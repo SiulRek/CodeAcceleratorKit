@@ -1,0 +1,14 @@
+2024-05-11 18:10:41,841 - INFO - -------------- This is a Title -------------------------------
+2024-05-11 18:10:41,841 - ERROR - Test raised exc: test_example_error
+Message: Traceback (most recent call last):
+  File "/home/krakerlu/github/pcb-defect-detection/source/utils/testing/test_result_logger.py", line 146, in test_example_error
+    raise ValueError()
+ValueError
+
+2024-05-11 18:10:41,841 - ERROR - Test failure: test_example_fail
+Message: Traceback (most recent call last):
+  File "/home/krakerlu/github/pcb-defect-detection/source/utils/testing/test_result_logger.py", line 143, in test_example_fail
+    self.assertEqual(1, 2)
+AssertionError: 1 != 2
+
+2024-05-11 18:10:41,841 - INFO - Test passed: test_example_pass
