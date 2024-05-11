@@ -1,13 +1,13 @@
-	# Visual Studio Code
-	.vscode/
+# Visual Studio Code
+.vscode/
 
-	# Virtual Environment
-	venv/
+# Virtual Environment
+venv/
 
-	# Python Caches
-	__pycache__/
+# Python Caches
+__pycache__/
 
-	# Local and Temporary Files
-	**/local/
-	#**/temp.*
-	#**/test.*
+# Local and Temporary Files
+**/local/
+#**/temp.*
+#**/test.*
