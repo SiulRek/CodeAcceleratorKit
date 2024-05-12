@@ -1,3 +1,0 @@
-
-#UNCLEADED
-print("Hello, World!")
