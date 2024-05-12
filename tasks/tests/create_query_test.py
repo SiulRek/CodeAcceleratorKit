@@ -18,4 +18,25 @@ class Car:
     def get_car(self):
         return self.brand, self.model
 
+    #B Hello Darkness my Old Friend
+    # reference_1.py
+    #*test_1
+    #summarize data/example_script_2.py (True)
+    #test_1_query
+    #T Comment Title
+    #C Wow Thats a good comment
+    #C The line continues even here
+    #C The comment is so long.
+    #run data/example_script.py
+    #summarize_folder data (True, [], [reference_1.py; reference_2.py; example_script_6.py])
+    #T Reference File Title
+    # reference_2.py, data/reference_3.txt
+    #File
+    #tree . (2, False, [temp; log])
+    #unittest File (2)
+    #pylint data/example_script.py
+    #C This is another comment
+    #L
+    #E The end of the code
     # makequery (True, 100)
+    #checksum 21
