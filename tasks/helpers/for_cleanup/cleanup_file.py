@@ -2,7 +2,7 @@ import os
 
 from tasks.constants.getters import (
     get_checkpoint_directory,
-    get_environment_path,
+    get_environment_path_of_tasks,
 )
 from tasks.helpers.for_cleanup.format_docstrings import (
     format_docstrings,
@@ -147,10 +147,11 @@ def cleanup_file(
 
 if __name__ == "__main__":
     path = r"tasks/tests/cleanup_test.py"
+    root_dir = os.path.abspath(os.path.join(path, "..", "..", ".."))
     cleanup_file(
         path,
         checkpointing=True,
-        checkpoint_dir=get_checkpoint_directory(),
-        python_env_path=get_environment_path(),
+        checkpoint_dir=get_checkpoint_directory(root_dir),
+        python_env_path=get_environment_path_of_tasks(),
     )
     print(f"File cleaned of {path}")

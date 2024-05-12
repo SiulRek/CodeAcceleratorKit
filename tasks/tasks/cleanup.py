@@ -3,7 +3,7 @@ import sys
 
 from tasks.constants.getters import (
     get_checkpoint_directory,
-    get_environment_path,
+    get_environment_path_of_tasks,
 )
 from tasks.helpers.for_cleanup.cleanup_file import cleanup_file
 from tasks.helpers.for_cleanup.referenced_contents_extractor import (
@@ -38,7 +38,7 @@ def clean_up(file_path, root_dir):
         - root_dir (str): The root directory of the project.
     """
     checkpoint_dir = get_checkpoint_directory(root_dir)
-    environment_path = get_environment_path(root_dir)
+    environment_path = get_environment_path_of_tasks(root_dir)
 
     referenced_contents, updated_content = extract_referenced_contents(
         file_path, root_dir

@@ -49,23 +49,23 @@ import tasks.helpers.general.print_statements as task_prints
 
 
 if len(sys.argv) == 3:
-    ROOT_DIR = sys.argv[1]
+    TASK_EXECUTOR_ROOT = sys.argv[1]
     FILE_PATH = sys.argv[2]
-    sys.path.append(ROOT_DIR)
+    sys.path.append(TASK_EXECUTOR_ROOT)
 else:
-    ROOT_DIR = os.path.join(
+    TASK_EXECUTOR_ROOT = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "..", ".."
     )
     FILE_PATH = os.path.join(
-        ROOT_DIR,
+        TASK_EXECUTOR_ROOT,
         "tasks",
         "tests",
         "create_query_test.py",
     )
 
 
-TEMPORARY_FILE = get_temporary_file_path(ROOT_DIR)
-RESPONSE_FILE = get_response_file_path(ROOT_DIR)
+TEMPORARY_FILE = get_temporary_file_path(TASK_EXECUTOR_ROOT)
+RESPONSE_FILE = get_response_file_path(TASK_EXECUTOR_ROOT)
 extract_referenced_contents = ReferencedContentExtractor().extract_referenced_contents
 
 
@@ -142,7 +142,7 @@ def create_query(file_path, root_dir, query_path, response_path):
 
 def main():
     task_prints.process_start("Create Query")
-    create_query(FILE_PATH, ROOT_DIR, TEMPORARY_FILE, RESPONSE_FILE)
+    create_query(FILE_PATH, TASK_EXECUTOR_ROOT, TEMPORARY_FILE, RESPONSE_FILE)
     task_prints.process_end()
 
 

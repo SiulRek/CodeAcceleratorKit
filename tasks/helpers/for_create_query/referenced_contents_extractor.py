@@ -3,7 +3,7 @@ import os
 from tasks.constants.definitions import (
     MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES,
 )
-from tasks.constants.getters import get_environment_path
+from tasks.constants.getters import get_environment_path, get_environment_path_of_tasks
 from tasks.helpers.for_create_query.get_error_text import (
     get_error_text,
 )
@@ -115,7 +115,7 @@ class ReferencedContentExtractor(ExtractorBase):
     def validate_run_pylint_reference(self, line):
         if result := line_validation_for_run_pylint(line):
             script_path = find_file(result, self.root_dir, self.file_path)
-            environment_path = get_environment_path(self.root_dir)
+            environment_path = get_environment_path_of_tasks()
             pylint_output = execute_pylint(script_path, environment_path)
             default_title = "Pylint Output"
             return (REFERENCE_TYPES.RUN_PYLINT, default_title, pylint_output)
