@@ -7,6 +7,11 @@ FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 TASKS_CODE_ROOT = os.path.join(FILE_DIR, "..", "..")
 
 
+def get_task_cache_directory():
+    dir = os.path.join(TASKS_CODE_ROOT, "tasks",  "__taskcache__")
+    os.makedirs(dir, exist_ok=True)
+    return os.path.normpath(dir)
+
 def get_response_file_path(root_dir):
     dir = os.path.join(root_dir, "local", "tasks_room", "outputs")
     os.makedirs(dir, exist_ok=True)
