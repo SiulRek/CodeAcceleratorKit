@@ -1,5 +1,4 @@
 import os
-import sys
 
 from tasks.constants.getters import (
     get_checkpoint_directory,
@@ -9,64 +8,56 @@ from tasks.helpers.for_cleanup.cleanup_file import cleanup_file
 from tasks.helpers.for_cleanup.referenced_contents_extractor import (
     ReferencedContentExtractor,
 )
-import tasks.helpers.general.print_statements as task_prints
+from tasks.tasks.task_base import TaskBase
 
-if len(sys.argv) == 3:
-    ROOT_DIR = sys.argv[1]
-    FILE_PATH = sys.argv[2]
-    sys.path.append(ROOT_DIR)
-else:
-    ROOT_DIR = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "..", ".."
-    )
-    FILE_PATH = os.path.join(
-        ROOT_DIR,
-        "tasks",
-        "tests",
-        "cleanup_test.py",
-    )
 
 extract_referenced_contents = ReferencedContentExtractor().extract_referenced_contents
 
 
-def clean_up(file_path, root_dir):
-    """
-    Create a query from the file and referenced contents in the file.
+class CleanupTask(TaskBase):
+    NAME = "Cleanup"
 
-    Args:
-        - file_path (str): The path to the file to be processed.
-        - root_dir (str): The root directory of the project.
-    """
-    checkpoint_dir = get_checkpoint_directory(root_dir)
-    environment_path = get_environment_path_of_tasks(root_dir)
+    def setup(self):
+        super().setup()
+        self.file_path = self.additional_args[0]
 
-    referenced_contents, updated_content = extract_referenced_contents(
-        file_path, root_dir
-    )
-    select_only, select_not, checkpointing = referenced_contents
+    def execute(self):
+        root_dir = self.task_executor_root
+        file_path = self.file_path
+        checkpoint_dir = get_checkpoint_directory(root_dir)
+        environment_path = get_environment_path_of_tasks()
 
-    if select_only != None and select_not != None:
-        msg = "Cannot have both select_only and select_not options specified."
-        raise ValueError(msg)
+        referenced_contents, updated_content = extract_referenced_contents(
+            file_path, root_dir
+        )
+        select_only, select_not, checkpointing = referenced_contents
 
-    with open(file_path, "w") as file:
-        file.write(updated_content)
+        if select_only != None and select_not != None:
+            msg = "Cannot have both select_only and select_not options specified."
+            raise ValueError(msg)
 
-    cleanup_file(
-        file_path=file_path,
-        select_only=select_only,
-        select_not=select_not,
-        checkpointing=checkpointing,
-        python_env_path=environment_path,
-        checkpoint_dir=checkpoint_dir,
-    )
+        with open(file_path, "w") as file:
+            file.write(updated_content)
 
-
-def main():
-    task_prints.process_start("Cleanup")
-    clean_up(FILE_PATH, ROOT_DIR)
-    task_prints.process_end()
+        cleanup_file(
+            file_path=file_path,
+            select_only=select_only,
+            select_not=select_not,
+            checkpointing=checkpointing,
+            python_env_path=environment_path,
+            checkpoint_dir=checkpoint_dir,
+        )
 
 
 if __name__ == "__main__":
-    main()
+    default_root = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", ".."
+    )
+    default_file_path = os.path.join(
+        default_root,
+        "tasks",
+        "tests",
+        "cleanup_test.py",
+    )
+    task = CleanupTask(default_root, default_file_path)
+    task.main()
