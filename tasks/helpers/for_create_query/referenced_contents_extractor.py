@@ -3,7 +3,7 @@ import os
 from tasks.constants.definitions import (
     MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES,
 )
-from tasks.constants.getters import get_environment_path, get_environment_path_of_tasks
+from tasks.constants.getters import get_environment_path, get_environment_path_of_tasks, get_temporary_script_path
 from tasks.helpers.for_create_query.get_error_text import (
     get_error_text,
 )
@@ -36,9 +36,7 @@ from tasks.helpers.general.execute_pylint import execute_pylint
 from tasks.helpers.general.execute_python_script import (
     execute_python_script,
 )
-from tasks.helpers.general.execute_unittests_from_file import (
-    execute_unittests_from_file,
-)
+import tasks.helpers.general.execute_unittests_from_file as execute_unittests_from_file
 from tasks.helpers.general.extractor_base import ExtractorBase
 from tasks.helpers.general.find_dir import find_dir
 from tasks.helpers.general.find_file import find_file
@@ -125,7 +123,14 @@ class ReferencedContentExtractor(ExtractorBase):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
             script_path = find_file(name, self.root_dir, self.file_path)
-            unittest_output = execute_unittests_from_file(script_path, verbosity)
+            temp_script_path = get_temporary_script_path(self.root_dir)
+            unittest_output = execute_python_script(
+                script=execute_unittests_from_file,
+                args=[script_path, str(verbosity)],
+                env_python_path=get_environment_path(self.root_dir),
+                cwd=self.root_dir,
+                temp_script_path=temp_script_path,
+            )
             default_title = "Unittest Output"
             return (REFERENCE_TYPES.RUN_UNITTEST, default_title, unittest_output)
         return None

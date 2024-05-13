@@ -51,6 +51,11 @@ def execute_unittests_from_file(file_path, verbosity=1):
 
 
 if __name__ == "__main__":
-    path = f"path/to/file"
-    test_results = execute_unittests_from_file(path)
+    if len(sys.argv) < 1:
+        path = f"path/to/file"
+    else:
+        # Assuming the arguments match
+        path = sys.argv[1]
+        verbosity = int(sys.argv[2]) if len(sys.argv) > 2 else 1
+    test_results = execute_unittests_from_file(path, verbosity)
     print(test_results)
