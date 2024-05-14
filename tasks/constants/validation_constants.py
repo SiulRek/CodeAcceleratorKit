@@ -22,3 +22,19 @@ class CREATE_QUERY_PATTERNS(Enum):
     
     # For extracting error messages
     TEST_RESULT = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (ERROR|INFO) - .*)")
+
+
+class CREATE_QUERY_TAGS(Enum):
+    BEGIN = "#B "
+    END = "#E "
+    ERROR = "#L"
+    TITLE = "#T "
+    COMMENT = "#C "
+    CURRENT_FILE = f"#{FILE_TAG}"
+    MAKE_QUERY = "#makequery"
+
+# ----------------- For Clean Up -----------------
+class CLEANUP_TAGS(Enum):
+    SELECT_ONLY = "#only"
+    SELECT_NOT = "#not"
+    CHECKPOINTS = "#checkpointing"

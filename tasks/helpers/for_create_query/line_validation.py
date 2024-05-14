@@ -1,7 +1,9 @@
 import re
 
-from tasks.constants.patterns import CREATE_QUERY_PATTERNS as PATTERNS
-from tasks.constants.definitions import CREATE_QUERY_TAGS as TAGS
+from tasks.constants.validation_constants import (
+    CREATE_QUERY_PATTERNS as PATTERNS,
+    CREATE_QUERY_TAGS as TAGS
+)
 from tasks.constants.defaults import DIRECTORY_TREE_DEFAULTS
 from tasks.helpers.general.line_validation_utils import (
     retrieve_list_in_square_brackets,

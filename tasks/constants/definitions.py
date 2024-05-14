@@ -7,18 +7,6 @@ FILE_TAG = "File"
 
 
 # ----------------- For Create Query -----------------
-MAKE_QUERY_TAG = "#makequery"
-
-class CREATE_QUERY_TAGS(Enum):
-    BEGIN = "#B "
-    END = "#E "
-    ERROR = "#L"
-    TITLE = "#T "
-    COMMENT = "#C "
-    CURRENT_FILE = f"#{FILE_TAG}"
-    MAKE_QUERY = "#makequery"
-
-
 class MAKE_QUERY_REFERENCE_TYPES(Enum):
     BEGIN_TEXT = "begin_text",
     END_TEXT = "end_text",
@@ -40,11 +28,6 @@ class MAKE_QUERY_REFERENCE_TYPES(Enum):
 LINE_WIDTH = 80
 INTEND = " " * 4
 DOC_QUOTE = '"""'
-
-class CLEANUP_TAGS(Enum):
-    SELECT_ONLY = "#only"
-    SELECT_NOT = "#not"
-    CHECKPOINTS = "#checkpointing"
 
 class CLEANUP_REFERENCE_TYPES(Enum):
     SELECT_ONLY = "select_only"
