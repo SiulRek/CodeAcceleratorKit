@@ -2,6 +2,16 @@ import re
 
 
 def extract_python_code(text):
+    """
+    Extracts Python code from a given text. Specifically, it extracts code from code blocks that are formatted as ```python ... ```.
+    The code is expected to start with: python, import, from, def, class, if, for, while, 3 times double quotes or '''.
+
+    Args:
+        text (str): The text to extract Python code from.
+    
+    Returns:
+        str: The extracted Python code.
+    """
     pattern = r"```(.*?)```"
 
     matches = re.findall(pattern, text, re.DOTALL)
@@ -9,12 +19,13 @@ def extract_python_code(text):
     python_code_blocks = [
         match
         for match in matches
-        if "python" in match.lower()
-        or match.strip().startswith(("def", "import", "from", "class"))
+        if match.strip().startswith(("python", "import", "from", "def", "class", "if", "for", "while",'"""', "'''"))
     ]
+    
+    for i, block in enumerate(python_code_blocks):
+        if block.startswith("python"):
+            python_code_blocks[i] = block[6:]
     python_code = "\n\n".join(python_code_blocks)
-    if python_code.startswith("python"):
-        python_code = python_code[6:]
     python_code = python_code.replace("`", "")
     return python_code
 
