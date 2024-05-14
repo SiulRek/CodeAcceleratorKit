@@ -20,7 +20,7 @@ def get_response_file_path(root_dir):
     return os.path.normpath(path)
 
 #TODO change to query file path
-def get_temporary_file_path(root_dir):
+def get_response_file_path(root_dir):
     dir = os.path.join(root_dir, "local", "tasks_room", "outputs")
     os.makedirs(dir, exist_ok=True)
     path = os.path.join(dir, "temporary_file.txt")
