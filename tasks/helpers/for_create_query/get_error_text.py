@@ -1,4 +1,4 @@
-from tasks.constants.definitions import TEST_RESULTS_FILE
+from tasks.constants.configs import TEST_RESULTS_FILE
 from tasks.constants.validation_constants import CREATE_QUERY_PATTERNS
 from tasks.helpers.general.find_file import find_file
 

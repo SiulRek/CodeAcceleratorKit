@@ -1,7 +1,7 @@
 from enum import Enum
 import re
 
-from tasks.constants.definitions import FILE_TAG
+from tasks.constants.configs import FILE_TAG
 # ----------------- General  -------------------------
 
 # ----------------- For Create Query -----------------

@@ -1,6 +1,6 @@
 import re
 
-from tasks.constants.definitions import LINE_WIDTH
+from tasks.constants.configs import LINE_WIDTH
 from tasks.helpers.general.wrap_text import wrap_text
 
 

@@ -1,6 +1,6 @@
 import os
 
-from tasks.constants.definitions import (
+from tasks.constants.configs import (
     MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES,
 )
 from tasks.constants.getters import get_environment_path, get_environment_path_of_tasks, get_temporary_script_path
