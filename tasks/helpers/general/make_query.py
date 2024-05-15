@@ -3,11 +3,11 @@ import openai
 from local.private.keys import OPENAI_KEY
 
 
-def make_query(query_message, max_response_tokens=6000):
+def make_query(query_message, max_response_tokens=3000):
     openai.api_key = OPENAI_KEY
 
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a Python and Vision AI developer."},
             {"role": "user", "content": query_message},
