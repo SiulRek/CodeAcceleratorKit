@@ -30,6 +30,7 @@ class TaskBase:
         self.additional_args = None
         self.cache_dir = None
         self._initialize_arguments(default_root, default_args)
+        self.line_sep = "-" * 120 + "\n"
 
     def _initialize_arguments(self, default_root, default_args):
         """
@@ -60,16 +61,18 @@ class TaskBase:
         msg = "Subclasses should implement this method."
         raise NotImplementedError(msg)
 
-    def _print_execution_start(self):
-        """Prints the start message for task execution."""
-        msg = f"{'-'*100}\nRunned Task: {self.NAME}\n{'-'*100}"
-        print(msg)
-
     def teardown(self):
         """Placeholder for task-specific teardown. can be extended by
         subclasses."""
         if self.cache_dir and os.path.exists(self.cache_dir):
             os.rmdir(self.cache_dir)
+
+    def _print_execution_start(self):
+        """Prints the start message for task execution."""
+        msg = f"{'='*55} TASK START {'='*53}\n"
+        msg += f"Runned Task: {self.NAME}\n{self.line_sep}"
+        msg += "Task Ouputs:\n"
+        print(msg)
 
     def _print_execution_end(self, additional_msg=""):
         """
@@ -79,7 +82,9 @@ class TaskBase:
             - additional_msg (str): Optional additional message to include
                 in the completion printout.
         """
-        msg = f"{'='*50} TASK EXECUTED SUCCESSFULLY {'='*50}"
+        msg = self.line_sep
+        msg += "TASK EXECUTED SUCCESSFULLY\n"
+        msg += f"{'='*55} TASK END {'='*55}"
         if additional_msg:
             msg += f"\n{additional_msg}"
         print(msg)
