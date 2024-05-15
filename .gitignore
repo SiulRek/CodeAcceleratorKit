@@ -9,5 +9,5 @@ __pycache__/
 
 # Local and Temporary Files
 **/local/
-#**/temp.*
-#**/test.*
+**/temp*
+**/test.*
