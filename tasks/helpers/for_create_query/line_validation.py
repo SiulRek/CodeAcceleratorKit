@@ -1,9 +1,7 @@
 import re
 
-from tasks.constants.validation_constants import (
-    CREATE_QUERY_PATTERNS as PATTERNS,
-    CREATE_QUERY_TAGS as TAGS
-)
+from tasks.constants.configs import CREATE_QUERY_TAGS as TAGS
+from tasks.constants.configs import FILE_TAG
 from tasks.constants.defaults import DIRECTORY_TREE_DEFAULTS
 from tasks.helpers.general.line_validation_utils import (
     retrieve_list_in_square_brackets,
@@ -11,17 +9,23 @@ from tasks.helpers.general.line_validation_utils import (
     retrieve_bool,
 )
 
-FILE_PATTERN = PATTERNS.FILE.value
-FILE_WITH_DIR = PATTERNS.FILE_WITH_DIR.value
-FILL_TEXT_PATTERN = PATTERNS.FILL_TEXT.value
-RUN_SCRIPT_PATTERN = PATTERNS.RUN_SCRIPT.value
-RUN_PYLINT_PATTERN = PATTERNS.RUN_PYLINT.value
-UNITTEST_PATTERN = PATTERNS.UNITTEST.value
-DIRECTORY_TREE_PATTERN = PATTERNS.DIRECTORY_TREE.value
-SUMMARIZE_PYTHON_SCRIPT_PATTERN = PATTERNS.SUMMARIZE_PYTHON_SCRIPT.value
-SUMMARIZE_FOLDER_PATTERN = PATTERNS.SUMMARIZE_FOLDER.value
-QUERY_TEMPLATE_PATTERN = PATTERNS.QUERY_TEMPLATE.value
-CHECKSUM_PATTERN = PATTERNS.CHECKSUM.value
+FILE_PATTERN = re.compile(
+    rf"{TAGS.FILE.value}\s*((?:\S+\.(?:py|txt|log|md|csv))\s*(?:,\s*\S+\.(?:py|txt|log|md|csv)\s*)*|{FILE_TAG})"
+)
+FILE_WITH_DIR = re.compile(
+    rf"{TAGS.FILE.value}\s([\w/\\.-]+[\\/][\w.-]+\.(py|txt|log|md|csv))"
+)
+FILL_TEXT_PATTERN = re.compile(rf"^{TAGS.FILL_TEXT.value}\s*(.*)")
+RUN_SCRIPT_PATTERN = re.compile(rf"{TAGS.RUN_SCRIPT.value}\s(\S+\.py|{FILE_TAG})")
+RUN_PYLINT_PATTERN = re.compile(rf"{TAGS.RUN_PYLINT.value}\s(\S+\.py|{FILE_TAG})")
+UNITTEST_PATTERN = re.compile(rf"{TAGS.UNITTEST.value}\s(\S+\.py|{FILE_TAG})")
+DIRECTORY_TREE_PATTERN = re.compile(rf"{TAGS.DIRECTORY_TREE.value}\s(\S+)")
+SUMMARIZE_PYTHON_SCRIPT_PATTERN = re.compile(
+    rf"{TAGS.SUMMARIZE_PYTHON_SCRIPT.value}\s(\S+\.py|{FILE_TAG})"
+)
+SUMMARIZE_FOLDER_PATTERN = re.compile(rf"{TAGS.SUMMARIZE_FOLDER.value}\s(\S+)")
+QUERY_TEMPLATE_PATTERN = re.compile(rf"{TAGS.QUERY_TEMPLATE_START.value}(.*?)_{TAGS.QUERY_TEMPLATE_END.value}")
+CHECKSUM_PATTERN = re.compile(rf"{TAGS.CHECKSUM.value}\s(\S+)")
 
 BEGIN_TAG = TAGS.BEGIN.value
 END_TAG = TAGS.END.value
@@ -174,9 +178,7 @@ def line_validation_for_query_template(line):
 
 
 def line_validation_for_make_query(line):
-    """
-    Validate the line to check if it is a valid line to make a query.
-    """
+    """Validate the line to check if it is a valid line to make a query."""
     if MAKE_QUERY_TAG in line:
         max_tokens = None
         create_python_script = False
@@ -189,9 +191,7 @@ def line_validation_for_make_query(line):
 
 
 def line_validation_for_checksum(line):
-    """
-    Validate the line to check if it is a valid line to add checksum.
-    """
+    """Validate the line to check if it is a valid line to add checksum."""
     if result := CHECKSUM_PATTERN.match(line):
         try:
             checksum = int(result.group(1).strip())

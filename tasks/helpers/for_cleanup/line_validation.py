@@ -1,4 +1,4 @@
-from tasks.constants.validation_constants import CLEANUP_TAGS as TAGS
+from tasks.constants.configs import CLEANUP_TAGS as TAGS
 
 SELECT_ONLY_TAG = TAGS.SELECT_ONLY.value
 SELECT_NOT_TAG = TAGS.SELECT_NOT.value

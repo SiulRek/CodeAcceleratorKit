@@ -1,9 +1,12 @@
 from enum import Enum
-
+import os
+import re
 
 # ----------------- General Constants -----------------
 TEST_RESULTS_FILE = "test_results.log"
 FILE_TAG = "File"
+REGISTERED_VARIABLES_JSON = os.path.join("tasks", "constants", "registered_variables.json")
+VARIABLE_JSON_NAME = "variable.json"
 
 
 # ----------------- For Create Query -----------------
@@ -24,6 +27,29 @@ class MAKE_QUERY_REFERENCE_TYPES(Enum):
     TITLE = "title"
     MAKE_QUERY = "make_query"
 
+
+class CREATE_QUERY_TAGS(Enum):
+    BEGIN = "#B "
+    END = "#E "
+    RUN_PYLINT = "#pylint"
+    RUN_SCRIPT = "#run"
+    UNITTEST = "#unittest"
+    DIRECTORY_TREE = "#tree"
+    SUMMARIZE_PYTHON_SCRIPT = "#summarize"
+    SUMMARIZE_FOLDER = "#summarize_folder"
+    QUERY_TEMPLATE_START = "#"
+    QUERY_TEMPLATE_END = "_query"
+    CHECKSUM = "#checksum"
+    FILE = "#"
+    FILL_TEXT = r"#\*"
+    ERROR = "#L"
+    TITLE = "#T "
+    COMMENT = "#C "
+    CURRENT_FILE = f"#{FILE_TAG}"
+    MAKE_QUERY = "#makequery"
+
+TEST_RESULT_PATTERN = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (ERROR|INFO) - .*)")
+
 # ----------------- For Clean Up -----------------
 LINE_WIDTH = 80
 INTEND = " " * 4
@@ -33,3 +59,8 @@ class CLEANUP_REFERENCE_TYPES(Enum):
     SELECT_ONLY = "select_only"
     SELECT_NOT = "select_not"
     CHECKPOINTING = "checkpointing"
+
+class CLEANUP_TAGS(Enum):
+    SELECT_ONLY = "#only"
+    SELECT_NOT = "#not"
+    CHECKPOINTS = "#checkpointing"
