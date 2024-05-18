@@ -59,16 +59,14 @@ class ExecutorVariable:
 
     def _get_room_dir(self, executor_root):
         """
-        Determines the room directory based on the executor root.
+        Determines the room directory based on the registration data of
+        executor root.
 
         Args:
             - executor_root (str): The root directory of the executor.
 
         Returns:
             - str: The room directory path.
-
-        Raises:
-            - ValueError: If the executor root is not registered.
         """
         with open(configs.REGISTERED_VARIABLES_JSON, "r", encoding="utf-8") as f:
             registered_variables = json.load(f)
@@ -88,14 +86,14 @@ class ExecutorVariable:
         Raises:
             - KeyError: If a required key is missing.
         """
-        for key in Vars.VariableNames:
+        for key in Vars.VariableNames.__members__.keys():
             if key not in attributes_dict:
                 msg = f"Missing key {key}"
                 raise KeyError(msg)
             setattr(self, key, attributes_dict[key])
 
     def load_attributes_from_json(self):
-        """Loads attributes from a JSON file."""
+        """Loads attributes from the Variable JSON file."""
         if not os.path.exists(self.variable_json):
             msg = f"Variable JSON file {self.variable_json} does not exist or"
             msg += " has been deleted."

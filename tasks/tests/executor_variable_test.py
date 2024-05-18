@@ -1,9 +1,9 @@
 from enum import Enum
 import json
 import os
-import shutil
 import unittest
 from unittest.mock import patch
+import tempfile
 
 from tasks.variables.executor_variable import ExecutorVariable
 from tasks.variables.normalize_path import normalize_path
@@ -14,39 +14,83 @@ class VariableNamesMock(Enum):
     VAR2 = "VAR2"
 
 
-EXECUTOR_ROOT = normalize_path(os.path.join("tasks", "tests", "temp", "executor_root"))
-JSON_MOCK = normalize_path(
-    os.path.join("tasks", "tests", "temp", "registered_variables.json")
-)
-
-
 class TestExecutorVariable(unittest.TestCase):
 
     def setUp(self):
-        json_dir = os.path.dirname(JSON_MOCK)
-        os.makedirs(json_dir, exist_ok=True)
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.executor_root = normalize_path(os.path.join(self.temp_dir.name, "executor_root"))
+        self.json_mock = normalize_path(os.path.join(self.temp_dir.name, "registered_variables.json"))
+
         registered_variables = {
-            EXECUTOR_ROOT: normalize_path(os.path.join(json_dir, "task_room"))
+            self.executor_root: normalize_path(os.path.join(self.temp_dir.name, "task_room"))
         }
-        with open(JSON_MOCK, "w", encoding="utf-8") as f:
+
+        with open(self.json_mock, "w", encoding="utf-8") as f:
             json.dump(registered_variables, f, indent=4)
 
     def tearDown(self):
-        json_dir = os.path.dirname(JSON_MOCK)
-        if os.path.exists(json_dir):
-            shutil.rmtree(json_dir)
+        self.temp_dir.cleanup()
+
+    def test_load_attributes_from_json_1(self):
+        with patch(
+            "tasks.constants.configs.REGISTERED_VARIABLES_JSON", self.json_mock
+        ), patch(
+            "tasks.variables.variable_names.VariableNames", VariableNamesMock
+        ):
+            executor_variable = ExecutorVariable(
+                self.executor_root, load_attributes_from_json=False
+            )
+            room_dir = os.path.dirname(executor_variable.variable_json)
+            os.makedirs(room_dir, exist_ok=True)
+            with open(executor_variable.variable_json, "w", encoding="utf-8") as f:
+                json.dump({"VAR1": "value1", "VAR2": "value2"}, f, indent=4)
+            executor_variable.load_attributes_from_json()
+
+            self.assertEqual(executor_variable.VAR1, "value1")
+            self.assertEqual(executor_variable.VAR2, "value2")
+    
+    def test_load_attributes_from_json_2(self):
+        with patch(
+            "tasks.constants.configs.REGISTERED_VARIABLES_JSON", self.json_mock
+        ), patch(
+            "tasks.variables.variable_names.VariableNames", VariableNamesMock
+        ):
+            variable_json = ExecutorVariable(
+                self.executor_root, load_attributes_from_json=False
+            ).variable_json
+            room_dir = os.path.dirname(variable_json)
+            os.makedirs(room_dir, exist_ok=True)
+            with open(variable_json, "w", encoding="utf-8") as f:
+                json.dump({"VAR1": "value1", "VAR2": "value2"}, f, indent=4)
+            executor_variable = ExecutorVariable(
+                self.executor_root, load_attributes_from_json=True
+            )
+
+            self.assertEqual(executor_variable.VAR1, "value1")
+            self.assertEqual(executor_variable.VAR2, "value2")
+    
+    def test_load_attributes_from_dict(self):
+        with patch( "tasks.constants.configs.REGISTERED_VARIABLES_JSON", self.json_mock), patch(
+            "tasks.variables.variable_names.VariableNames", VariableNamesMock
+        ):
+            executor_variable = ExecutorVariable(
+                self.executor_root, load_attributes_from_json=False
+            )
+            executor_variable.load_attributes_from_dict({"VAR1": "value1", "VAR2": "value2"})
+
+
+            self.assertEqual(executor_variable.VAR1, "value1")
+            self.assertEqual(executor_variable.VAR2, "value2")
 
     def test_save_attributes(self):
         with patch(
-            "tasks.constants.configs.REGISTERED_VARIABLES_JSON", JSON_MOCK
+            "tasks.constants.configs.REGISTERED_VARIABLES_JSON", self.json_mock
         ), patch(
             "tasks.variables.variable_names.VariableNames", VariableNamesMock
-        ), patch(
-            "os.path.exists", return_value=True
         ):
 
             executor_variable = ExecutorVariable(
-                EXECUTOR_ROOT, load_attributes_from_json=False
+                self.executor_root, load_attributes_from_json=False
             )
             executor_variable.VAR1 = "value1"
             executor_variable.VAR2 = "value2"

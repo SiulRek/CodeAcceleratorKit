@@ -5,7 +5,7 @@ import warnings
 from tasks.constants.configs import REGISTERED_VARIABLES_JSON
 from tasks.variables.executor_variable import ExecutorVariable
 from tasks.variables.normalize_path import normalize_path
-from tasks.variables.variable_names import VariableNames
+import tasks.variables.variable_names as Vars
 
 
 class ExecutorHandler:
@@ -35,6 +35,7 @@ class ExecutorHandler:
             msg = f"Task executor root {executor_root} is already registered."
             msg += " Use the overwrite flag to overwrite the registration."
             raise ValueError(msg)
+        os.makedirs(room_dir, exist_ok=True)
         registered_variables[executor_root] = room_dir
         with open(REGISTERED_VARIABLES_JSON, "w", encoding="utf-8") as f:
             json.dump(registered_variables, f, indent=4)
@@ -53,20 +54,26 @@ class ExecutorHandler:
             - dict: A dictionary of initialized attributes.
         """
         attributes = {}
-        for key in VariableNames:
+        for key in Vars.VariableNames.__members__.keys():
             init_func = getattr(cls, f"_initialize_{key}")
             attributes[key] = init_func(executor_root, room_dir)
         return attributes
 
     @classmethod
-    def register(cls, executor_root, room_dir="local/task_room", overwrite=False):
+    def register(cls, executor_root, room_dir="local/task_room", overwrite=False, create_dirs=True):
         """
-        Registers an executor and initializes attributes.
+        Registers an executor: records in registered_variables.json, initializes attributes 
+        creates directories, and saves the attributes to the variable JSON file. Returns the
+        executor variable of the registration.
 
         Args:
             - executor_root (str): The root directory of the executor.
             - room_dir (str, optional): The room directory. Defaults to "local/task_room".
             - overwrite (bool, optional): Whether to overwrite an existing
+            - create_dirs (bool, optional): Whether to create directories for the executor.
+
+        Returns:
+            - ExecutorVariable: The executor variable generated from the registration.
         """
         executor_root = normalize_path(executor_root)
         room_dir = normalize_path(room_dir)
@@ -77,8 +84,12 @@ class ExecutorHandler:
         variable = ExecutorVariable(executor_root, load_attributes_from_json=False)
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()
+        if create_dirs:
+            cls.create_directories(variable)
+        return variable
 
-    def create_directories(self, variable):
+    @classmethod
+    def create_directories(cls, variable):
         """
         Creates directories for the executor.
 
@@ -86,8 +97,8 @@ class ExecutorHandler:
             - variable (ExecutorVariable): The executor variable.
         """
         created_dirs = []
-        for key in VariableNames:
-            if key.name.endswith("_DIR"):
+        for key in Vars.VariableNames.__members__.keys():
+            if key.endswith("_DIR"):
                 path = getattr(variable, key)
                 os.makedirs(path, exist_ok=True)
                 created_dirs.append(path)
@@ -107,4 +118,5 @@ class ExecutorHandler:
 
         for unknown_dir in unknown_dirs:
             for unknown_dir in unknown_dirs:
-                warnings.warn(f"Unknown directory found: {unknown_dir}")
+                warnings.warn(f"Unknown directory {unknown_dir} from task room.")
+                
