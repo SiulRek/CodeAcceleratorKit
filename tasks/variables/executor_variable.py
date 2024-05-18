@@ -53,10 +53,6 @@ class ExecutorVariable:
         """
         return self._variable_json
 
-    
-    # def __getitem__(self, key):
-    #     return self._attributes.get(key, None)
-
     def _get_room_dir(self, executor_root):
         """
         Determines the room directory based on the registration data of
@@ -88,7 +84,7 @@ class ExecutorVariable:
         """
         for key in Vars.VariableNames.__members__.keys():
             if key not in attributes_dict:
-                msg = f"Missing key {key}"
+                msg = f"Missing  attribute {key} in attributes dictionary."
                 raise KeyError(msg)
             setattr(self, key, attributes_dict[key])
 
@@ -109,7 +105,6 @@ class ExecutorVariable:
         Raises:
             - AttributeError: If a required attribute is missing.
         """
-        # Check if file exists, if not
         attributes_dict = {}
         for key in Vars.VariableNames.__members__.keys():
             if not hasattr(self, key):

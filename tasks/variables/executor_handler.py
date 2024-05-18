@@ -7,12 +7,11 @@ from tasks.variables.executor_variable import ExecutorVariable
 from tasks.variables.normalize_path import normalize_path
 import tasks.variables.variable_names as Vars
 
-
 class ExecutorHandler:
     """Handles the registration and initialization of executor variables."""
 
     @classmethod
-    def _register(cls, executor_root, room_dir, overwrite):
+    def _register_executor(cls, executor_root, room_dir, overwrite):
         """
         Registers an executor root and its corresponding room directory.
 
@@ -20,13 +19,8 @@ class ExecutorHandler:
             - executor_root (str): The root directory of the executor.
             - room_dir (str): The room directory to register.
             - overwrite (bool): Whether to overwrite anexistingregistration.
-
-        Raises:
-            - ValueError: If the executor root is already registered.
         """
         if not os.path.exists(REGISTERED_VARIABLES_JSON):
-            with open(REGISTERED_VARIABLES_JSON, "w", encoding="utf-8") as f:
-                json.dump({}, f, indent=4)
                 registered_variables = {}
         else:
             with open(REGISTERED_VARIABLES_JSON, "r", encoding="utf-8") as f:
@@ -41,7 +35,7 @@ class ExecutorHandler:
             json.dump(registered_variables, f, indent=4)
 
     @classmethod
-    def _initialize_attributes(cls, executor_root, room_dir):
+    def _init_executor_attributes(cls, executor_root, room_dir):
         """
         Initializes attributes for the executor based on its root and room
         directory.
@@ -60,11 +54,11 @@ class ExecutorHandler:
         return attributes
 
     @classmethod
-    def register(cls, executor_root, room_dir="local/task_room", overwrite=False, create_dirs=True):
+    def register_executor(cls, executor_root, room_dir="local/task_room", overwrite=False, create_dirs=True):
         """
-        Registers an executor: records in registered_variables.json, initializes attributes 
-        creates directories, and saves the attributes to the variable JSON file. Returns the
-        executor variable of the registration.
+        Registers an executor: records in registered_variables.json, initializes executor 
+        attributes creates directories, and saves the attributes to the variable JSON file. 
+        Returns the executor variable of the registration.
 
         Args:
             - executor_root (str): The root directory of the executor.
@@ -79,8 +73,8 @@ class ExecutorHandler:
         room_dir = normalize_path(room_dir)
         if not room_dir.startswith(executor_root):
             room_dir = os.path.join(executor_root, room_dir)
-        cls._register(executor_root, room_dir, overwrite=overwrite)
-        attributes = cls._initialize_attributes(executor_root, room_dir)
+        cls._register_executor(executor_root, room_dir, overwrite=overwrite)
+        attributes = cls._init_executor_attributes(executor_root, room_dir)
         variable = ExecutorVariable(executor_root, load_attributes_from_json=False)
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()

@@ -53,7 +53,7 @@ class TestExecutorHandler(unittest.TestCase):
     def test_register(self):
         Handler._initialize_VAR1_DIR = lambda x, y: "value1"
         Handler._initialize_VAR2_DIR = lambda x, y: "value2"
-        executor_var = Handler.register(
+        executor_var = Handler.register_executor(
             self.executor_root, self.room_subfolder, create_dirs=False
         )
 
@@ -69,7 +69,7 @@ class TestExecutorHandler(unittest.TestCase):
     def test_initialize_attributes(self):
         Handler._initialize_VAR1_DIR = lambda x, y: "value1"
         Handler._initialize_VAR2_DIR = lambda x, y: "value2"
-        attributes = Handler._initialize_attributes(
+        attributes = Handler._init_executor_attributes(
             self.executor_root, self.room_subfolder
         )
 
@@ -83,7 +83,7 @@ class TestExecutorHandler(unittest.TestCase):
         Handler._initialize_VAR2_DIR = lambda x, y: os.path.join(
             self.room_dir, "value2"
         )
-        executor_var = Handler.register(
+        executor_var = Handler.register_executor(
             self.executor_root, self.room_subfolder, overwrite=True, create_dirs=True
         )
 
@@ -93,14 +93,14 @@ class TestExecutorHandler(unittest.TestCase):
     def test_overwrite_registration(self):
         Handler._initialize_VAR1_DIR = lambda x, y: "value1"
         Handler._initialize_VAR2_DIR = lambda x, y: "value2"
-        Handler.register(
+        Handler.register_executor(
             self.executor_root, self.room_subfolder, overwrite=False, create_dirs=False
         )
 
         with self.assertRaises(ValueError):
-            Handler.register(self.executor_root, self.room_subfolder, overwrite=False)
+            Handler.register_executor(self.executor_root, self.room_subfolder, overwrite=False)
 
-        Handler.register(
+        Handler.register_executor(
             self.executor_root, self.room_subfolder, overwrite=True, create_dirs=False
         )
 
