@@ -1,8 +1,6 @@
 from tasks.constants.configs import TEST_RESULTS_FILE
-from tasks.constants.validation_constants import CREATE_QUERY_PATTERNS
+from tasks.constants.configs import TEST_RESULT_PATTERN
 from tasks.helpers.general.find_file import find_file
-
-TEST_RESULT_PATTERN = CREATE_QUERY_PATTERNS.TEST_RESULT.value
 
 
 def _extract_error_messages(log_text):
