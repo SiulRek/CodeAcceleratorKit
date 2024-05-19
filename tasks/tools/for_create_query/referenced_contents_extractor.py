@@ -4,14 +4,14 @@ from tasks.constants.configs import (
     MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES,
 )
 from tasks.constants.getters import get_environment_path, get_environment_path_of_tasks, get_temporary_script_path
-from tasks.helpers.for_create_query.get_error_text import (
+from tasks.tools.for_create_query.get_error_text import (
     get_error_text,
 )
-from tasks.helpers.for_create_query.get_fill_text import get_fill_text
-from tasks.helpers.for_create_query.get_query_template import (
+from tasks.tools.for_create_query.get_fill_text import get_fill_text
+from tasks.tools.for_create_query.get_query_template import (
     get_query_template,
 )
-from tasks.helpers.for_create_query.line_validation import (
+from tasks.tools.for_create_query.line_validation import (
     line_validation_for_begin_text,
     line_validation_for_end_text,
     line_validation_for_title,
@@ -29,18 +29,18 @@ from tasks.helpers.for_create_query.line_validation import (
     line_validation_for_query_template,
     line_validation_for_make_query,
 )
-from tasks.helpers.for_create_query.summarize_python_script import (
+from tasks.tools.for_create_query.summarize_python_script import (
     summarize_python_file,
 )
-from tasks.helpers.general.execute_pylint import execute_pylint
-from tasks.helpers.general.execute_python_script import (
-    execute_python_script,
+from tasks.tools.general.execute_pylint import execute_pylint
+from tasks.tools.general.execute_python_module import (
+    execute_python_module,
 )
-import tasks.helpers.general.execute_unittests_from_file as execute_unittests_from_file
-from tasks.helpers.general.extractor_base import ExtractorBase
-from tasks.helpers.general.find_dir import find_dir
-from tasks.helpers.general.find_file import find_file
-from tasks.helpers.general.generate_directory_tree import (
+import tasks.tools.general.execute_unittests_from_file as execute_unittests_from_file
+from tasks.tools.general.extractor_base import ExtractorBase
+from tasks.tools.general.find_dir import find_dir
+from tasks.tools.general.find_file import find_file
+from tasks.tools.general.generate_directory_tree import (
     generate_directory_tree,
 )
 
@@ -105,7 +105,7 @@ class ReferencedContentExtractor(ExtractorBase):
         if result := line_validation_for_run_python_script(line):
             script_path = find_file(result, self.root_dir, self.file_path)
             environment_path = get_environment_path(self.root_dir)
-            script_output = execute_python_script(script_path, environment_path)
+            script_output = execute_python_module(script_path, environment_path)
             default_title = "Python Script Output"
             return (REFERENCE_TYPES.RUN_PYTHON_SCRIPT, default_title, script_output)
         return None
@@ -124,8 +124,8 @@ class ReferencedContentExtractor(ExtractorBase):
             name, verbosity = result
             script_path = find_file(name, self.root_dir, self.file_path)
             temp_script_path = get_temporary_script_path(self.root_dir)
-            unittest_output = execute_python_script(
-                script=execute_unittests_from_file,
+            unittest_output = execute_python_module(
+                module=execute_unittests_from_file,
                 args=[script_path, str(verbosity)],
                 env_python_path=get_environment_path(self.root_dir),
                 cwd=self.root_dir,

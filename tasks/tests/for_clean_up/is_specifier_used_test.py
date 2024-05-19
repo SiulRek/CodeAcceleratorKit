@@ -1,6 +1,6 @@
 import unittest
 
-from tasks.helpers.for_cleanup.is_specifier_used import is_specifier_used
+from tasks.tools.for_cleanup.is_specifier_used import is_specifier_used
 
 
 class TestIsSpecifierUsed(unittest.TestCase):

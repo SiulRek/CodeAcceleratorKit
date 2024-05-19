@@ -4,8 +4,8 @@ from tasks.constants.getters import (
     get_checkpoint_directory,
     get_environment_path_of_tasks,
 )
-from tasks.helpers.for_cleanup.cleanup_file import cleanup_file
-from tasks.helpers.for_cleanup.referenced_contents_extractor import (
+from tasks.tools.for_cleanup.cleanup_file import cleanup_file
+from tasks.tools.for_cleanup.referenced_contents_extractor import (
     ReferencedContentExtractor,
 )
 from tasks.tasks.task_base import TaskBase

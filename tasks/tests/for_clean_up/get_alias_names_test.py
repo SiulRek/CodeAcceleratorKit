@@ -1,5 +1,5 @@
 import unittest
-from tasks.helpers.for_cleanup.split_import_statement import get_alias_names
+from tasks.tools.for_cleanup.split_import_statement import get_alias_names
 
 
 class TestGetAliasNames(unittest.TestCase):

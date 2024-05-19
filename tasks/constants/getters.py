@@ -1,7 +1,7 @@
 import os
 import json
 
-from tasks.helpers.general.retrieve_modules import retrieve_modules
+from tasks.tools.general.retrieve_modules import retrieve_modules
 
 FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 TASKS_CODE_ROOT = os.path.join(FILE_DIR, "..", "..")

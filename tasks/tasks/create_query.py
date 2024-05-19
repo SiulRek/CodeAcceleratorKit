@@ -33,9 +33,9 @@ import os
 
 from tasks.constants.configs import MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES
 from tasks.constants.getters import get_query_file_path, get_response_file_path
-from tasks.helpers.for_create_query.add_text_tags import add_text_tags
-from tasks.helpers.for_create_query.finalizer import Finalizer
-from tasks.helpers.for_create_query.referenced_contents_extractor import (
+from tasks.tools.for_create_query.add_text_tags import add_text_tags
+from tasks.tools.for_create_query.finalizer import Finalizer
+from tasks.tools.for_create_query.referenced_contents_extractor import (
     ReferencedContentExtractor,
 )
 from tasks.tasks.task_base import TaskBase

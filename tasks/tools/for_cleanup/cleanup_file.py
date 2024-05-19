@@ -4,28 +4,28 @@ from tasks.constants.getters import (
     get_checkpoint_directory,
     get_environment_path_of_tasks,
 )
-from tasks.helpers.for_cleanup.format_docstrings import (
+from tasks.tools.for_cleanup.format_docstrings import (
     format_docstrings,
 )
-from tasks.helpers.for_cleanup.rearrange_imports import (
+from tasks.tools.for_cleanup.rearrange_imports import (
     rearrange_imports,
 )
-from tasks.helpers.for_cleanup.refactore_exception import (
+from tasks.tools.for_cleanup.refactore_exception import (
     refactor_exception,
 )
-from tasks.helpers.for_cleanup.remove_line_comments import (
+from tasks.tools.for_cleanup.remove_line_comments import (
     remove_line_comments,
 )
-from tasks.helpers.for_cleanup.remove_trailing_parts import (
+from tasks.tools.for_cleanup.remove_trailing_parts import (
     remove_trailing_parts,
 )
-from tasks.helpers.for_cleanup.remove_unused_imports import (
+from tasks.tools.for_cleanup.remove_unused_imports import (
     remove_unused_imports,
 )
-from tasks.helpers.for_cleanup.run_black_formatting import (
+from tasks.tools.for_cleanup.run_black_formatting import (
     format_with_black,
 )
-from tasks.helpers.general.execute_pylint import execute_pylint
+from tasks.tools.general.execute_pylint import execute_pylint
 
 STRATEGIES = {
     "RT": (remove_trailing_parts, "Remove trailing parts", False),

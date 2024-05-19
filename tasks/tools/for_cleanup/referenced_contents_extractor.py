@@ -1,12 +1,12 @@
 from tasks.constants.configs import (
     CLEANUP_REFERENCE_TYPES as REFERENCE_TYPE,
 )
-from tasks.helpers.for_cleanup.line_validation import (
+from tasks.tools.for_cleanup.line_validation import (
     line_validation_for_select_only,
     line_validation_for_select_not,
     line_validation_for_checkpoints,
 )
-from tasks.helpers.general.extractor_base import ExtractorBase
+from tasks.tools.general.extractor_base import ExtractorBase
 
 
 class ReferencedContentExtractor(ExtractorBase):

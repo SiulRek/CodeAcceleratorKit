@@ -1,12 +1,12 @@
 import os
 
-from tasks.helpers.for_create_query.line_validation import (
+from tasks.tools.for_create_query.line_validation import (
     line_validation_for_checksum,
 )
-from tasks.helpers.general.extract_python_code import (
+from tasks.tools.general.extract_python_code import (
     extract_python_code,
 )
-from tasks.helpers.general.make_query import make_query
+from tasks.tools.general.make_query import make_query
 
 
 def write_to_file(file_path, content):

@@ -1,6 +1,6 @@
 from tasks.constants.configs import TEST_RESULTS_FILE
 from tasks.constants.configs import TEST_RESULT_PATTERN
-from tasks.helpers.general.find_file import find_file
+from tasks.tools.general.find_file import find_file
 
 
 def _extract_error_messages(log_text):
