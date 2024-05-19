@@ -129,7 +129,7 @@ def wrap_metadata_text(text, leading_spaces):
 
     updated_items = []
     for item in items:
-        prefix = "- " if not item.startswith("-") else ""
+        prefix = "- " if not item.strip().startswith("-") else ""
         item = prefix + item
         max_intend_length = len(intended_leading_spaces) + len(INTEND) ## Following line of item intend more than first
         item = wrap_text(item, width=LINE_WIDTH - max_intend_length)
