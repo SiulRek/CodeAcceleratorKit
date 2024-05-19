@@ -2,13 +2,13 @@ import json
 import os
 import warnings
 
-from tasks.constants.configs import REGISTERED_VARIABLES_JSON
-from tasks.variables.executor_variable import ExecutorVariable
-from tasks.variables.normalize_path import normalize_path
-import tasks.variables.variable_names as Vars
+from tasks.constants.configs import REGISTERED_EXECUTORS_JSON
+from tasks.handling.executor_context import ExecutorContext
+from tasks.handling.normalize_path import normalize_path
+import tasks.handling.context_attribute_names as Names
 
 class ExecutorHandler:
-    """Handles the registration and initialization of executor variables."""
+    """Handles the registration and initialization of new task executors."""
 
     @classmethod
     def _register_executor(cls, executor_root, room_dir, overwrite):
@@ -20,10 +20,10 @@ class ExecutorHandler:
             - room_dir (str): The room directory to register.
             - overwrite (bool): Whether to overwrite anexistingregistration.
         """
-        if not os.path.exists(REGISTERED_VARIABLES_JSON):
+        if not os.path.exists(REGISTERED_EXECUTORS_JSON):
                 registered_variables = {}
         else:
-            with open(REGISTERED_VARIABLES_JSON, "r", encoding="utf-8") as f:
+            with open(REGISTERED_EXECUTORS_JSON, "r", encoding="utf-8") as f:
                 registered_variables = json.load(f)
         if executor_root in registered_variables and not overwrite:
             msg = f"Task executor root {executor_root} is already registered."
@@ -31,7 +31,7 @@ class ExecutorHandler:
             raise ValueError(msg)
         os.makedirs(room_dir, exist_ok=True)
         registered_variables[executor_root] = room_dir
-        with open(REGISTERED_VARIABLES_JSON, "w", encoding="utf-8") as f:
+        with open(REGISTERED_EXECUTORS_JSON, "w", encoding="utf-8") as f:
             json.dump(registered_variables, f, indent=4)
 
     @classmethod
@@ -48,7 +48,7 @@ class ExecutorHandler:
             - dict: A dictionary of initialized attributes.
         """
         attributes = {}
-        for key in Vars.VariableNames.__members__.keys():
+        for key in Names.ContextAttrNames.__members__.keys():
             init_func = getattr(cls, f"_initialize_{key}")
             attributes[key] = init_func(executor_root, room_dir)
         return attributes
@@ -56,7 +56,7 @@ class ExecutorHandler:
     @classmethod
     def register_executor(cls, executor_root, room_dir="local/task_room", overwrite=False, create_dirs=True):
         """
-        Registers an executor: records in registered_variables.json, initializes executor 
+        Registers an executor: records in registered_executors.json, initializes executor 
         attributes creates directories, and saves the attributes to the variable JSON file. 
         Returns the executor variable of the registration.
 
@@ -75,7 +75,7 @@ class ExecutorHandler:
             room_dir = os.path.join(executor_root, room_dir)
         cls._register_executor(executor_root, room_dir, overwrite=overwrite)
         attributes = cls._init_executor_attributes(executor_root, room_dir)
-        variable = ExecutorVariable(executor_root, load_attributes_from_json=False)
+        variable = ExecutorContext(executor_root, load_attributes_from_json=False)
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()
         if create_dirs:
@@ -91,7 +91,7 @@ class ExecutorHandler:
             - variable (ExecutorVariable): The executor variable.
         """
         created_dirs = []
-        for key in Vars.VariableNames.__members__.keys():
+        for key in Names.ContextAttrNames.__members__.keys():
             if key.endswith("_DIR"):
                 path = getattr(variable, key)
                 os.makedirs(path, exist_ok=True)

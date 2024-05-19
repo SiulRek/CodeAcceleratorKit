@@ -1,19 +1,19 @@
-import os
 import json
+import os
 
 import tasks.constants.configs as configs
-from tasks.variables.normalize_path import normalize_path
-import tasks.variables.variable_names as Vars
+from tasks.handling.normalize_path import normalize_path
+import tasks.handling.context_attribute_names as Names
 
 
-class ExecutorVariable:
+class ExecutorContext:
     """
-    Handles executor variables, including loading and saving attributes.
+    Handles executor context, including loading and saving attributes.
 
     Args:
         - executor_root (str): The root directory of the executor.
-        - load_attributes_from_json (bool): Whether to load attributes
-            fromJSON at initialization.
+        - load_attributes_from_json (bool): Whether to load attributes from
+            JSON at initialization.
     """
 
     def __init__(self, executor_root, load_attributes_from_json=True):
@@ -21,7 +21,7 @@ class ExecutorVariable:
         self._room_dir = self._get_room_dir(executor_root)
         self._variable_json = os.path.join(self.room_dir, configs.VARIABLE_JSON_NAME)
         if load_attributes_from_json:
-            self.load_attributes_from_json()
+            self.load_attributes()
 
     @property
     def executor_root(self):
@@ -42,7 +42,7 @@ class ExecutorVariable:
             - str: The room directory path.
         """
         return self._room_dir
-    
+
     @property
     def variable_json(self):
         """
@@ -55,16 +55,19 @@ class ExecutorVariable:
 
     def _get_room_dir(self, executor_root):
         """
-        Determines the room directory based on the registration data of
-        executor root.
+        Determines the room directory based on the registration data of executor
+        root.
 
         Args:
             - executor_root (str): The root directory of the executor.
 
         Returns:
             - str: The room directory path.
+
+        Raises:
+            - ValueError: If the executor root is not registered.
         """
-        with open(configs.REGISTERED_VARIABLES_JSON, "r", encoding="utf-8") as f:
+        with open(configs.REGISTERED_EXECUTORS_JSON, "r", encoding="utf-8") as f:
             registered_variables = json.load(f)
         if executor_root not in registered_variables:
             msg = f"Executor root {executor_root} is not registered."
@@ -76,23 +79,27 @@ class ExecutorVariable:
         Loads attributes from a dictionary.
 
         Args:
-            - attributes_dict (dict): A dictionary containing theattributes
+            - attributes_dict (dict): A dictionary containing the attributes
                 to load.
 
         Raises:
             - KeyError: If a required key is missing.
         """
-        for key in Vars.VariableNames.__members__.keys():
+        for key in Names.ContextAttrNames.__members__.keys():
             if key not in attributes_dict:
-                msg = f"Missing  attribute {key} in attributes dictionary."
+                msg = f"Missing attribute {key} in attributes dictionary."
                 raise KeyError(msg)
             setattr(self, key, attributes_dict[key])
 
-    def load_attributes_from_json(self):
-        """Loads attributes from the Variable JSON file."""
+    def load_attributes(self):
+        """
+        Loads attributes from the Variable JSON file.
+
+        Raises:
+            - FileNotFoundError: If the variable JSON file does not exist.
+        """
         if not os.path.exists(self.variable_json):
-            msg = f"Variable JSON file {self.variable_json} does not exist or"
-            msg += " has been deleted."
+            msg = f"Variable JSON file {self.variable_json} does not exist or has been deleted."
             raise FileNotFoundError(msg)
         with open(self.variable_json, "r", encoding="utf-8") as f:
             attributes_dict = json.load(f)
@@ -106,7 +113,7 @@ class ExecutorVariable:
             - AttributeError: If a required attribute is missing.
         """
         attributes_dict = {}
-        for key in Vars.VariableNames.__members__.keys():
+        for key in Names.ContextAttrNames.__members__.keys():
             if not hasattr(self, key):
                 msg = f"Missing attribute {key}"
                 raise AttributeError(msg)

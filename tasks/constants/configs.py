@@ -5,7 +5,7 @@ import re
 # ----------------- General Constants -----------------
 TEST_RESULTS_FILE = "test_results.log"
 FILE_TAG = "File"
-REGISTERED_VARIABLES_JSON = os.path.join("tasks", "constants", "registered_variables.json")
+REGISTERED_EXECUTORS_JSON = os.path.join("tasks", "constants", "registered_executors.json")
 VARIABLE_JSON_NAME = "variable.json"
 
 
