@@ -35,7 +35,7 @@ class ExecutorHandler:
             json.dump(registered_variables, f, indent=4)
 
     @classmethod
-    def _init_executor_attributes(cls, executor_root, storage_dir):
+    def _init_executor_attributes(cls, executor_root, storage_dir, python_env, cwd):
         """
         Initializes attributes for the executor based on its root and storage
         directory.
@@ -43,11 +43,26 @@ class ExecutorHandler:
         Args:
             - executor_root (str): The root directory of the executor.
             - storage_dir (str): The storage directory.
+            - python_env (str): The Python environment to use.
+            - cwd (str): The current working directory of the executor.
 
         Returns:
             - dict: A dictionary of initialized attributes.
         """
         attributes = {}
+
+        # Add cwd and python_env attributes
+        python_env = normalize_path(python_env)
+        if cwd is None:
+            cwd = executor_root
+        if not os.path.exists(cwd):
+            raise NotADirectoryError(f"Current working directory {cwd} does not exist.")
+        if not os.path.exists(python_env):
+            raise NotADirectoryError(f"Python environment {python_env} does not exist.")
+        attributes[Names.ContextAttrNames.cwd.value] = normalize_path(cwd)
+        attributes[Names.ContextAttrNames.python_env.value] = python_env
+
+        # Add other attributes
         for key in Names.ContextAttrNames.__members__.keys():
             init_func = getattr(cls, f"_initialize_{key}")
             attributes[key] = init_func(executor_root, storage_dir)
@@ -87,7 +102,7 @@ class ExecutorHandler:
                 warnings.warn(f"Unknown directory {unknown_dir} from task storage.")
                 
     @classmethod
-    def register_executor(cls, executor_root, storage_dir="local/task_storage", overwrite=False, create_dirs=True):
+    def register_executor(cls, executor_root, python_env, storage_dir="local/task_storage", overwrite=False, create_dirs=True, cwd=None):
         """
         Registers an executor: records in registered_executors.json, initializes executor 
         attributes creates directories, and saves the attributes to the variable JSON file. 
@@ -95,9 +110,11 @@ class ExecutorHandler:
 
         Args:
             - executor_root (str): The root directory of the executor.
+            - python_env (str): The Python environment to use.
             - storage_dir (str, optional): The storage directory. Defaults to "local/task_storage".
             - overwrite (bool, optional): Whether to overwrite an existing
             - create_dirs (bool, optional): Whether to create directories for the executor.
+            - cwd (str, optional): The current working directory of the executor.
 
         Returns:
             - ExecutorVariable: The executor variable generated from the registration.
@@ -107,7 +124,7 @@ class ExecutorHandler:
         if not storage_dir.startswith(executor_root):
             storage_dir = os.path.join(executor_root, storage_dir)
         cls._register_executor(executor_root, storage_dir, overwrite=overwrite)
-        attributes = cls._init_executor_attributes(executor_root, storage_dir)
+        attributes = cls._init_executor_attributes(executor_root, storage_dir, python_env, cwd)
         variable = ExecutorContext(executor_root, load_attributes_from_json=False)
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()
