@@ -18,8 +18,8 @@ class ExecutorContext:
 
     def __init__(self, executor_root, load_attributes_from_json=True):
         self._executor_root = normalize_path(executor_root)
-        self._room_dir = self._get_room_dir(executor_root)
-        self._variable_json = os.path.join(self.room_dir, configs.VARIABLE_JSON_NAME)
+        self._storage_dir = self._get_storage_dir(executor_root)
+        self._variable_json = os.path.join(self.storage_dir, configs.VARIABLE_JSON_NAME)
         if load_attributes_from_json:
             self.load_attributes()
 
@@ -34,14 +34,14 @@ class ExecutorContext:
         return self._executor_root
 
     @property
-    def room_dir(self):
+    def storage_dir(self):
         """
-        Returns the room directory path.
+        Returns the storage directory path.
 
         Returns:
-            - str: The room directory path.
+            - str: The storage directory path.
         """
-        return self._room_dir
+        return self._storage_dir
 
     @property
     def variable_json(self):
@@ -53,16 +53,16 @@ class ExecutorContext:
         """
         return self._variable_json
 
-    def _get_room_dir(self, executor_root):
+    def _get_storage_dir(self, executor_root):
         """
-        Determines the room directory based on the registration data of executor
+        Determines the storage directory based on the registration data of executor
         root.
 
         Args:
             - executor_root (str): The root directory of the executor.
 
         Returns:
-            - str: The room directory path.
+            - str: The storage directory path.
 
         Raises:
             - ValueError: If the executor root is not registered.

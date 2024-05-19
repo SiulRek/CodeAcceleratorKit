@@ -22,8 +22,8 @@ class TestExecutorHandler(unittest.TestCase):
         self.executor_root = normalize_path(
             os.path.join(self.temp_dir.name, "executor_root")
         )
-        self.room_subfolder = "task_room"
-        self.room_dir = os.path.join(self.executor_root, self.room_subfolder)
+        self.storage_subfolder = "task_storage"
+        self.storage_dir = os.path.join(self.executor_root, self.storage_subfolder)
         self.json_mock = normalize_path(
             os.path.join(self.temp_dir.name, "registered_variables.json")
         )
@@ -54,14 +54,14 @@ class TestExecutorHandler(unittest.TestCase):
         Handler._initialize_VAR1_DIR = lambda x, y: "value1"
         Handler._initialize_VAR2_DIR = lambda x, y: "value2"
         executor_context = Handler.register_executor(
-            self.executor_root, self.room_subfolder, create_dirs=False
+            self.executor_root, self.storage_subfolder, create_dirs=False
         )
 
         with open(self.json_mock, "r", encoding="utf-8") as f:
             registered_executors = json.load(f)
 
         self.assertIn(self.executor_root, registered_executors)
-        self.assertEqual(registered_executors[self.executor_root], self.room_dir)
+        self.assertEqual(registered_executors[self.executor_root], self.storage_dir)
 
         self.assertEqual(executor_context.VAR1_DIR, "value1")
         self.assertEqual(executor_context.VAR2_DIR, "value2")
@@ -70,7 +70,7 @@ class TestExecutorHandler(unittest.TestCase):
         Handler._initialize_VAR1_DIR = lambda x, y: "value1"
         Handler._initialize_VAR2_DIR = lambda x, y: "value2"
         attributes = Handler._init_executor_attributes(
-            self.executor_root, self.room_subfolder
+            self.executor_root, self.storage_subfolder
         )
 
         self.assertIn("VAR1_DIR", attributes)
@@ -78,13 +78,13 @@ class TestExecutorHandler(unittest.TestCase):
 
     def test_create_directories(self):
         Handler._initialize_VAR1_DIR = lambda x, y: os.path.join(
-            self.room_dir, "value1"
+            self.storage_dir, "value1"
         )
         Handler._initialize_VAR2_DIR = lambda x, y: os.path.join(
-            self.room_dir, "value2"
+            self.storage_dir, "value2"
         )
         executor_context = Handler.register_executor(
-            self.executor_root, self.room_subfolder, overwrite=True, create_dirs=True
+            self.executor_root, self.storage_subfolder, overwrite=True, create_dirs=True
         )
 
         self.assertTrue(os.path.exists(executor_context.VAR1_DIR))
@@ -94,21 +94,21 @@ class TestExecutorHandler(unittest.TestCase):
         Handler._initialize_VAR1_DIR = lambda x, y: "value1"
         Handler._initialize_VAR2_DIR = lambda x, y: "value2"
         Handler.register_executor(
-            self.executor_root, self.room_subfolder, overwrite=False, create_dirs=False
+            self.executor_root, self.storage_subfolder, overwrite=False, create_dirs=False
         )
 
         with self.assertRaises(ValueError):
-            Handler.register_executor(self.executor_root, self.room_subfolder, overwrite=False)
+            Handler.register_executor(self.executor_root, self.storage_subfolder, overwrite=False)
 
         Handler.register_executor(
-            self.executor_root, self.room_subfolder, overwrite=True, create_dirs=False
+            self.executor_root, self.storage_subfolder, overwrite=True, create_dirs=False
         )
 
         with open(self.json_mock, "r", encoding="utf-8") as f:
             registered_executors = json.load(f)
 
         self.assertIn(self.executor_root, registered_executors)
-        self.assertEqual(registered_executors[self.executor_root], self.room_dir)
+        self.assertEqual(registered_executors[self.executor_root], self.storage_dir)
 
 
 if __name__ == "__main__":

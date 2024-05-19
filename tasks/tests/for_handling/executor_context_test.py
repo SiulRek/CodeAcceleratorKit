@@ -22,7 +22,7 @@ class TestExecutorVariable(unittest.TestCase):
         self.json_mock = normalize_path(os.path.join(self.temp_dir.name, "registered_variables.json"))
 
         registered_executors = {
-            self.executor_root: normalize_path(os.path.join(self.temp_dir.name, "task_room"))
+            self.executor_root: normalize_path(os.path.join(self.temp_dir.name, "task_storage"))
         }
 
         with open(self.json_mock, "w", encoding="utf-8") as f:
@@ -40,8 +40,8 @@ class TestExecutorVariable(unittest.TestCase):
             executor_context = ExecutorContext(
                 self.executor_root, load_attributes_from_json=False
             )
-            room_dir = os.path.dirname(executor_context.variable_json)
-            os.makedirs(room_dir, exist_ok=True)
+            storage_dir = os.path.dirname(executor_context.variable_json)
+            os.makedirs(storage_dir, exist_ok=True)
             with open(executor_context.variable_json, "w", encoding="utf-8") as f:
                 json.dump({"VAR1": "value1", "VAR2": "value2"}, f, indent=4)
             executor_context.load_attributes()
@@ -58,8 +58,8 @@ class TestExecutorVariable(unittest.TestCase):
             variable_json = ExecutorContext(
                 self.executor_root, load_attributes_from_json=False
             ).variable_json
-            room_dir = os.path.dirname(variable_json)
-            os.makedirs(room_dir, exist_ok=True)
+            storage_dir = os.path.dirname(variable_json)
+            os.makedirs(storage_dir, exist_ok=True)
             with open(variable_json, "w", encoding="utf-8") as f:
                 json.dump({"VAR1": "value1", "VAR2": "value2"}, f, indent=4)
             executor_context = ExecutorContext(
@@ -94,8 +94,8 @@ class TestExecutorVariable(unittest.TestCase):
             )
             executor_context.VAR1 = "value1"
             executor_context.VAR2 = "value2"
-            room_dir = os.path.dirname(executor_context.variable_json)
-            os.makedirs(room_dir, exist_ok=True)
+            storage_dir = os.path.dirname(executor_context.variable_json)
+            os.makedirs(storage_dir, exist_ok=True)
             executor_context.save_attributes()
 
             with open(executor_context.variable_json, "r", encoding="utf-8") as f:

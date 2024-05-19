@@ -14,26 +14,26 @@ def get_task_cache_directory(name):
 
 
 def get_query_file_path(root_dir):
-    dir = os.path.join(root_dir, "local", "tasks_room", "outputs")
+    dir = os.path.join(root_dir, "local", "tasks_storage", "outputs")
     os.makedirs(dir, exist_ok=True)
     path = os.path.join(dir, "query.txt")
     return os.path.normpath(path)
 
 def get_response_file_path(root_dir):
-    dir = os.path.join(root_dir, "local", "tasks_room", "outputs")
+    dir = os.path.join(root_dir, "local", "tasks_storage", "outputs")
     os.makedirs(dir, exist_ok=True)
     path = os.path.join(dir, "response_file.txt")
     return os.path.normpath(path)
 
 
 def get_fill_text_directory(root_dir):
-    dir = os.path.join(root_dir, "local", "tasks_room", "data", "fill_texts")
+    dir = os.path.join(root_dir, "local", "tasks_storage", "data", "fill_texts")
     os.makedirs(dir, exist_ok=True)
     return os.path.normpath(dir)
 
 
 def get_query_templates_directory(root_dir):
-    dir = os.path.join(root_dir, "local", "tasks_room", "data", "query_templates")
+    dir = os.path.join(root_dir, "local", "tasks_storage", "data", "query_templates")
     os.makedirs(dir, exist_ok=True)
     return os.path.normpath(dir)
 
@@ -44,14 +44,14 @@ def get_temporary_script_path(root_dir):
     else:
         get_temporary_script_path.counter += 1
     name = f"script_{get_temporary_script_path.counter}.py"
-    dir = os.path.join(root_dir, "local", "tasks_room", "temp")
+    dir = os.path.join(root_dir, "local", "tasks_storage", "temp")
     os.makedirs(dir, exist_ok=True)
     path = os.path.join(dir, name)
     return os.path.normpath(path)
 
 
 def get_output_directory(root_dir):
-    dir = os.path.join(root_dir, "local", "tasks_room", "outputs")
+    dir = os.path.join(root_dir, "local", "tasks_storage", "outputs")
     os.makedirs(dir, exist_ok=True)
     return os.path.normpath(dir)
 
@@ -76,7 +76,7 @@ def get_environment_path_of_tasks():
 
 def get_modules_info(root_dir):
     path = os.path.join(
-        root_dir, "local", "tasks_room", "data", "modules_info.json"
+        root_dir, "local", "tasks_storage", "data", "modules_info.json"
     )
     if not os.path.exists(path):
         retrieve_modules(path)
