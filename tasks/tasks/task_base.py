@@ -1,17 +1,18 @@
-import sys
+from abc import ABC, abstractmethod
 import os
+import sys
 
 from tasks.constants.getters import get_task_cache_directory
 
 
-class TaskBase:
+class TaskBase(ABC):
     """
     Base class for task execution, providing setup and common utilities for all
     tasks.
 
     Attributes:
-        - NAME (str): A class-level attribute that identifies the name of
-            the task.
+        - NAME (str): A class-level attribute that identifies the name
+            ofthetask.
     """
 
     NAME = None
@@ -21,10 +22,10 @@ class TaskBase:
         Initializes the task with default root and additional arguments.
 
         Args:
-            - default_root (str): The default root directory for task
-                execution.
-            - default_args (tuple): Additional default arguments required by
-                the task.
+            - default_root (str): The default root directory
+                fortaskexecution.
+            - default_args (tuple): Additional default arguments
+                requiredbythe task.
         """
         self.task_executor_root = None
         self.additional_args = None
@@ -38,10 +39,10 @@ class TaskBase:
         arguments.
 
         Args:
-            - default_root (str): The default root directory if no command
-                line argument is provided.
-            - default_args (tuple): Default arguments to use if no
-                additional command line arguments are provided.
+            - default_root (str): The default root directory if
+                nocommandline argument is provided.
+            - default_args (tuple): Default arguments to use if
+                noadditionalcommand line arguments are provided.
         """
         if len(sys.argv) < 2:
             self.task_executor_root = default_root
@@ -55,15 +56,12 @@ class TaskBase:
         """Placeholder for task-specific setup. Can be extended by subclasses."""
         self.cache_dir = get_task_cache_directory(self.NAME)
 
+    @abstractmethod
     def execute(self):
-        """Executes the task's main functionality. Must be implemented by
-        subclasses."""
-        msg = "Subclasses should implement this method."
-        raise NotImplementedError(msg)
+        """Executes the task's main functionality. Must be implementedbysubclasses."""
 
     def teardown(self):
-        """Placeholder for task-specific teardown. can be extended by
-        subclasses."""
+        """Placeholder for task-specific teardown. can be extended bysubclasses."""
         if self.cache_dir and os.path.exists(self.cache_dir):
             os.rmdir(self.cache_dir)
 
@@ -71,7 +69,7 @@ class TaskBase:
         """Prints the start message for task execution."""
         msg = f"{'='*55} TASK START {'='*53}\n"
         msg += f"Runned Task: {self.NAME}\n{self.line_sep}"
-        msg += "Task Ouputs:\n"
+        msg += "Task Outputs:\n"
         print(msg)
 
     def _print_execution_end(self, additional_msg=""):
@@ -79,8 +77,8 @@ class TaskBase:
         Prints the end message for task execution, indicating completion.
 
         Args:
-            - additional_msg (str): Optional additional message to include
-                in the completion printout.
+            - additional_msg (str): Optional additional message to
+                includeinthe completion printout.
         """
         msg = self.line_sep
         msg += "TASK EXECUTED SUCCESSFULLY\n"
