@@ -2,7 +2,7 @@ import os
 import csv
 import time, datetime
 
-import pandas as pd
+import re, json
 import shutil
 
 class BackupHandler:
@@ -223,10 +223,8 @@ class BackupHandler:
 
 # Example Usage:
 if __name__ == "__main__":
-    backup_dir = r'C:/MEIN_PLATZ/Git/utility_box/backup_mechanism/test_storage'
-    max_backups = 2  # Adjust this value as needed
+    backup_dir = 'path/to/backup/directory'
+    max_backups = 10
     backup_handler = BackupHandler(backup_dir, max_backups)
-    backup_handler.store_backup(r'C:/Users/43664/Downloads/2023-03-03_Lecture_PDT_temporary.pdf', 'Backup comment')
-    backup_handler.store_backup(r'C:/Users/43664/Downloads/2023-03-03_Lecture_PDT_temporary.pdf', 'Backup comment')
-    backup_handler.store_backup(r'C:/Users/43664/Downloads/2023-03-03_Lecture_PDT_temporary.pdf', 'Backup comment')
+    backup_handler.store_backup('file_path.txt', 'Backup comment')
     # Perform other backup operations as needed.

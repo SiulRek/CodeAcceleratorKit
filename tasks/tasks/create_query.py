@@ -32,7 +32,7 @@ TODO when adding new reference:
 import os
 
 from tasks.constants.configs import MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES
-from tasks.constants.getters import get_response_file_path, get_response_file_path
+from tasks.constants.getters import get_query_file_path, get_response_file_path
 from tasks.helpers.for_create_query.add_text_tags import add_text_tags
 from tasks.helpers.for_create_query.finalizer import Finalizer
 from tasks.helpers.for_create_query.referenced_contents_extractor import (
@@ -120,7 +120,7 @@ class CreateQuery(TaskBase):
     def setup(self):
         super().setup()
         self.file_path = self.additional_args[0]
-        self.query_path = get_response_file_path(self.task_executor_root)
+        self.query_path = get_query_file_path(self.task_executor_root)
         self.response_path = get_response_file_path(self.task_executor_root)
 
     def execute(self):
@@ -131,6 +131,6 @@ class CreateQuery(TaskBase):
 if __name__ == "__main__":
     default_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
     default_file_path = os.path.join(
-        default_root, "tasks", "tests", "create_query_test.py"
+        default_root, "tasks", "tests", "for_tasks", "create_query_test.py"
     )
     CreateQuery(default_root, default_file_path).main()

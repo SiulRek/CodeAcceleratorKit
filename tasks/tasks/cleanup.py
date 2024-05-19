@@ -57,6 +57,7 @@ if __name__ == "__main__":
         default_root,
         "tasks",
         "tests",
+        "for_tasks",
         "cleanup_test.py",
     )
     task = CleanupTask(default_root, default_file_path)
