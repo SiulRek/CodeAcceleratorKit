@@ -56,7 +56,7 @@ def process_import_statements(import_statements, modules_info_getter=get_modules
     Returns:
         - list: A list of import lines
     """
-    modules_info = modules_info_getter()
+    modules_info = modules_info_getter(r"/home/krakerlu/github/CodeAcceleratorKit")
     standard_library = modules_info["standard_library"]
     third_party = modules_info["third_party"]
     local = modules_info["local"]
