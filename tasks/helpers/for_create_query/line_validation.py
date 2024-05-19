@@ -24,7 +24,7 @@ SUMMARIZE_PYTHON_SCRIPT_PATTERN = re.compile(
     rf"{TAGS.SUMMARIZE_PYTHON_SCRIPT.value}\s(\S+\.py|{FILE_TAG})"
 )
 SUMMARIZE_FOLDER_PATTERN = re.compile(rf"{TAGS.SUMMARIZE_FOLDER.value}\s(\S+)")
-QUERY_TEMPLATE_PATTERN = re.compile(rf"{TAGS.QUERY_TEMPLATE_START.value}(.*?)_{TAGS.QUERY_TEMPLATE_END.value}")
+QUERY_TEMPLATE_PATTERN = re.compile(rf"{TAGS.QUERY_TEMPLATE_START.value}(.*?){TAGS.QUERY_TEMPLATE_END.value}")
 CHECKSUM_PATTERN = re.compile(rf"{TAGS.CHECKSUM.value}\s(\S+)")
 
 BEGIN_TAG = TAGS.BEGIN.value
@@ -34,7 +34,6 @@ COMMENT_TAG = TAGS.COMMENT.value
 CURRENT_FILE_TAG = TAGS.CURRENT_FILE.value
 ERROR_TAG = TAGS.ERROR.value
 MAKE_QUERY_TAG = TAGS.MAKE_QUERY.value
-
 
 def line_validation_for_begin_text(line):
     """Validate if the line is a start tag."""
