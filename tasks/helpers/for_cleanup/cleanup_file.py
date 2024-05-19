@@ -31,7 +31,7 @@ STRATEGIES = {
     "RT": (remove_trailing_parts, "Remove trailing parts", False),
     "RL": (remove_line_comments, "Remove line comments", False),
     "RE": (refactor_exception, "Refactor exception", False),
-    # "RI": (rearrange_imports, "Rearrange imports", False),
+    "RI": (rearrange_imports, "Rearrange imports", False),
     "RU": (remove_unused_imports, "Remove unused imports", False),
     "FM": (format_docstrings, "Format docstrings", False),
     "BF": (format_with_black, "Run Black formatting", True),
