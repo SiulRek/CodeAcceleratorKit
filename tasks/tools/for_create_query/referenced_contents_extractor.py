@@ -37,7 +37,7 @@ from tasks.tools.general.execute_python_module import (
     execute_python_module,
 )
 import tasks.tools.general.execute_unittests_from_file as execute_unittests_from_file
-from tasks.tools.general.extractor_base import ExtractorBase
+from tasks.tools.for_all_tasks.extractor_base import ExtractorBase
 from tasks.tools.general.find_dir import find_dir
 from tasks.tools.general.find_file import find_file
 from tasks.tools.general.generate_directory_tree import (

@@ -6,7 +6,7 @@ from tasks.tools.for_cleanup.line_validation import (
     line_validation_for_select_not,
     line_validation_for_checkpoints,
 )
-from tasks.tools.general.extractor_base import ExtractorBase
+from tasks.tools.for_all_tasks.extractor_base import ExtractorBase
 
 
 class ReferencedContentExtractor(ExtractorBase):
