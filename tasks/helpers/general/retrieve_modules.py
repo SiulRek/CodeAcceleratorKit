@@ -5,7 +5,8 @@ import stdlib_list
 
 package_to_import_name = {
     "Pillow": "PIL",
-    # 'scikit-learn': 'sklearn',
+    'scikit-learn': 'sklearn',
+    "_warnings": "warnings",
     "PyYAML": "yaml",
     "python-dateutil": "dateutil",
     # Add other packages where needed.
