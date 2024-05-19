@@ -79,7 +79,7 @@ class ExecutorHandler:
         """
         created_dirs = []
         for key in Names.ContextAttrNames.__members__.keys():
-            if key.endswith("_DIR"):
+            if key.endswith("_dir"):
                 path = getattr(context, key)
                 os.makedirs(path, exist_ok=True)
                 created_dirs.append(path)

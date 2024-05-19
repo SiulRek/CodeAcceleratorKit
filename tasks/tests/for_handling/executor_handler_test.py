@@ -10,8 +10,8 @@ from tasks.handling.executor_handler import ExecutorHandler as Handler
 from tasks.handling.normalize_path import normalize_path
 
 class AttrNamesMock(Enum):
-    VAR1_DIR = "value1"
-    VAR2_DIR = "value2"
+    var1_dir = "value1"
+    var2_dir = "value2"
     cwd = "cwd"
     python_env = "python_env"
 
@@ -46,8 +46,8 @@ class TestExecutorHandler(unittest.TestCase):
         self.addCleanup(patcher3.stop)
         self.mock_variable_names = patcher3.start()
 
-        Handler._initialize_VAR1_DIR = lambda x, y: "value1"
-        Handler._initialize_VAR2_DIR = lambda x, y: "value2"
+        Handler._initialize_var1_dir = lambda x, y: "value1"
+        Handler._initialize_var2_dir = lambda x, y: "value2"
         Handler._initialize_cwd = lambda x, y: self.executor_root
         Handler._initialize_python_env = lambda x, y: os.path.join(self.executor_root, "python_env")
 
@@ -72,8 +72,8 @@ class TestExecutorHandler(unittest.TestCase):
         self.assertIn(self.executor_root, registered_executors)
         self.assertEqual(registered_executors[self.executor_root], self.storage_dir)
 
-        self.assertEqual(executor_context.VAR1_DIR, "value1")
-        self.assertEqual(executor_context.VAR2_DIR, "value2")
+        self.assertEqual(executor_context.var1_dir, "value1")
+        self.assertEqual(executor_context.var2_dir, "value2")
         self.assertEqual(executor_context.cwd, self.executor_root)
         self.assertEqual(executor_context.python_env, normalize_path(python_env_path))
 
@@ -85,16 +85,16 @@ class TestExecutorHandler(unittest.TestCase):
             self.executor_root, self.storage_subfolder, python_env_path, self.executor_root
         )
 
-        self.assertIn("VAR1_DIR", attributes)
-        self.assertIn("VAR2_DIR", attributes)
+        self.assertIn("var1_dir", attributes)
+        self.assertIn("var2_dir", attributes)
         self.assertEqual(attributes["cwd"], self.executor_root)
         self.assertEqual(attributes["python_env"], normalize_path(python_env_path))
 
     def test_create_directories(self):
-        Handler._initialize_VAR1_DIR = lambda x, y: os.path.join(
+        Handler._initialize_var1_dir = lambda x, y: os.path.join(
             self.storage_dir, "value1"
         )
-        Handler._initialize_VAR2_DIR = lambda x, y: os.path.join(
+        Handler._initialize_var2_dir = lambda x, y: os.path.join(
             self.storage_dir, "value2"
         )
         python_env_path = os.path.join(self.executor_root, "python_env")
@@ -108,8 +108,8 @@ class TestExecutorHandler(unittest.TestCase):
             create_dirs=True,
         )
 
-        self.assertTrue(os.path.exists(executor_context.VAR1_DIR))
-        self.assertTrue(os.path.exists(executor_context.VAR2_DIR))
+        self.assertTrue(os.path.exists(executor_context.var1_dir))
+        self.assertTrue(os.path.exists(executor_context.var2_dir))
         self.assertTrue(os.path.exists(executor_context.cwd))
         self.assertTrue(os.path.exists(executor_context.python_env))
 
@@ -161,8 +161,8 @@ class TestExecutorHandler(unittest.TestCase):
         self.assertEqual(logged_in_context.executor_root, self.executor_root)
         self.assertEqual(logged_in_context.storage_dir, self.storage_dir)
         self.assertEqual(logged_in_context.variable_json, os.path.join(self.storage_dir, "variable.json"))
-        self.assertEqual(logged_in_context.VAR1_DIR, "value1")
-        self.assertEqual(logged_in_context.VAR2_DIR, "value2")
+        self.assertEqual(logged_in_context.var1_dir, "value1")
+        self.assertEqual(logged_in_context.var2_dir, "value2")
         self.assertEqual(logged_in_context.cwd, self.executor_root)
         self.assertEqual(logged_in_context.python_env, normalize_path(python_env_path))
 
