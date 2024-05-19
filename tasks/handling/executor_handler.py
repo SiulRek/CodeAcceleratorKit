@@ -54,6 +54,39 @@ class ExecutorHandler:
         return attributes
 
     @classmethod
+    def sync_directories(cls, context):
+        """
+        Synchronizes the directories of the executor context with the directories
+        in the task storage.
+
+        Args:
+            - context (ExecutorContext): The executor context to synchronize.
+        """
+        created_dirs = []
+        for key in Names.ContextAttrNames.__members__.keys():
+            if key.endswith("_DIR"):
+                path = getattr(context, key)
+                os.makedirs(path, exist_ok=True)
+                created_dirs.append(path)
+        storage_dir = context.storage_dir
+        dirs_in_storage = os.listdir(storage_dir)
+        dirs_in_storage = [
+            os.path.join(storage_dir, dir_) for dir_ in dirs_in_storage if os.path.isdir(dir_)
+        ]
+        dirs_in_storage = [normalize_path(dir_) for dir_ in dirs_in_storage]
+        unknown_dirs = []
+        for dir_in_storage in dirs_in_storage:
+            for created_dir in created_dirs:
+                if dir_in_storage in created_dir:
+                    break
+            else:
+                unknown_dirs.append(dir_in_storage)
+
+        for unknown_dir in unknown_dirs:
+            for unknown_dir in unknown_dirs:
+                warnings.warn(f"Unknown directory {unknown_dir} from task storage.")
+                
+    @classmethod
     def register_executor(cls, executor_root, storage_dir="local/task_storage", overwrite=False, create_dirs=True):
         """
         Registers an executor: records in registered_executors.json, initializes executor 
@@ -79,38 +112,24 @@ class ExecutorHandler:
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()
         if create_dirs:
-            cls.create_directories(variable)
+            cls.sync_directories(variable)
         return variable
 
     @classmethod
-    def create_directories(cls, variable):
+    def login_executor(cls, executor_root, update_dirs=True):
         """
-        Creates directories for the executor.
+        Logs in to an executor: loads the executor attributes from the variable JSON file,
+        creates directories, and returns the executor context.
 
         Args:
-            - variable (ExecutorVariable): The executor variable.
+            - executor_root (str): The root directory of the executor.
+            - update_dirs (bool, optional): Whether to update the directories of the executor context.
+        
+        Returns:
+            
         """
-        created_dirs = []
-        for key in Names.ContextAttrNames.__members__.keys():
-            if key.endswith("_DIR"):
-                path = getattr(variable, key)
-                os.makedirs(path, exist_ok=True)
-                created_dirs.append(path)
-        storage_dir = variable.storage_dir
-        dirs_in_storage = os.listdir(storage_dir)
-        dirs_in_storage = [
-            os.path.join(storage_dir, dir_) for dir_ in dirs_in_storage if os.path.isdir(dir_)
-        ]
-        dirs_in_storage = [normalize_path(dir_) for dir_ in dirs_in_storage]
-        unknown_dirs = []
-        for dir_in_storage in dirs_in_storage:
-            for created_dir in created_dirs:
-                if dir_in_storage in created_dir:
-                    break
-            else:
-                unknown_dirs.append(dir_in_storage)
-
-        for unknown_dir in unknown_dirs:
-            for unknown_dir in unknown_dirs:
-                warnings.warn(f"Unknown directory {unknown_dir} from task storage.")
-                
+        executor_root = normalize_path(executor_root)
+        context = ExecutorContext(executor_root)
+        if update_dirs:
+            cls.sync_directories(context)
+        return context
