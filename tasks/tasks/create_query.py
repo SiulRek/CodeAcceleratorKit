@@ -16,8 +16,8 @@ Available reference types:
 | run_pylint              | Run pylint on a file                  | #run_pylint <file_path>                          | -                                                   |
 | run_unittest            | Run unittest on a file                | #run_unittest <file_path>                        | <verbosity> -                                                   |
 | directory_tree          | Get directory tree                    | #tree <directory_path>                 | <max_depth, include_files, ignore_list (semicolon-separated list)> |
-| summarize_python_script | Summarize a Python script             | #summarize <script_path>           | <include_definitions_with_docstrings>               |
-| summarize_folder       | Summarize Python scripts in a folder  | #summarize_folder <folder_path>     | <include_definitions_with_docstrings, excluded_dirs, excluded_files> |
+| summarize_python_script | Summarize a Python script             | #summarize <script_path>           | <include_definitions_without_docstrings>               |
+| summarize_folder       | Summarize Python scripts in a folder  | #summarize_folder <folder_path>     | <include_definitions_without_docstrings, excluded_dirs, excluded_files> |
 | make_query              | Make a query from a temporary file    | #makequery                                       | <create_python_script, max_tokens>                  |
 | checksum                | Check if provided checksum corresponds | #checksum <number_of_references>                 | -                                                   |
 
