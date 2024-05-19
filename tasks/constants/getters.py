@@ -13,17 +13,16 @@ def get_task_cache_directory(name):
     return os.path.normpath(dir)
 
 
-def get_response_file_path(root_dir):
+def get_query_file_path(root_dir):
     dir = os.path.join(root_dir, "local", "tasks_room", "outputs")
     os.makedirs(dir, exist_ok=True)
-    path = os.path.join(dir, "response.txt")
+    path = os.path.join(dir, "query.txt")
     return os.path.normpath(path)
 
-#TODO change to query file path
 def get_response_file_path(root_dir):
     dir = os.path.join(root_dir, "local", "tasks_room", "outputs")
     os.makedirs(dir, exist_ok=True)
-    path = os.path.join(dir, "temporary_file.txt")
+    path = os.path.join(dir, "response_file.txt")
     return os.path.normpath(path)
 
 
