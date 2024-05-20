@@ -9,7 +9,7 @@ from tasks.management.task_session import TaskSession
 
 
 class TaskManager:
-    """ Manages the registration and initialization of new task runners. """
+    """Manages the registration and initialization of new task runners."""
 
     @classmethod
     def _register_runner(cls, runner_root, storage_dir, overwrite):
@@ -19,8 +19,7 @@ class TaskManager:
         Args:
             - runner_root (str): The root directory of the runner.
             - storage_dir (str): The storage directory to register.
-            - overwrite (bool): Whether to overwrite an
-                existingregistration.
+            - overwrite (bool): Whether to overwrite anexistingregistration.
         """
         if not os.path.exists(REGISTERED_RUNNERS_JSON):
             registered_variables = {}
@@ -74,14 +73,14 @@ class TaskManager:
         return attributes
 
     @classmethod
-    def sync_directories(cls, session):
+    def sync_directories_to(cls, runner_root):
         """
-        Synchronizes the directories of the runner session with the directories
-        in the task storage.
+        Synchronizes the directories of a runner to the storage directory.
 
         Args:
-            - session (TaskSession): The runner session to synchronize.
+            - runner_root (str): The root directory of the runner.
         """
+        session = TaskSession(runner_root)
         created_dirs = []
         for attr in Names.SessionAttrNames.__members__.keys():
             if attr.endswith("_dir"):
@@ -90,16 +89,16 @@ class TaskManager:
                 created_dirs.append(path)
         storage_dir = session.storage_dir
         dirs_in_storage = os.listdir(storage_dir)
+        dirs_in_storage = [os.path.join(storage_dir, dir_) for dir_ in dirs_in_storage]
         dirs_in_storage = [
-            os.path.join(storage_dir, dir_)
-            for dir_ in dirs_in_storage
+            dir_ for dir_ in dirs_in_storage
             if os.path.isdir(dir_)
         ]
         dirs_in_storage = [normalize_path(dir_) for dir_ in dirs_in_storage]
         unknown_dirs = []
         for dir_in_storage in dirs_in_storage:
             for created_dir in created_dirs:
-                if dir_in_storage in created_dir:
+                if dir_in_storage in created_dir or dir_in_storage.endswith('configs'):
                     break
             else:
                 unknown_dirs.append(dir_in_storage)
@@ -124,18 +123,17 @@ class TaskManager:
         Args:
             - runner_root (str): The root directory of the runner.
             - python_env (str): The Python environment to use.
-            - storage_dir (str, optional): The storage directory. Defaultsto
-                "local/task_storage".
-            - overwrite (bool, optional): Whether to overwrite an
-                existingregistration. Defaults to False.
-            - create_dirs (bool, optional): Whether to create directoriesfor
-                the runner. Defaults to True.
-            - cwd (str, optional): The current working directory of
-                therunner.
+            - storage_dir (str, optional): The storage directory.
+                Defaultsto"local/task_storage".
+            - overwrite (bool, optional): Whether to overwrite
+                anexistingregistration. Defaults to False.
+            - create_dirs (bool, optional): Whether to create
+                directoriesforthe runner. Defaults to True.
+            - cwd (str, optional): The current working directory
+                oftherunner.
 
         Returns:
-            - TaskSession: The runner session generated from
-                theregistration.
+            - TaskSession: The runner session generated fromtheregistration.
         """
         runner_root = normalize_path(runner_root)
         storage_dir = normalize_path(storage_dir)
@@ -145,12 +143,12 @@ class TaskManager:
         attributes = cls._init_runner_attributes(
             runner_root, storage_dir, python_env, cwd
         )
-        variable = TaskSession(runner_root, load_attributes_from_storage=False)
-        variable.load_attributes_from_dict(attributes)
-        variable.save_attributes()
+        session = TaskSession(runner_root, load_attributes_from_storage=False)
+        session.load_attributes_from_dict(attributes)
+        session.save_attributes()
         if create_dirs:
-            cls.sync_directories(variable)
-        return variable
+            cls.sync_directories_to(runner_root)
+        return session
 
     @classmethod
     def login_runner(cls, runner_root, update_dirs=True):
@@ -159,14 +157,14 @@ class TaskManager:
 
         Args:
             - runner_root (str): The root directory of the runner.
-            - update_dirs (bool, optional): Whether to update thedirectories
-                of the runner session. Defaults to True.
+            - update_dirs (bool, optional): Whether to update
+                thedirectoriesof the runner session. Defaults to True.
 
         Returns:
             - TaskSession: The runner session after logging in.
         """
         runner_root = normalize_path(runner_root)
-        session = TaskSession(runner_root)
         if update_dirs:
-            cls.sync_directories(session)
+            cls.sync_directories_to(runner_root)
+        session = TaskSession(runner_root)
         return session
