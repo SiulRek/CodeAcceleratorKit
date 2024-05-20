@@ -3,9 +3,9 @@ import os
 import warnings
 
 from tasks.constants.configs import REGISTERED_EXECUTORS_JSON
-from tasks.handling.executor_context import ExecutorContext
+from tasks.handling.task_session import TaskSession
 from tasks.handling.normalize_path import normalize_path
-import tasks.handling.context_attribute_names as Names
+import tasks.handling.session_attribute_names as Names
 
 
 class ExecutorHandler:
@@ -62,7 +62,7 @@ class ExecutorHandler:
             raise NotADirectoryError(f"Python environment {python_env} does not exist.")
 
         # Add other attributes
-        for attr in Names.ContextAttrNames.__members__.keys():
+        for attr in Names.SessionAttrNames.__members__.keys():
             if attr in "cwd":
                 attributes[attr] = cwd
             elif attr in "python_env":
@@ -73,21 +73,21 @@ class ExecutorHandler:
         return attributes
 
     @classmethod
-    def sync_directories(cls, context):
+    def sync_directories(cls, session):
         """
-        Synchronizes the directories of the executor context with the directories
+        Synchronizes the directories of the executor session with the directories
         in the task storage.
 
         Args:
-            - context (ExecutorContext): The executor context to synchronize.
+            - session (TaskSession): The executor session to synchronize.
         """
         created_dirs = []
-        for attr in Names.ContextAttrNames.__members__.keys():
+        for attr in Names.SessionAttrNames.__members__.keys():
             if attr.endswith("_dir"):
-                path = getattr(context, attr)
+                path = getattr(session, attr)
                 os.makedirs(path, exist_ok=True)
                 created_dirs.append(path)
-        storage_dir = context.storage_dir
+        storage_dir = session.storage_dir
         dirs_in_storage = os.listdir(storage_dir)
         dirs_in_storage = [
             os.path.join(storage_dir, dir_) for dir_ in dirs_in_storage if os.path.isdir(dir_)
@@ -129,7 +129,7 @@ class ExecutorHandler:
             storage_dir = os.path.join(executor_root, storage_dir)
         cls._register_executor(executor_root, storage_dir, overwrite=overwrite)
         attributes = cls._init_executor_attributes(executor_root, storage_dir, python_env, cwd)
-        variable = ExecutorContext(executor_root, load_attributes_from_storage=False)
+        variable = TaskSession(executor_root, load_attributes_from_storage=False)
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()
         if create_dirs:
@@ -140,17 +140,17 @@ class ExecutorHandler:
     def login_executor(cls, executor_root, update_dirs=True):
         """
         Logs in to an executor: loads the executor attributes from the variable JSON file,
-        creates directories, and returns the executor context.
+        creates directories, and returns the executor session.
 
         Args:
             - executor_root (str): The root directory of the executor.
-            - update_dirs (bool, optional): Whether to update the directories of the executor context.
+            - update_dirs (bool, optional): Whether to update the directories of the executor session.
         
         Returns:
             
         """
         executor_root = normalize_path(executor_root)
-        context = ExecutorContext(executor_root)
+        session = TaskSession(executor_root)
         if update_dirs:
-            cls.sync_directories(context)
-        return context
+            cls.sync_directories(session)
+        return session

@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from tasks.handling.executor_context import ExecutorContext
+from tasks.handling.task_session import TaskSession
 from tasks.handling.normalize_path import normalize_path
 from tasks.tools.for_testing.test_result_logger import TestResultLogger
 
@@ -65,9 +65,9 @@ class TestExecutorVariable(unittest.TestCase):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.context_attribute_names.ContextAttrNames", AttrNamesMock
+            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
         ):
-            executor_context = ExecutorContext(
+            session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
             )
             with open(
@@ -75,18 +75,18 @@ class TestExecutorVariable(unittest.TestCase):
             ) as f:
                 json.dump({"cwd": "test_dir", "python_env": "test_env"}, f, indent=4)
 
-            executor_context.load_attributes_from_storage()
+            session.load_attributes_from_storage()
 
-            self.assertEqual(executor_context.cwd, "test_dir")
-            self.assertEqual(executor_context.python_env, "test_env")
+            self.assertEqual(session.cwd, "test_dir")
+            self.assertEqual(session.python_env, "test_env")
 
     def test_load_attributes(self):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.context_attribute_names.ContextAttrNames", AttrNamesMock
+            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
         ):
-            variable_json = ExecutorContext(
+            variable_json = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
             ).configs_dir
             with open(
@@ -94,24 +94,24 @@ class TestExecutorVariable(unittest.TestCase):
             ) as f:
                 json.dump({"cwd": "test_dir", "python_env": "test_env"}, f, indent=4)
 
-            executor_context = ExecutorContext(
+            session = TaskSession(
                 self.executor_root, load_attributes_from_storage=True
             )
 
-            self.assertEqual(executor_context.cwd, "test_dir")
-            self.assertEqual(executor_context.python_env, "test_env")
+            self.assertEqual(session.cwd, "test_dir")
+            self.assertEqual(session.python_env, "test_env")
 
     def test_load_attributes_from_dict(self):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.context_attribute_names.ContextAttrNames",
+            "tasks.handling.session_attribute_names.SessionAttrNames",
             AttrNamesMockExtended,
         ):
-            executor_context = ExecutorContext(
+            session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
             )
-            executor_context.load_attributes_from_dict(
+            session.load_attributes_from_dict(
                 {
                     "cwd": "test_dir",
                     "python_env": "test_env",
@@ -122,71 +122,71 @@ class TestExecutorVariable(unittest.TestCase):
                 }
             )
 
-            self.assertEqual(executor_context.cwd, "test_dir")
-            self.assertEqual(executor_context.python_env, "test_env")
-            self.assertEqual(executor_context.attr_3, "value3")
-            self.assertEqual(executor_context.attr_4, "value4")
-            self.assertEqual(executor_context.attr_5, "value5")
-            self.assertEqual(executor_context.attr_6, "value6")
+            self.assertEqual(session.cwd, "test_dir")
+            self.assertEqual(session.python_env, "test_env")
+            self.assertEqual(session.attr_3, "value3")
+            self.assertEqual(session.attr_4, "value4")
+            self.assertEqual(session.attr_5, "value5")
+            self.assertEqual(session.attr_6, "value6")
 
 
     def test_load_attributes_from_storage_with_pickle(self):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.context_attribute_names.ContextAttrNames",
+            "tasks.handling.session_attribute_names.SessionAttrNames",
             AttrNamesMockExtended,
         ):
-            executor_context = ExecutorContext(
+            session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
             )
 
             with open(os.path.join(self.configs_dir, "other_configs.pkl"), "wb") as f:
                 pickle.dump({"attr_5": "value5", "attr_6": "value6"}, f)
 
-            executor_context.load_attributes_from_storage()
-            self.assertEqual(executor_context.attr_5, "value5")
-            self.assertEqual(executor_context.attr_6, "value6")
+            session.load_attributes_from_storage()
+            self.assertEqual(session.attr_5, "value5")
+            self.assertEqual(session.attr_6, "value6")
             
     def test_are_attributes_complete_true(self):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.context_attribute_names.ContextAttrNames", AttrNamesMock
+            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
         ):
-            executor_context = ExecutorContext(
+            session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
             )
-            executor_context.load_attributes_from_dict(
+            session.load_attributes_from_dict(
                 {"cwd": "test_dir", "python_env": "test_env"}
             )
 
-            self.assertTrue(executor_context.are_attributes_complete())
+            self.assertTrue(session.are_attributes_complete())
 
     def test_are_attributes_complete_false(self):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.context_attribute_names.ContextAttrNames", AttrNamesMock
+            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
         ):
-            executor_context = ExecutorContext(
+            session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
             )
-            executor_context.load_attributes_from_dict({"cwd": "test_dir"})
+            session.load_attributes_from_dict({"cwd": "test_dir"})
 
-            self.assertFalse(executor_context.are_attributes_complete())
+            self.assertFalse(session.are_attributes_complete())
 
     def test_save_attributes(self):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.context_attribute_names.ContextAttrNames",
+            "tasks.handling.session_attribute_names.SessionAttrNames",
             AttrNamesMockExtended,
         ):
-            executor_context = ExecutorContext(
+            session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
             )
-            executor_context.load_attributes_from_dict(
+            session.load_attributes_from_dict(
                 {
                     "cwd": "test_dir",
                     "python_env": "test_env",
@@ -196,7 +196,7 @@ class TestExecutorVariable(unittest.TestCase):
                     "attr_6": "value6",
                 }
             )
-            executor_context.save_attributes()
+            session.save_attributes()
 
             with open(
                 os.path.join(self.configs_dir, "configs.json"), "r", encoding="utf-8"

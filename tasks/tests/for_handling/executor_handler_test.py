@@ -43,7 +43,7 @@ class TestExecutorHandler(unittest.TestCase):
         self.mock_REGISTERED_EXECUTORS_JSON = patcher2.start()
 
         patcher3 = patch(
-            "tasks.handling.context_attribute_names.ContextAttrNames", AttrNamesMock
+            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
         )
         self.addCleanup(patcher3.stop)
         self.mock_variable_names = patcher3.start()
@@ -62,7 +62,7 @@ class TestExecutorHandler(unittest.TestCase):
         python_env_path = os.path.join(self.executor_root, "python_env")
         os.makedirs(python_env_path)
 
-        executor_context = Handler.register_executor(
+        session = Handler.register_executor(
             self.executor_root,
             python_env_path,
             storage_dir=self.storage_subfolder,
@@ -76,10 +76,10 @@ class TestExecutorHandler(unittest.TestCase):
         self.assertIn(self.executor_root, registered_executors)
         self.assertEqual(registered_executors[self.executor_root], self.storage_dir)
 
-        self.assertEqual(executor_context.var1_dir, "value1")
-        self.assertEqual(executor_context.var2_dir, "value2")
-        self.assertEqual(executor_context.cwd, self.executor_root)
-        self.assertEqual(executor_context.python_env, normalize_path(python_env_path))
+        self.assertEqual(session.var1_dir, "value1")
+        self.assertEqual(session.var2_dir, "value2")
+        self.assertEqual(session.cwd, self.executor_root)
+        self.assertEqual(session.python_env, normalize_path(python_env_path))
 
     def test_initialize_attributes(self):
         python_env_path = os.path.join(self.executor_root, "python_env")
@@ -107,7 +107,7 @@ class TestExecutorHandler(unittest.TestCase):
         python_env_path = os.path.join(self.executor_root, "python_env")
         os.makedirs(python_env_path)
 
-        executor_context = Handler.register_executor(
+        session = Handler.register_executor(
             self.executor_root,
             python_env_path,
             storage_dir=self.storage_subfolder,
@@ -115,10 +115,10 @@ class TestExecutorHandler(unittest.TestCase):
             create_dirs=True,
         )
 
-        self.assertTrue(os.path.exists(executor_context.var1_dir))
-        self.assertTrue(os.path.exists(executor_context.var2_dir))
-        self.assertTrue(os.path.exists(executor_context.cwd))
-        self.assertTrue(os.path.exists(executor_context.python_env))
+        self.assertTrue(os.path.exists(session.var1_dir))
+        self.assertTrue(os.path.exists(session.var2_dir))
+        self.assertTrue(os.path.exists(session.cwd))
+        self.assertTrue(os.path.exists(session.python_env))
 
     def test_overwrite_registration(self):
         python_env_path = os.path.join(self.executor_root, "python_env")
@@ -166,19 +166,19 @@ class TestExecutorHandler(unittest.TestCase):
             create_dirs=False,
         )
 
-        logged_in_context = Handler.login_executor(
+        session = Handler.login_executor(
             self.executor_root, update_dirs=False
         )
 
-        self.assertEqual(logged_in_context.executor_root, self.executor_root)
-        self.assertEqual(logged_in_context.storage_dir, self.storage_dir)
+        self.assertEqual(session.executor_root, self.executor_root)
+        self.assertEqual(session.storage_dir, self.storage_dir)
         self.assertEqual(
-            logged_in_context.configs_dir, os.path.join(self.storage_dir, "configs")
+            session.configs_dir, os.path.join(self.storage_dir, "configs")
         )
-        self.assertEqual(logged_in_context.var1_dir, "value1")
-        self.assertEqual(logged_in_context.var2_dir, "value2")
-        self.assertEqual(logged_in_context.cwd, self.executor_root)
-        self.assertEqual(logged_in_context.python_env, normalize_path(python_env_path))
+        self.assertEqual(session.var1_dir, "value1")
+        self.assertEqual(session.var2_dir, "value2")
+        self.assertEqual(session.cwd, self.executor_root)
+        self.assertEqual(session.python_env, normalize_path(python_env_path))
 
 
 if __name__ == "__main__":
