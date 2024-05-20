@@ -4,15 +4,12 @@ import sys
 
 from tasks.configs.getters import get_task_cache_directory
 
-
 class TaskBase(ABC):
     """
-    Base class for task execution, providing setup and common utilities for all
-    tasks.
-
+    Base class for task execution, providing setup and common utilities for all tasks.
+    
     Attributes:
-        - NAME (str): A class-level attribute that identifies the name
-            ofthetask.
+    - NAME (str): A class-level attribute that identifies the name of the task.
     """
 
     NAME = None
@@ -20,12 +17,10 @@ class TaskBase(ABC):
     def __init__(self, default_root, *default_args):
         """
         Initializes the task with default root and additional arguments.
-
+        
         Args:
-            - default_root (str): The default root directory
-                fortaskexecution.
-            - default_args (tuple): Additional default arguments
-                requiredbythe task.
+        - default_root (str): The default root directory for task execution.
+        - default_args (tuple): Additional default arguments required by the task.
         """
         self.task_runner_root = None
         self.additional_args = None
@@ -35,14 +30,11 @@ class TaskBase(ABC):
 
     def _initialize_arguments(self, default_root, default_args):
         """
-        Processes command line arguments and sets the task root and additional
-        arguments.
-
+        Processes command line arguments and sets the task root and additional arguments.
+        
         Args:
-            - default_root (str): The default root directory if
-                nocommandline argument is provided.
-            - default_args (tuple): Default arguments to use if
-                noadditionalcommand line arguments are provided.
+        - default_root (str): The default root directory if no command line argument is provided.
+        - default_args (tuple): Default arguments to use if no additional command line arguments are provided.
         """
         if len(sys.argv) < 2:
             self.task_runner_root = default_root
@@ -58,10 +50,10 @@ class TaskBase(ABC):
 
     @abstractmethod
     def execute(self):
-        """Executes the task's main functionality. Must be implementedbysubclasses."""
+        """Executes the task's main functionality. Must be implemented by subclasses."""
 
     def teardown(self):
-        """Placeholder for task-specific teardown. can be extended bysubclasses."""
+        """Placeholder for task-specific teardown. Can be extended by subclasses."""
         if self.cache_dir and os.path.exists(self.cache_dir):
             os.rmdir(self.cache_dir)
 
@@ -75,10 +67,9 @@ class TaskBase(ABC):
     def _print_execution_end(self, additional_msg=""):
         """
         Prints the end message for task execution, indicating completion.
-
+        
         Args:
-            - additional_msg (str): Optional additional message to
-                includeinthe completion printout.
+        - additional_msg (str): Optional additional message to include in the completion printout.
         """
         msg = self.line_sep
         msg += "TASK EXECUTED SUCCESSFULLY\n"
