@@ -129,10 +129,12 @@ class ExecutorContext:
         Raises:
             - AttributeError: If a required attribute is missing.
         """
-        configs = {}
         if not self.are_attributes_complete():
             msg = "Missing context attribute(s) to save."
             raise AttributeError(msg)
+        os.makedirs(self.configs_dir, exist_ok=True)
+            
+        configs = {}
         for member in Names.ContextAttrNames:
             attr = member.name
             _, file_name = member.value
