@@ -6,7 +6,7 @@ import re
 TEST_RESULTS_FILE = "test_results.log"
 FILE_TAG = "File"
 REGISTERED_EXECUTORS_JSON = os.path.join("tasks", "constants", "registered_executors.json")
-VARIABLE_JSON_NAME = "variable.json"
+CONFIGS_SUBFOLDER = "configs"
 
 
 # ----------------- For Create Query -----------------
