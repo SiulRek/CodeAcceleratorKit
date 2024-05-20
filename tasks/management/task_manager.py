@@ -19,7 +19,7 @@ class TaskManager:
         Args:
             - runner_root (str): The root directory of the runner.
             - storage_dir (str): The storage directory to register.
-            - overwrite (bool): Whether to overwrite anexistingregistration.
+            - overwrite (bool): Whether to overwrite an existing registration.
         """
         if not os.path.exists(REGISTERED_RUNNERS_JSON):
             registered_variables = {}
@@ -64,7 +64,7 @@ class TaskManager:
 
         for attr in Names.SessionAttrNames.__members__.keys():
             if attr in "cwd":
-                attributes[attr] = cwd
+                attributes[attr] = cwd if cwd is not None else runner_root
             elif attr in "python_env":
                 attributes[attr] = python_env
             else:
@@ -124,11 +124,11 @@ class TaskManager:
             - runner_root (str): The root directory of the runner.
             - python_env (str): The Python environment to use.
             - storage_dir (str, optional): The storage directory.
-                Defaultsto"local/task_storage".
+                Defaults to "local/task_storage".
             - overwrite (bool, optional): Whether to overwrite
-                anexistingregistration. Defaults to False.
+                an existing registration. Defaults to False.
             - create_dirs (bool, optional): Whether to create
-                directoriesforthe runner. Defaults to True.
+                directories for the runner. Defaults to True.
             - cwd (str, optional): The current working directory
                 oftherunner.
 
@@ -158,7 +158,7 @@ class TaskManager:
         Args:
             - runner_root (str): The root directory of the runner.
             - update_dirs (bool, optional): Whether to update
-                thedirectoriesof the runner session. Defaults to True.
+                the directories of the runner session. Defaults to True.
 
         Returns:
             - TaskSession: The runner session after logging in.
