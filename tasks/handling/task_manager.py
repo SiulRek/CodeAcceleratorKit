@@ -3,13 +3,13 @@ import os
 import warnings
 
 from tasks.configs.constants import REGISTERED_RUNNERS_JSON
-from tasks.handling.normalize_path import normalize_path
 import tasks.configs.session_attributes as Names
+from tasks.handling.normalize_path import normalize_path
 from tasks.handling.task_session import TaskSession
 
 
-class RunnerHandler:
-    """Handles the registration and initialization of new task runners."""
+class TaskManager:
+    """ Manages the registration and initialization of new task runners. """
 
     @classmethod
     def _register_runner(cls, runner_root, storage_dir, overwrite):
@@ -19,8 +19,8 @@ class RunnerHandler:
         Args:
             - runner_root (str): The root directory of the runner.
             - storage_dir (str): The storage directory to register.
-            - overwrite (bool): Whether to overwrite an existing
-                registration.
+            - overwrite (bool): Whether to overwrite an
+                existingregistration.
         """
         if not os.path.exists(REGISTERED_RUNNERS_JSON):
             registered_variables = {}
@@ -76,8 +76,8 @@ class RunnerHandler:
     @classmethod
     def sync_directories(cls, session):
         """
-        Synchronizes the directories of the runner session with the
-        directories in the task storage.
+        Synchronizes the directories of the runner session with the directories
+        in the task storage.
 
         Args:
             - session (TaskSession): The runner session to synchronize.
@@ -124,18 +124,18 @@ class RunnerHandler:
         Args:
             - runner_root (str): The root directory of the runner.
             - python_env (str): The Python environment to use.
-            - storage_dir (str, optional): The storage directory. Defaults
-                to "local/task_storage".
-            - overwrite (bool, optional): Whether to overwrite an existing
-                registration. Defaults to False.
-            - create_dirs (bool, optional): Whether to create directories
-                for the runner. Defaults to True.
-            - cwd (str, optional): The current working directory of the
-                runner.
+            - storage_dir (str, optional): The storage directory. Defaultsto
+                "local/task_storage".
+            - overwrite (bool, optional): Whether to overwrite an
+                existingregistration. Defaults to False.
+            - create_dirs (bool, optional): Whether to create directoriesfor
+                the runner. Defaults to True.
+            - cwd (str, optional): The current working directory of
+                therunner.
 
         Returns:
-            - TaskSession: The runner session generated from the
-                registration.
+            - TaskSession: The runner session generated from
+                theregistration.
         """
         runner_root = normalize_path(runner_root)
         storage_dir = normalize_path(storage_dir)
@@ -159,8 +159,8 @@ class RunnerHandler:
 
         Args:
             - runner_root (str): The root directory of the runner.
-            - update_dirs (bool, optional): Whether to update the
-                directories of the runner session. Defaults to True.
+            - update_dirs (bool, optional): Whether to update thedirectories
+                of the runner session. Defaults to True.
 
         Returns:
             - TaskSession: The runner session after logging in.
