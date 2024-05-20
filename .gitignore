@@ -11,3 +11,5 @@ __pycache__/
 **/local/
 **/temp*
 **/test.*
+tasks/tests/outputs/test_results_simple.log
+tasks/tests/outputs/test_results.log
