@@ -65,7 +65,7 @@ class TestExecutorVariable(unittest.TestCase):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
+            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
@@ -84,7 +84,7 @@ class TestExecutorVariable(unittest.TestCase):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
+            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             variable_json = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
@@ -105,7 +105,7 @@ class TestExecutorVariable(unittest.TestCase):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.session_attribute_names.SessionAttrNames",
+            "tasks.constants.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(
@@ -134,7 +134,7 @@ class TestExecutorVariable(unittest.TestCase):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.session_attribute_names.SessionAttrNames",
+            "tasks.constants.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(
@@ -152,7 +152,7 @@ class TestExecutorVariable(unittest.TestCase):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
+            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
@@ -167,7 +167,7 @@ class TestExecutorVariable(unittest.TestCase):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.session_attribute_names.SessionAttrNames", AttrNamesMock
+            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
@@ -180,7 +180,7 @@ class TestExecutorVariable(unittest.TestCase):
         with patch(
             "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.handling.session_attribute_names.SessionAttrNames",
+            "tasks.constants.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(

@@ -5,7 +5,7 @@ import warnings
 
 import tasks.constants.configs as configs
 from tasks.handling.normalize_path import normalize_path
-import tasks.handling.session_attribute_names as Names
+import tasks.constants.session_attributes as Names
 
 
 class TaskSession:

@@ -4,7 +4,7 @@ import warnings
 
 from tasks.constants.configs import REGISTERED_EXECUTORS_JSON
 from tasks.handling.normalize_path import normalize_path
-import tasks.handling.session_attribute_names as Names
+import tasks.constants.session_attributes as Names
 from tasks.handling.task_session import TaskSession
 
 
