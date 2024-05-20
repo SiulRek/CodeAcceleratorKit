@@ -124,6 +124,36 @@ class TestExecutorVariable(unittest.TestCase):
 
             executor_context.load_attributes_from_storage()
             self.assertEqual(executor_context.cwd, "test_dir_pickle")
+    
+    def test_are_attributes_complete_true(self):
+        with patch(
+            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+        ), patch(
+            "tasks.handling.context_attribute_names.ContextAttrNames", AttrNamesMock
+        ):
+            executor_context = ExecutorContext(
+                self.executor_root, load_attributes_from_storage=False
+            )
+            executor_context.load_attributes_from_dict(
+                {"cwd": "test_dir", "python_env": "test_env"}
+            )
+
+            self.assertTrue(executor_context.are_attributes_complete())
+    
+    def test_are_attributes_complete_false(self):
+        with patch(
+            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+        ), patch(
+            "tasks.handling.context_attribute_names.ContextAttrNames", AttrNamesMock
+        ):
+            executor_context = ExecutorContext(
+                self.executor_root, load_attributes_from_storage=False
+            )
+            executor_context.load_attributes_from_dict(
+                {"cwd": "test_dir"}
+            )
+
+            self.assertFalse(executor_context.are_attributes_complete())
 
     def test_save_attributes(self):
         with patch(
