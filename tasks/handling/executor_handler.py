@@ -3,9 +3,9 @@ import os
 import warnings
 
 from tasks.constants.configs import REGISTERED_EXECUTORS_JSON
-from tasks.handling.task_session import TaskSession
 from tasks.handling.normalize_path import normalize_path
 import tasks.handling.session_attribute_names as Names
+from tasks.handling.task_session import TaskSession
 
 
 class ExecutorHandler:
@@ -19,10 +19,11 @@ class ExecutorHandler:
         Args:
             - executor_root (str): The root directory of the executor.
             - storage_dir (str): The storage directory to register.
-            - overwrite (bool): Whether to overwrite anexistingregistration.
+            - overwrite (bool): Whether to overwrite an existing
+                registration.
         """
         if not os.path.exists(REGISTERED_EXECUTORS_JSON):
-                registered_variables = {}
+            registered_variables = {}
         else:
             with open(REGISTERED_EXECUTORS_JSON, "r", encoding="utf-8") as f:
                 registered_variables = json.load(f)
@@ -52,16 +53,16 @@ class ExecutorHandler:
         """
         attributes = {}
 
-        # Add cwd and python_env attributes
         python_env = normalize_path(python_env)
         if cwd is None:
             cwd = executor_root
         if not os.path.exists(cwd):
-            raise NotADirectoryError(f"Current working directory {cwd} does not exist.")
+            msg = f"Current working directory {cwd} does not exist."
+            raise NotADirectoryError(msg)
         if not os.path.exists(python_env):
-            raise NotADirectoryError(f"Python environment {python_env} does not exist.")
+            msg = f"Python environment {python_env} does not exist."
+            raise NotADirectoryError(msg)
 
-        # Add other attributes
         for attr in Names.SessionAttrNames.__members__.keys():
             if attr in "cwd":
                 attributes[attr] = cwd
@@ -75,8 +76,8 @@ class ExecutorHandler:
     @classmethod
     def sync_directories(cls, session):
         """
-        Synchronizes the directories of the executor session with the directories
-        in the task storage.
+        Synchronizes the directories of the executor session with the
+        directories in the task storage.
 
         Args:
             - session (TaskSession): The executor session to synchronize.
@@ -90,7 +91,9 @@ class ExecutorHandler:
         storage_dir = session.storage_dir
         dirs_in_storage = os.listdir(storage_dir)
         dirs_in_storage = [
-            os.path.join(storage_dir, dir_) for dir_ in dirs_in_storage if os.path.isdir(dir_)
+            os.path.join(storage_dir, dir_)
+            for dir_ in dirs_in_storage
+            if os.path.isdir(dir_)
         ]
         dirs_in_storage = [normalize_path(dir_) for dir_ in dirs_in_storage]
         unknown_dirs = []
@@ -104,31 +107,44 @@ class ExecutorHandler:
         for unknown_dir in unknown_dirs:
             for unknown_dir in unknown_dirs:
                 warnings.warn(f"Unknown directory {unknown_dir} from task storage.")
-                
+
     @classmethod
-    def register_executor(cls, executor_root, python_env, storage_dir="local/task_storage", overwrite=False, create_dirs=True, cwd=None):
+    def register_executor(
+        cls,
+        executor_root,
+        python_env,
+        storage_dir="local/task_storage",
+        overwrite=False,
+        create_dirs=True,
+        cwd=None,
+    ):
         """
-        Registers an executor: records in registered_executors.json, initializes executor 
-        attributes creates directories, and saves the attributes to the variable JSON file. 
-        Returns the executor variable of the registration.
+        Registers an executor and initializes its attributes.
 
         Args:
             - executor_root (str): The root directory of the executor.
             - python_env (str): The Python environment to use.
-            - storage_dir (str, optional): The storage directory. Defaults to "local/task_storage".
+            - storage_dir (str, optional): The storage directory. Defaults
+                to "local/task_storage".
             - overwrite (bool, optional): Whether to overwrite an existing
-            - create_dirs (bool, optional): Whether to create directories for the executor.
-            - cwd (str, optional): The current working directory of the executor.
+                registration. Defaults to False.
+            - create_dirs (bool, optional): Whether to create directories
+                for the executor. Defaults to True.
+            - cwd (str, optional): The current working directory of the
+                executor.
 
         Returns:
-            - ExecutorVariable: The executor variable generated from the registration.
+            - TaskSession: The executor session generated from the
+                registration.
         """
         executor_root = normalize_path(executor_root)
         storage_dir = normalize_path(storage_dir)
         if not storage_dir.startswith(executor_root):
             storage_dir = os.path.join(executor_root, storage_dir)
         cls._register_executor(executor_root, storage_dir, overwrite=overwrite)
-        attributes = cls._init_executor_attributes(executor_root, storage_dir, python_env, cwd)
+        attributes = cls._init_executor_attributes(
+            executor_root, storage_dir, python_env, cwd
+        )
         variable = TaskSession(executor_root, load_attributes_from_storage=False)
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()
@@ -139,15 +155,15 @@ class ExecutorHandler:
     @classmethod
     def login_executor(cls, executor_root, update_dirs=True):
         """
-        Logs in to an executor: loads the executor attributes from the variable JSON file,
-        creates directories, and returns the executor session.
+        Logs in to an executor and initializes its session.
 
         Args:
             - executor_root (str): The root directory of the executor.
-            - update_dirs (bool, optional): Whether to update the directories of the executor session.
-        
+            - update_dirs (bool, optional): Whether to update the
+                directories of the executor session. Defaults to True.
+
         Returns:
-            
+            - TaskSession: The executor session after logging in.
         """
         executor_root = normalize_path(executor_root)
         session = TaskSession(executor_root)
