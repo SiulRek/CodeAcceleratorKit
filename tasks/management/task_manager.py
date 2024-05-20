@@ -130,10 +130,10 @@ class TaskManager:
             - create_dirs (bool, optional): Whether to create
                 directories for the runner. Defaults to True.
             - cwd (str, optional): The current working directory
-                oftherunner.
+                of the runner.
 
         Returns:
-            - TaskSession: The runner session generated fromtheregistration.
+            - TaskSession: The runner session generated from the registration.
         """
         runner_root = normalize_path(runner_root)
         storage_dir = normalize_path(storage_dir)
