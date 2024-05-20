@@ -7,6 +7,7 @@ from tasks.handling.executor_context import ExecutorContext
 from tasks.handling.normalize_path import normalize_path
 import tasks.handling.context_attribute_names as Names
 
+
 class ExecutorHandler:
     """Handles the registration and initialization of new task executors."""
 
@@ -59,13 +60,16 @@ class ExecutorHandler:
             raise NotADirectoryError(f"Current working directory {cwd} does not exist.")
         if not os.path.exists(python_env):
             raise NotADirectoryError(f"Python environment {python_env} does not exist.")
-        attributes[Names.ContextAttrNames.cwd.value] = normalize_path(cwd)
-        attributes[Names.ContextAttrNames.python_env.value] = python_env
 
         # Add other attributes
-        for key in Names.ContextAttrNames.__members__.keys():
-            init_func = getattr(cls, f"_initialize_{key}")
-            attributes[key] = init_func(executor_root, storage_dir)
+        for attr in Names.ContextAttrNames.__members__.keys():
+            if attr in "cwd":
+                attributes[attr] = cwd
+            elif attr in "python_env":
+                attributes[attr] = python_env
+            else:
+                init_func = getattr(cls, f"_initialize_{attr}")
+                attributes[attr] = init_func(executor_root, storage_dir)
         return attributes
 
     @classmethod
@@ -78,9 +82,9 @@ class ExecutorHandler:
             - context (ExecutorContext): The executor context to synchronize.
         """
         created_dirs = []
-        for key in Names.ContextAttrNames.__members__.keys():
-            if key.endswith("_dir"):
-                path = getattr(context, key)
+        for attr in Names.ContextAttrNames.__members__.keys():
+            if attr.endswith("_dir"):
+                path = getattr(context, attr)
                 os.makedirs(path, exist_ok=True)
                 created_dirs.append(path)
         storage_dir = context.storage_dir
@@ -125,7 +129,7 @@ class ExecutorHandler:
             storage_dir = os.path.join(executor_root, storage_dir)
         cls._register_executor(executor_root, storage_dir, overwrite=overwrite)
         attributes = cls._init_executor_attributes(executor_root, storage_dir, python_env, cwd)
-        variable = ExecutorContext(executor_root, load_attributes_from_json=False)
+        variable = ExecutorContext(executor_root, load_attributes_from_storage=False)
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()
         if create_dirs:
