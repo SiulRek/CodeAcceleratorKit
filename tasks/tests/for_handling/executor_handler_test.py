@@ -9,11 +9,13 @@ import tasks
 from tasks.handling.executor_handler import ExecutorHandler as Handler
 from tasks.handling.normalize_path import normalize_path
 
+
 class AttrNamesMock(Enum):
-    var1_dir = "value1"
-    var2_dir = "value2"
-    cwd = "cwd"
-    python_env = "python_env"
+    var1_dir = (1, "configs.pkl")
+    var2_dir = (2, "configs.pkl")
+    cwd = (3, "configs.json")
+    python_env = (4, "configs.json")
+
 
 class TestExecutorHandler(unittest.TestCase):
     def setUp(self):
@@ -49,7 +51,9 @@ class TestExecutorHandler(unittest.TestCase):
         Handler._initialize_var1_dir = lambda x, y: "value1"
         Handler._initialize_var2_dir = lambda x, y: "value2"
         Handler._initialize_cwd = lambda x, y: self.executor_root
-        Handler._initialize_python_env = lambda x, y: os.path.join(self.executor_root, "python_env")
+        Handler._initialize_python_env = lambda x, y: os.path.join(
+            self.executor_root, "python_env"
+        )
 
     def tearDown(self):
         self.temp_dir.cleanup()
@@ -82,7 +86,10 @@ class TestExecutorHandler(unittest.TestCase):
         os.makedirs(python_env_path)
 
         attributes = Handler._init_executor_attributes(
-            self.executor_root, self.storage_subfolder, python_env_path, self.executor_root
+            self.executor_root,
+            self.storage_subfolder,
+            python_env_path,
+            self.executor_root,
         )
 
         self.assertIn("var1_dir", attributes)
@@ -127,7 +134,10 @@ class TestExecutorHandler(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             Handler.register_executor(
-                self.executor_root,  python_env_path, storage_dir=self.storage_subfolder,overwrite=False
+                self.executor_root,
+                python_env_path,
+                storage_dir=self.storage_subfolder,
+                overwrite=False,
             )
 
         Handler.register_executor(
@@ -156,11 +166,15 @@ class TestExecutorHandler(unittest.TestCase):
             create_dirs=False,
         )
 
-        logged_in_context = Handler.login_executor(self.executor_root, update_dirs=False)
+        logged_in_context = Handler.login_executor(
+            self.executor_root, update_dirs=False
+        )
 
         self.assertEqual(logged_in_context.executor_root, self.executor_root)
         self.assertEqual(logged_in_context.storage_dir, self.storage_dir)
-        self.assertEqual(logged_in_context.variable_json, os.path.join(self.storage_dir, "variable.json"))
+        self.assertEqual(
+            logged_in_context.configs_dir, os.path.join(self.storage_dir, "configs")
+        )
         self.assertEqual(logged_in_context.var1_dir, "value1")
         self.assertEqual(logged_in_context.var2_dir, "value2")
         self.assertEqual(logged_in_context.cwd, self.executor_root)
