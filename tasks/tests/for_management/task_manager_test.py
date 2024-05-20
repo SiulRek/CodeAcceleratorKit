@@ -6,8 +6,8 @@ import unittest
 from unittest.mock import patch
 
 import tasks
-from tasks.handling.task_manager import TaskManager as Handler
-from tasks.handling.normalize_path import normalize_path
+from tasks.management.task_manager import TaskManager as Handler
+from tasks.management.normalize_path import normalize_path
 
 
 class AttrNamesMock(Enum):
@@ -29,7 +29,7 @@ class TestTaskManager(unittest.TestCase):
             os.path.join(self.temp_dir.name, "registered_variables.json")
         )
         patcher1 = patch.object(
-            tasks.handling.task_manager,
+            tasks.management.task_manager,
             "REGISTERED_RUNNERS_JSON",
             self.json_mock,
         )

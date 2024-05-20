@@ -4,7 +4,7 @@ import pickle
 import warnings
 
 import tasks.configs.constants as configs
-from tasks.handling.normalize_path import normalize_path
+from tasks.management.normalize_path import normalize_path
 import tasks.configs.session_attributes as Names
 
 

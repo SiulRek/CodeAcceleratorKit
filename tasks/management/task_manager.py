@@ -4,8 +4,8 @@ import warnings
 
 from tasks.configs.constants import REGISTERED_RUNNERS_JSON
 import tasks.configs.session_attributes as Names
-from tasks.handling.normalize_path import normalize_path
-from tasks.handling.task_session import TaskSession
+from tasks.management.normalize_path import normalize_path
+from tasks.management.task_session import TaskSession
 
 
 class TaskManager:
