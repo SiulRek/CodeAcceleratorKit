@@ -26,8 +26,7 @@ def separate_imports(code_text):
     try:
         while True:
             line = next(lines)
-            stripped_line = line.strip()
-            if stripped_line.startswith("import ") or stripped_line.startswith("from "):
+            if line.startswith("import ") or line.startswith("from "):
                 import_statement = line
                 previous_line_is_import = True
                 if "(" in line and ")" not in line:
