@@ -1,9 +1,11 @@
 import json
 import os
 
+import pickle
 import tasks.constants.configs as configs
 from tasks.handling.normalize_path import normalize_path
 import tasks.handling.context_attribute_names as Names
+import warnings
 
 
 class ExecutorContext:
@@ -12,16 +14,15 @@ class ExecutorContext:
 
     Args:
         - executor_root (str): The root directory of the executor.
-        - load_attributes_from_json (bool): Whether to load attributes from
-            JSON at initialization.
+        - load_attributes_from_storage (bool): Whether to load attributes from the storage directory.
     """
 
-    def __init__(self, executor_root, load_attributes_from_json=True):
+    def __init__(self, executor_root, load_attributes_from_storage=True):
         self._executor_root = normalize_path(executor_root)
         self._storage_dir = self._get_storage_dir(executor_root)
-        self._variable_json = os.path.join(self.storage_dir, configs.VARIABLE_JSON_NAME)
-        if load_attributes_from_json:
-            self.load_attributes()
+        self._configs_dir = os.path.join(self.storage_dir, configs.CONFIGS_SUBFOLDER)
+        if load_attributes_from_storage:
+            self.load_attributes_from_storage()
 
     @property
     def executor_root(self):
@@ -44,14 +45,14 @@ class ExecutorContext:
         return self._storage_dir
 
     @property
-    def variable_json(self):
+    def configs_dir(self):
         """
-        Returns the path to the variable JSON file.
+        Returns the directory path for storing configuration files inside the executor storage directory.
 
         Returns:
-            - str: The path to the variable JSON file.
+            - str: The configuration directory path.
         """
-        return self._variable_json
+        return self._configs_dir
 
     def _get_storage_dir(self, executor_root):
         """
@@ -63,9 +64,6 @@ class ExecutorContext:
 
         Returns:
             - str: The storage directory path.
-
-        Raises:
-            - ValueError: If the executor root is not registered.
         """
         with open(configs.REGISTERED_EXECUTORS_JSON, "r", encoding="utf-8") as f:
             registered_variables = json.load(f)
@@ -81,29 +79,56 @@ class ExecutorContext:
         Args:
             - attributes_dict (dict): A dictionary containing the attributes
                 to load.
-
-        Raises:
-            - KeyError: If a required key is missing.
         """
-        for key in Names.ContextAttrNames.__members__.keys():
-            if key not in attributes_dict:
-                msg = f"Missing attribute {key} in attributes dictionary."
-                raise KeyError(msg)
-            setattr(self, key, attributes_dict[key])
+        for attr in Names.ContextAttrNames.__members__.keys():
+            if attr not in attributes_dict:
+                continue
+            setattr(self, attr, attributes_dict[attr])
+        for attr in attributes_dict.keys():
+            if attr not in Names.ContextAttrNames.__members__.keys():
+                warnings.warn(f"Attribute {attr} is not an attribute defined in ContextAttrNames.")
+                setattr(self, attr, attributes_dict[attr])
 
-    def load_attributes(self):
-        """
-        Loads attributes from the Variable JSON file.
 
-        Raises:
-            - FileNotFoundError: If the variable JSON file does not exist.
+    def load_attributes_from_storage(self):
         """
-        if not os.path.exists(self.variable_json):
-            msg = f"Variable JSON file {self.variable_json} does not exist or has been deleted."
-            raise FileNotFoundError(msg)
-        with open(self.variable_json, "r", encoding="utf-8") as f:
-            attributes_dict = json.load(f)
-        self.load_attributes_from_dict(attributes_dict)
+        Loads attributes from the storage/configs directory.
+        """
+
+        if not os.path.isdir(self.configs_dir):
+            msg = f"Directory {self.configs_dir} does not exist."
+            msg += "Please register the executor properly."
+            raise NotADirectoryError(msg)
+        attributes_dict = {}
+        for dir_ in os.listdir(self.configs_dir):
+            if dir_ == 'configs.json':
+                with open(os.path.join(self.configs_dir, dir_), "r", encoding="utf-8") as f:
+                    attributes_dict = json.load(f)
+                self.load_attributes_from_dict(attributes_dict)
+            elif dir_.endswith(".json"):
+                name = dir_.split(".")[0]
+                with open(os.path.join(self.configs_dir, dir_), "r", encoding="utf-8") as f:
+                    attribute = json.load(f)
+                attribute_dict = {name: attribute}
+                self.load_attributes_from_dict(attribute_dict)
+            elif dir_.endswith(".pickle"):
+                name = dir_.split(".")[0]
+                with open(os.path.join(self.configs_dir, dir_), "rb") as f:
+                    attribute = pickle.load(f)
+                attribute_dict = {name: attribute}
+                self.load_attributes_from_dict(attribute_dict)
+    
+    def are_attributes_complete(self):
+        """
+        Checks if all attributes defined in ContextAttrNames are present in the instance.
+
+        Returns:
+            - bool: True if all attributes are present, False otherwise.
+        """
+        for attr in Names.ContextAttrNames.__members__.keys():
+            if not hasattr(self, attr):
+                return False
+        return True
 
     def save_attributes(self):
         """
@@ -112,11 +137,19 @@ class ExecutorContext:
         Raises:
             - AttributeError: If a required attribute is missing.
         """
-        attributes_dict = {}
-        for key in Names.ContextAttrNames.__members__.keys():
-            if not hasattr(self, key):
-                msg = f"Missing attribute {key}"
-                raise AttributeError(msg)
-            attributes_dict[key] = getattr(self, key)
-        with open(self.variable_json, "w", encoding="utf-8") as f:
-            json.dump(attributes_dict, f, indent=4)
+        configs = {}
+        if not self.are_attributes_complete():
+            msg = "Missing context attribute(s) to save."
+            raise AttributeError(msg)
+        for member in Names.ContextAttrNames:
+            attr = member.name
+            _, file_name = member.value
+            if not file_name in configs:
+                configs[file_name] = {}
+            configs[file_name][attr] = getattr(self, attr)
+        for file_name, attributes in configs.items():
+            with open(os.path.join(self.configs_dir, f"{file_name}"), "w", encoding="utf-8") as f:
+                if file_name.endswith(".json"):
+                    json.dump(attributes, f, indent=4)
+                elif file_name.endswith(".pickle"):
+                    pickle.dump(attributes, f)
