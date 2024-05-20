@@ -22,7 +22,7 @@ class CleanupTask(TaskBase):
         self.file_path = self.additional_args[0]
 
     def execute(self):
-        root_dir = self.task_executor_root
+        root_dir = self.task_runner_root
         file_path = self.file_path
         checkpoint_dir = get_checkpoint_directory(root_dir)
         environment_path = get_environment_path_of_tasks()

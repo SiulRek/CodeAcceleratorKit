@@ -13,27 +13,27 @@ class TaskSession:
     Stores the TaskSession, including loading and saving attributes.
 
     Args:
-        - executor_root (str): The root directory of the executor.
+        - runner_root (str): The root directory of the runner.
         - load_attributes_from_storage (bool): Whether to load attributes
             from the storage directory.
     """
 
-    def __init__(self, executor_root, load_attributes_from_storage=True):
-        self._executor_root = normalize_path(executor_root)
-        self._storage_dir = self._get_storage_dir(executor_root)
+    def __init__(self, runner_root, load_attributes_from_storage=True):
+        self._runner_root = normalize_path(runner_root)
+        self._storage_dir = self._get_storage_dir(runner_root)
         self._configs_dir = os.path.join(self.storage_dir, configs.CONFIGS_SUBFOLDER)
         if load_attributes_from_storage:
             self.load_attributes_from_storage()
 
     @property
-    def executor_root(self):
+    def runner_root(self):
         """
-        Returns the normalized executor root path.
+        Returns the normalized runner root path.
 
         Returns:
-            - str: The executor root path.
+            - str: The runner root path.
         """
-        return self._executor_root
+        return self._runner_root
 
     @property
     def storage_dir(self):
@@ -49,30 +49,30 @@ class TaskSession:
     def configs_dir(self):
         """
         Returns the directory path for storing configuration files inside the
-        executor storage directory.
+        runner storage directory.
 
         Returns:
             - str: The configuration directory path.
         """
         return self._configs_dir
 
-    def _get_storage_dir(self, executor_root):
+    def _get_storage_dir(self, runner_root):
         """
         Determines the storage directory based on the registration data of
-        executor root.
+        runner root.
 
         Args:
-            - executor_root (str): The root directory of the executor.
+            - runner_root (str): The root directory of the runner.
 
         Returns:
             - str: The storage directory path.
         """
-        with open(configs.REGISTERED_EXECUTORS_JSON, "r", encoding="utf-8") as f:
+        with open(configs.REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_variables = json.load(f)
-        if executor_root not in registered_variables:
-            msg = f"Executor root {executor_root} is not registered."
+        if runner_root not in registered_variables:
+            msg = f"Runner root {runner_root} is not registered."
             raise ValueError(msg)
-        return registered_variables[executor_root]
+        return registered_variables[runner_root]
 
     def load_attributes_from_dict(self, attributes_dict):
         """
@@ -96,7 +96,7 @@ class TaskSession:
     def load_attributes_from_storage(self):
         """Loads attributes from the storage/configs directory."""
         if not os.path.isdir(self.configs_dir):
-            msg = f"Directory {self.configs_dir} does not exist. Please register the executor properly."
+            msg = f"Directory {self.configs_dir} does not exist. Please register the runner properly."
             raise NotADirectoryError(msg)
         attributes_dict = {}
         for dir_ in os.listdir(self.configs_dir):

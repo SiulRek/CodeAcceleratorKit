@@ -27,7 +27,7 @@ class TaskBase(ABC):
             - default_args (tuple): Additional default arguments
                 requiredbythe task.
         """
-        self.task_executor_root = None
+        self.task_runner_root = None
         self.additional_args = None
         self.cache_dir = None
         self._initialize_arguments(default_root, default_args)
@@ -45,11 +45,11 @@ class TaskBase(ABC):
                 noadditionalcommand line arguments are provided.
         """
         if len(sys.argv) < 2:
-            self.task_executor_root = default_root
+            self.task_runner_root = default_root
             self.additional_args = default_args
-            sys.path.append(self.task_executor_root)
+            sys.path.append(self.task_runner_root)
         else:
-            self.task_executor_root = sys.argv[1]
+            self.task_runner_root = sys.argv[1]
             self.additional_args = sys.argv[2:]
 
     def setup(self):

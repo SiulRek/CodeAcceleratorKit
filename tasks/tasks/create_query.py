@@ -120,11 +120,11 @@ class CreateQuery(TaskBase):
     def setup(self):
         super().setup()
         self.file_path = self.additional_args[0]
-        self.query_path = get_query_file_path(self.task_executor_root)
-        self.response_path = get_response_file_path(self.task_executor_root)
+        self.query_path = get_query_file_path(self.task_runner_root)
+        self.response_path = get_response_file_path(self.task_runner_root)
 
     def execute(self):
-        root_dir = self.task_executor_root
+        root_dir = self.task_runner_root
         create_query(self.file_path, root_dir, self.query_path, self.response_path)
 
 

@@ -5,7 +5,7 @@ import re
 # ----------------- General Constants -----------------
 TEST_RESULTS_FILE = "test_results.log"
 FILE_TAG = "File"
-REGISTERED_EXECUTORS_JSON = os.path.join("tasks", "configs", "registered_executors.json")
+REGISTERED_RUNNERS_JSON = os.path.join("tasks", "configs", "registered_runners.json")
 CONFIGS_SUBFOLDER = "configs"
 
 

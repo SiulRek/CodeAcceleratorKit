@@ -1,7 +1,7 @@
 import tasks.configs.getters as getters
 
 
-def register_executor_workspace(workspace_dir):
+def register_runner_workspace(workspace_dir):
 
     # Initialize all the directories in the workspace
     getters.get_output_directory(workspace_dir)

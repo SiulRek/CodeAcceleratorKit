@@ -2,51 +2,51 @@ import json
 import os
 import warnings
 
-from tasks.configs.constants import REGISTERED_EXECUTORS_JSON
+from tasks.configs.constants import REGISTERED_RUNNERS_JSON
 from tasks.handling.normalize_path import normalize_path
 import tasks.configs.session_attributes as Names
 from tasks.handling.task_session import TaskSession
 
 
-class ExecutorHandler:
-    """Handles the registration and initialization of new task executors."""
+class RunnerHandler:
+    """Handles the registration and initialization of new task runners."""
 
     @classmethod
-    def _register_executor(cls, executor_root, storage_dir, overwrite):
+    def _register_runner(cls, runner_root, storage_dir, overwrite):
         """
-        Registers an executor root and its corresponding storage directory.
+        Registers an runner root and its corresponding storage directory.
 
         Args:
-            - executor_root (str): The root directory of the executor.
+            - runner_root (str): The root directory of the runner.
             - storage_dir (str): The storage directory to register.
             - overwrite (bool): Whether to overwrite an existing
                 registration.
         """
-        if not os.path.exists(REGISTERED_EXECUTORS_JSON):
+        if not os.path.exists(REGISTERED_RUNNERS_JSON):
             registered_variables = {}
         else:
-            with open(REGISTERED_EXECUTORS_JSON, "r", encoding="utf-8") as f:
+            with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
                 registered_variables = json.load(f)
-        if executor_root in registered_variables and not overwrite:
-            msg = f"Task executor root {executor_root} is already registered."
+        if runner_root in registered_variables and not overwrite:
+            msg = f"Task runner root {runner_root} is already registered."
             msg += " Use the overwrite flag to overwrite the registration."
             raise ValueError(msg)
         os.makedirs(storage_dir, exist_ok=True)
-        registered_variables[executor_root] = storage_dir
-        with open(REGISTERED_EXECUTORS_JSON, "w", encoding="utf-8") as f:
+        registered_variables[runner_root] = storage_dir
+        with open(REGISTERED_RUNNERS_JSON, "w", encoding="utf-8") as f:
             json.dump(registered_variables, f, indent=4)
 
     @classmethod
-    def _init_executor_attributes(cls, executor_root, storage_dir, python_env, cwd):
+    def _init_runner_attributes(cls, runner_root, storage_dir, python_env, cwd):
         """
-        Initializes attributes for the executor based on its root and storage
+        Initializes attributes for the runner based on its root and storage
         directory.
 
         Args:
-            - executor_root (str): The root directory of the executor.
+            - runner_root (str): The root directory of the runner.
             - storage_dir (str): The storage directory.
             - python_env (str): The Python environment to use.
-            - cwd (str): The current working directory of the executor.
+            - cwd (str): The current working directory of the runner.
 
         Returns:
             - dict: A dictionary of initialized attributes.
@@ -55,7 +55,7 @@ class ExecutorHandler:
 
         python_env = normalize_path(python_env)
         if cwd is None:
-            cwd = executor_root
+            cwd = runner_root
         if not os.path.exists(cwd):
             msg = f"Current working directory {cwd} does not exist."
             raise NotADirectoryError(msg)
@@ -70,17 +70,17 @@ class ExecutorHandler:
                 attributes[attr] = python_env
             else:
                 init_func = getattr(cls, f"_initialize_{attr}")
-                attributes[attr] = init_func(executor_root, storage_dir)
+                attributes[attr] = init_func(runner_root, storage_dir)
         return attributes
 
     @classmethod
     def sync_directories(cls, session):
         """
-        Synchronizes the directories of the executor session with the
+        Synchronizes the directories of the runner session with the
         directories in the task storage.
 
         Args:
-            - session (TaskSession): The executor session to synchronize.
+            - session (TaskSession): The runner session to synchronize.
         """
         created_dirs = []
         for attr in Names.SessionAttrNames.__members__.keys():
@@ -109,9 +109,9 @@ class ExecutorHandler:
                 warnings.warn(f"Unknown directory {unknown_dir} from task storage.")
 
     @classmethod
-    def register_executor(
+    def register_runner(
         cls,
-        executor_root,
+        runner_root,
         python_env,
         storage_dir="local/task_storage",
         overwrite=False,
@@ -119,33 +119,33 @@ class ExecutorHandler:
         cwd=None,
     ):
         """
-        Registers an executor and initializes its attributes.
+        Registers an runner and initializes its attributes.
 
         Args:
-            - executor_root (str): The root directory of the executor.
+            - runner_root (str): The root directory of the runner.
             - python_env (str): The Python environment to use.
             - storage_dir (str, optional): The storage directory. Defaults
                 to "local/task_storage".
             - overwrite (bool, optional): Whether to overwrite an existing
                 registration. Defaults to False.
             - create_dirs (bool, optional): Whether to create directories
-                for the executor. Defaults to True.
+                for the runner. Defaults to True.
             - cwd (str, optional): The current working directory of the
-                executor.
+                runner.
 
         Returns:
-            - TaskSession: The executor session generated from the
+            - TaskSession: The runner session generated from the
                 registration.
         """
-        executor_root = normalize_path(executor_root)
+        runner_root = normalize_path(runner_root)
         storage_dir = normalize_path(storage_dir)
-        if not storage_dir.startswith(executor_root):
-            storage_dir = os.path.join(executor_root, storage_dir)
-        cls._register_executor(executor_root, storage_dir, overwrite=overwrite)
-        attributes = cls._init_executor_attributes(
-            executor_root, storage_dir, python_env, cwd
+        if not storage_dir.startswith(runner_root):
+            storage_dir = os.path.join(runner_root, storage_dir)
+        cls._register_runner(runner_root, storage_dir, overwrite=overwrite)
+        attributes = cls._init_runner_attributes(
+            runner_root, storage_dir, python_env, cwd
         )
-        variable = TaskSession(executor_root, load_attributes_from_storage=False)
+        variable = TaskSession(runner_root, load_attributes_from_storage=False)
         variable.load_attributes_from_dict(attributes)
         variable.save_attributes()
         if create_dirs:
@@ -153,20 +153,20 @@ class ExecutorHandler:
         return variable
 
     @classmethod
-    def login_executor(cls, executor_root, update_dirs=True):
+    def login_runner(cls, runner_root, update_dirs=True):
         """
-        Logs in to an executor and initializes its session.
+        Logs in to an runner and initializes its session.
 
         Args:
-            - executor_root (str): The root directory of the executor.
+            - runner_root (str): The root directory of the runner.
             - update_dirs (bool, optional): Whether to update the
-                directories of the executor session. Defaults to True.
+                directories of the runner session. Defaults to True.
 
         Returns:
-            - TaskSession: The executor session after logging in.
+            - TaskSession: The runner session after logging in.
         """
-        executor_root = normalize_path(executor_root)
-        session = TaskSession(executor_root)
+        runner_root = normalize_path(runner_root)
+        session = TaskSession(runner_root)
         if update_dirs:
             cls.sync_directories(session)
         return session

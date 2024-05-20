@@ -34,25 +34,25 @@ class TestTaskSession(unittest.TestCase):
     def setUpClass(cls):
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         cls.logger = TestResultLogger(LOG_FILE)
-        cls.logger.log_title("Executor Variable Test")
+        cls.logger.log_title("Runner Variable Test")
 
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.executor_root = normalize_path(
-            os.path.join(self.temp_dir.name, "executor_root")
+        self.runner_root = normalize_path(
+            os.path.join(self.temp_dir.name, "runner_root")
         )
         self.json_mock = normalize_path(
             os.path.join(self.temp_dir.name, "registered_variables.json")
         )
 
-        registered_executors = {
-            self.executor_root: normalize_path(
+        registered_runners = {
+            self.runner_root: normalize_path(
                 os.path.join(self.temp_dir.name, "task_storage")
             )
         }
 
         with open(self.json_mock, "w", encoding="utf-8") as f:
-            json.dump(registered_executors, f, indent=4)
+            json.dump(registered_runners, f, indent=4)
 
         self.configs_dir = os.path.join(self.temp_dir.name, "task_storage", "configs")
         os.makedirs(self.configs_dir, exist_ok=True)
@@ -63,12 +63,12 @@ class TestTaskSession(unittest.TestCase):
 
     def test_load_attributes_1(self):
         with patch(
-            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
         ), patch(
             "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
-                self.executor_root, load_attributes_from_storage=False
+                self.runner_root, load_attributes_from_storage=False
             )
             with open(
                 os.path.join(self.configs_dir, "configs.json"), "w", encoding="utf-8"
@@ -82,12 +82,12 @@ class TestTaskSession(unittest.TestCase):
 
     def test_load_attributes(self):
         with patch(
-            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
         ), patch(
             "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             variable_json = TaskSession(
-                self.executor_root, load_attributes_from_storage=False
+                self.runner_root, load_attributes_from_storage=False
             ).configs_dir
             with open(
                 os.path.join(variable_json, "configs.json"), "w", encoding="utf-8"
@@ -95,7 +95,7 @@ class TestTaskSession(unittest.TestCase):
                 json.dump({"cwd": "test_dir", "python_env": "test_env"}, f, indent=4)
 
             session = TaskSession(
-                self.executor_root, load_attributes_from_storage=True
+                self.runner_root, load_attributes_from_storage=True
             )
 
             self.assertEqual(session.cwd, "test_dir")
@@ -103,13 +103,13 @@ class TestTaskSession(unittest.TestCase):
 
     def test_load_attributes_from_dict(self):
         with patch(
-            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
         ), patch(
             "tasks.configs.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(
-                self.executor_root, load_attributes_from_storage=False
+                self.runner_root, load_attributes_from_storage=False
             )
             session.load_attributes_from_dict(
                 {
@@ -132,13 +132,13 @@ class TestTaskSession(unittest.TestCase):
 
     def test_load_attributes_from_storage_with_pickle(self):
         with patch(
-            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
         ), patch(
             "tasks.configs.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(
-                self.executor_root, load_attributes_from_storage=False
+                self.runner_root, load_attributes_from_storage=False
             )
 
             with open(os.path.join(self.configs_dir, "other_configs.pkl"), "wb") as f:
@@ -150,12 +150,12 @@ class TestTaskSession(unittest.TestCase):
             
     def test_are_attributes_complete_true(self):
         with patch(
-            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
         ), patch(
             "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
-                self.executor_root, load_attributes_from_storage=False
+                self.runner_root, load_attributes_from_storage=False
             )
             session.load_attributes_from_dict(
                 {"cwd": "test_dir", "python_env": "test_env"}
@@ -165,12 +165,12 @@ class TestTaskSession(unittest.TestCase):
 
     def test_are_attributes_complete_false(self):
         with patch(
-            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
         ), patch(
             "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
-                self.executor_root, load_attributes_from_storage=False
+                self.runner_root, load_attributes_from_storage=False
             )
             session.load_attributes_from_dict({"cwd": "test_dir"})
 
@@ -178,13 +178,13 @@ class TestTaskSession(unittest.TestCase):
 
     def test_save_attributes(self):
         with patch(
-            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
         ), patch(
             "tasks.configs.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(
-                self.executor_root, load_attributes_from_storage=False
+                self.runner_root, load_attributes_from_storage=False
             )
             session.load_attributes_from_dict(
                 {
