@@ -117,7 +117,7 @@ def wrap_metadata_text(text, leading_spaces):
         if check_new_item(line):
             items.append(line)
         else:
-            items[-1] += line + "\n"
+            items[-1] += "\n" + line
     if items[0] == "":
         items.pop(0)
 
