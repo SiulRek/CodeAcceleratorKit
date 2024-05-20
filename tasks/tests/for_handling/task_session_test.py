@@ -29,7 +29,7 @@ class AttrNamesMockExtended(Enum):
     attr_6 = (6, "other_configs.pkl")
 
 
-class TestExecutorVariable(unittest.TestCase):
+class TestTaskSession(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.makedirs(OUTPUT_DIR, exist_ok=True)
