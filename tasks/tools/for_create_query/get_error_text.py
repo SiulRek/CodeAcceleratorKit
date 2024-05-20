@@ -1,5 +1,5 @@
-from tasks.constants.configs import TEST_RESULTS_FILE
-from tasks.constants.configs import TEST_RESULT_PATTERN
+from tasks.configs.constants import TEST_RESULTS_FILE
+from tasks.configs.constants import TEST_RESULT_PATTERN
 from tasks.tools.general.find_file import find_file
 
 

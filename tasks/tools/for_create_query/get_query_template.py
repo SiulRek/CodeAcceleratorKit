@@ -1,6 +1,6 @@
 import os
 
-from tasks.constants.getters import get_query_templates_directory
+from tasks.configs.getters import get_query_templates_directory
 
 
 def get_query_template(name, root_dir):

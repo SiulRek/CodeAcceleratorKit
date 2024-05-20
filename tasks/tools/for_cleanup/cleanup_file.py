@@ -1,6 +1,6 @@
 import os
 
-from tasks.constants.getters import (
+from tasks.configs.getters import (
     get_checkpoint_directory,
     get_environment_path_of_tasks,
 )

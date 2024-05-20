@@ -31,8 +31,8 @@ TODO when adding new reference:
 """
 import os
 
-from tasks.constants.configs import MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES
-from tasks.constants.getters import get_query_file_path, get_response_file_path
+from tasks.configs.constants import MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES
+from tasks.configs.getters import get_query_file_path, get_response_file_path
 from tasks.tools.for_create_query.add_text_tags import add_text_tags
 from tasks.tools.for_create_query.finalizer import Finalizer
 from tasks.tools.for_create_query.referenced_contents_extractor import (

@@ -1,8 +1,8 @@
 import re
 
-from tasks.constants.configs import CREATE_QUERY_TAGS as TAGS
-from tasks.constants.configs import FILE_TAG
-from tasks.constants.defaults import DIRECTORY_TREE_DEFAULTS
+from tasks.configs.constants import CREATE_QUERY_TAGS as TAGS
+from tasks.configs.constants import FILE_TAG
+from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
 from tasks.tools.for_all_tasks.line_validation_utils import (
     retrieve_list_in_square_brackets,
     retrieve_optional_arguments,

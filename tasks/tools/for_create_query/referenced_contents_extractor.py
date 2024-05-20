@@ -1,9 +1,9 @@
 import os
 
-from tasks.constants.configs import (
+from tasks.configs.constants import (
     MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES,
 )
-from tasks.constants.getters import get_environment_path, get_environment_path_of_tasks, get_temporary_script_path
+from tasks.configs.getters import get_environment_path, get_environment_path_of_tasks, get_temporary_script_path
 from tasks.tools.for_create_query.get_error_text import (
     get_error_text,
 )

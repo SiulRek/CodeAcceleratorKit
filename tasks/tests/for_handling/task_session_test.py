@@ -63,9 +63,9 @@ class TestTaskSession(unittest.TestCase):
 
     def test_load_attributes_1(self):
         with patch(
-            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
+            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
@@ -82,9 +82,9 @@ class TestTaskSession(unittest.TestCase):
 
     def test_load_attributes(self):
         with patch(
-            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
+            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             variable_json = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
@@ -103,9 +103,9 @@ class TestTaskSession(unittest.TestCase):
 
     def test_load_attributes_from_dict(self):
         with patch(
-            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.constants.session_attributes.SessionAttrNames",
+            "tasks.configs.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(
@@ -132,9 +132,9 @@ class TestTaskSession(unittest.TestCase):
 
     def test_load_attributes_from_storage_with_pickle(self):
         with patch(
-            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.constants.session_attributes.SessionAttrNames",
+            "tasks.configs.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(
@@ -150,9 +150,9 @@ class TestTaskSession(unittest.TestCase):
             
     def test_are_attributes_complete_true(self):
         with patch(
-            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
+            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
@@ -165,9 +165,9 @@ class TestTaskSession(unittest.TestCase):
 
     def test_are_attributes_complete_false(self):
         with patch(
-            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
+            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
                 self.executor_root, load_attributes_from_storage=False
@@ -178,9 +178,9 @@ class TestTaskSession(unittest.TestCase):
 
     def test_save_attributes(self):
         with patch(
-            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
         ), patch(
-            "tasks.constants.session_attributes.SessionAttrNames",
+            "tasks.configs.session_attributes.SessionAttrNames",
             AttrNamesMockExtended,
         ):
             session = TaskSession(

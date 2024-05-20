@@ -1,6 +1,6 @@
 import os
 
-from tasks.constants.configs import FILE_TAG
+from tasks.configs.constants import FILE_TAG
 
 
 def find_nearest_file(file_name, root_dir, reference_file):

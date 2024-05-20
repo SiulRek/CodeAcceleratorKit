@@ -1,6 +1,6 @@
 import warnings
 
-from tasks.constants.getters import get_modules_info
+from tasks.configs.getters import get_modules_info
 from tasks.tools.for_cleanup.extract_module_path import (
     extract_module_path,
 )

@@ -37,13 +37,13 @@ class TestExecutorHandler(unittest.TestCase):
         self.mock_REGISTERED_EXECUTORS_JSON = patcher1.start()
 
         patcher2 = patch(
-            "tasks.constants.configs.REGISTERED_EXECUTORS_JSON", self.json_mock
+            "tasks.configs.constants.REGISTERED_EXECUTORS_JSON", self.json_mock
         )
         self.addCleanup(patcher2.stop)
         self.mock_REGISTERED_EXECUTORS_JSON = patcher2.start()
 
         patcher3 = patch(
-            "tasks.constants.session_attributes.SessionAttrNames", AttrNamesMock
+            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         )
         self.addCleanup(patcher3.stop)
         self.mock_variable_names = patcher3.start()

@@ -3,9 +3,9 @@ import os
 import pickle
 import warnings
 
-import tasks.constants.configs as configs
+import tasks.configs.constants as configs
 from tasks.handling.normalize_path import normalize_path
-import tasks.constants.session_attributes as Names
+import tasks.configs.session_attributes as Names
 
 
 class TaskSession:

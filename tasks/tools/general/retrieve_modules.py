@@ -44,5 +44,5 @@ def retrieve_modules(json_file):
 
 
 if __name__ == "__main__":
-    json_file = "./tasks/constants/modules_info.json"
+    json_file = "./tasks/configs/modules_info.json"
     retrieve_modules(json_file)

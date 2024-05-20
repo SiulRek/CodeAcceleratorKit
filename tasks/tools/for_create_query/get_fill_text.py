@@ -1,6 +1,6 @@
 import os
 
-from tasks.constants.getters import get_fill_text_directory
+from tasks.configs.getters import get_fill_text_directory
 
 
 def get_fill_text(placeholder, root_dir):

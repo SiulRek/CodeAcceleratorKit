@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import os
 import sys
 
-from tasks.constants.getters import get_task_cache_directory
+from tasks.configs.getters import get_task_cache_directory
 
 
 class TaskBase(ABC):

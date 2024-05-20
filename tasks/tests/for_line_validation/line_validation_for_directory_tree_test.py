@@ -1,6 +1,6 @@
 import unittest
 
-from tasks.constants.defaults import DIRECTORY_TREE_DEFAULTS as DEFAULTS
+from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS as DEFAULTS
 from tasks.tools.for_create_query.line_validation import line_validation_for_directory_tree
 
 

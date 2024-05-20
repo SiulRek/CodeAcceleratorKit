@@ -1,4 +1,4 @@
-import tasks.constants.getters as getters
+import tasks.configs.getters as getters
 
 
 def register_executor_workspace(workspace_dir):

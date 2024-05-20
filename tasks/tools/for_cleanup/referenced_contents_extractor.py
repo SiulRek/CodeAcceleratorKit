@@ -1,4 +1,4 @@
-from tasks.constants.configs import (
+from tasks.configs.constants import (
     CLEANUP_REFERENCE_TYPES as REFERENCE_TYPE,
 )
 from tasks.tools.for_cleanup.line_validation import (
