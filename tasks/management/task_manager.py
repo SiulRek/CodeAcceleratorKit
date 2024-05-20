@@ -19,7 +19,8 @@ class TaskManager:
         Args:
             - runner_root (str): The root directory of the runner.
             - storage_dir (str): The storage directory to register.
-            - overwrite (bool): Whether to overwrite an existing registration.
+            - overwrite (bool): Whether to overwrite an existing
+                registration.
         """
         if not os.path.exists(REGISTERED_RUNNERS_JSON):
             registered_variables = {}
@@ -90,15 +91,12 @@ class TaskManager:
         storage_dir = session.storage_dir
         dirs_in_storage = os.listdir(storage_dir)
         dirs_in_storage = [os.path.join(storage_dir, dir_) for dir_ in dirs_in_storage]
-        dirs_in_storage = [
-            dir_ for dir_ in dirs_in_storage
-            if os.path.isdir(dir_)
-        ]
+        dirs_in_storage = [dir_ for dir_ in dirs_in_storage if os.path.isdir(dir_)]
         dirs_in_storage = [normalize_path(dir_) for dir_ in dirs_in_storage]
         unknown_dirs = []
         for dir_in_storage in dirs_in_storage:
             for created_dir in created_dirs:
-                if dir_in_storage in created_dir or dir_in_storage.endswith('configs'):
+                if dir_in_storage in created_dir or dir_in_storage.endswith("configs"):
                     break
             else:
                 unknown_dirs.append(dir_in_storage)
@@ -123,17 +121,18 @@ class TaskManager:
         Args:
             - runner_root (str): The root directory of the runner.
             - python_env (str): The Python environment to use.
-            - storage_dir (str, optional): The storage directory.
-                Defaults to "local/task_storage".
-            - overwrite (bool, optional): Whether to overwrite
-                an existing registration. Defaults to False.
-            - create_dirs (bool, optional): Whether to create
-                directories for the runner. Defaults to True.
-            - cwd (str, optional): The current working directory
-                of the runner.
+            - storage_dir (str, optional): The storage directory. Defaults
+                to "local/task_storage".
+            - overwrite (bool, optional): Whether to overwrite an existing
+                registration. Defaults to False.
+            - create_dirs (bool, optional): Whether to create directories
+                for the runner. Defaults to True.
+            - cwd (str, optional): The current working directory of the
+                runner.
 
         Returns:
-            - TaskSession: The runner session generated from the registration.
+            - TaskSession: The runner session generated from the
+                registration.
         """
         runner_root = normalize_path(runner_root)
         storage_dir = normalize_path(storage_dir)
@@ -157,8 +156,8 @@ class TaskManager:
 
         Args:
             - runner_root (str): The root directory of the runner.
-            - update_dirs (bool, optional): Whether to update
-                the directories of the runner session. Defaults to True.
+            - update_dirs (bool, optional): Whether to update the
+                directories of the runner session. Defaults to True.
 
         Returns:
             - TaskSession: The runner session after logging in.
