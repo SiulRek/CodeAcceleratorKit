@@ -101,22 +101,14 @@ class ExecutorContext:
             raise NotADirectoryError(msg)
         attributes_dict = {}
         for dir_ in os.listdir(self.configs_dir):
-            if dir_ == 'configs.json':
+            if dir_.endswith(".json"):
                 with open(os.path.join(self.configs_dir, dir_), "r", encoding="utf-8") as f:
                     attributes_dict = json.load(f)
                 self.load_attributes_from_dict(attributes_dict)
-            elif dir_.endswith(".json"):
-                name = dir_.split(".")[0]
-                with open(os.path.join(self.configs_dir, dir_), "r", encoding="utf-8") as f:
-                    attribute = json.load(f)
-                attribute_dict = {name: attribute}
-                self.load_attributes_from_dict(attribute_dict)
-            elif dir_.endswith(".pickle"):
-                name = dir_.split(".")[0]
+            elif dir_.endswith(".pkl"):
                 with open(os.path.join(self.configs_dir, dir_), "rb") as f:
-                    attribute = pickle.load(f)
-                attribute_dict = {name: attribute}
-                self.load_attributes_from_dict(attribute_dict)
+                    attributes_dict = pickle.load(f)
+                self.load_attributes_from_dict(attributes_dict)
     
     def are_attributes_complete(self):
         """
@@ -148,8 +140,10 @@ class ExecutorContext:
                 configs[file_name] = {}
             configs[file_name][attr] = getattr(self, attr)
         for file_name, attributes in configs.items():
-            with open(os.path.join(self.configs_dir, f"{file_name}"), "w", encoding="utf-8") as f:
-                if file_name.endswith(".json"):
+            file_path = os.path.join(self.configs_dir, file_name)
+            if file_name.endswith(".json"):
+                with open(file_path, "w", encoding="utf-8") as f:
                     json.dump(attributes, f, indent=4)
-                elif file_name.endswith(".pickle"):
+            elif file_name.endswith(".pkl"):
+                with open(file_path, "wb") as f:
                     pickle.dump(attributes, f)
