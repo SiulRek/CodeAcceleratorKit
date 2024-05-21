@@ -5,7 +5,7 @@ import warnings
 
 import tasks.configs.constants as configs
 from tasks.management.normalize_path import normalize_path
-import tasks.configs.session_attributes as Names
+import tasks.configs.session_attributes as Attributes
 
 
 class TaskSession:
@@ -82,12 +82,12 @@ class TaskSession:
             - attributes_dict (dict): A dictionary containing the attributes
                 to load.
         """
-        for attr in Names.SessionAttrNames.__members__.keys():
+        for attr in Attributes.SessionAttrNames.__members__.keys():
             if attr not in attributes_dict:
                 continue
             setattr(self, attr, attributes_dict[attr])
         for attr in attributes_dict.keys():
-            if attr not in Names.SessionAttrNames.__members__.keys():
+            if attr not in Attributes.SessionAttrNames.__members__.keys():
                 warnings.warn(
                     f"Attribute {attr} is not an attribute defined in ContextAttrNames."
                 )
@@ -119,7 +119,7 @@ class TaskSession:
         Returns:
             - bool: True if all attributes are present, False otherwise.
         """
-        for attr in Names.SessionAttrNames.__members__.keys():
+        for attr in Attributes.SessionAttrNames.__members__.keys():
             if not hasattr(self, attr):
                 return False
         return True
@@ -137,7 +137,7 @@ class TaskSession:
         os.makedirs(self.configs_dir, exist_ok=True)
 
         configs = {}
-        for member in Names.SessionAttrNames:
+        for member in Attributes.SessionAttrNames:
             attr = member.name
             _, file_name = member.value
             if file_name not in configs:

@@ -3,12 +3,12 @@ import os
 import warnings
 
 from tasks.configs.constants import REGISTERED_RUNNERS_JSON
-import tasks.configs.session_attributes as Names
+import tasks.configs.session_attributes as Attributes
 from tasks.management.normalize_path import normalize_path
 from tasks.management.task_session import TaskSession
 
 
-class TaskManager:
+class TaskManager(Attributes.AttributesInitializer):
     """Manages the registration and initialization of new task runners."""
 
     @classmethod
@@ -63,14 +63,20 @@ class TaskManager:
             msg = f"Python environment {python_env} does not exist."
             raise NotADirectoryError(msg)
 
-        for attr in Names.SessionAttrNames.__members__.keys():
+        primary_attrs = {
+            "runner_root": runner_root,
+            "storage_dir": storage_dir,
+            "cwd": cwd,
+            "python_env": python_env,
+        }
+        for attr in Attributes.SessionAttrNames.__members__.keys():
             if attr in "cwd":
                 attributes[attr] = cwd if cwd is not None else runner_root
             elif attr in "python_env":
                 attributes[attr] = python_env
             else:
                 init_func = getattr(cls, f"_initialize_{attr}")
-                attributes[attr] = init_func(runner_root, storage_dir)
+                attributes[attr] = init_func(primary_attrs)
         return attributes
 
     @classmethod
@@ -83,7 +89,7 @@ class TaskManager:
         """
         session = TaskSession(runner_root)
         created_dirs = []
-        for attr in Names.SessionAttrNames.__members__.keys():
+        for attr in Attributes.SessionAttrNames.__members__.keys():
             if attr.endswith("_dir"):
                 path = getattr(session, attr)
                 os.makedirs(path, exist_ok=True)
@@ -167,3 +173,11 @@ class TaskManager:
             cls.sync_directories_to(runner_root)
         session = TaskSession(runner_root)
         return session
+
+if __name__ == "__main__":
+    TaskManager.register_runner(
+        runner_root=r"/home/krakerlu/github/CodeAcceleratorKitTest",
+        python_env=r"/home/krakerlu/github/CodeAcceleratorKitTest/venv",
+        overwrite=True
+    )
+
