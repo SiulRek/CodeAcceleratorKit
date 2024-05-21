@@ -11,7 +11,7 @@ from tasks.tools.for_create_query.get_fill_text import get_fill_text
 from tasks.tools.for_create_query.get_query_template import (
     get_query_template,
 )
-from tasks.tools.for_create_query.line_validation import (
+from tasks.tasks.engines.for_create_query.line_validation import (
     line_validation_for_begin_text,
     line_validation_for_end_text,
     line_validation_for_title,
@@ -37,7 +37,7 @@ from tasks.tools.general.execute_python_module import (
     execute_python_module,
 )
 import tasks.tools.general.execute_unittests_from_file as execute_unittests_from_file
-from tasks.tools.for_all_tasks.macro_engine import MacroEngine
+from tasks.tasks.engines.macro_engine import MacroEngine
 from tasks.tools.general.find_dir import find_dir
 from tasks.tools.general.find_file import find_file
 from tasks.tools.general.generate_directory_tree import (

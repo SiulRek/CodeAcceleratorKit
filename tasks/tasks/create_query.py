@@ -34,8 +34,8 @@ import os
 from tasks.configs.constants import MAKE_QUERY_MACROS as MACROS
 from tasks.configs.getters import get_query_file_path, get_response_file_path
 from tasks.tools.for_create_query.add_text_tags import add_text_tags
-from tasks.tools.for_create_query.finalizer import Finalizer
-from tasks.tools.for_create_query.create_query_engine import (
+from tasks.tasks.engines.for_cleanup.finalizer import Finalizer
+from tasks.tasks.engines.for_create_query.create_query_engine import (
     CreateQueryEngine,
 )
 from tasks.tasks.task_base import TaskBase

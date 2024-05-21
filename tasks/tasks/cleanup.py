@@ -5,7 +5,7 @@ from tasks.configs.getters import (
     get_environment_path_of_tasks,
 )
 from tasks.tools.for_cleanup.cleanup_file import cleanup_file
-from tasks.tools.for_cleanup.cleanup_engine import (
+from tasks.tasks.engines.for_cleanup.cleanup_engine import (
     CleanupEngine,
 )
 from tasks.tasks.task_base import TaskBase
