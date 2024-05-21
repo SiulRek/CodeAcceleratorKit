@@ -1,4 +1,7 @@
-class ExtractorBase:
+from abc import ABC, abstractmethod
+
+
+class ExtractorBase(ABC):
     """
     Base class for extracting referenced content from files based on specified
     validation methods.
@@ -21,8 +24,8 @@ class ExtractorBase:
         self.initialize_validation_methods()
 
     def initialize_validation_methods(self):
-        """Initializes the validation methods for extracting referenced content
-        from the text."""
+        """Initializes the validation methods for extracting referenced
+        contentfromthe text."""
         self.validation_methods = [
             getattr(self, method)
             for method in dir(self)
@@ -93,21 +96,20 @@ class ExtractorBase:
         process_results = self.post_process_referenced_contents(referenced_contents)
         return process_results, updated_text
 
+    @abstractmethod
     def post_process_referenced_contents(self, referenced_contents):
         """
         Processes the collected referenced contents for final output.
 
-        This method can be overridden by child classes to implement custom
+        This method must be overridden by child classes to implement custom
         processing of the referenced contents, such as merging related items or
-        filtering out specific results. By default, it returns the referenced
-        contents as they were collected.
+        filtering out specific results.
 
         Args:
             - referenced_contents (list): The list of referenced contents
                 collected by the validation methods.
 
         Returns:
-            - costum_type: A custom type or list of referenced contents
+            - custom_type: A custom type or list of referenced contents
                 after post-processing.
         """
-        return referenced_contents
