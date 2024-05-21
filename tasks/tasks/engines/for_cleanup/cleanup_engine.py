@@ -24,16 +24,16 @@ class CleanupEngine(MacroEngine):
             return (MACROS.CHECKPOINTING, True)
         return None
 
-    def post_process_macros(self, referenced_contents):
+    def post_process_macros(self, macros_data):
         select_not = []
         select_only = []
         checkpoint_tag = False
-        for ref_type, content in referenced_contents:
-            if ref_type == MACROS.SELECT_NOT:
+        for macro, content in macros_data:
+            if macro == MACROS.SELECT_NOT:
                 select_not.extend(content)
-            elif ref_type == MACROS.SELECT_ONLY:
+            elif macro == MACROS.SELECT_ONLY:
                 select_only.extend(content)
-            elif ref_type == MACROS.CHECKPOINTING:
+            elif macro == MACROS.CHECKPOINTING:
                 checkpoint_tag = True
 
         select_not = list(set(select_not)) or None

@@ -19,21 +19,21 @@ class TaskSession:
     """
 
     def __init__(self, runner_root, load_attributes_from_storage=True):
-        self._runner_root = normalize_path(runner_root)
-        self._storage_dir = self._get_storage_dir(runner_root)
+        self._root = normalize_path(runner_root)
+        self._storage_dir = self._get_storage_dir(self.root)
         self._configs_dir = os.path.join(self.storage_dir, configs.CONFIGS_SUBFOLDER)
         if load_attributes_from_storage:
             self.load_attributes_from_storage()
 
     @property
-    def runner_root(self):
+    def root(self):
         """
         Returns the normalized runner root path.
 
         Returns:
             - str: The runner root path.
         """
-        return self._runner_root
+        return self._root
 
     @property
     def storage_dir(self):

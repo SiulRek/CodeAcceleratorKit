@@ -7,6 +7,8 @@ TEST_RESULTS_FILE = "test_results.log"
 FILE_TAG = "File"
 REGISTERED_RUNNERS_JSON = os.path.join("tasks", "configs", "registered_runners.json")
 CONFIGS_SUBFOLDER = "configs"
+TASKS_PYTHON_ENV = os.path.abspath(r"./venv")
+TASKS_CACHE = os.path.abspath(r"./tasks/__taskscache__")
 
 
 # ----------------- For Create Query -----------------

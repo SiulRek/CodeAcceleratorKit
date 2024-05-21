@@ -5,13 +5,9 @@ from tasks.configs.getters import (
     get_environment_path_of_tasks,
 )
 from tasks.tools.for_cleanup.cleanup_file import cleanup_file
-from tasks.tasks.engines.for_cleanup.cleanup_engine import (
-    CleanupEngine,
-)
+from tasks.tasks.engines.for_cleanup.cleanup_engine import CleanupEngine
 from tasks.tasks.task_base import TaskBase
 
-
-extract_referenced_contents = CleanupEngine().extract_macros
 
 
 class CleanupTask(TaskBase):
@@ -27,10 +23,9 @@ class CleanupTask(TaskBase):
         checkpoint_dir = get_checkpoint_directory(root_dir)
         environment_path = get_environment_path_of_tasks()
 
-        referenced_contents, updated_content = extract_referenced_contents(
-            file_path, root_dir
-        )
-        select_only, select_not, checkpointing = referenced_contents
+        engine = CleanupEngine(root_dir)
+        macros_data, updated_content = engine.extract_macros(file_path)
+        select_only, select_not, checkpointing = macros_data
 
         if select_only != None and select_not != None:
             msg = "Cannot have both select_only and select_not options specified."

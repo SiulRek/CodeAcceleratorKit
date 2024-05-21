@@ -115,3 +115,4 @@ class MacroEngine(ABC):
             - custom_type: A custom type or list of macros after
                 post-processing.
         """
+        pass

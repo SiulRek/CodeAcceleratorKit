@@ -2,7 +2,7 @@ from enum import Enum
 import json
 import os
 
-from tasks.configs.constants import CONFIGS_SUBFOLDER
+from tasks.configs.constants import CONFIGS_SUBFOLDER, TASKS_PYTHON_ENV
 from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tools.general.retrieve_modules import retrieve_modules
 
@@ -11,7 +11,7 @@ class SessionAttrNames(Enum):
     """Enumeration for context attribute names."""
 
     cwd = (1, "configs.json")
-    python_env = (2, "configs.json")
+    runner_python_env = (2, "configs.json")
     cache_dir = (3, "configs.json")
     data_dir = (4, "configs.json")
     fill_text_dir = (5, "configs.json")
@@ -20,7 +20,7 @@ class SessionAttrNames(Enum):
     checkpoint_dir = (8, "configs.json")
     query_file = (9, "configs.json")
     response_file = (10, "configs.json")
-    temporary_script = (11, "configs.json")
+    tasks_python_env = (11, "configs.json")
     modules_info = (12, "modules_info.json")
 
 
@@ -50,7 +50,6 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_query_templates_dir(cls, primary_attrs):
-        storage_dir = primary_attrs.get("storage_dir")
         data_dir = cls._initialize_data_dir(primary_attrs)
         dir_ = os.path.join(data_dir, "query_templates")
         dir_ = normalize_path(dir_)
@@ -86,23 +85,8 @@ class AttributesInitializer:
         return path
 
     @classmethod
-    def _initialize_temporary_script(cls, primary_attrs):
-        cache_dir = cls._initialize_cache_dir(primary_attrs)
-        cache_dir = normalize_path(cache_dir)
-
-        if not os.path.exists(cache_dir):
-            os.makedirs(cache_dir)
-
-        if not hasattr(cls, "_temp_script_counter"):
-            cls._temp_script_counter = 1
-        else:
-            cls._temp_script_counter += 1
-
-        name = f"script_{cls._temp_script_counter}.py"
-        path = os.path.join(cache_dir, name)
-        path = normalize_path(path)
-
-        return path
+    def _initialize_tasks_python_env(cls, _):
+        return TASKS_PYTHON_ENV
 
     @classmethod
     def _initialize_modules_info(cls, primary_attrs):

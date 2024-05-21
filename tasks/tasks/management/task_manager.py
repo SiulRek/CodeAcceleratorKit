@@ -67,12 +67,12 @@ class TaskManager(Attributes.AttributesInitializer):
             "runner_root": runner_root,
             "storage_dir": storage_dir,
             "cwd": cwd,
-            "python_env": python_env,
+            "runner_python_env": python_env,
         }
         for attr in Attributes.SessionAttrNames.__members__.keys():
             if attr in "cwd":
                 attributes[attr] = cwd if cwd is not None else runner_root
-            elif attr in "python_env":
+            elif attr in "runner_python_env":
                 attributes[attr] = python_env
             else:
                 init_func = getattr(cls, f"_initialize_{attr}")
@@ -109,14 +109,14 @@ class TaskManager(Attributes.AttributesInitializer):
 
         for unknown_dir in unknown_dirs:
             for unknown_dir in unknown_dirs:
-                warnings.warn(f"Unknown directory {unknown_dir} from task storage.")
+                warnings.warn(f"Unknown directory {unknown_dir} from tasks storage.")
 
     @classmethod
     def register_runner(
         cls,
         runner_root,
         python_env,
-        storage_dir="local/task_storage",
+        storage_dir="local/tasks_storage",
         overwrite=False,
         create_dirs=True,
         cwd=None,
@@ -176,8 +176,8 @@ class TaskManager(Attributes.AttributesInitializer):
 
 if __name__ == "__main__":
     TaskManager.register_runner(
-        runner_root=r"/home/krakerlu/github/CodeAcceleratorKitTest",
-        python_env=r"/home/krakerlu/github/CodeAcceleratorKitTest/venv",
+        runner_root=r"/home/krakerlu/github/CodeAcceleratorKit",
+        python_env=r"/home/krakerlu/github/CodeAcceleratorKit/venv",
         overwrite=True
     )
 

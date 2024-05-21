@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 from tasks.tools.general.retrieve_modules import retrieve_modules
 
@@ -8,7 +8,7 @@ TASKS_CODE_ROOT = os.path.join(FILE_DIR, "..", "..")
 
 
 def get_task_cache_directory(name):
-    dir = os.path.join(TASKS_CODE_ROOT, "tasks",  "__taskcache__", name)
+    dir = os.path.join(TASKS_CODE_ROOT, "tasks", "__taskcache__", name)
     os.makedirs(dir, exist_ok=True)
     return os.path.normpath(dir)
 
@@ -18,6 +18,7 @@ def get_query_file_path(root_dir):
     os.makedirs(dir, exist_ok=True)
     path = os.path.join(dir, "query.txt")
     return os.path.normpath(path)
+
 
 def get_response_file_path(root_dir):
     dir = os.path.join(root_dir, "local", "tasks_storage", "outputs")
@@ -63,25 +64,19 @@ def get_checkpoint_directory(root_dir):
     return os.path.normpath(dir)
 
 
-# Allows to run subprocesses in the virtual environment of the external workspace
 def get_environment_path(root_dir):
     path = os.path.join(root_dir, "venv")
     return os.path.normpath(path)
 
 
-# Allows to run subprocesses in the virtual environment of this (the tasks) workspace.  
 def get_environment_path_of_tasks():
     return get_environment_path(TASKS_CODE_ROOT)
 
 
 def get_modules_info(root_dir):
-    path = os.path.join(
-        root_dir, "local", "tasks_storage", "data", "modules_info.json"
-    )
+    path = os.path.join(root_dir, "local", "tasks_storage", "data", "modules_info.json")
     if not os.path.exists(path):
-        retrieve_modules(path)
+        retrieve_modules(root_dir, path)
     with open(path, "r") as file:
         modules_info = json.load(file)
-    list_dirs = os.listdir(root_dir)
-    modules_info["local"] = [dir for dir in list_dirs if os.path.isdir(dir)]
-    return modules_info
+    return modules_info["modules_info"]

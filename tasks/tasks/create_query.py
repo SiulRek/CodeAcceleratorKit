@@ -40,13 +40,12 @@ from tasks.tasks.engines.for_create_query.create_query_engine import (
 )
 from tasks.tasks.task_base import TaskBase
 
-extract_macros = CreateQueryEngine().extract_macros
 
-
-class ReferenceTitleManager:
+class ChapterTitleManager:
 
     def __init__(self):
         self.title = None
+
 
     def set(self, title):
         self.title = title
@@ -62,18 +61,18 @@ def format_text_from_macros(macros_data, updated_content):
 
     Args:
         - referenced_contents (list): A list of tuples detailing
-            references(type, data).
+            macros(type, data).
         - file_path (str): The path to the current file.
         - updated_content (str): The updated content of the current file.
         - root_dir (str): The root directory of the project.
 
     Returns:
-        - str: Formatted query based on file references.
+        - str: Formatted query based on file macros.
     """
     query = ""
-    title_manager = ReferenceTitleManager()
-    for referenced_content in macros_data:
-        content_type, default_title, text = referenced_content
+    title_manager = ChapterTitleManager()
+    for macros_data in macros_data:
+        content_type, default_title, text = macros_data
         current_title = title_manager.get()
         title = current_title if current_title else default_title
 
@@ -92,7 +91,7 @@ def format_text_from_macros(macros_data, updated_content):
 
 def create_query(file_path, root_dir, query_path, response_path):
     """
-    Create a query from the file and referenced contents in the file.
+    Create a query from the file and macros referenced in the file.
 
     Args:
         - file_path (str): The path to the file to be processed.
@@ -100,9 +99,8 @@ def create_query(file_path, root_dir, query_path, response_path):
         - query_path (str): The path to the query file.
         - response_path (str): The path to the response file.
     """
-    macros_data, updated_content = extract_macros(
-        file_path, root_dir
-    )
+    engine = CreateQueryEngine(root_dir)
+    macros_data, updated_content = engine.extract_macros(file_path)
     macros_data, begin_text, end_text, make_query_kwargs = macros_data
 
     query = format_text_from_macros(macros_data, updated_content)
