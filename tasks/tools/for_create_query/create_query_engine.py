@@ -72,9 +72,9 @@ class CreateQueryEngine(MacroEngine):
         if result := line_validation_for_files(line):
             referenced_files = []
             for file_name in result:
-                file_path = find_file(file_name, self.root_dir, self.file_path)
+                file_path = find_file(file_name, self.runner_root, self.file_path)
                 with open(file_path, "r", encoding="utf-8") as file:
-                    relative_path = os.path.relpath(file_path, self.root_dir)
+                    relative_path = os.path.relpath(file_path, self.runner_root)
                     default_title = f"File at {relative_path}"
                     referenced_file = (MACROS.FILE, default_title, file.read())
                     referenced_files.append(referenced_file)
@@ -83,28 +83,28 @@ class CreateQueryEngine(MacroEngine):
 
     def validate_current_file_macro(self, line):
         if line_validation_for_current_file_reference(line):
-            relative_path = os.path.relpath(self.file_path, self.root_dir)
+            relative_path = os.path.relpath(self.file_path, self.runner_root)
             default_title = f"File at {relative_path}"
             return (MACROS.CURRENT_FILE, default_title, None)
         return None
 
     def validate_error_macro(self, line):
         if line_validation_for_error(line):
-            error_text = get_error_text(self.root_dir, self.file_path)
+            error_text = get_error_text(self.runner_root, self.file_path)
             default_title = "Occured Errors"
             return (MACROS.LOGGED_ERROR, default_title, error_text)
         return None
 
     def validate_fill_text_macro(self, line):
         if result := line_validation_for_fill_text(line):
-            fill_text, default_title = get_fill_text(result, self.root_dir)
+            fill_text, default_title = get_fill_text(result, self.runner_root)
             return (MACROS.FILL_TEXT, default_title, fill_text)
         return None
 
     def validate_run_python_script_macro(self, line):
         if result := line_validation_for_run_python_script(line):
-            script_path = find_file(result, self.root_dir, self.file_path)
-            environment_path = get_environment_path(self.root_dir)
+            script_path = find_file(result, self.runner_root, self.file_path)
+            environment_path = get_environment_path(self.runner_root)
             script_output = execute_python_module(script_path, environment_path)
             default_title = "Python Script Output"
             return (MACROS.RUN_PYTHON_SCRIPT, default_title, script_output)
@@ -112,7 +112,7 @@ class CreateQueryEngine(MacroEngine):
 
     def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
-            script_path = find_file(result, self.root_dir, self.file_path)
+            script_path = find_file(result, self.runner_root, self.file_path)
             environment_path = get_environment_path_of_tasks()
             pylint_output = execute_pylint(script_path, environment_path)
             default_title = "Pylint Output"
@@ -122,13 +122,13 @@ class CreateQueryEngine(MacroEngine):
     def validate_run_unittest_macro(self, line):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
-            script_path = find_file(name, self.root_dir, self.file_path)
-            temp_script_path = get_temporary_script_path(self.root_dir)
+            script_path = find_file(name, self.runner_root, self.file_path)
+            temp_script_path = get_temporary_script_path(self.runner_root)
             unittest_output = execute_python_module(
                 module=execute_unittests_from_file,
                 args=[script_path, str(verbosity)],
-                env_python_path=get_environment_path(self.root_dir),
-                cwd=self.root_dir,
+                env_python_path=get_environment_path(self.runner_root),
+                cwd=self.runner_root,
                 temp_script_path=temp_script_path,
             )
             default_title = "Unittest Output"
@@ -138,7 +138,7 @@ class CreateQueryEngine(MacroEngine):
     def validate_directory_tree_macro(self, line):
         if result := line_validation_for_directory_tree(line):
             dir, max_depth, include_files, ignore_list = result
-            dir = find_dir(dir, self.root_dir, self.file_path)
+            dir = find_dir(dir, self.runner_root, self.file_path)
             directory_tree = generate_directory_tree(
                 dir, max_depth, include_files, ignore_list
             )
@@ -149,7 +149,7 @@ class CreateQueryEngine(MacroEngine):
     def validate_summarize_python_script_macro(self, line):
         if result := line_validation_for_summarize_python_script(line):
             name, include_definitions_without_docstrings = result
-            script_path = find_file(name, self.root_dir, self.file_path)
+            script_path = find_file(name, self.runner_root, self.file_path)
             script_summary = summarize_python_file(
                 script_path, include_definitions_without_docstrings
             )
@@ -169,12 +169,12 @@ class CreateQueryEngine(MacroEngine):
                 excluded_dirs,
                 excluded_files,
             ) = result
-            folder_path = find_dir(folder_path, self.root_dir, self.file_path)
+            folder_path = find_dir(folder_path, self.runner_root, self.file_path)
             excluded_dirs = [
-                find_dir(dir, self.root_dir, self.file_path) for dir in excluded_dirs
+                find_dir(dir, self.runner_root, self.file_path) for dir in excluded_dirs
             ]
             excluded_files = [
-                find_file(file, self.root_dir, self.file_path)
+                find_file(file, self.runner_root, self.file_path)
                 for file in excluded_files
             ]
             referenced_contents = []
@@ -205,7 +205,7 @@ class CreateQueryEngine(MacroEngine):
 
     def validate_query_template_macro(self, line):
         if result := line_validation_for_query_template(line):
-            query_template = get_query_template(result, self.root_dir)
+            query_template = get_query_template(result, self.runner_root)
             referenced_contents, _ = self._extract_macros(query_template)
             return referenced_contents
         return None

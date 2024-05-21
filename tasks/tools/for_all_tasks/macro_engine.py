@@ -84,7 +84,7 @@ class MacroEngine(ABC):
                 macros.
         """
         self.file_path = file_path
-        self.root_dir = root_dir
+        self.runner_root = root_dir
 
         with open(file_path, "r", encoding="utf-8") as file:
             text = file.read()
