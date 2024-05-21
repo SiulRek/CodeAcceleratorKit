@@ -26,6 +26,8 @@ def _extract_error_messages(log_text):
 def get_error_text(root_dir, reference_file_path):
     """
     Function to extract the error text from the log file.
+    Searches for the nearest to the reference file log file 
+    and extracts the error messages.
 
     Args:
         - root_dir (str): The root directory of the project.
