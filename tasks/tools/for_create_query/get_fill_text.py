@@ -3,20 +3,23 @@ import os
 from tasks.configs.getters import get_fill_text_directory
 
 
-def get_fill_text(placeholder, root_dir):
+def get_fill_text(placeholder, fill_text_dir):
     """
     Get fill text from a file with a placeholder.
 
     Args:
         - placeholder (str): The placeholder to search for.
-        - root_dir (str): The root directory of the project.
+        - fill_text_dir (str): The directory containing the fill text files.
 
     Returns:
         - tuple: A tuple containing the fill text and the title of the fill
             text.
     """
-    fill_text_directory = get_fill_text_directory(root_dir)
-    for root, _, files in os.walk(fill_text_directory):
+    if not os.path.exists(fill_text_dir):
+        msg = f"Fill text directory {fill_text_dir} does not exist."
+        raise NotADirectoryError(msg)
+    
+    for root, _, files in os.walk(fill_text_dir):
         files = [os.path.splitext(file) for file in files]
         for file in files:
             if file[0] == placeholder:
