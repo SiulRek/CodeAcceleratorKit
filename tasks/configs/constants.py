@@ -10,7 +10,7 @@ CONFIGS_SUBFOLDER = "configs"
 
 
 # ----------------- For Create Query -----------------
-class MAKE_QUERY_REFERENCE_TYPES(Enum):
+class MAKE_QUERY_MACROS(Enum):
     BEGIN_TEXT = "begin_text",
     END_TEXT = "end_text",
     COMMENT = "comment"
@@ -55,7 +55,7 @@ LINE_WIDTH = 80
 INTEND = " " * 4
 DOC_QUOTE = '"""'
 
-class CLEANUP_REFERENCE_TYPES(Enum):
+class CLEANUP_MACROS(Enum):
     SELECT_ONLY = "select_only"
     SELECT_NOT = "select_not"
     CHECKPOINTING = "checkpointing"

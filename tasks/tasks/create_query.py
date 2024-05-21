@@ -6,7 +6,7 @@ Available reference types:
 |-------------------------|---------------------------------------|--------------------------------------------------|-----------------------------------------------------|
 | start tag               | Place start text                      | #S <start_text>                                  | -                                                   |
 | end tag                 | Place end text                        | #E <end_text>                                    | -                                                   |
-| title                   | Title of the reference                | #T <title>                                       | -                                                   |
+| title                   | Title of the chapter                | #T <title>                                       | -                                                   |
 | comment                 | Comment text                          | #C <comment>                                     | -                                                   |
 | file reference          | Reference to file/s                   | #File <file_path> or <file_path_1, file_path_2>  | -                                                   |
 | current_file_reference  | Current file content                  | #File                                            | -                                                   |
@@ -19,7 +19,7 @@ Available reference types:
 | summarize_python_script | Summarize a Python script             | #summarize <script_path>           | <include_definitions_without_docstrings>               |
 | summarize_folder       | Summarize Python scripts in a folder  | #summarize_folder <folder_path>     | <include_definitions_without_docstrings, excluded_dirs, excluded_files> |
 | make_query              | Make a query from a temporary file    | #makequery                                       | <create_python_script, max_tokens>                  |
-| checksum                | Check if provided checksum corresponds | #checksum <number_of_references>                 | -                                                   |
+| checksum                | Check if provided checksum corresponds | #checksum <number_of_macros>                 | -                                                   |
 
 Note: Replace angled brackets and their contents with appropriate values when using patterns.
 
@@ -31,7 +31,7 @@ TODO when adding new reference:
 """
 import os
 
-from tasks.configs.constants import MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES
+from tasks.configs.constants import MAKE_QUERY_MACROS as MACROS
 from tasks.configs.getters import get_query_file_path, get_response_file_path
 from tasks.tools.for_create_query.add_text_tags import add_text_tags
 from tasks.tools.for_create_query.finalizer import Finalizer
@@ -40,7 +40,7 @@ from tasks.tools.for_create_query.create_query_engine import (
 )
 from tasks.tasks.task_base import TaskBase
 
-extract_referenced_contents = CreateQueryEngine().extract_macros
+extract_macros = CreateQueryEngine().extract_macros
 
 
 class ReferenceTitleManager:
@@ -56,7 +56,7 @@ class ReferenceTitleManager:
         return title
 
 
-def format_text_from_references(referenced_contents, updated_content):
+def format_text_from_macros(macros_data, updated_content):
     """
     Formats a query string from file references and updated content.
 
@@ -72,16 +72,16 @@ def format_text_from_references(referenced_contents, updated_content):
     """
     query = ""
     title_manager = ReferenceTitleManager()
-    for referenced_content in referenced_contents:
+    for referenced_content in macros_data:
         content_type, default_title, text = referenced_content
         current_title = title_manager.get()
         title = current_title if current_title else default_title
 
-        if content_type == REFERENCE_TYPES.TITLE:
+        if content_type == MACROS.TITLE:
             title_manager.set(default_title)
-        elif content_type == REFERENCE_TYPES.CURRENT_FILE:
+        elif content_type == MACROS.CURRENT_FILE:
             query += f"\n\n--- {title} ---\n{updated_content}"
-        elif content_type in REFERENCE_TYPES:
+        elif content_type in MACROS:
             query += f"\n\n--- {title} ---\n{text}"
         else:
             msg = f"Unknown content type: {content_type}"
@@ -100,12 +100,12 @@ def create_query(file_path, root_dir, query_path, response_path):
         - query_path (str): The path to the query file.
         - response_path (str): The path to the response file.
     """
-    extracted_contents, updated_content = extract_referenced_contents(
+    macros_data, updated_content = extract_macros(
         file_path, root_dir
     )
-    referenced_contents, begin_text, end_text, make_query_kwargs = extracted_contents
+    macros_data, begin_text, end_text, make_query_kwargs = macros_data
 
-    query = format_text_from_references(referenced_contents, updated_content)
+    query = format_text_from_macros(macros_data, updated_content)
 
     query = add_text_tags(begin_text, end_text, query)
 

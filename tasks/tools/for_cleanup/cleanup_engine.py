@@ -1,5 +1,5 @@
 from tasks.configs.constants import (
-    CLEANUP_REFERENCE_TYPES as REFERENCE_TYPE,
+    CLEANUP_MACROS as MACROS,
 )
 from tasks.tools.for_cleanup.line_validation import (
     line_validation_for_select_only,
@@ -11,19 +11,19 @@ from tasks.tools.for_all_tasks.macro_engine import MacroEngine
 
 class CleanupEngine(MacroEngine):
 
-    def validate_select_only_reference(self, line):
+    def validate_select_only_macro(self, line):
         if result := line_validation_for_select_only(line):
-            return (REFERENCE_TYPE.SELECT_ONLY, result)
+            return (MACROS.SELECT_ONLY, result)
         return None
 
-    def validate_select_not_reference(self, line):
+    def validate_select_not_macro(self, line):
         if result := line_validation_for_select_not(line):
-            return (REFERENCE_TYPE.SELECT_NOT, result)
+            return (MACROS.SELECT_NOT, result)
         return None
 
-    def validate_checkpoints_reference(self, line):
+    def validate_checkpoints_macro(self, line):
         if line_validation_for_checkpoints(line):
-            return (REFERENCE_TYPE.CHECKPOINTING, True)
+            return (MACROS.CHECKPOINTING, True)
         return None
 
     def post_process_macros(self, referenced_contents):
@@ -31,11 +31,11 @@ class CleanupEngine(MacroEngine):
         select_only = []
         checkpoint_tag = False
         for ref_type, content in referenced_contents:
-            if ref_type == REFERENCE_TYPE.SELECT_NOT:
+            if ref_type == MACROS.SELECT_NOT:
                 select_not.extend(content)
-            elif ref_type == REFERENCE_TYPE.SELECT_ONLY:
+            elif ref_type == MACROS.SELECT_ONLY:
                 select_only.extend(content)
-            elif ref_type == REFERENCE_TYPE.CHECKPOINTING:
+            elif ref_type == MACROS.CHECKPOINTING:
                 checkpoint_tag = True
 
         select_not = list(set(select_not)) or None

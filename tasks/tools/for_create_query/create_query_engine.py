@@ -1,7 +1,7 @@
 import os
 
 from tasks.configs.constants import (
-    MAKE_QUERY_REFERENCE_TYPES as REFERENCE_TYPES,
+    MAKE_QUERY_MACROS as MACROS,
 )
 from tasks.configs.getters import get_environment_path, get_environment_path_of_tasks, get_temporary_script_path
 from tasks.tools.for_create_query.get_error_text import (
@@ -47,28 +47,28 @@ from tasks.tools.general.generate_directory_tree import (
 
 class CreateQueryEngine(MacroEngine):
 
-    def validate_begin_text_reference(self, line):
+    def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):
-            return (REFERENCE_TYPES.BEGIN_TEXT, result, None)
+            return (MACROS.BEGIN_TEXT, result, None)
         return None
 
-    def validate_end_text_reference(self, line):
+    def validate_end_text_macro(self, line):
         if result := line_validation_for_end_text(line):
-            return (REFERENCE_TYPES.END_TEXT, result, None)
+            return (MACROS.END_TEXT, result, None)
         return None
 
-    def validate_title_reference(self, line):
+    def validate_title_macro(self, line):
         if result := line_validation_for_title(line):
-            return (REFERENCE_TYPES.TITLE, result, None)
+            return (MACROS.TITLE, result, None)
         return None
 
-    def validate_comment_reference(self, line):
+    def validate_comment_macro(self, line):
         if result := line_validation_for_comment(line):
             default_title = "Comment"
-            return (REFERENCE_TYPES.COMMENT, default_title, result)
+            return (MACROS.COMMENT, default_title, result)
         return None
 
-    def validate_files_reference(self, line):
+    def validate_files_macro(self, line):
         if result := line_validation_for_files(line):
             referenced_files = []
             for file_name in result:
@@ -76,50 +76,50 @@ class CreateQueryEngine(MacroEngine):
                 with open(file_path, "r", encoding="utf-8") as file:
                     relative_path = os.path.relpath(file_path, self.root_dir)
                     default_title = f"File at {relative_path}"
-                    referenced_file = (REFERENCE_TYPES.FILE, default_title, file.read())
+                    referenced_file = (MACROS.FILE, default_title, file.read())
                     referenced_files.append(referenced_file)
             return referenced_files
         return None
 
-    def validate_current_file_reference(self, line):
+    def validate_current_file_macro(self, line):
         if line_validation_for_current_file_reference(line):
             relative_path = os.path.relpath(self.file_path, self.root_dir)
             default_title = f"File at {relative_path}"
-            return (REFERENCE_TYPES.CURRENT_FILE, default_title, None)
+            return (MACROS.CURRENT_FILE, default_title, None)
         return None
 
-    def validate_error_reference(self, line):
+    def validate_error_macro(self, line):
         if line_validation_for_error(line):
             error_text = get_error_text(self.root_dir, self.file_path)
             default_title = "Occured Errors"
-            return (REFERENCE_TYPES.LOGGED_ERROR, default_title, error_text)
+            return (MACROS.LOGGED_ERROR, default_title, error_text)
         return None
 
-    def validate_fill_text_reference(self, line):
+    def validate_fill_text_macro(self, line):
         if result := line_validation_for_fill_text(line):
             fill_text, default_title = get_fill_text(result, self.root_dir)
-            return (REFERENCE_TYPES.FILL_TEXT, default_title, fill_text)
+            return (MACROS.FILL_TEXT, default_title, fill_text)
         return None
 
-    def validate_run_python_script_reference(self, line):
+    def validate_run_python_script_macro(self, line):
         if result := line_validation_for_run_python_script(line):
             script_path = find_file(result, self.root_dir, self.file_path)
             environment_path = get_environment_path(self.root_dir)
             script_output = execute_python_module(script_path, environment_path)
             default_title = "Python Script Output"
-            return (REFERENCE_TYPES.RUN_PYTHON_SCRIPT, default_title, script_output)
+            return (MACROS.RUN_PYTHON_SCRIPT, default_title, script_output)
         return None
 
-    def validate_run_pylint_reference(self, line):
+    def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
             script_path = find_file(result, self.root_dir, self.file_path)
             environment_path = get_environment_path_of_tasks()
             pylint_output = execute_pylint(script_path, environment_path)
             default_title = "Pylint Output"
-            return (REFERENCE_TYPES.RUN_PYLINT, default_title, pylint_output)
+            return (MACROS.RUN_PYLINT, default_title, pylint_output)
         return None
 
-    def validate_run_unittest_reference(self, line):
+    def validate_run_unittest_macro(self, line):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
             script_path = find_file(name, self.root_dir, self.file_path)
@@ -132,10 +132,10 @@ class CreateQueryEngine(MacroEngine):
                 temp_script_path=temp_script_path,
             )
             default_title = "Unittest Output"
-            return (REFERENCE_TYPES.RUN_UNITTEST, default_title, unittest_output)
+            return (MACROS.RUN_UNITTEST, default_title, unittest_output)
         return None
 
-    def validate_directory_tree_reference(self, line):
+    def validate_directory_tree_macro(self, line):
         if result := line_validation_for_directory_tree(line):
             dir, max_depth, include_files, ignore_list = result
             dir = find_dir(dir, self.root_dir, self.file_path)
@@ -143,10 +143,10 @@ class CreateQueryEngine(MacroEngine):
                 dir, max_depth, include_files, ignore_list
             )
             default_title = "Directory Tree"
-            return (REFERENCE_TYPES.DIRECTORY_TREE, default_title, directory_tree)
+            return (MACROS.DIRECTORY_TREE, default_title, directory_tree)
         return None
 
-    def validate_summarize_python_script_reference(self, line):
+    def validate_summarize_python_script_macro(self, line):
         if result := line_validation_for_summarize_python_script(line):
             name, include_definitions_without_docstrings = result
             script_path = find_file(name, self.root_dir, self.file_path)
@@ -155,13 +155,13 @@ class CreateQueryEngine(MacroEngine):
             )
             default_title = f"Summarized Python Script {os.path.basename(script_path)}"
             return (
-                REFERENCE_TYPES.SUMMARIZE_PYTHON_SCRIPT,
+                MACROS.SUMMARIZE_PYTHON_SCRIPT,
                 default_title,
                 script_summary,
             )
         return None
 
-    def validate_summarize_folder_reference(self, line):
+    def validate_summarize_folder_macro(self, line):
         if result := line_validation_for_summarize_folder(line):
             (
                 folder_path,
@@ -195,7 +195,7 @@ class CreateQueryEngine(MacroEngine):
                         )
                         referenced_contents.append(
                             (
-                                REFERENCE_TYPES.SUMMARIZE_PYTHON_SCRIPT,
+                                MACROS.SUMMARIZE_PYTHON_SCRIPT,
                                 default_title,
                                 script_summary,
                             )
@@ -203,27 +203,27 @@ class CreateQueryEngine(MacroEngine):
             return referenced_contents
         return None
 
-    def validate_query_template_reference(self, line):
+    def validate_query_template_macro(self, line):
         if result := line_validation_for_query_template(line):
             query_template = get_query_template(result, self.root_dir)
             referenced_contents, _ = self._extract_macros(query_template)
             return referenced_contents
         return None
 
-    def validate_make_query_reference(self, line):
+    def validate_make_query_macro(self, line):
         if results := line_validation_for_make_query(line):
-            return (REFERENCE_TYPES.MAKE_QUERY, results, None)
+            return (MACROS.MAKE_QUERY, results, None)
         return None
 
     def post_process_macros(self, referenced_contents):
         # Merge comments in sequence to one comment
         for referenced_content in referenced_contents:
-            if referenced_content[0] == REFERENCE_TYPES.COMMENT:
+            if referenced_content[0] == MACROS.COMMENT:
                 start = referenced_contents.index(referenced_content)
                 index = start + 1
                 while (
                     index < len(referenced_contents)
-                    and referenced_contents[index][0] == REFERENCE_TYPES.COMMENT
+                    and referenced_contents[index][0] == MACROS.COMMENT
                 ):
                     merged_text = f"{referenced_content[2].strip()}\n"
                     merged_text += f"{referenced_contents[index][2].strip()}"
@@ -239,19 +239,19 @@ class CreateQueryEngine(MacroEngine):
         begin_text = ""
         end_text = ""
         for referenced_content in referenced_contents:
-            if referenced_content[0] == REFERENCE_TYPES.BEGIN_TEXT:
+            if referenced_content[0] == MACROS.BEGIN_TEXT:
                 begin_text += referenced_content[1]
                 referenced_contents.remove(referenced_content)
-            elif referenced_content[0] == REFERENCE_TYPES.END_TEXT:
+            elif referenced_content[0] == MACROS.END_TEXT:
                 end_text += referenced_content[1]
                 referenced_contents.remove(referenced_content)
 
         # Organize the make query reference
         make_query_kwargs = {}
         for referenced_content in referenced_contents:
-            if referenced_content[0] == REFERENCE_TYPES.MAKE_QUERY:
+            if referenced_content[0] == MACROS.MAKE_QUERY:
                 if len(make_query_kwargs) > 0:
-                    msg = "Multiple make_query references found in the query."
+                    msg = "Multiple make_query macros found in the query."
                     raise ValueError(msg)
                 create_python_script, max_tokens = referenced_content[1]
                 make_query_kwargs["create_python_script"] = create_python_script
