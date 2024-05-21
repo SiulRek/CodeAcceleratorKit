@@ -1,14 +1,14 @@
+
 from enum import Enum
 import json
 import os
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import tasks
-from tasks.management.normalize_path import normalize_path
-from tasks.management.task_manager import TaskManager as Manager
-
+from tasks.tasks.management.normalize_path import normalize_path
+from tasks.tasks.management.task_manager import TaskManager as Manager
 
 class AttrNamesMock(Enum):
     var1_dir = (1, "configs.pkl")
@@ -29,7 +29,7 @@ class TestTaskManager(unittest.TestCase):
             os.path.join(self.temp_dir.name, "registered_variables.json")
         )
         patcher1 = patch.object(
-            tasks.management.task_manager,
+            tasks.tasks.management.task_manager,
             "REGISTERED_RUNNERS_JSON",
             self.json_mock,
         )
@@ -48,16 +48,18 @@ class TestTaskManager(unittest.TestCase):
         self.addCleanup(patcher3.stop)
         self.mock_variable_names = patcher3.start()
 
-        Manager._initialize_var1_dir = lambda x, y: os.path.join(
-            self.storage_dir, "value1"
+        patcher4 = patch('tasks.tasks.management.task_manager.Attributes.AttributesInitializer', new_callable=MagicMock)
+        self.addCleanup(patcher4.stop)
+        self.mock_attributes_initializer = patcher4.start()
+
+        Manager._initialize_var1_dir = lambda primary_attrs: os.path.join(
+            primary_attrs["storage_dir"], "value1"
         )
-        Manager._initialize_var2_dir = lambda x, y: os.path.join(
-            self.storage_dir, "value2"
+        Manager._initialize_var2_dir = lambda primary_attrs: os.path.join(
+            primary_attrs["storage_dir"], "value2"
         )
-        Manager._initialize_cwd = lambda x, y: self.runner_root
-        Manager._initialize_python_env = lambda x, y: os.path.join(
-            self.runner_root, "python_env"
-        )
+        Manager._initialize_cwd = lambda primary_attrs: primary_attrs["runner_root"]
+        Manager._initialize_python_env = lambda primary_attrs: primary_attrs["python_env"]
 
     def tearDown(self):
         self.temp_dir.cleanup()
@@ -141,11 +143,11 @@ class TestTaskManager(unittest.TestCase):
         unknown_dir = os.path.join(self.storage_dir, "unknown_dir")
         os.makedirs(unknown_dir)
 
-        Manager._initialize_var1_dir = lambda x, y: os.path.join(
-            self.storage_dir, "value1"
+        Manager._initialize_var1_dir = lambda primary_attrs: os.path.join(
+            primary_attrs["storage_dir"], "value1"
         )
-        Manager._initialize_var2_dir = lambda x, y: os.path.join(
-            self.storage_dir, "value2"
+        Manager._initialize_var2_dir = lambda primary_attrs: os.path.join(
+            primary_attrs["storage_dir"], "value2"
         )
         Manager.register_runner(
             self.runner_root,

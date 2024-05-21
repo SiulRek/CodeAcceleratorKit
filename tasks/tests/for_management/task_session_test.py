@@ -6,8 +6,8 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from tasks.management.task_session import TaskSession
-from tasks.management.normalize_path import normalize_path
+from tasks.tasks.management.task_session import TaskSession
+from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tools.for_testing.test_result_logger import TestResultLogger
 
 ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")

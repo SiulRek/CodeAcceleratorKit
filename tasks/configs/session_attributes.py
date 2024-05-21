@@ -3,7 +3,7 @@ import json
 import os
 
 from tasks.configs.constants import CONFIGS_SUBFOLDER
-from tasks.management.normalize_path import normalize_path
+from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tools.general.retrieve_modules import retrieve_modules
 
 
