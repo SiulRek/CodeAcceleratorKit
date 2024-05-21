@@ -1,50 +1,48 @@
 from abc import ABC, abstractmethod
 
-
-class ExtractorBase(ABC):
+class MacroEngine(ABC):
     """
-    Base class for extracting referenced content from files based on specified
+    Base class for extracting macros from files based on specified
     validation methods.
 
-    This class scans files for specific content patterns using a series of
+    This class scans files for specific macro patterns using a series of
     validation methods prefixed with 'validate_'. Each validation method
     processes a line from the file to detect and extract different types of
-    referenced content. The extracted content can include references to other
+    macros. The extracted macros can include references to other
     files, scripts, errors, or any specific tags defined within the validation
     methods.
 
     Methods:
-        - extract_referenced_contents: Extract referenced contents from a
-            file and separates them from non-referenced content.
-        - post_process_referenced_contents: Provide a hook for child classes
-            to further process the referenced contents.
+        - extract_macros: Extract macros from a file and separates them from
+            non-referenced content.
+        - post_process_macros: Provide a hook for child classes to further
+            process the extracted macros.
     """
 
     def __init__(self):
         self.initialize_validation_methods()
 
     def initialize_validation_methods(self):
-        """Initializes the validation methods for extracting referenced
-        contentfromthe text."""
+        """Initializes the validation methods for extracting macros from the text."""
         self.validation_methods = [
             getattr(self, method)
             for method in dir(self)
             if callable(getattr(self, method)) and method.startswith("validate_")
         ]
 
-    def _extract_referenced_contents(self, text):
+    def _extract_macros(self, text):
         """
-        Extracts referenced and updated text from the input text based on
+        Extracts macros and updated text from the input text based on
         validation methods.
 
         Args:
-            - text (str): The text to extract referenced content from.
+            - text (str): The text to extract macros from.
 
         Returns:
-            - tuple: A tuple containing a list of referenced contents and
+            - tuple: A tuple containing a list of extracted macros and
                 the updated text.
         """
-        referenced_contents = []
+        macros = []
         updated_text_lines = []
 
         for line in text.splitlines():
@@ -53,19 +51,18 @@ class ExtractorBase(ABC):
             for val in self.validation_methods:
                 if result := val(stripped_line):
                     if isinstance(result, list):
-                        referenced_contents.extend(result)
+                        macros.extend(result)
                     else:
-                        referenced_contents.append(result)
+                        macros.append(result)
                     break
             if not result:
                 updated_text_lines.append(line)
         updated_text = "\n".join(updated_text_lines)
-        return referenced_contents, updated_text
+        return macros, updated_text
 
-    def extract_referenced_contents(self, file_path, root_dir):
+    def extract_macros(self, file_path, root_dir):
         """
-        Extracts referenced contents from a specified file using validation
-        methods, while maintaining the order of their occurrence.
+        Extracts macros from a specified file using validation methods, while maintaining the order of their occurrence.
 
         This method iterates through each line of the file, applying validation
         methods that start with 'validate_' to detect and extract specific
@@ -82,34 +79,35 @@ class ExtractorBase(ABC):
 
         Returns:
             - tuple: A tuple where the first element is the result of
-                post-processing the referenced contents, defined in child
+                post-processing the extracted macros, defined in child
                 classes, and the second element is the updated text stripped of
-                referenced content.
+                macros.
         """
         self.file_path = file_path
         self.root_dir = root_dir
 
         with open(file_path, "r", encoding="utf-8") as file:
             text = file.read()
-            referenced_contents, updated_text = self._extract_referenced_contents(text)
+            macros, updated_text = self._extract_macros(text)
 
-        process_results = self.post_process_referenced_contents(referenced_contents)
+        process_results = self.post_process_macros(macros)
         return process_results, updated_text
 
     @abstractmethod
-    def post_process_referenced_contents(self, referenced_contents):
+    def post_process_macros(self, macros):
         """
-        Processes the collected referenced contents for final output.
+        Processes the collected macros for final output.
 
         This method must be overridden by child classes to implement custom
-        processing of the referenced contents, such as merging related items or
+        processing of the extracted macros, such as merging related items or
         filtering out specific results.
 
         Args:
-            - referenced_contents (list): The list of referenced contents
-                collected by the validation methods.
+            - macros (list): The list of macros collected by the validation
+                methods.
 
         Returns:
-            - custom_type: A custom type or list of referenced contents
-                after post-processing.
+            - custom_type: A custom type or list of macros after
+                post-processing.
         """
+        pass

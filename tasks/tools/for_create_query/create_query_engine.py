@@ -37,7 +37,7 @@ from tasks.tools.general.execute_python_module import (
     execute_python_module,
 )
 import tasks.tools.general.execute_unittests_from_file as execute_unittests_from_file
-from tasks.tools.for_all_tasks.extractor_base import ExtractorBase
+from tasks.tools.for_all_tasks.macro_engine import MacroEngine
 from tasks.tools.general.find_dir import find_dir
 from tasks.tools.general.find_file import find_file
 from tasks.tools.general.generate_directory_tree import (
@@ -45,7 +45,7 @@ from tasks.tools.general.generate_directory_tree import (
 )
 
 
-class ReferencedContentExtractor(ExtractorBase):
+class CreateQueryEngine(MacroEngine):
 
     def validate_begin_text_reference(self, line):
         if result := line_validation_for_begin_text(line):
@@ -206,7 +206,7 @@ class ReferencedContentExtractor(ExtractorBase):
     def validate_query_template_reference(self, line):
         if result := line_validation_for_query_template(line):
             query_template = get_query_template(result, self.root_dir)
-            referenced_contents, _ = self._extract_referenced_contents(query_template)
+            referenced_contents, _ = self._extract_macros(query_template)
             return referenced_contents
         return None
 
@@ -215,7 +215,7 @@ class ReferencedContentExtractor(ExtractorBase):
             return (REFERENCE_TYPES.MAKE_QUERY, results, None)
         return None
 
-    def post_process_referenced_contents(self, referenced_contents):
+    def post_process_macros(self, referenced_contents):
         # Merge comments in sequence to one comment
         for referenced_content in referenced_contents:
             if referenced_content[0] == REFERENCE_TYPES.COMMENT:

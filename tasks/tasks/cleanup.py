@@ -5,13 +5,13 @@ from tasks.configs.getters import (
     get_environment_path_of_tasks,
 )
 from tasks.tools.for_cleanup.cleanup_file import cleanup_file
-from tasks.tools.for_cleanup.referenced_contents_extractor import (
-    ReferencedContentExtractor,
+from tasks.tools.for_cleanup.cleanup_engine import (
+    CleanupEngine,
 )
 from tasks.tasks.task_base import TaskBase
 
 
-extract_referenced_contents = ReferencedContentExtractor().extract_referenced_contents
+extract_referenced_contents = CleanupEngine().extract_macros
 
 
 class CleanupTask(TaskBase):

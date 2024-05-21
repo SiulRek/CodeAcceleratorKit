@@ -6,10 +6,10 @@ from tasks.tools.for_cleanup.line_validation import (
     line_validation_for_select_not,
     line_validation_for_checkpoints,
 )
-from tasks.tools.for_all_tasks.extractor_base import ExtractorBase
+from tasks.tools.for_all_tasks.macro_engine import MacroEngine
 
 
-class ReferencedContentExtractor(ExtractorBase):
+class CleanupEngine(MacroEngine):
 
     def validate_select_only_reference(self, line):
         if result := line_validation_for_select_only(line):
@@ -26,7 +26,7 @@ class ReferencedContentExtractor(ExtractorBase):
             return (REFERENCE_TYPE.CHECKPOINTING, True)
         return None
 
-    def post_process_referenced_contents(self, referenced_contents):
+    def post_process_macros(self, referenced_contents):
         select_not = []
         select_only = []
         checkpoint_tag = False
