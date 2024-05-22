@@ -3,12 +3,13 @@ import os
 import re
 
 # ----------------- General Constants -----------------
+TASKS_ROOT = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
 TEST_RESULTS_FILE = "test_results.log"
 FILE_TAG = "File"
-REGISTERED_RUNNERS_JSON = os.path.join("tasks", "configs", "registered_runners.json")
+REGISTERED_RUNNERS_JSON = os.path.join(TASKS_ROOT, "tasks", "configs", "registered_runners.json")
 CONFIGS_SUBFOLDER = "configs"
-TASKS_PYTHON_ENV = os.path.abspath(r"./venv")
-TASKS_CACHE = os.path.abspath(r"./tasks/__taskscache__")
+TASKS_PYTHON_ENV = os.path.join(TASKS_ROOT, "venv")
+TASKS_CACHE = os.path.join(TASKS_ROOT, "tasks", "__taskscache__")
 
 
 # ----------------- For Create Query -----------------
