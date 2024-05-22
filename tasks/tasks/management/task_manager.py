@@ -80,7 +80,7 @@ class TaskManager(Attributes.AttributesInitializer):
         return attributes
 
     @classmethod
-    def sync_directories_to(cls, runner_root):
+    def sync_directories_of(cls, runner_root):
         """
         Synchronizes the directories of a runner to the storage directory.
 
@@ -155,7 +155,7 @@ class TaskManager(Attributes.AttributesInitializer):
         session.load_attributes_from_dict(attributes)
         session.save_attributes()
         if create_dirs:
-            cls.sync_directories_to(runner_root)
+            cls.sync_directories_of(runner_root)
         return session
 
     @classmethod
@@ -173,7 +173,7 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         runner_root = normalize_path(runner_root)
         if update_dirs:
-            cls.sync_directories_to(runner_root)
+            cls.sync_directories_of(runner_root)
         session = TaskSession(runner_root)
         return session
 

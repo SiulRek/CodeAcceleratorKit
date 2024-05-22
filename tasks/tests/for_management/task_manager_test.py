@@ -121,8 +121,8 @@ class TestTaskManager(unittest.TestCase):
         self.assertTrue(os.path.exists(session.cwd))
         self.assertTrue(os.path.exists(session.runner_python_env))
 
-    def test_sync_directories_to(self):
-        with patch.object(Manager, "sync_directories_to") as mock_sync:
+    def test_sync_directories_of(self):
+        with patch.object(Manager, "sync_directories_of") as mock_sync:
             python_env_path = os.path.join(self.runner_root, "runner_python_env")
             os.makedirs(python_env_path)
 
@@ -158,7 +158,7 @@ class TestTaskManager(unittest.TestCase):
             create_dirs=False,
         )
         with patch("warnings.warn") as mock_warn:
-            Manager.sync_directories_to(self.runner_root)
+            Manager.sync_directories_of(self.runner_root)
             mock_warn.assert_called_with(
                 f"Unknown directory {normalize_path(unknown_dir)} from tasks storage."
             )
