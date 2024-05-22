@@ -28,7 +28,7 @@ class CleanupTask(TaskBase):
         """
         file_path = self.file_path
         checkpoint_dir = self.session.checkpoint_dir
-        environment_path = self.session.runner_python_env
+        environment_path = self.session.tasks_python_env
 
         engine = CleanupEngine(self.session)
         macros_data, updated_content = engine.extract_macros(file_path)
