@@ -10,11 +10,12 @@ import tasks
 from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tasks.management.task_manager import TaskManager as Manager
 
+
 class AttrNamesMock(Enum):
     var1_dir = (1, "configs.pkl")
     var2_dir = (2, "configs.pkl")
     cwd = (3, "configs.json")
-    python_env = (4, "configs.json")
+    runner_python_env= (4, "configs.json")
 
 
 class TestTaskManager(unittest.TestCase):
@@ -59,13 +60,13 @@ class TestTaskManager(unittest.TestCase):
             primary_attrs["storage_dir"], "value2"
         )
         Manager._initialize_cwd = lambda primary_attrs: primary_attrs["runner_root"]
-        Manager._initialize_python_env = lambda primary_attrs: primary_attrs["python_env"]
+        Manager._initialize_runner_python_env= lambda primary_attrs: primary_attrs["runner_python_env"]
 
     def tearDown(self):
         self.temp_dir.cleanup()
 
     def test_register(self):
-        python_env_path = os.path.join(self.runner_root, "python_env")
+        python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
 
         session = Manager.register_runner(
@@ -85,10 +86,10 @@ class TestTaskManager(unittest.TestCase):
         self.assertEqual(session.var1_dir, os.path.join(self.storage_dir, "value1"))
         self.assertEqual(session.var2_dir, os.path.join(self.storage_dir, "value2"))
         self.assertEqual(session.cwd, self.runner_root)
-        self.assertEqual(session.python_env, normalize_path(python_env_path))
+        self.assertEqual(session.runner_python_env, normalize_path(python_env_path))
 
     def test_initialize_attributes(self):
-        python_env_path = os.path.join(self.runner_root, "python_env")
+        python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
 
         attributes = Manager._init_runner_attributes(
@@ -101,10 +102,10 @@ class TestTaskManager(unittest.TestCase):
         self.assertIn("var1_dir", attributes)
         self.assertIn("var2_dir", attributes)
         self.assertEqual(attributes["cwd"], self.runner_root)
-        self.assertEqual(attributes["python_env"], normalize_path(python_env_path))
+        self.assertEqual(attributes["runner_python_env"], normalize_path(python_env_path))
 
     def test_create_directories(self):
-        python_env_path = os.path.join(self.runner_root, "python_env")
+        python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
 
         session = Manager.register_runner(
@@ -118,11 +119,11 @@ class TestTaskManager(unittest.TestCase):
         self.assertTrue(os.path.exists(session.var1_dir))
         self.assertTrue(os.path.exists(session.var2_dir))
         self.assertTrue(os.path.exists(session.cwd))
-        self.assertTrue(os.path.exists(session.python_env))
+        self.assertTrue(os.path.exists(session.runner_python_env))
 
     def test_sync_directories_to(self):
         with patch.object(Manager, "sync_directories_to") as mock_sync:
-            python_env_path = os.path.join(self.runner_root, "python_env")
+            python_env_path = os.path.join(self.runner_root, "runner_python_env")
             os.makedirs(python_env_path)
 
             Manager.register_runner(
@@ -136,7 +137,7 @@ class TestTaskManager(unittest.TestCase):
             mock_sync.assert_called_once_with(self.runner_root)
 
     def test_detect_unknown_directories(self):
-        python_env_path = os.path.join(self.runner_root, "python_env")
+        python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
         os.makedirs(self.storage_dir)
 
@@ -159,11 +160,11 @@ class TestTaskManager(unittest.TestCase):
         with patch("warnings.warn") as mock_warn:
             Manager.sync_directories_to(self.runner_root)
             mock_warn.assert_called_with(
-                f"Unknown directory {normalize_path(unknown_dir)} from task storage."
+                f"Unknown directory {normalize_path(unknown_dir)} from tasks storage."
             )
 
     def test_overwrite_registration(self):
-        python_env_path = os.path.join(self.runner_root, "python_env")
+        python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
 
         Manager.register_runner(
@@ -197,7 +198,7 @@ class TestTaskManager(unittest.TestCase):
         self.assertEqual(registered_runners[self.runner_root], self.storage_dir)
 
     def test_login_runner(self):
-        python_env_path = os.path.join(self.runner_root, "python_env")
+        python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
 
         Manager.register_runner(
@@ -210,13 +211,13 @@ class TestTaskManager(unittest.TestCase):
 
         session = Manager.login_runner(self.runner_root, update_dirs=False)
 
-        self.assertEqual(session.runner_root, self.runner_root)
+        self.assertEqual(session.root, self.runner_root)
         self.assertEqual(session.storage_dir, self.storage_dir)
         self.assertEqual(session.configs_dir, os.path.join(self.storage_dir, "configs"))
         self.assertEqual(session.var1_dir, os.path.join(self.storage_dir, "value1"))
         self.assertEqual(session.var2_dir, os.path.join(self.storage_dir, "value2"))
         self.assertEqual(session.cwd, self.runner_root)
-        self.assertEqual(session.python_env, normalize_path(python_env_path))
+        self.assertEqual(session.runner_python_env, normalize_path(python_env_path))
 
 
 if __name__ == "__main__":
