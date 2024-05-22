@@ -34,6 +34,7 @@ from tasks.tools.general.get_temporary_script_path import get_temporary_script_p
 
 
 class CreateQueryEngine(MacroEngine):
+    """Engine for creating a query from macros within text lines."""
 
     def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):
@@ -111,7 +112,7 @@ class CreateQueryEngine(MacroEngine):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
             script_path = find_file(name, self.session.root, self.file_path)
-            temp_script_path = get_temporary_script_path(self.session.cache_dir)
+            temp_script_path = get_temporary_script_path(self.session.cache)
             python_env = self.session.runner_python_env
             unittest_output = execute_python_module(
                 module=execute_unittests_from_file,
@@ -208,12 +209,27 @@ class CreateQueryEngine(MacroEngine):
         return None
 
     def post_process_macros(self, macros_data):
+        """
+        Post-processes the extracted macros to merge comments, begin_text, and
+        end_text.
+
+        Args:
+            - macros_data (list): A list of tuples containing macro data,
+                where each tuple is in the format (macro_type, title, content).
+
+        Returns:
+            - tuple: A tuple containing processed macro data, aggregated
+                beginning text, aggregated ending text, and a dictionary of
+                keyword arguments for the MAKE_QUERY macro.
+        """
         # Merge comments in sequence to one comment
         for macro_data in macros_data:
             if macro_data[0] == MACROS.COMMENT:
                 start = macros_data.index(macro_data)
                 index = start + 1
-                while index < len(macros_data) and macros_data[index][0] == MACROS.COMMENT:
+                while (
+                    index < len(macros_data) and macros_data[index][0] == MACROS.COMMENT
+                ):
                     merged_text = f"{macro_data[2].strip()}\n"
                     merged_text += f"{macros_data[index][2].strip()}"
                     macro_data = (
@@ -223,7 +239,7 @@ class CreateQueryEngine(MacroEngine):
                     )
                     macros_data.pop(index)
                 macros_data[start] = macro_data
-
+                
         # Merge begin_text and end_text in the referenced contents
         begin_text = ""
         end_text = ""

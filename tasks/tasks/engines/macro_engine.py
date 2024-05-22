@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-from tasks.tasks.management.task_session import TaskSession
-
 
 class MacroEngine(ABC):
     """
@@ -20,14 +18,14 @@ class MacroEngine(ABC):
             process the extracted macros.
     """
 
-    def __init__(self, runner_root):
+    def __init__(self, session):
         """
         Initializes the MacroEngine with the provided session.
 
         Args:
             session (object): The session object of the running task.
         """
-        self.session = TaskSession(runner_root)
+        self.session = session
         self.initialize_validation_methods()
 
     def initialize_validation_methods(self):

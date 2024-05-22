@@ -32,9 +32,8 @@ TODO when adding new reference:
 import os
 
 from tasks.configs.constants import MAKE_QUERY_MACROS as MACROS
-from tasks.configs.getters import get_query_file_path, get_response_file_path
 from tasks.tools.for_create_query.add_text_tags import add_text_tags
-from tasks.tasks.engines.for_cleanup.finalizer import Finalizer
+from tasks.tasks.engines.for_create_query.finalizer import Finalizer
 from tasks.tasks.engines.for_create_query.create_query_engine import (
     CreateQueryEngine,
 )
@@ -42,15 +41,33 @@ from tasks.tasks.task_base import TaskBase
 
 
 class ChapterTitleManager:
+    """
+    Manages the title of the chapter for query formatting.
+    
+    Attributes:
+        - title (str): The current title of the chapter.
+    """
 
     def __init__(self):
+        """Initializes ChapterTitleManager with no title."""
         self.title = None
 
-
     def set(self, title):
+        """
+        Sets the chapter title.
+        
+        Args:
+            - title (str): The title to be set.
+        """
         self.title = title
 
     def get(self):
+        """
+        Gets the current chapter title and resets it to None.
+        
+        Returns:
+            - str: The current title.
+        """
         title, self.title = self.title, None
         return title
 
@@ -60,11 +77,8 @@ def format_text_from_macros(macros_data, updated_content):
     Formats a query string from file references and updated content.
 
     Args:
-        - referenced_contents (list): A list of tuples detailing
-            macros(type, data).
-        - file_path (str): The path to the current file.
+        - macros_data (list): A list of tuples detailing macros (type, data).
         - updated_content (str): The updated content of the current file.
-        - root_dir (str): The root directory of the project.
 
     Returns:
         - str: Formatted query based on file macros.
@@ -89,44 +103,48 @@ def format_text_from_macros(macros_data, updated_content):
     return query
 
 
-def create_query(file_path, root_dir, query_path, response_path):
-    """
-    Create a query from the file and macros referenced in the file.
-
-    Args:
-        - file_path (str): The path to the file to be processed.
-        - root_dir (str): The root directory of the project.
-        - query_path (str): The path to the query file.
-        - response_path (str): The path to the response file.
-    """
-    engine = CreateQueryEngine(root_dir)
-    macros_data, updated_content = engine.extract_macros(file_path)
-    macros_data, begin_text, end_text, make_query_kwargs = macros_data
-
-    query = format_text_from_macros(macros_data, updated_content)
-
-    query = add_text_tags(begin_text, end_text, query)
-
-    finalizer = Finalizer()
-    finalizer.set_paths(file_path, query_path, response_path)
-    finalizer.finalize(updated_content, query, make_query_kwargs)
-
-
 class CreateQuery(TaskBase):
+    """
+    Task to create a query based on formatted content and macros.
+    
+    Attributes:
+        NAME (str): The name of the task.
+    """
+
     NAME = "Create Query"
 
     def setup(self):
+        """
+        Sets up the CreateQuery task by initializing the file path.
+        """
         super().setup()
         self.file_path = self.additional_args[0]
-        self.query_path = get_query_file_path(self.task_runner_root)
-        self.response_path = get_response_file_path(self.task_runner_root)
 
     def execute(self):
-        root_dir = self.task_runner_root
-        create_query(self.file_path, root_dir, self.query_path, self.response_path)
+        """
+        Executes the CreateQuery task to format and finalize the query.
+        """
+        engine = CreateQueryEngine(self.session)
+        macros_data, updated_content = engine.extract_macros(self.file_path)
+        macros_data, begin_text, end_text, make_query_kwargs = macros_data
+
+        query = format_text_from_macros(macros_data, updated_content)
+
+        query = add_text_tags(begin_text, end_text, query)
+
+        finalizer = Finalizer()
+        finalizer.set_paths(
+            self.file_path,
+            self.session.query_file,
+            self.session.response_file
+        )
+        finalizer.finalize(updated_content, query, make_query_kwargs)
 
 
 if __name__ == "__main__":
+    """
+    Entry point for the module. Initializes and runs the CreateQuery task.
+    """
     default_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
     default_file_path = os.path.join(
         default_root, "tasks", "tests", "for_tasks", "create_query_test.py"

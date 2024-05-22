@@ -1,33 +1,40 @@
 import os
 
-from tasks.configs.getters import (
-    get_checkpoint_directory,
-    get_environment_path_of_tasks,
-)
-from tasks.tools.for_cleanup.cleanup_file import cleanup_file
 from tasks.tasks.engines.for_cleanup.cleanup_engine import CleanupEngine
 from tasks.tasks.task_base import TaskBase
-
+from tasks.tools.for_cleanup.cleanup_file import cleanup_file
 
 
 class CleanupTask(TaskBase):
+    """A task for cleaning up files by removing or keeping specific parts based on
+    macros."""
+
     NAME = "Cleanup"
 
     def setup(self):
+        """Sets up the CleanupTask by initializing the file path from additional
+        arguments."""
         super().setup()
         self.file_path = self.additional_args[0]
 
     def execute(self):
-        root_dir = self.task_runner_root
-        file_path = self.file_path
-        checkpoint_dir = get_checkpoint_directory(root_dir)
-        environment_path = get_environment_path_of_tasks()
+        """
+        Executes the cleanup task, extracting macros from the file and
+        performing the cleanup.
 
-        engine = CleanupEngine(root_dir)
+        Raises:
+            - ValueError: If both select_only and select_not options are
+                specified.
+        """
+        file_path = self.file_path
+        checkpoint_dir = self.session.checkpoint_dir
+        environment_path = self.session.runner_python_env
+
+        engine = CleanupEngine(self.session)
         macros_data, updated_content = engine.extract_macros(file_path)
         select_only, select_not, checkpointing = macros_data
 
-        if select_only != None and select_not != None:
+        if select_only is not None and select_not is not None:
             msg = "Cannot have both select_only and select_not options specified."
             raise ValueError(msg)
 
@@ -45,9 +52,7 @@ class CleanupTask(TaskBase):
 
 
 if __name__ == "__main__":
-    default_root = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "..", ".."
-    )
+    default_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
     default_file_path = os.path.join(
         default_root,
         "tasks",

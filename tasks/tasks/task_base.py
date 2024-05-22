@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 import os
 import sys
+import shutil
 
-from tasks.configs.getters import get_task_cache_directory
+from tasks.tasks.management.task_session import TaskSession
+
 
 class TaskBase(ABC):
     """
@@ -45,20 +47,34 @@ class TaskBase(ABC):
             self.additional_args = sys.argv[2:]
 
     def setup(self):
-        """Placeholder for task-specific setup. Can be extended by subclasses."""
-        self.cache_dir = get_task_cache_directory(self.NAME)
+        """
+        Sets up the task environment.
+        Initializes the task session and creates the cache directory.
+        """
+        self.session = TaskSession(self.task_runner_root)
+        self.cache_dir = self.session.cache
+        os.makedirs(self.cache_dir, exist_ok=True)
 
     @abstractmethod
     def execute(self):
-        """Executes the task's main functionality. Must be implemented by subclasses."""
+        """
+        Executes the task's main functionality.
+        Must be implemented by subclasses.
+        """
 
     def teardown(self):
-        """Placeholder for task-specific teardown. Can be extended by subclasses."""
+        """
+        Cleans up the task environment.
+        Removes the cache directory if it exists.
+        """
         if self.cache_dir and os.path.exists(self.cache_dir):
-            os.rmdir(self.cache_dir)
+            shutil.rmtree(self.cache_dir)
 
     def _print_execution_start(self):
-        """Prints the start message for task execution."""
+        """
+        Prints the start message for task execution.
+        Provides information about the task being started.
+        """
         msg = f"{'='*55} TASK START {'='*53}\n"
         msg += f"Runned Task: {self.NAME}\n{self.line_sep}"
         msg += "Task Outputs:\n"
@@ -79,7 +95,10 @@ class TaskBase(ABC):
         print(msg)
 
     def main(self):
-        """The main method to manage the flow of task execution."""
+        """
+        The main method to manage the flow of task execution.
+        Executes the task by calling setup, execute, and teardown methods successively.
+        """
         self._print_execution_start()
         self.setup()
         self.execute()
