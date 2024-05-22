@@ -1,9 +1,5 @@
 import os
 
-from tasks.configs.getters import (
-    get_checkpoint_directory,
-    get_environment_path_of_tasks,
-)
 from tasks.tools.for_cleanup.format_docstrings import (
     format_docstrings,
 )
@@ -26,6 +22,8 @@ from tasks.tools.for_cleanup.run_black_formatting import (
     format_with_black,
 )
 from tasks.tools.general.execute_pylint import execute_pylint
+from tasks.tasks.management.task_session import TaskSession
+
 
 STRATEGIES = {
     "RT": (remove_trailing_parts, "Remove trailing parts", False),
@@ -148,10 +146,11 @@ def cleanup_file(
 if __name__ == "__main__":
     path = r"tasks/tests/cleanup_test.py"
     root_dir = os.path.abspath(os.path.join(path, "..", "..", ".."))
+    session = TaskSession(root_dir)
     cleanup_file(
         path,
         checkpointing=True,
-        checkpoint_dir=get_checkpoint_directory(root_dir),
-        python_env_path=get_environment_path_of_tasks(),
+        checkpoint_dir=session.checkpoint_dir,
+        python_env_path=session.runner_python_env,
     )
     print(f"File cleaned of {path}")
