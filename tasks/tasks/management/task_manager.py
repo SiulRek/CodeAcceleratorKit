@@ -140,6 +140,9 @@ class TaskManager(Attributes.AttributesInitializer):
             - TaskSession: The runner session generated from the
                 registration.
         """
+        if not os.path.exists(runner_root):
+            msg = f"Runner root {runner_root} does not exist."
+            raise NotADirectoryError(msg)
         runner_root = normalize_path(runner_root)
         storage_dir = normalize_path(storage_dir)
         if not storage_dir.startswith(runner_root):
