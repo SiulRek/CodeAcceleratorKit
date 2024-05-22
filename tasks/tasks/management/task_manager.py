@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import warnings
 
 from tasks.configs.constants import REGISTERED_RUNNERS_JSON
@@ -177,10 +178,32 @@ class TaskManager(Attributes.AttributesInitializer):
         session = TaskSession(runner_root)
         return session
 
+    @classmethod
+    def delete_runner(cls, runner_root):
+        """
+        Deletes a runner registration.
+
+        Args:
+            - runner_root (str): The root directory of the runner.
+        """
+        runner_root = normalize_path(runner_root)
+        if not os.path.exists(runner_root):
+            msg = f"Runner root {runner_root} does not exist."
+            raise NotADirectoryError(msg)
+        with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
+            registered_variables = json.load(f)
+        if runner_root not in registered_variables:
+            msg = f"Runner root {runner_root} is not registered."
+            raise ValueError(msg)
+        storage_dir = registered_variables[runner_root]
+        shutil.rmtree(storage_dir)
+        del registered_variables[runner_root]
+        with open(REGISTERED_RUNNERS_JSON, "w", encoding="utf-8") as f:
+            json.dump(registered_variables, f, indent=4)
+
 if __name__ == "__main__":
     TaskManager.register_runner(
         runner_root=r"/home/krakerlu/github/CodeAcceleratorKit",
         python_env=r"/home/krakerlu/github/CodeAcceleratorKit/venv",
-        overwrite=True
+        overwrite=True,
     )
-

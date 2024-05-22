@@ -1,4 +1,3 @@
-
 from enum import Enum
 import json
 import os
@@ -15,7 +14,7 @@ class AttrNamesMock(Enum):
     var1_dir = (1, "configs.pkl")
     var2_dir = (2, "configs.pkl")
     cwd = (3, "configs.json")
-    runner_python_env= (4, "configs.json")
+    runner_python_env = (4, "configs.json")
 
 
 class TestTaskManager(unittest.TestCase):
@@ -49,7 +48,10 @@ class TestTaskManager(unittest.TestCase):
         self.addCleanup(patcher3.stop)
         self.mock_variable_names = patcher3.start()
 
-        patcher4 = patch('tasks.tasks.management.task_manager.Attributes.AttributesInitializer', new_callable=MagicMock)
+        patcher4 = patch(
+            "tasks.tasks.management.task_manager.Attributes.AttributesInitializer",
+            new_callable=MagicMock,
+        )
         self.addCleanup(patcher4.stop)
         self.mock_attributes_initializer = patcher4.start()
 
@@ -60,7 +62,9 @@ class TestTaskManager(unittest.TestCase):
             primary_attrs["storage_dir"], "value2"
         )
         Manager._initialize_cwd = lambda primary_attrs: primary_attrs["runner_root"]
-        Manager._initialize_runner_python_env= lambda primary_attrs: primary_attrs["runner_python_env"]
+        Manager._initialize_runner_python_env = lambda primary_attrs: primary_attrs[
+            "runner_python_env"
+        ]
 
     def tearDown(self):
         self.temp_dir.cleanup()
@@ -102,7 +106,9 @@ class TestTaskManager(unittest.TestCase):
         self.assertIn("var1_dir", attributes)
         self.assertIn("var2_dir", attributes)
         self.assertEqual(attributes["cwd"], self.runner_root)
-        self.assertEqual(attributes["runner_python_env"], normalize_path(python_env_path))
+        self.assertEqual(
+            attributes["runner_python_env"], normalize_path(python_env_path)
+        )
 
     def test_create_directories(self):
         python_env_path = os.path.join(self.runner_root, "runner_python_env")
@@ -218,6 +224,32 @@ class TestTaskManager(unittest.TestCase):
         self.assertEqual(session.var2_dir, os.path.join(self.storage_dir, "value2"))
         self.assertEqual(session.cwd, self.runner_root)
         self.assertEqual(session.runner_python_env, normalize_path(python_env_path))
+
+    def test_delete_runner(self):
+        python_env_path = os.path.join(self.runner_root, "runner_python_env")
+        os.makedirs(python_env_path)
+
+        Manager.register_runner(
+            self.runner_root,
+            python_env_path,
+            storage_dir=self.storage_subfolder,
+            overwrite=False,
+            create_dirs=True,
+        )
+
+        with open(self.json_mock, "r", encoding="utf-8") as f:
+            registered_runners = json.load(f)
+        self.assertIn(self.runner_root, registered_runners)
+
+        self.assertTrue(os.path.exists(self.storage_dir))
+
+        Manager.delete_runner(self.runner_root)
+
+        with open(self.json_mock, "r", encoding="utf-8") as f:
+            registered_runners = json.load(f)
+        self.assertNotIn(self.runner_root, registered_runners)
+
+        self.assertFalse(os.path.exists(self.storage_dir))
 
 
 if __name__ == "__main__":
