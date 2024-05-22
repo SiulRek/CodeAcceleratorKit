@@ -200,6 +200,30 @@ class TaskManager(Attributes.AttributesInitializer):
         del registered_variables[runner_root]
         with open(REGISTERED_RUNNERS_JSON, "w", encoding="utf-8") as f:
             json.dump(registered_variables, f, indent=4)
+            
+    def copy_data_files(self, source_runner_dir, dest_runner_dir):
+        """
+        Copies data files from the source runner to the destination runner.
+
+        Args:
+            - source_runner_dir (str): The source runner directory.
+            - dest_runner_dir (str): The destination runner directory.
+        """
+        source_session = TaskSession(source_runner_dir)
+        dest_session = TaskSession(dest_runner_dir)
+        source_data_dir = source_session.data_dir
+
+        for attr in Attributes.SessionAttrNames.__members__.keys():
+            if attr.endswith("_dir"):
+                source_dir = getattr(source_session, attr)
+                dest_dir = getattr(dest_session, attr)
+                if source_dir.startswith(source_data_dir):
+                    for name in os.listdir(source_dir):
+                        source_path = os.path.join(source_dir, name)
+                        if os.path.isfile(source_path):
+                            dest_path = os.path.join(dest_dir, name)
+                            shutil.copy(source_path, dest_path)
+
 
 if __name__ == "__main__":
     TaskManager.register_runner(

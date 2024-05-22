@@ -251,6 +251,42 @@ class TestTaskManager(unittest.TestCase):
 
         self.assertFalse(os.path.exists(self.storage_dir))
 
+    def test_copy_data_files(self):
+        source_runner_dir = os.path.join(self.temp_dir.name, "source_runner")
+        os.makedirs(source_runner_dir)
+
+        dest_runner_dir = os.path.join(self.temp_dir.name, "dest_runner")
+        os.makedirs(dest_runner_dir)
+
+        source_data_dir = os.path.join(source_runner_dir, "data")
+        os.makedirs(source_data_dir)
+        source_file_path = os.path.join(source_data_dir, "example_file.txt")
+        with open(source_file_path, "w") as file:
+            file.write("Sample data")
+
+        dest_data_dir = os.path.join(dest_runner_dir, "data")
+        os.makedirs(dest_data_dir)
+
+        with patch("tasks.tasks.management.task_manager.TaskSession") as MockSession:
+            mock_source_session = MagicMock()
+            mock_source_session.data_dir = source_data_dir
+            mock_source_session.var1_dir = source_data_dir
+            mock_source_session.var2_dir = source_data_dir
+
+            mock_dest_session = MagicMock()
+            mock_dest_session.var1_dir = dest_data_dir
+            mock_dest_session.var2_dir = dest_data_dir
+
+            MockSession.side_effect = [mock_source_session, mock_dest_session]
+
+            Manager().copy_data_files(source_runner_dir, dest_runner_dir)
+
+        dest_file_path = os.path.join(dest_data_dir, "example_file.txt")
+        self.assertTrue(os.path.isfile(dest_file_path))
+        with open(dest_file_path, "r") as file:
+            content = file.read()
+            self.assertEqual(content, "Sample data")
+
 
 if __name__ == "__main__":
     unittest.main()
