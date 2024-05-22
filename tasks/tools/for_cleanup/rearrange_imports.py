@@ -1,6 +1,5 @@
 import warnings
 
-from tasks.configs.getters import get_modules_info
 from tasks.tools.for_cleanup.extract_module_path import (
     extract_module_path,
 )
@@ -43,20 +42,17 @@ def extract_module_docstring(code_text):
     return docstring
 
 
-def process_import_statements(import_statements, modules_info_getter=get_modules_info):
+def process_import_statements(import_statements, modules_info):
     """
-    Rearranges the import staments in alphabetical order.
+    Rearranges the import staments in alphabetical order based on the module path. The order is standard library, third-party, and local.
 
     Args:
         - import_statements (list): A list of import lines.
-        - modules_info_getter (function): A function that returns a
-            dictionary containing informationabout Python modules. Defaults to
-            get_modules_info.
+        - modules_info: (dict): A dictionary containing information about the loaded modules. Keys are 'standard_library', 'third_party', and 'local'.
 
     Returns:
         - list: A list of import lines
     """
-    modules_info = modules_info_getter(r"/home/krakerlu/github/CodeAcceleratorKit")
     standard_library = modules_info["standard_library"]
     third_party = modules_info["third_party"]
     local = modules_info["local"]
@@ -97,18 +93,19 @@ def process_import_statements(import_statements, modules_info_getter=get_modules
     return updated_import_statements
 
 
-def rearrange_imports(code_text):
+def rearrange_imports(code_text, modules_info):
     """
-    Rearranges the import statements in a Python script.
+    Rearranges the import statements in a Python script. The order is standard library, third-party, and local in alphabetical order.
 
     Args:
         - code_text (str): A string containing Python code.
+        - modules_info (dict): A dictionary containing information about the loaded modules. Keys are 'standard_library', 'third_party', and 'local'.
 
     Returns:
         - str: The Python code with the import statements rearranged.
     """
     import_statements, other_code = separate_imports(code_text)
-    updated_import_statements = process_import_statements(import_statements)
+    updated_import_statements = process_import_statements(import_statements, modules_info)
     updated_import_statements = "\n".join(updated_import_statements)
     module_docstring = extract_module_docstring(code_text)
     if module_docstring:
@@ -117,17 +114,18 @@ def rearrange_imports(code_text):
     return updated_import_statements + other_code
 
 
-def rearrange_imports_from_file(file_path):
+def rearrange_imports_from_file(file_path, modules_info):
     """
-    Rearranges the import statements in a Python script file.
+    Rearranges the import statements in a Python script file. The order is standard library, third-party, and local in alphabetical order.
 
     Args:
         - file_path (str): The path to the Python script file.
+        - modules_info (dict): A dictionary containing information about the loaded modules. Keys are 'standard_library', 'third_party', and 'local'.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code_text = file.read()
 
-    updated_code = rearrange_imports(code_text)
+    updated_code = rearrange_imports(code_text, modules_info)
 
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(updated_code)
@@ -135,5 +133,10 @@ def rearrange_imports_from_file(file_path):
 
 if __name__ == "__main__":
     file_path = r"tasks/tests/data/example_script_3.py"
-    rearrange_imports_from_file(file_path)
+    modules_info = {
+        "standard_library": [],
+        "third_party": [],
+        "local": [],
+    }
+    rearrange_imports_from_file(file_path, modules_info)
     print(file_path)

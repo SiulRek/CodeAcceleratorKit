@@ -1,3 +1,4 @@
+import warnings
 import os
 
 from tasks.tools.for_cleanup.format_docstrings import (
@@ -76,9 +77,9 @@ def cleanup_file(
     file_path,
     select_only=None,
     select_not=None,
-    checkpointing=False,
     checkpoint_dir=None,
     python_env_path=None,
+    modules_info=None
 ):
     """
     Apply cleanup strategies to a python file. The strategies are applied in the
@@ -88,12 +89,11 @@ def cleanup_file(
         - file_path (str): Path to the file to clean.
         - select_only (list): List of strategies to apply. Default to None.
         - select_not (list): List of strategies to exclude. Default to None.
-        - checkpointing (bool): Whether to create checkpoints.
-            DefaulttoFalse.
-        - checkpoint_dir (str): Directory to save the checkpointsin.Required
-            if checkpointing is True.
+        - checkpoint_dir (str): Directory to save the checkpoints in. If specified, checkpointing is enabled.
         - python_env_path (str): Path to the python environment to
-            useforsubprocess cleaning. Required for subprocess cleaning.
+            use for subprocess cleaning. Required for subprocess cleaning.
+        - modules_info (dict): A dictionary containing information about the loaded modules. Keys are 'standard_library', 'third_party', and 'local'.
+        Used for rearranging imports. If None skips rearranging imports.
     """
     if not file_path.endswith(".py"):
         msg = f"File {file_path} is not a python file"
@@ -101,12 +101,13 @@ def cleanup_file(
     if not os.path.exists(file_path):
         msg = f"File {file_path} not found"
         raise FileNotFoundError(msg)
+
     with open(file_path, "r") as file:
         code = file.read()
-    if checkpointing and not checkpoint_dir:
-        msg = "Output directory is required for checkpointing"
-        raise ValueError(msg)
-    os.makedirs(checkpoint_dir, exist_ok=True)
+
+    checkpointing = bool(checkpoint_dir)
+    if checkpointing:
+        os.makedirs(checkpoint_dir, exist_ok=True)
 
     if select_only and select_not:
         msg = "Cannot have both select_only and select_not options specified."
@@ -128,13 +129,19 @@ def cleanup_file(
                 raise ValueError(
                     "Python environment path is required for cleaning with subprocess."
                 )
-            if not updated_code == code:
+            if updated_code != code:
                 with open(file_path, "w") as file:
                     file.write(updated_code)
-            if result := function(file_path, python_env_path):
-                print(result)
+            
+            if message := function(file_path, python_env_path):
+                print(message)
             with open(file_path, "r") as file:
                 updated_code = file.read()
+        elif function == rearrange_imports:
+                if not modules_info:
+                    warnings.warn("Modules info not provided. Skipping rearranging imports.")
+                    continue
+                updated_code = function(updated_code, modules_info)
         else:
             updated_code = function(updated_code)
         file_name = os.path.basename(file_path)
@@ -149,7 +156,6 @@ if __name__ == "__main__":
     session = TaskSession(root_dir)
     cleanup_file(
         path,
-        checkpointing=True,
         checkpoint_dir=session.checkpoint_dir,
         python_env_path=session.runner_python_env,
     )

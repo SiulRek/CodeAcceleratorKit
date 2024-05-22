@@ -37,6 +37,9 @@ class CleanupTask(TaskBase):
         if select_only is not None and select_not is not None:
             msg = "Cannot have both select_only and select_not options specified."
             raise ValueError(msg)
+        if not checkpointing:
+            checkpoint_dir = None
+            
 
         with open(file_path, "w") as file:
             file.write(updated_content)
@@ -45,9 +48,9 @@ class CleanupTask(TaskBase):
             file_path=file_path,
             select_only=select_only,
             select_not=select_not,
-            checkpointing=checkpointing,
-            python_env_path=environment_path,
             checkpoint_dir=checkpoint_dir,
+            python_env_path=environment_path,
+            modules_info=self.session.modules_info,
         )
 
 
