@@ -19,7 +19,7 @@ from tasks.tasks.create_query.line_validation import (
     line_validation_for_query_template,
     line_validation_for_make_query,
 )
-from tasks.tasks.foundation.macro_engine import MacroEngine
+from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
 from tasks.tools.for_create_query.get_error_text import get_error_text
 from tasks.tools.for_create_query.get_fill_text import get_fill_text
 from tasks.tools.for_create_query.get_query_template import get_query_template
@@ -33,8 +33,8 @@ from tasks.tools.general.generate_directory_tree import generate_directory_tree
 from tasks.tools.general.get_temporary_script_path import get_temporary_script_path
 
 
-class CreateQueryEngine(MacroEngine):
-    """Engine for creating a query from macros within text lines."""
+class CreateQueryInterpreter(MacroInterpreter):
+    """Interpreter for creating a query from macros within text lines."""
 
     def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):

@@ -31,7 +31,7 @@ TODO when adding new reference:
 import os
 
 from tasks.configs.constants import MAKE_QUERY_MACROS as MACROS
-from tasks.tasks.create_query.create_query_engine import CreateQueryEngine
+from tasks.tasks.create_query.create_query_interpreter import CreateQueryInterpreter
 from tasks.tasks.create_query.finalizer import Finalizer
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_create_query.add_text_tags import add_text_tags
@@ -122,17 +122,17 @@ class CreateQueryTask(TaskBase):
 
     def execute(self):
         """Executes the CreateQuery task to format and finalize the query."""
-        engine = CreateQueryEngine(self.session)
+        interpreter = CreateQueryInterpreter(self.session)
 
         if self.macros_text:
-            engine.file_path = self.file_path  # Allows for current file macros
-            macros_data, _ = engine.extract_macros_from_text(
+            interpreter.file_path = self.file_path  # Allows for current file macros
+            macros_data, _ = interpreter.extract_macros_from_text(
                 self.macros_text, post_process=True
             )
             with open(self.file_path, "r") as file:
                 updated_content = file.read()
         else:
-            macros_data, updated_content = engine.extract_macros_from_file(
+            macros_data, updated_content = interpreter.extract_macros_from_file(
                 self.file_path
             )
         macros_data, begin_text, end_text, make_query_kwargs = macros_data

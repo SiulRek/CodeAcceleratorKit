@@ -1,17 +1,20 @@
 from abc import ABC, abstractmethod
 
-class MacroEngine(ABC):
-    """
-    A base class for extracting macros from files based on specified validation methods used in Tasks.
 
-    This class stores the session object of the running task and provides the foundational mechanisms 
-    to identify and extract macros from the current file types.
+class MacroInterpreter(ABC):
+    """
+    A base class for extracting macros from files based on specified validation
+    methods used in Tasks.
+
+    This class stores the session object of the running task and provides the
+    foundational mechanisms to identify and extract macros from the current file
+    types.
 
     Attributes:
-        session (object): The current session object of the running task.
+        - session (object): The current session object of the running task.
 
     Methods:
-        - extract_macros: Extract macros from a file and separates them from
+        - extract_macros: Extract macros from a file and separate them from
             non-referenced content.
         - post_process_macros: Provide a hook for child classes to further
             process the extracted macros.
@@ -19,10 +22,10 @@ class MacroEngine(ABC):
 
     def __init__(self, session):
         """
-        Initializes the MacroEngine with the provided session.
+        Initializes the MacroInterpreter with the provided session.
 
         Args:
-            session (object): The session object of the running task.
+            - session (object): The session object of the running task.
         """
         self.session = session
         self.initialize_validation_methods()
@@ -37,13 +40,13 @@ class MacroEngine(ABC):
 
     def extract_macros_from_text(self, text, post_process=False):
         """
-        Extracts macros and updated text from the input text based on
-        validation methods.
+        Extracts macros and updated text from the input text based on validation
+        methods.
 
         Args:
             - text (str): The text to extract macros from.
-            - post_process (bool): Whether to post-process the extracted macros
-                or not.
+            - post_process (bool): Whether to post-process the extracted
+                macros or not.
 
         Returns:
             - tuple: macros_data or the post-processed macros.
@@ -71,7 +74,8 @@ class MacroEngine(ABC):
 
     def extract_macros_from_file(self, file_path):
         """
-        Extracts macros from a specified file using validation methods, while maintaining the order of their occurrence.
+        Extracts macros from a specified file using validation methods, while
+        maintaining the order of their occurrence.
 
         This method iterates through each line of the file, applying validation
         methods that start with 'validate_' to detect and extract specific
@@ -86,9 +90,8 @@ class MacroEngine(ABC):
 
         Returns:
             - tuple: A tuple where the first element is the result of
-                post-processing the extracted macros, defined in child
-                classes, and the second element is the updated text stripped of
-                macros.
+                post-processing the extracted macros, defined in child classes,
+                and the second element is the updated text stripped of macros.
         """
         self.file_path = file_path
 

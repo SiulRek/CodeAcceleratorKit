@@ -4,10 +4,11 @@ from tasks.tasks.cleanup.line_validation import (
     line_validation_for_select_not,
     line_validation_for_checkpoints,
 )
-from tasks.tasks.foundation.macro_engine import MacroEngine
+from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
 
 
-class CleanupEngine(MacroEngine):
+class CleanupInterpreter(MacroInterpreter):
+    """ A class for interpreting cleanup macros from text. """
 
     def validate_select_only_macro(self, line):
         if result := line_validation_for_select_only(line):

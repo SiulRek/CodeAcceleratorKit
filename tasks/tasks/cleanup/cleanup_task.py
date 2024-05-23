@@ -1,6 +1,6 @@
 import os
 
-from tasks.tasks.cleanup.cleanup_engine import CleanupEngine
+from tasks.tasks.cleanup.cleanup_interpreter import CleanupInterpreter
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_cleanup.cleanup_file import cleanup_file
 
@@ -33,13 +33,13 @@ class CleanupTask(TaskBase):
         checkpoint_dir = self.session.checkpoint_dir
         environment_path = self.session.tasks_python_env
 
-        engine = CleanupEngine(self.session)
+        interpreter = CleanupInterpreter(self.session)
         if self.macros_text:
-            macros_data, _ = engine.extract_macros_from_text(self.macros_text, post_process=True)
+            macros_data, _ = interpreter.extract_macros_from_text(self.macros_text, post_process=True)
             with open(file_path, "r") as file:
                 updated_content = file.read()
         else:
-            macros_data, updated_content = engine.extract_macros_from_file(file_path)
+            macros_data, updated_content = interpreter.extract_macros_from_file(file_path)
         select_only, select_not, checkpointing = macros_data
 
         if select_only is not None and select_not is not None:
