@@ -16,6 +16,9 @@ class CleanupTask(TaskBase):
         arguments."""
         super().setup()
         self.file_path = self.additional_args[0]
+        self.macros_text = None
+        if len(self.additional_args) > 1:
+            self.macros_text = self.additional_args[1]
 
     def execute(self):
         """
@@ -31,7 +34,12 @@ class CleanupTask(TaskBase):
         environment_path = self.session.tasks_python_env
 
         engine = CleanupEngine(self.session)
-        macros_data, updated_content = engine.extract_macros(file_path)
+        if self.macros_text:
+            macros_data, _ = engine.extract_macros_from_text(self.macros_text, post_process=True)
+            with open(file_path, "r") as file:
+                updated_content = file.read()
+        else:
+            macros_data, updated_content = engine.extract_macros_from_file(file_path)
         select_only, select_not, checkpointing = macros_data
 
         if select_only is not None and select_not is not None:

@@ -199,7 +199,7 @@ class CreateQueryEngine(MacroEngine):
             query_template = get_query_template(
                 result, self.session.query_templates_dir
             )
-            macros_data, _ = self._extract_macros(query_template)
+            macros_data, _ = self.extract_macros_from_text(query_template)
             return macros_data
         return None
 

@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-
 class MacroEngine(ABC):
     """
     A base class for extracting macros from files based on specified validation methods used in Tasks.
@@ -36,17 +35,18 @@ class MacroEngine(ABC):
             if callable(getattr(self, method)) and method.startswith("validate_")
         ]
 
-    def _extract_macros(self, text):
+    def extract_macros_from_text(self, text, post_process=False):
         """
         Extracts macros and updated text from the input text based on
         validation methods.
 
         Args:
             - text (str): The text to extract macros from.
+            - post_process (bool): Whether to post-process the extracted macros
+                or not.
 
         Returns:
-            - tuple: A tuple containing a list of extracted macros and
-                the updated text.
+            - tuple: macros_data or the post-processed macros.
         """
         macros = []
         updated_text_lines = []
@@ -64,9 +64,12 @@ class MacroEngine(ABC):
             if not result:
                 updated_text_lines.append(line)
         updated_text = "\n".join(updated_text_lines)
+
+        if post_process:
+            return self.post_process_macros(macros), updated_text
         return macros, updated_text
 
-    def extract_macros(self, file_path):
+    def extract_macros_from_file(self, file_path):
         """
         Extracts macros from a specified file using validation methods, while maintaining the order of their occurrence.
 
@@ -91,7 +94,7 @@ class MacroEngine(ABC):
 
         with open(file_path, "r", encoding="utf-8") as file:
             text = file.read()
-            macros, updated_text = self._extract_macros(text)
+            macros, updated_text = self.extract_macros_from_text(text)
 
         process_results = self.post_process_macros(macros)
         return process_results, updated_text
