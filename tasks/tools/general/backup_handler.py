@@ -131,7 +131,7 @@ class BackupHandler:
         self.load_context()
         previous_file_path = os.path.normpath(previous_file_path)
         copy_context_data = deepcopy(self.context_data)
-        copy_context_data.reverse()
+        copy_context_data.reverse()  # To get the last backup first
         for backup_file_context in copy_context_data:
             source_file_path = os.path.normpath(
                 backup_file_context["previous_file_path"]
@@ -175,6 +175,31 @@ class BackupHandler:
                 raise FileNotFoundError(msg)
         msg = "No backup found"
         raise FileNotFoundError(msg)
+
+    def get_backup_path(self, previous_file_path):
+        """
+        Get the backup path of a specific file.
+
+        Args:
+            - previous_file_path (str): The path to the file that was backed
+                up.
+
+        Returns:
+            - str: The path to the backup file.
+        """
+        self.load_context()
+        previous_file_path = os.path.normpath(previous_file_path)
+        for backup_file_context in self.context_data:
+            source_file_path = os.path.normpath(
+                backup_file_context["previous_file_path"]
+            )
+            if source_file_path == previous_file_path:
+                return os.path.join(
+                    self.backup_dir, backup_file_context["backup_file_name"]
+                )
+        else:
+            msg = f"No backup found for {previous_file_path}"
+            raise FileNotFoundError(msg)
 
     def cleanup_storage(self):
         """

@@ -272,6 +272,19 @@ class TestBackupHandler(unittest.TestCase):
 
         self.assertEqual(len(self.backup_handler.get_backup_context()), 1)
 
+    def test_get_backup_path(self):
+        source_file = TEXT_FILE_1_PATH
+        backup_comment = "Backup comment"
+
+        with open(source_file, "w", encoding="utf-8") as f:
+            f.write("Sample content")
+
+        self.backup_handler.store_backup(source_file, backup_comment)
+
+        backup_path = self.backup_handler.get_backup_path(source_file)
+        self.assertTrue(os.path.exists(backup_path))
+        self.assertTrue(backup_path.startswith(self.backup_dir))
+
 
 if __name__ == "__main__":
     unittest.main()
