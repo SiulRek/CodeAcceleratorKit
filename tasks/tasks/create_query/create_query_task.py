@@ -33,11 +33,11 @@ import os
 
 from tasks.configs.constants import MAKE_QUERY_MACROS as MACROS
 from tasks.tools.for_create_query.add_text_tags import add_text_tags
-from tasks.tasks.engines.for_create_query.finalizer import Finalizer
-from tasks.tasks.engines.for_create_query.create_query_engine import (
+from tasks.tasks.create_query.finalizer import Finalizer
+from tasks.tasks.create_query.create_query_engine import (
     CreateQueryEngine,
 )
-from tasks.tasks.task_base import TaskBase
+from tasks.tasks.foundation.task_base import TaskBase
 
 
 class ChapterTitleManager:
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     """
     Entry point for the module. Initializes and runs the CreateQuery task.
     """
-    default_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+    default_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")
     default_file_path = os.path.join(
         default_root, "tasks", "tests", "for_tasks", "create_query_test.py"
     )

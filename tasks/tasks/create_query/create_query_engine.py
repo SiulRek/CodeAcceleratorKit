@@ -1,7 +1,7 @@
 import os
 
 from tasks.configs.constants import MAKE_QUERY_MACROS as MACROS
-from tasks.tasks.engines.for_create_query.line_validation import (
+from tasks.tasks.create_query.line_validation import (
     line_validation_for_begin_text,
     line_validation_for_end_text,
     line_validation_for_title,
@@ -19,7 +19,7 @@ from tasks.tasks.engines.for_create_query.line_validation import (
     line_validation_for_query_template,
     line_validation_for_make_query,
 )
-from tasks.tasks.engines.macro_engine import MacroEngine
+from tasks.tasks.foundation.macro_engine import MacroEngine
 from tasks.tools.for_create_query.get_error_text import get_error_text
 from tasks.tools.for_create_query.get_fill_text import get_fill_text
 from tasks.tools.for_create_query.get_query_template import get_query_template

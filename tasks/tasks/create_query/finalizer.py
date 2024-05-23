@@ -1,6 +1,6 @@
 import os
 
-from tasks.tasks.engines.for_create_query.line_validation import (
+from tasks.tasks.create_query.line_validation import (
     line_validation_for_checksum,
 )
 from tasks.tools.general.extract_python_code import (

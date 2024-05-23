@@ -1,10 +1,10 @@
 from tasks.configs.constants import CLEANUP_MACROS as MACROS
-from tasks.tasks.engines.for_cleanup.line_validation import (
+from tasks.tasks.cleanup.line_validation import (
     line_validation_for_select_only,
     line_validation_for_select_not,
     line_validation_for_checkpoints,
 )
-from tasks.tasks.engines.macro_engine import MacroEngine
+from tasks.tasks.foundation.macro_engine import MacroEngine
 
 
 class CleanupEngine(MacroEngine):

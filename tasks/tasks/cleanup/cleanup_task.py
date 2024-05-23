@@ -1,7 +1,7 @@
 import os
 
-from tasks.tasks.engines.for_cleanup.cleanup_engine import CleanupEngine
-from tasks.tasks.task_base import TaskBase
+from tasks.tasks.cleanup.cleanup_engine import CleanupEngine
+from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_cleanup.cleanup_file import cleanup_file
 
 
@@ -55,7 +55,7 @@ class CleanupTask(TaskBase):
 
 
 if __name__ == "__main__":
-    default_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+    default_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")
     default_file_path = os.path.join(
         default_root,
         "tasks",
