@@ -258,8 +258,8 @@ class CreateQueryEngine(MacroEngine):
                 if len(make_query_kwargs) > 0:
                     msg = "Multiple make_query macros found in the query."
                     raise ValueError(msg)
-                create_python_script, max_tokens = macro_data[1]
-                make_query_kwargs["create_python_script"] = create_python_script
+                modify_inplace, max_tokens = macro_data[1]
+                make_query_kwargs["modify_inplace"] = modify_inplace
                 make_query_kwargs["max_tokens"] = max_tokens
         make_query_kwargs = make_query_kwargs or None
         return (macros_data, begin_text, end_text, make_query_kwargs)

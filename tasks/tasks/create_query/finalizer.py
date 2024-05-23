@@ -21,8 +21,7 @@ class Finalizer:
 
     Attributes:
         - file_path (str): Path to the target file for final content.
-        - query_path (str): Path to save the generated query.
-        - response_path (str): Path to save the query response.
+        - output_dir (str): Path to the output directory.
         - checksum (int): Expected checksum for validation.
         - updated_contents (str): Content to be processed and validated.
         - final_lines (list): Lines of content after processing.
@@ -39,18 +38,18 @@ class Finalizer:
         self.final_lines = []
         self.query = None
 
-    def set_paths(self, file_path, query_path, response_path):
+    def set_directories(self, file_path, output_dir):
         """
         Sets the file, query, and response paths.
 
         Args:
-            - - file_path (str): Target file path.
-            - - query_path (str): Output query file path.
-            - - response_path (str): Query response file path.
+            - file_path (str): Target file path.
+            - output_dir (str): Output directory path.
         """
         self.file_path = file_path
-        self.query_path = query_path
-        self.response_path = response_path
+        self.file_name = os.path.basename(self.file_path).split(".")[0]
+        self.file_ext = os.path.splitext(self.file_path)[1]
+        self.output_dir = output_dir
 
     def _validate_lines(self):
         """Validates each line of the updated contents for checksums and
@@ -79,19 +78,23 @@ class Finalizer:
 
         Args:
             - make_query_kwargs (dict): Parameters including
-                'create_python_script' and 'max_tokens' for the query.
+                'modify_inplace' and 'max_tokens' for the query.
         """
-        create_python_script = make_query_kwargs["create_python_script"]
+        modify_inplace = make_query_kwargs["modify_inplace"]
         max_tokens = make_query_kwargs["max_tokens"]
         print("Making query...")
         response = (
             make_query(self.query, max_tokens) if max_tokens else make_query(self.query)
         )
-        write_to_file(self.response_path, response)
-        print(f"Response saved to {self.response_path}")
-        if create_python_script:
-            code = extract_python_code(response)
-            python_path = os.path.splitext(self.response_path)[0] + ".py"
+        response_name = self.file_name + "_response.txt"
+        response_path = os.path.join(self.output_dir, response_name)
+        write_to_file(response_path, response)
+        print(f"Response saved to {response_path}")
+        if code := extract_python_code(response):
+            if modify_inplace:
+                python_path = self.file_path
+            else:
+                python_path = os.path.splitext(response_path)[0] + ".py"
             write_to_file(python_path, code)
             print(f"Python script saved to {python_path}")
 
@@ -104,9 +107,11 @@ class Finalizer:
             - make_query_kwargs (dict): Arguments for making the query.
         """
         final_text = "\n".join(self.final_lines)
+        query_name = self.file_name + "_query.txt"
+        query_path = os.path.join(self.output_dir, query_name)
         write_to_file(self.file_path, final_text)
-        write_to_file(self.query_path, self.query)
-        print(f"Query saved to {self.query_path}")
+        write_to_file(query_path, self.query)
+        print(f"Query saved to {query_path}")
         if make_query_kwargs:
             self._handle_query(make_query_kwargs)
 
@@ -116,9 +121,9 @@ class Finalizer:
         writing results.
 
         Args:
-            - - updated_contents (str): The updated content to process.
-            - - query (str): The query to handle.
-            - - make_query_kwargs (dict): Additional parameters for
+            - updated_contents (str): The updated content to process.
+            - query (str): The query to handle.
+            - make_query_kwargs (dict): Additional parameters for
                 queryhandling.
         """
         self.updated_contents = updated_contents

@@ -18,7 +18,7 @@ Available reference types:
 | directory_tree          | Get directory tree                    | #tree <directory_path>                 | <max_depth, include_files, ignore_list (semicolon-separated list)> |
 | summarize_python_script | Summarize a Python script             | #summarize <script_path>           | <include_definitions_without_docstrings>               |
 | summarize_folder       | Summarize Python scripts in a folder  | #summarize_folder <folder_path>     | <include_definitions_without_docstrings, excluded_dirs, excluded_files> |
-| make_query              | Make a query from a temporary file    | #makequery                                       | <create_python_script, max_tokens>                  |
+| make_query              | Make a query from a temporary file    | #makequery                                       | <modify_inplace, max_tokens>                  |
 | checksum                | Check if provided checksum corresponds | #checksum <number_of_macros>                 | -                                                   |
 
 Note: Replace angled brackets and their contents with appropriate values when using patterns.
@@ -133,10 +133,9 @@ class CreateQuery(TaskBase):
         query = add_text_tags(begin_text, end_text, query)
 
         finalizer = Finalizer()
-        finalizer.set_paths(
+        finalizer.set_directories(
             self.file_path,
-            self.session.query_file,
-            self.session.response_file
+            self.session.output_dir,
         )
         finalizer.finalize(updated_content, query, make_query_kwargs)
 

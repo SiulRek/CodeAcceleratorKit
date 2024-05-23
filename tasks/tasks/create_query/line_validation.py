@@ -179,13 +179,13 @@ def line_validation_for_query_template(line):
 def line_validation_for_make_query(line):
     """Validate the line to check if it is a valid line to make a query."""
     if MAKE_QUERY_TAG in line:
-        create_python_script = True
+        modify_inplace = False
         max_tokens = None
         if arguments := retrieve_optional_arguments(line):
-            create_python_script = retrieve_bool(arguments[0])
+            modify_inplace = retrieve_bool(arguments[0])
             if len(arguments) > 1:
                 max_tokens = int(arguments[1])
-        return create_python_script, max_tokens
+        return modify_inplace, max_tokens
     return None
 
 
