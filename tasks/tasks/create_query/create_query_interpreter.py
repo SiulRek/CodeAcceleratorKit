@@ -241,19 +241,23 @@ class CreateQueryInterpreter(MacroInterpreter):
                 macros_data[start] = macro_data
                 
         # Merge begin_text and end_text in the referenced contents
-        begin_text = ""
-        end_text = ""
+        begin_text = []
+        end_text = []
+        updated_macros_data_1 = []
         for macro_data in macros_data:
             if macro_data[0] == MACROS.BEGIN_TEXT:
-                begin_text += macro_data[1]
-                macros_data.remove(macro_data)
+                begin_text.append(macro_data[1])
             elif macro_data[0] == MACROS.END_TEXT:
-                end_text += macro_data[1]
-                macros_data.remove(macro_data)
+                end_text.append(macro_data[1])
+            else:
+                updated_macros_data_1.append(macro_data)
+        begin_text = "\n".join(begin_text) if begin_text else ""
+        end_text = "\n".join(end_text) if end_text else ""
 
         # Organize the make query reference
+        updated_macros_data_2 = []
         make_query_kwargs = {}
-        for macro_data in macros_data:
+        for macro_data in updated_macros_data_1:
             if macro_data[0] == MACROS.MAKE_QUERY:
                 # if len(make_query_kwargs) > 0:
                 #     msg = "Multiple make_query macros found in the query."
@@ -261,5 +265,7 @@ class CreateQueryInterpreter(MacroInterpreter):
                 modify_inplace, max_tokens = macro_data[1]
                 make_query_kwargs["modify_inplace"] = modify_inplace
                 make_query_kwargs["max_tokens"] = max_tokens
+            else:
+                updated_macros_data_2.append(macro_data)
         make_query_kwargs = make_query_kwargs or None
-        return (macros_data, begin_text, end_text, make_query_kwargs)
+        return (updated_macros_data_2, begin_text, end_text, make_query_kwargs)

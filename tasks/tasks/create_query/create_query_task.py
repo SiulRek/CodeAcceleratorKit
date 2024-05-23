@@ -158,6 +158,6 @@ if __name__ == "__main__":
         os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."
     )
     default_file_path = os.path.join(
-        default_root, "tasks", "tests", "for_tasks", "create_query.py"
+        default_root, "tasks", "tests", "for_tasks", "create_query_test.py"
     )
     CreateQueryTask(default_root, default_file_path).main()
