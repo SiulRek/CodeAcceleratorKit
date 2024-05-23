@@ -13,7 +13,6 @@ def write_to_file(file_path, content):
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(content)
 
-
 class Finalizer:
     """
     Processes final stages of file content modification, including checksum
@@ -71,7 +70,7 @@ class Finalizer:
                     msg = f"Checksum mismatch: {diff} != {self.checksum}"
                     raise ValueError(msg)
 
-    def _handle_query(self, make_query_kwargs):
+    def _handle_query(self, make_query_kwargs, backup_handler):
         """
         Generates a query based on provided parameters and handles the execution
         and file output of the response.
@@ -79,6 +78,8 @@ class Finalizer:
         Args:
             - make_query_kwargs (dict): Parameters including
                 'modify_inplace' and 'max_tokens' for the query.
+            - backup_handler (BackupHandler): Backup handler to backup the file, when 
+                modify_inplace is True.
         """
         modify_inplace = make_query_kwargs["modify_inplace"]
         max_tokens = make_query_kwargs["max_tokens"]
@@ -92,19 +93,25 @@ class Finalizer:
         print(f"Response saved to {response_path}")
         if code := extract_python_code(response):
             if modify_inplace:
+                backup_handler.store_backup(self.file_path, "Before modification from create query task")
+                backup_file_path = backup_handler.get_backup_path(self.file_path)
+                print(f"Backup saved to {backup_file_path}")
                 python_path = self.file_path
             else:
                 python_path = os.path.splitext(response_path)[0] + ".py"
             write_to_file(python_path, code)
             print(f"Python script saved to {python_path}")
 
-    def _finalize(self, make_query_kwargs):
+    def _finalize(self, make_query_kwargs, backup_handler):
         """
         Writes the final processed content to the file and handles the query and
         its response.
 
         Args:
             - make_query_kwargs (dict): Arguments for making the query.
+            is True.
+            - backup_handler (BackupHandler): Backup handler to backup the file
+                when modify_inplace is True.
         """
         final_text = "\n".join(self.final_lines)
         query_name = self.file_name + "_query.txt"
@@ -113,9 +120,9 @@ class Finalizer:
         write_to_file(query_path, self.query)
         print(f"Query saved to {query_path}")
         if make_query_kwargs:
-            self._handle_query(make_query_kwargs)
+            self._handle_query(make_query_kwargs, backup_handler)
 
-    def finalize(self, updated_contents, query, make_query_kwargs):
+    def finalize(self, updated_contents, query, make_query_kwargs, backup_handler):
         """
         Finalizes the content processing by validating, verifying checksum, and
         writing results.
@@ -125,9 +132,11 @@ class Finalizer:
             - query (str): The query to handle.
             - make_query_kwargs (dict): Additional parameters for
                 queryhandling.
+            - backup_handler (BackupHandler): Backup handler to backup the file
+                when modify_inplace is True.
         """
         self.updated_contents = updated_contents
         self.query = query
         self._validate_lines()
         self._verify_checksum()
-        self._finalize(make_query_kwargs)
+        self._finalize(make_query_kwargs, backup_handler)

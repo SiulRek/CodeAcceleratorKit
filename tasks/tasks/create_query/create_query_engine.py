@@ -255,9 +255,9 @@ class CreateQueryEngine(MacroEngine):
         make_query_kwargs = {}
         for macro_data in macros_data:
             if macro_data[0] == MACROS.MAKE_QUERY:
-                if len(make_query_kwargs) > 0:
-                    msg = "Multiple make_query macros found in the query."
-                    raise ValueError(msg)
+                # if len(make_query_kwargs) > 0:
+                #     msg = "Multiple make_query macros found in the query."
+                #     raise ValueError(msg) # Last make_query macro will be used
                 modify_inplace, max_tokens = macro_data[1]
                 make_query_kwargs["modify_inplace"] = modify_inplace
                 make_query_kwargs["max_tokens"] = max_tokens

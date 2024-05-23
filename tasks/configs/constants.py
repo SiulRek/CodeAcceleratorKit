@@ -10,7 +10,7 @@ REGISTERED_RUNNERS_JSON = os.path.join(TASKS_ROOT, "tasks", "configs", "register
 CONFIGS_SUBFOLDER = "configs"
 TASKS_PYTHON_ENV = os.path.join(TASKS_ROOT, "venv")
 TASKS_CACHE = os.path.join(TASKS_ROOT, "tasks", "__taskscache__")
-
+MAX_BACKUPS = 70
 
 # ----------------- For Create Query -----------------
 class MAKE_QUERY_MACROS(Enum):

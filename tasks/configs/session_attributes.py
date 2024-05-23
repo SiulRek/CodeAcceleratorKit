@@ -2,7 +2,7 @@ from enum import Enum
 import json
 import os
 
-from tasks.configs.constants import CONFIGS_SUBFOLDER, TASKS_PYTHON_ENV, TASKS_CACHE
+from tasks.configs.constants import CONFIGS_SUBFOLDER, TASKS_PYTHON_ENV, TASKS_CACHE, MAX_BACKUPS
 from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tools.general.retrieve_modules import retrieve_modules
 
@@ -10,7 +10,7 @@ from tasks.tools.general.retrieve_modules import retrieve_modules
 class SessionAttrNames(Enum):
     """
     Enumeration for context attribute names, representing different
-    configurableattributes for a session, each associated with a unique
+    configurable attributes for a session, each associated with a unique
     identifier and a file where its value might be found.
     """
 
@@ -21,11 +21,13 @@ class SessionAttrNames(Enum):
     fill_text_dir = (5, "configs.json")
     query_templates_dir = (6, "configs.json")
     output_dir = (7, "configs.json")
-    checkpoint_dir = (8, "configs.json")
-    query_file = (9, "configs.json")
-    response_file = (10, "configs.json")
-    tasks_python_env = (11, "configs.json")
-    modules_info = (12, "modules_info.json")
+    backup_dir = (8, "configs.json")
+    checkpoint_dir = (9, "configs.json")
+    query_file = (10, "configs.json")
+    response_file = (11, "configs.json")
+    tasks_python_env = (12, "configs.json")
+    max_backups = (13, "configs.json")
+    modules_info = (14, "modules_info.json")
 
 
 class AttributesInitializer:
@@ -73,6 +75,14 @@ class AttributesInitializer:
         return dir_
 
     @classmethod
+    def _initialize_backup_dir(cls, primary_attrs):
+        """Initializes the backup directory path based on the output directory."""
+        output_dir = cls._initialize_output_dir(primary_attrs)
+        dir_ = os.path.join(output_dir, "backups")
+        dir_ = normalize_path(dir_)
+        return dir_
+
+    @classmethod
     def _initialize_checkpoint_dir(cls, primary_attrs):
         """Initializes the checkpoint directory path based on the output directory."""
         output_dir = cls._initialize_output_dir(primary_attrs)
@@ -101,6 +111,11 @@ class AttributesInitializer:
         """Initializes the tasks Python environment variable."""
         return TASKS_PYTHON_ENV
 
+    @classmethod
+    def _initialize_max_backups(cls, _):
+        """Initializes the maximum number of backups to keep."""
+        return MAX_BACKUPS
+     
     @classmethod
     def _initialize_modules_info(cls, primary_attrs):
         """Initializes the modules information by retrieving and loading the
