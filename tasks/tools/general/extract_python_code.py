@@ -26,6 +26,9 @@ def extract_python_code(text):
         if block.startswith("python"):
             python_code_blocks[i] = block[6:]
     python_code = "\n\n".join(python_code_blocks)
+    python_code = python_code.replace("```", "").strip()
+    if python_code.startswith("-"):
+        python_code = python_code[python_code.find("\n") + 1:]
     python_code = python_code.replace("`", "")
     return python_code
 
