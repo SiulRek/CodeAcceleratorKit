@@ -16,7 +16,7 @@ class SessionAttrNames(Enum):
 
     cwd = (1, "configs.json")
     runner_python_env = (2, "configs.json")
-    cache = (3, "configs.json")
+    tasks_cache = (3, "configs.json")
     data_dir = (4, "configs.json")
     fill_text_dir = (5, "configs.json")
     query_templates_dir = (6, "configs.json")
@@ -29,13 +29,16 @@ class SessionAttrNames(Enum):
     max_backups = (13, "configs.json")
     modules_info = (14, "modules_info.json")
 
+# Format of dict: "new name": "old name"
+UPDATE_MAPPING = None
+
 
 class AttributesInitializer:
     """Class responsible for initializing various session attributes. It is used during registration of new task runners with the TaskManager class."""
 
     @classmethod
-    def _initialize_cache(cls, primary_attrs):
-        """Initializes the cache directory path."""
+    def _initialize_tasks_cache(cls, primary_attrs):
+        """Initializes the tasks_cache directory path."""
         dir = normalize_path(TASKS_CACHE)
         return dir
 
