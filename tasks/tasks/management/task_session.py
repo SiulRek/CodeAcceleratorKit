@@ -1,3 +1,4 @@
+from copy import deepcopy
 import json
 import os
 import pickle
@@ -111,6 +112,29 @@ class TaskSession:
                     attributes_dict = pickle.load(f)
                 self.load_attributes_from_dict(attributes_dict)
 
+    # def update_attributes(self, new_attributes, prioritize_old_values=True):
+    #     """
+    #     Updates the attributes with new attributes.
+
+    #     Args:
+    #         - new_attributes (dict): The new attributes to update.
+    #         - prioritize_old_values (bool, optional): Whether to prioritize old values or new values. Defaults to True.
+    #     """
+    #     for new_name, old_name in Attributes.UPDATE_MAPPING.items():
+    #         if new_name not in new_attributes:
+    #             raise ValueError(f"Attribute {new_name} is missing in new_attributes.")
+    #         if not hasattr(self, old_name):
+    #             raise AttributeError(f"Old Attribute {old_name} is missing in the session instance.")
+    #         if prioritize_old_values:
+    #             value = deepcopy(getattr(self, old_name))
+    #             delattr(self, old_name)
+    #             setattr(self, new_name, value)
+    #         else:
+    #             delattr(self, old_name)
+    #             value = new_attributes[new_name]
+    #             setattr(self, new_name, value)
+                
+    
     def are_attributes_complete(self):
         """
         Checks if all attributes defined in ContextAttrNames are present in the
@@ -143,6 +167,7 @@ class TaskSession:
             if file_name not in configs:
                 configs[file_name] = {}
             configs[file_name][attr] = getattr(self, attr)
+        file_names = []
         for file_name, attributes in configs.items():
             file_path = os.path.join(self.configs_dir, file_name)
             if file_name.endswith(".json"):
@@ -151,3 +176,9 @@ class TaskSession:
             elif file_name.endswith(".pkl"):
                 with open(file_path, "wb") as f:
                     pickle.dump(attributes, f)
+            else:
+                raise ValueError(f"File name {file_name} is not supported.")
+            file_names.append(file_name)
+        for name in os.listdir(self.configs_dir):
+            if name not in file_names:
+                warnings.warn(f"File {name} is unknown and will be ignored.")

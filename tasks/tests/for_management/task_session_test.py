@@ -5,6 +5,7 @@ import pickle
 import tempfile
 import unittest
 from unittest.mock import patch
+import warnings
 
 from tasks.tasks.management.task_session import TaskSession
 from tasks.tasks.management.normalize_path import normalize_path
@@ -222,6 +223,42 @@ class TestTaskSession(unittest.TestCase):
             self.assertEqual(
                 written_other_configs_pickle, expected_other_configs_pickle
             )
+
+    def test_save_attributes_with_unknown_file(self):
+        with patch(
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
+        ), patch(
+            "tasks.configs.session_attributes.SessionAttrNames",
+            AttrNamesMockExtended,
+        ):
+            session = TaskSession(
+                self.runner_root, load_attributes_from_storage=False
+            )
+            session.load_attributes_from_dict(
+                {
+                    "cwd": "test_dir",
+                    "python_env": "test_env",
+                    "attr_3": "value3",
+                    "attr_4": "value4",
+                    "attr_5": "value5",
+                    "attr_6": "value6",
+                }
+            )
+
+            unknown_file_path = os.path.join(self.configs_dir, "unknown_file.txt")
+            with open(unknown_file_path, "w", encoding="utf-8") as f:
+                f.write("This is an unknown file.")
+
+            with warnings.catch_warnings(record=True) as w:
+                warnings.simplefilter("always")
+                session.save_attributes()
+
+                self.assertTrue(any(item.category == UserWarning for item in w))
+                self.assertTrue(
+                    any("unknown_file.txt" in str(item.message) for item in w)
+                )
+
+            self.assertTrue(os.path.exists(unknown_file_path))
 
 
 if __name__ == "__main__":
