@@ -90,7 +90,7 @@ class TaskSession:
         for attr in attributes_dict.keys():
             if attr not in Attributes.SessionAttrNames.__members__.keys():
                 warnings.warn(
-                    f"Attribute {attr} is not an attribute defined in ContextAttrNames."
+                    f"Attribute {attr} is not an attribute defined in SessionAttrNames."
                 )
                 setattr(self, attr, attributes_dict[attr])
 
@@ -120,6 +120,8 @@ class TaskSession:
             - new_attributes (dict): The new attributes to update.
             - prioritize_old_values (bool, optional): Whether to prioritize old values or new values. Defaults to True.
         """
+        if Attributes.UPDATE_MAPPING is None:
+            raise ValueError("UPDATE_MAPPING is not defined in session_attributes.py.")
         for new_name, old_name in Attributes.UPDATE_MAPPING.items():
             if new_name not in new_attributes:
                 raise ValueError(f"Attribute {new_name} is missing in new_attributes.")
