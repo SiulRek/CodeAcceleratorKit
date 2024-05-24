@@ -26,7 +26,7 @@ class TaskBase(ABC):
         """
         self.task_runner_root = None
         self.additional_args = None
-        self.cache_dir = None
+        self.tasks_cache_dir = None
         self._initialize_arguments(default_root, default_args)
         self.line_sep = "-" * 120 + "\n"
 
@@ -49,11 +49,11 @@ class TaskBase(ABC):
     def setup(self):
         """
         Sets up the task environment.
-        Initializes the task session and creates the cache directory.
+        Initializes the task session and creates the tasks_cache directory.
         """
         self.session = TaskSession(self.task_runner_root)
-        self.cache_dir = self.session.cache
-        os.makedirs(self.cache_dir, exist_ok=True)
+        self.tasks_cache_dir = self.session.tasks_cache
+        os.makedirs(self.tasks_cache_dir, exist_ok=True)
 
     @abstractmethod
     def execute(self):
@@ -65,10 +65,10 @@ class TaskBase(ABC):
     def teardown(self):
         """
         Cleans up the task environment.
-        Removes the cache directory if it exists.
+        Removes the tasks_cache directory if it exists.
         """
-        if self.cache_dir and os.path.exists(self.cache_dir):
-            shutil.rmtree(self.cache_dir)
+        if self.tasks_cache_dir and os.path.exists(self.tasks_cache_dir):
+            shutil.rmtree(self.tasks_cache_dir)
 
     def _print_execution_start(self):
         """
