@@ -112,29 +112,28 @@ class TaskSession:
                     attributes_dict = pickle.load(f)
                 self.load_attributes_from_dict(attributes_dict)
 
-    # def update_attributes(self, new_attributes, prioritize_old_values=True):
-    #     """
-    #     Updates the attributes with new attributes.
+    def update_attributes(self, new_attributes, prioritize_old_values=True):
+        """
+        Updates the attributes with new attributes.
 
-    #     Args:
-    #         - new_attributes (dict): The new attributes to update.
-    #         - prioritize_old_values (bool, optional): Whether to prioritize old values or new values. Defaults to True.
-    #     """
-    #     for new_name, old_name in Attributes.UPDATE_MAPPING.items():
-    #         if new_name not in new_attributes:
-    #             raise ValueError(f"Attribute {new_name} is missing in new_attributes.")
-    #         if not hasattr(self, old_name):
-    #             raise AttributeError(f"Old Attribute {old_name} is missing in the session instance.")
-    #         if prioritize_old_values:
-    #             value = deepcopy(getattr(self, old_name))
-    #             delattr(self, old_name)
-    #             setattr(self, new_name, value)
-    #         else:
-    #             delattr(self, old_name)
-    #             value = new_attributes[new_name]
-    #             setattr(self, new_name, value)
+        Args:
+            - new_attributes (dict): The new attributes to update.
+            - prioritize_old_values (bool, optional): Whether to prioritize old values or new values. Defaults to True.
+        """
+        for new_name, old_name in Attributes.UPDATE_MAPPING.items():
+            if new_name not in new_attributes:
+                raise ValueError(f"Attribute {new_name} is missing in new_attributes.")
+            if not hasattr(self, old_name):
+                raise AttributeError(f"Old Attribute {old_name} is missing in the session instance.")
+            if prioritize_old_values:
+                value = deepcopy(getattr(self, old_name))
+                delattr(self, old_name)
+                setattr(self, new_name, value)
+            else:
+                delattr(self, old_name)
+                value = new_attributes[new_name]
+                setattr(self, new_name, value)
                 
-    
     def are_attributes_complete(self):
         """
         Checks if all attributes defined in ContextAttrNames are present in the

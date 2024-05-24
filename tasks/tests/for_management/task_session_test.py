@@ -1,11 +1,11 @@
+import unittest
 from enum import Enum
 import json
 import os
 import pickle
 import tempfile
-import unittest
-from unittest.mock import patch
 import warnings
+from unittest.mock import patch
 
 from tasks.tasks.management.task_session import TaskSession
 from tasks.tasks.management.normalize_path import normalize_path
@@ -29,6 +29,10 @@ class AttrNamesMockExtended(Enum):
     attr_5 = (5, "other_configs.pkl")
     attr_6 = (6, "other_configs.pkl")
 
+UpdateMappingMock = {
+    "new_cwd": "cwd",
+    "new_python_env": "python_env",
+}
 
 class TestTaskSession(unittest.TestCase):
     @classmethod
@@ -259,6 +263,55 @@ class TestTaskSession(unittest.TestCase):
                 )
 
             self.assertTrue(os.path.exists(unknown_file_path))
+
+    def test_update_attributes(self):
+        with patch(
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
+        ), patch(
+            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMockExtended
+        ), patch(
+            "tasks.configs.session_attributes.UPDATE_MAPPING", UpdateMappingMock
+        ):
+            session = TaskSession(
+                self.runner_root, load_attributes_from_storage=False
+            )
+            session.load_attributes_from_dict(
+                {
+                    "cwd": "test_dir",
+                    "python_env": "test_env",
+                    "attr_3": "value3",
+                    "attr_4": "value4",
+                }
+            )
+
+            new_attributes = {
+                "new_cwd": "new_test_dir",
+                "new_python_env": "new_test_env",
+            }
+
+            # Test with prioritize_old_values=True
+            session.update_attributes(new_attributes, prioritize_old_values=True)
+            self.assertFalse(hasattr(session, "cwd"))
+            self.assertFalse(hasattr(session, "python_env"))
+            self.assertEqual(session.new_cwd, "test_dir")
+            self.assertEqual(session.new_python_env, "test_env")
+
+            # Reload original attributes
+            session.load_attributes_from_dict(
+                {
+                    "cwd": "test_dir",
+                    "python_env": "test_env",
+                    "attr_3": "value3",
+                    "attr_4": "value4",
+                }
+            )
+
+            # Test with prioritize_old_values=False
+            session.update_attributes(new_attributes, prioritize_old_values=False)
+            self.assertFalse(hasattr(session, "cwd"))
+            self.assertFalse(hasattr(session, "python_env"))
+            self.assertEqual(session.new_cwd, "new_test_dir")
+            self.assertEqual(session.new_python_env, "new_test_env")
 
 
 if __name__ == "__main__":
