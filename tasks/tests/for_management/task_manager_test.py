@@ -4,15 +4,22 @@ import os
 import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
+import warnings
 
 import tasks
 from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tasks.management.task_manager import TaskManager as Manager
-
+from tasks.tasks.management.task_session import TaskSession
 
 class AttrNamesMock(Enum):
     var1_dir = (1, "configs.pkl")
     var2_dir = (2, "configs.pkl")
+    cwd = (3, "configs.json")
+    runner_python_env = (4, "configs.json")
+
+class AttrNamesMockOld(Enum):
+    old_var1_dir = (1, "configs.pkl")
+    old_var2_dir = (2, "configs.pkl")
     cwd = (3, "configs.json")
     runner_python_env = (4, "configs.json")
 
@@ -287,6 +294,108 @@ class TestTaskManager(unittest.TestCase):
             content = file.read()
             self.assertEqual(content, "Sample data")
 
+    def test_update_runner_prioritize_old_values(self):
+        with patch(
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
+        ):
+            python_env_path = os.path.join(self.runner_root, "runner_python_env")
+            os.makedirs(python_env_path)
+
+            Manager.register_runner(
+                self.runner_root,
+                python_env_path,
+                storage_dir=self.storage_subfolder,
+                overwrite=False,
+                create_dirs=False,
+            )
+
+            with patch(
+                "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMockOld
+            ):
+                session = TaskSession(self.runner_root, load_attributes_from_storage=False)
+                session.load_attributes_from_dict(
+                    {
+                        "old_var1_dir": "old_value1",
+                        "old_var2_dir": "old_value2",
+                        "cwd": "old_cwd",
+                        "runner_python_env": "old_python_env",
+                    }
+                )
+                session.save_attributes()
+
+            new_attrs = {
+                "var1_dir": os.path.join(self.storage_dir, "new_value1"),
+                "var2_dir": os.path.join(self.storage_dir, "new_value2"),
+                "cwd": self.runner_root,
+                "runner_python_env": python_env_path,
+            }
+            update_mapping = {
+                "var1_dir": "old_var1_dir",
+                "var2_dir": "old_var2_dir",
+                "cwd": "cwd",
+                "runner_python_env": "runner_python_env",
+            }
+            with patch.object(Manager, "_init_runner_attributes", return_value=new_attrs), patch(
+            "tasks.configs.session_attributes.UPDATE_MAPPING", update_mapping
+            ), patch("tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock):
+                Manager().update_runner(self.runner_root, prioritize_old_values=True)
+                updated_session = TaskSession(self.runner_root, load_attributes_from_storage=True)
+                self.assertEqual(updated_session.var1_dir, "old_value1")
+                self.assertEqual(updated_session.var2_dir, "old_value2")
+                self.assertEqual(updated_session.cwd, "old_cwd")
+                self.assertEqual(updated_session.runner_python_env, "old_python_env")
+
+
+    def test_update_runner_prioritize_new_values(self):
+        with patch(
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
+        ):
+            python_env_path = os.path.join(self.runner_root, "runner_python_env")
+            os.makedirs(python_env_path)
+
+            Manager.register_runner(
+                self.runner_root,
+                python_env_path,
+                storage_dir=self.storage_subfolder,
+                overwrite=False,
+                create_dirs=False,
+            )
+
+            with patch(
+                "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMockOld
+            ):
+                session = TaskSession(self.runner_root, load_attributes_from_storage=False)
+                session.load_attributes_from_dict(
+                    {
+                        "old_var1_dir": "old_value1",
+                        "old_var2_dir": "old_value2",
+                        "cwd": "old_cwd",
+                        "runner_python_env": "old_python_env",
+                    }
+                )
+                session.save_attributes()
+
+            new_attrs = {
+                "var1_dir": os.path.join(self.storage_dir, "new_value1"),
+                "var2_dir": os.path.join(self.storage_dir, "new_value2"),
+                "cwd": self.runner_root,
+                "runner_python_env": python_env_path,
+            }
+            update_mapping = {
+                "var1_dir": "old_var1_dir",
+                "var2_dir": "old_var2_dir",
+                "cwd": "cwd",
+                "runner_python_env": "runner_python_env",
+            }
+            with patch.object(Manager, "_init_runner_attributes", return_value=new_attrs), patch(
+            "tasks.configs.session_attributes.UPDATE_MAPPING", update_mapping
+            ), patch("tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock):
+                Manager().update_runner(self.runner_root, prioritize_old_values=False)
+                updated_session = TaskSession(self.runner_root, load_attributes_from_storage=True)
+                self.assertEqual(updated_session.var1_dir, os.path.join(self.storage_dir, "new_value1"))
+                self.assertEqual(updated_session.var2_dir, os.path.join(self.storage_dir, "new_value2"))
+                self.assertEqual(updated_session.cwd, self.runner_root)
+                self.assertEqual(updated_session.runner_python_env, python_env_path)
 
 if __name__ == "__main__":
     unittest.main()

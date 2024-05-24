@@ -177,6 +177,26 @@ class TaskManager(Attributes.AttributesInitializer):
             cls.sync_directories_of(runner_root)
         session = TaskSession(runner_root)
         return session
+    
+    def update_runner(self, runner_root, prioritize_old_values=True):
+        """
+        Updates the runner session with the latest attributes.
+
+        Args:
+            - runner_root (str): The root directory of the runner.
+            - prioritize_old_values (bool, optional): Whether to prioritize
+                the old values over the new values. Defaults to True.
+        """
+        session = TaskSession(runner_root)
+        new_attributes = self._init_runner_attributes(
+            runner_root,
+            session.storage_dir,
+            session.runner_python_env,
+            session.cwd,
+        )
+        session.update_attributes(new_attributes, prioritize_old_values=prioritize_old_values)
+        session.save_attributes()
+        TaskManager.sync_directories_of(runner_root)
 
     @classmethod
     def delete_runner(cls, runner_root):
