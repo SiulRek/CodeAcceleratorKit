@@ -178,7 +178,8 @@ class TaskManager(Attributes.AttributesInitializer):
         session = TaskSession(runner_root)
         return session
     
-    def update_runner(self, runner_root, prioritize_old_values=True):
+    @classmethod
+    def update_runner(cls, runner_root, prioritize_old_values=True):
         """
         Updates the runner session with the latest attributes.
 
@@ -188,7 +189,7 @@ class TaskManager(Attributes.AttributesInitializer):
                 the old values over the new values. Defaults to True.
         """
         session = TaskSession(runner_root)
-        new_attributes = self._init_runner_attributes(
+        new_attributes = cls._init_runner_attributes(
             runner_root,
             session.storage_dir,
             session.runner_python_env,
@@ -197,6 +198,16 @@ class TaskManager(Attributes.AttributesInitializer):
         session.update_attributes(new_attributes, prioritize_old_values=prioritize_old_values)
         session.save_attributes()
         TaskManager.sync_directories_of(runner_root)
+    
+    @classmethod
+    def update_registered_runners(cls):
+        """
+        Updates the attributes of all registered runners.
+        """
+        with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
+            registered_variables = json.load(f)
+        for runner_root in registered_variables.keys():
+            cls.update_runner(runner_root)
 
     @classmethod
     def delete_runner(cls, runner_root):
