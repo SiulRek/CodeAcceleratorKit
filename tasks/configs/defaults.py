@@ -10,7 +10,7 @@ class DIRECTORY_TREE_DEFAULTS(Enum):
         "pcb-defect-detection.code-workspace",
         ".vscode",
         "venv",
-        "__pycache__",
+        "__taskscache__",
         "batch_scripts",
         "local",
         "temp.py",

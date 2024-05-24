@@ -9,7 +9,7 @@ FILE_TAG = "File"
 REGISTERED_RUNNERS_JSON = os.path.join(TASKS_ROOT, "tasks", "configs", "registered_runners.json")
 CONFIGS_SUBFOLDER = "configs"
 TASKS_PYTHON_ENV = os.path.join(TASKS_ROOT, "venv")
-TASKS_CACHE = os.path.join(TASKS_ROOT, "tasks", "__taskscache__")
+TASKS_CACHE = os.path.join(TASKS_ROOT, "tasks", "__pytasks_cache__")
 MAX_BACKUPS = 70
 
 # ----------------- For Create Query -----------------
