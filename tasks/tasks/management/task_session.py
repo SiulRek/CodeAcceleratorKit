@@ -150,26 +150,25 @@ class TaskSession:
                     attributes_dict = pickle.load(f)
                 self.load_attributes_from_dict(attributes_dict)
                 
-    # def update_attributes(self, new_attributes, prioritize_old_values=True):
-    #     """
-    #     Updates the attributes with new attributes.
+    def update_attributes(self, reinitialized_attrs):
+        """
+        Updates the attributes with the reinitialized attributes. The update depends on the UPDATE_MAPPING parameter.
 
-    #     Args:
-    #         - new_attributes (dict): The new attributes to update.
-    #         - prioritize_old_values (bool, optional): Whether to prioritize old values or new values. Defaults to True.
-    #     """
-    #     updated_attrs = {}
-    #     for new_name in new_attributes:
-    #         if new_name not in Attributes.UPDATE_MAPPING:
-    #             raise AttributeError(f"Attribute {new_name} is not in the update mapping.")
-    #         old_name = Attributes.UPDATE_MAPPING[new_name]
-    #         if old_name is None:
-    #             updated_attrs[new_name] = new_attributes[new_name]
-    #         else:
-    #             updated_attrs[new_name] = self.get_attribute_copy(old_name)
+        Args:
+            - reinitialized_attrs (dict): A dictionary containing the reinitialized attributes. It is expected that the keys corresponds to SessionAttrNames.
+        """
+        updated_attrs = {}
+        for reinit_name in reinitialized_attrs:
+            if reinit_name not in Attributes.UPDATE_MAPPING:
+                raise AttributeError(f"Attribute {reinit_name} is not in the update mapping.")
+            old_name = Attributes.UPDATE_MAPPING[reinit_name]
+            if old_name is None:
+                updated_attrs[reinit_name] = reinitialized_attrs[reinit_name]
+            else:
+                updated_attrs[reinit_name] = self.get_attribute_copy(old_name)
         
-    #     self.clear_attributes()
-    #     self.load_attributes_from_dict(updated_attrs)
+        self.clear_attributes()
+        self.load_attributes_from_dict(updated_attrs)
             
     def are_attributes_complete(self):
         """

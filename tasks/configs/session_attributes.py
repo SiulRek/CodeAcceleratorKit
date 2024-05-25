@@ -29,8 +29,25 @@ class SessionAttrNames(Enum):
     max_backups = (13, "configs.json")
     modules_info = (14, "modules_info.json")
 
-# Format of dict: "new name": "old name"
-UPDATE_MAPPING = None
+UPDATE_MAPPING = {
+    # New name: old name 
+    # New Name should cover all names from SessionAttrNames
+    # Old name None is accepted
+    "cwd": "cwd",
+    "runner_python_env": "runner_python_env",
+    "tasks_cache": "tasks_cache",
+    "data_dir": "data_dir",
+    "fill_text_dir": "fill_text_dir",
+    "query_templates_dir": "query_templates_dir",
+    "output_dir": "output_dir",
+    "backup_dir": "backup_dir",
+    "checkpoint_dir": "checkpoint_dir",
+    "query_file": "query_file",
+    "response_file": "response_file",
+    "tasks_python_env": "tasks_python_env",
+    "max_backups": "max_backups",
+    "modules_info": "modules_info"
+}
 
 
 class AttributesInitializer:
