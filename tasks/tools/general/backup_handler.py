@@ -121,7 +121,9 @@ class BackupHandler:
 
     def recover_backup(self, previous_file_path):
         """
-        Recover a specific backup file to its original location.
+        Recover a specific backup file to its original location. If multiple
+        backups exist for the same file, the most recent backup will be 
+        recovered.
 
         Args:
             - previous_file_path (str): The path to the file that was backed
