@@ -23,11 +23,10 @@ class SessionAttrNames(Enum):
     output_dir = (8, "configs.json")
     backup_dir = (9, "configs.json")
     checkpoint_dir = (10, "configs.json")
-    query_file = (11, "configs.json")
-    response_file = (12, "configs.json")
-    tasks_python_env = (13, "configs.json")
-    max_backups = (14, "configs.json")
-    modules_info = (15, "modules_info.json")
+    chats_dir = (11, "configs.json")
+    tasks_python_env = (12, "configs.json")
+    max_backups = (13, "configs.json")
+    modules_info = (14, "modules_info.json")
 
 
 UPDATE_MAPPING = {
@@ -44,8 +43,7 @@ UPDATE_MAPPING = {
     "output_dir": "output_dir",
     "backup_dir": "backup_dir",
     "checkpoint_dir": "checkpoint_dir",
-    "query_file": "query_file",
-    "response_file": "response_file",
+    "chats_dir": None,
     "tasks_python_env": "tasks_python_env",
     "max_backups": "max_backups",
     "modules_info": "modules_info"
@@ -120,20 +118,12 @@ class AttributesInitializer:
         return dir_
 
     @classmethod
-    def _initialize_query_file(cls, primary_attrs):
-        """Initializes the query file path based on the output directory."""
+    def _initialize_chats_dir(cls, primary_attrs):
+        """Initializes the chats directory path based on the output directory."""
         output_dir = cls._initialize_output_dir(primary_attrs)
-        path = os.path.join(output_dir, "query.txt")
-        path = normalize_path(path)
-        return path
-
-    @classmethod
-    def _initialize_response_file(cls, primary_attrs):
-        """Initializes the response file path based on the output directory."""
-        output_dir = cls._initialize_output_dir(primary_attrs)
-        path = os.path.join(output_dir, "response_file.txt")
-        path = normalize_path(path)
-        return path
+        dir_ = os.path.join(output_dir, "chats")
+        dir_ = normalize_path(dir_)
+        return dir_
 
     @classmethod
     def _initialize_tasks_python_env(cls, _):

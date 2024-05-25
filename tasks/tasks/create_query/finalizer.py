@@ -1,34 +1,29 @@
 import os
+import warnings
 
-from tasks.tasks.create_query.line_validation import (
-    line_validation_for_checksum,
-)
-from tasks.tools.general.extract_python_code import (
-    extract_python_code,
-)
+from tasks.tasks.create_query.line_validation import line_validation_for_checksum
+from tasks.tools.general.extract_python_code import extract_python_code
 from tasks.tools.general.make_query import make_query
 
 
 def write_to_file(file_path, content):
+    """
+    Writes specified content to the provided file.
+
+    Args:
+        - file_path (str): The path to the file to write to.
+        - content (str): The content to be written in the file.
+    """
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(content)
 
-class Finalizer:
-    """
-    Processes final stages of file content modification, including checksum
-    verification, query creation, and response handling.
 
-    Attributes:
-        - file_path (str): Path to the target file for final content.
-        - output_dir (str): Path to the output directory.
-        - checksum (int): Expected checksum for validation.
-        - updated_contents (str): Content to be processed and validated.
-        - final_lines (list): Lines of content after processing.
-        - query (str): Query to be executed.
-    """
+class Finalizer:
+    """Processes final stages of file content modification, including checksum
+    verification, query creation, and response handling."""
 
     def __init__(self):
-        """Initializes the Finalizer with default paths and content states."""
+        """Initializes Finalizer with predefined paths and content states."""
         self.file_path = None
         self.query_path = None
         self.response_path = None
@@ -37,22 +32,34 @@ class Finalizer:
         self.final_lines = []
         self.query = None
 
-    def set_directories(self, file_path, output_dir):
+    def set_directories(self, file_path, chats_dir):
         """
-        Sets the file, query, and response paths.
+        Sets file, query and response paths using provided base directory and
+        file path.
 
         Args:
-            - file_path (str): Target file path.
-            - output_dir (str): Output directory path.
+            - file_path (str): Path of the target file.
+            - chats_dir (str): Base directory to save the query and
+                response.
         """
         self.file_path = file_path
         self.file_name = os.path.basename(self.file_path).split(".")[0]
         self.file_ext = os.path.splitext(self.file_path)[1]
-        self.output_dir = output_dir
+        self.chats_dir = chats_dir
+
+    def set_backup_handler(self, backup_handler):
+        """
+        Attaches the provided backup handler to the finalizer.
+
+        Args:
+            - backup_handler (BackupHandler): Instance of a BackupHandler to
+                be attached.
+        """
+        self.backup_handler = backup_handler
 
     def _validate_lines(self):
-        """Validates each line of the updated contents for checksums and
-        updatesfinal lines."""
+        """Verifies each line of the updated contents for validation checksums.
+        Extra lines are added to the content map for final lines."""
         for line in self.updated_contents.splitlines():
             if result := line_validation_for_checksum(line.strip()):
                 self.checksum = result
@@ -60,8 +67,11 @@ class Finalizer:
                 self.final_lines.append(line)
 
     def _verify_checksum(self):
-        """Verifies if the line difference matches the expected checksum, raisingan
-        error on mismatch."""
+        """
+        Validates that the difference in length of original and final lines
+        matches the validated checksum. Raises an error if the checksum does not
+        match.
+        """
         if self.checksum:
             with open(self.file_path, "r", encoding="utf-8") as file:
                 file_contents = file.read().splitlines()
@@ -70,73 +80,82 @@ class Finalizer:
                     msg = f"Checksum mismatch: {diff} != {self.checksum}"
                     raise ValueError(msg)
 
-    def _handle_query(self, make_query_kwargs, backup_handler):
+    def validate_contents(self, updated_contents):
         """
-        Generates a query based on provided parameters and handles the execution
-        and file output of the response.
+        Verifies that the checksum of the updated contents matches the verified
+        one.
 
         Args:
-            - make_query_kwargs (dict): Parameters including
-                'modify_inplace' and 'max_tokens' for the query.
-            - backup_handler (BackupHandler): Backup handler to backup the file, when 
-                modify_inplace is True.
-        """
-        modify_inplace = make_query_kwargs["modify_inplace"]
-        max_tokens = make_query_kwargs["max_tokens"]
-        print("Making query...")
-        response = (
-            make_query(self.query, max_tokens) if max_tokens else make_query(self.query)
-        )
-        response_name = self.file_name + "_response.txt"
-        response_path = os.path.join(self.output_dir, response_name)
-        write_to_file(response_path, response)
-        print(f"Response saved to {response_path}")
-        if code := extract_python_code(response):
-            if modify_inplace:
-                backup_handler.store_backup(self.file_path, "Before modification from create query task")
-                backup_file_path = backup_handler.get_backup_path(self.file_path)
-                print(f"Backup saved to {backup_file_path}")
-                python_path = self.file_path
-            else:
-                python_path = os.path.splitext(response_path)[0] + ".py"
-            write_to_file(python_path, code)
-            print(f"Python script saved to {python_path}")
-
-    def _finalize(self, make_query_kwargs, backup_handler):
-        """
-        Writes the final processed content to the file and handles the query and
-        its response.
-
-        Args:
-            - make_query_kwargs (dict): Arguments for making the query.
-            is True.
-            - backup_handler (BackupHandler): Backup handler to backup the file
-                when modify_inplace is True.
-        """
-        final_text = "\n".join(self.final_lines)
-        query_name = self.file_name + "_query.txt"
-        query_path = os.path.join(self.output_dir, query_name)
-        write_to_file(self.file_path, final_text)
-        write_to_file(query_path, self.query)
-        print(f"Query saved to {query_path}")
-        if make_query_kwargs:
-            self._handle_query(make_query_kwargs, backup_handler)
-
-    def finalize(self, updated_contents, query, make_query_kwargs, backup_handler):
-        """
-        Finalizes the content processing by validating, verifying checksum, and
-        writing results.
-
-        Args:
-            - updated_contents (str): The updated content to process.
-            - query (str): The query to handle.
-            - make_query_kwargs (dict): Additional parameters for
-                queryhandling.
-            - backup_handler (BackupHandler): Backup handler to backup the file
-                when modify_inplace is True.
+            - updated_contents (str): Updated content to be verified.
         """
         self.updated_contents = updated_contents
-        self.query = query
         self._validate_lines()
         self._verify_checksum()
-        self._finalize(make_query_kwargs, backup_handler)
+
+    def _make_query(self, query, max_tokens):
+        """
+        Prepares a query based on provided parameters and executes it. Writes
+        the response of the query to query_path.
+
+        Args:
+            - query (str): Query to be executed.
+            - max_tokens (int): Maximum number of tokens to be generated by
+                model.
+        """
+        query_name = self.file_name + "_query.txt"
+        query_path = os.path.join(self.chats_dir, query_name)
+        write_to_file(query_path, self.query)
+        print(f"Query saved to {query_path}")
+        print("Making query...")
+        response = make_query(query, max_tokens) if max_tokens else make_query(query)
+        return response
+
+    def _process_response(self, response, modify_inplace):
+        """
+        Writes the response obtained from a query.
+
+        Args:
+            - response (str): The response of the query.
+            - modify_inplace (bool): Whether to save the response back in
+                the original file.
+        """
+        python_code = extract_python_code(response)
+
+        response_name = self.file_name + "_response.txt"
+        response_path = os.path.join(self.chats_dir, response_name)
+        write_to_file(response_path, response)
+        print(f"Response saved to {response_path}")
+        if python_code:
+            code_name = self.file_name + "_code.py"
+            code_path = os.path.join(self.chats_dir, code_name)
+            write_to_file(code_path, python_code)
+            print(f"Python code saved to {code_path}")
+        if modify_inplace:
+            if not python_code:
+                warnings.warn("No Python code found in response.")
+            else:
+                self.backup_handler.store_backup(
+                    self.file_path, "Before modification from create query task."
+                )
+                backuped_path = self.backup_handler.get_backup_path(self.file_path)
+                print(f"Backup saved to {backuped_path}")
+                write_to_file(self.file_path, python_code)
+
+    def finalize(self, query, make_query_kwargs):
+        """
+        Carries out the final stages of content processing including validation,
+        checksum verification, and result writing.
+
+        Args:
+            - query (str): Query to be executed.
+            - make_query_kwargs (dict): Parameters including
+                'modify_inplace' and 'max_tokens' for the query.
+        """
+        self.query = query
+        final_text = "\n".join(self.final_lines)
+        write_to_file(self.file_path, final_text)
+        if make_query_kwargs:
+            max_tokens = make_query_kwargs.get("max_tokens")
+            modify_inplace = make_query_kwargs.get("modify_inplace")
+            response = self._make_query(query, max_tokens)
+            self._process_response(response, modify_inplace)

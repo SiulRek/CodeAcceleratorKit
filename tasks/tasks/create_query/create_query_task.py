@@ -123,6 +123,9 @@ class CreateQueryTask(TaskBase):
     def execute(self):
         """Executes the CreateQuery task to format and finalize the query."""
         interpreter = CreateQueryInterpreter(self.session)
+        backup_handler = BackupHandler(
+            self.session.backup_dir, self.session.max_backups
+        )
 
         if self.macros_text:
             interpreter.file_path = self.file_path  # Allows for current file macros
@@ -144,12 +147,11 @@ class CreateQueryTask(TaskBase):
         finalizer = Finalizer()
         finalizer.set_directories(
             self.file_path,
-            self.session.output_dir,
+            self.session.chats_dir,
         )
-        backup_handler = BackupHandler(
-            self.session.backup_dir, self.session.max_backups
-        )
-        finalizer.finalize(updated_content, query, make_query_kwargs, backup_handler)
+        finalizer.set_backup_handler(backup_handler)
+        finalizer.validate_contents(updated_content)
+        finalizer.finalize(query, make_query_kwargs)
 
 
 if __name__ == "__main__":

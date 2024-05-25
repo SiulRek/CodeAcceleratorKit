@@ -7,7 +7,7 @@ def make_query(query_message, max_response_tokens=3000):
     openai.api_key = OPENAI_KEY
 
     response = openai.ChatCompletion.create(
-        model="gpt-4o",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a Python and Vision AI developer."},
             {"role": "user", "content": query_message},
