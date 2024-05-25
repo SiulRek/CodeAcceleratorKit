@@ -1,6 +1,7 @@
 import os
 
 from tasks.tasks.cleanup.cleanup_interpreter import CleanupInterpreter
+from tasks.tools.general.backup_handler import BackupHandler
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_cleanup.cleanup_file import cleanup_file
 
@@ -33,7 +34,12 @@ class CleanupTask(TaskBase):
         checkpoint_dir = self.session.checkpoint_dir
         environment_path = self.session.tasks_python_env
 
+        backup_handler = BackupHandler(
+            self.session.backup_dir,
+            self.session.max_backups,
+        )
         interpreter = CleanupInterpreter(self.session)
+
         if self.macros_text:
             macros_data, _ = interpreter.extract_macros_from_text(self.macros_text, post_process=True)
             with open(file_path, "r") as file:
@@ -48,9 +54,9 @@ class CleanupTask(TaskBase):
         if not checkpointing:
             checkpoint_dir = None
             
-
         with open(file_path, "w") as file:
             file.write(updated_content)
+        backup_handler.store_backup(file_path, "Before modification from cleanup task.")
 
         cleanup_file(
             file_path=file_path,
