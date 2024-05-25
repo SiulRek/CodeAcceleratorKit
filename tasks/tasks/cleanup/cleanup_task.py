@@ -7,7 +7,7 @@ from tasks.tools.for_cleanup.cleanup_file import cleanup_file
 
 
 class CleanupTask(TaskBase):
-    """A task for cleaning up files by removing or keeping specific parts based on
+    """A task for cleaning up python files by removing or refactoring specific parts based on
     macros."""
 
     NAME = "Cleanup"
