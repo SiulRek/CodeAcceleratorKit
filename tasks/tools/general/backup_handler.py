@@ -189,7 +189,9 @@ class BackupHandler:
         """
         self.load_context()
         previous_file_path = os.path.normpath(previous_file_path)
-        for backup_file_context in self.context_data:
+        reversed_context_data = deepcopy(self.context_data)
+        reversed_context_data.reverse()
+        for backup_file_context in reversed_context_data:
             source_file_path = os.path.normpath(
                 backup_file_context["previous_file_path"]
             )
