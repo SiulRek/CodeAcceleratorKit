@@ -1,3 +1,4 @@
+#TODO Maybe its not good to load attributes twice, so make flag or so
 from copy import deepcopy
 import json
 import os
@@ -23,6 +24,7 @@ class TaskSession:
         self._root = normalize_path(runner_root)
         self._storage_dir = self._get_storage_dir(self.root)
         self._configs_dir = os.path.join(self.storage_dir, configs.CONFIGS_SUBFOLDER)
+        self._all_attributes = {}
         if load_attributes_from_storage:
             self.load_attributes_from_storage()
 
@@ -56,6 +58,16 @@ class TaskSession:
             - str: The configuration directory path.
         """
         return self._configs_dir
+    
+    @property
+    def attributes(self):
+        """
+        Returns the attributes dictionary.
+
+        Returns:
+            - dict: The attributes dictionary.
+        """
+        return self._all_attributes
 
     def _get_storage_dir(self, runner_root):
         """
@@ -74,6 +86,40 @@ class TaskSession:
             msg = f"Runner root {runner_root} is not registered."
             raise ValueError(msg)
         return registered_variables[runner_root]
+    
+    def set_attribute(self, attribute_name, attribute_value):
+        """
+        Sets an attribute.
+
+        Args:
+            - attribute_name (str): The name of the attribute.
+            - attribute_value (Any): The value of the attribute.
+        """
+        if attribute_name not in Attributes.SessionAttrNames.__members__.keys():
+            warnings.warn(f"Attribute {attribute_name} is not defined in the SessionAttrNames.")
+        setattr(self, attribute_name, attribute_value)
+        self._all_attributes[attribute_name] = attribute_value
+    
+    def get_attribute_copy(self, attribute_name):
+        """
+        Returns a deep copy of the attribute.
+
+        Args:
+            - attribute_name (str): The name of the attribute.
+
+        Returns:
+            - Any: A deep copy of the attribute.
+        """
+        if attribute_name not in self._all_attributes:
+            msg = f"Attribute {attribute_name} is not present in the attributes."
+            raise AttributeError(msg)
+        return deepcopy(self._all_attributes[attribute_name])
+    
+    def clear_attributes(self):
+        """Clears all attributes."""
+        for attr in self._all_attributes:
+            delattr(self, attr)
+        self._all_attributes = {}
 
     def load_attributes_from_dict(self, attributes_dict):
         """
@@ -83,16 +129,8 @@ class TaskSession:
             - attributes_dict (dict): A dictionary containing the attributes
                 to load.
         """
-        for attr in Attributes.SessionAttrNames.__members__.keys():
-            if attr not in attributes_dict:
-                continue
-            setattr(self, attr, attributes_dict[attr])
-        for attr in attributes_dict.keys():
-            if attr not in Attributes.SessionAttrNames.__members__.keys():
-                warnings.warn(
-                    f"Attribute {attr} is not an attribute defined in SessionAttrNames."
-                )
-                setattr(self, attr, attributes_dict[attr])
+        for name, value in attributes_dict.items():
+            self.set_attribute(name, value)
 
     def load_attributes_from_storage(self):
         """Loads attributes from the storage/configs directory."""
@@ -111,35 +149,31 @@ class TaskSession:
                 with open(os.path.join(self.configs_dir, dir_), "rb") as f:
                     attributes_dict = pickle.load(f)
                 self.load_attributes_from_dict(attributes_dict)
-
-    def update_attributes(self, new_attributes, prioritize_old_values=True):
-        """
-        Updates the attributes with new attributes.
-
-        Args:
-            - new_attributes (dict): The new attributes to update.
-            - prioritize_old_values (bool, optional): Whether to prioritize old values or new values. Defaults to True.
-        """
-        if Attributes.UPDATE_MAPPING is None:
-            raise ValueError("UPDATE_MAPPING is not defined in session_attributes.py.")
-        for new_name, old_name in Attributes.UPDATE_MAPPING.items():
-            if new_name not in new_attributes:
-                raise ValueError(f"Attribute {new_name} is missing in new_attributes.")
-            if not hasattr(self, old_name):
-                raise AttributeError(f"Old Attribute {old_name} is missing in the session instance.")
-            if prioritize_old_values:
-                value = deepcopy(getattr(self, old_name))
-                delattr(self, old_name)
-                setattr(self, new_name, value)
-            else:
-                delattr(self, old_name)
-                value = new_attributes[new_name]
-                setattr(self, new_name, value)
                 
+    # def update_attributes(self, new_attributes, prioritize_old_values=True):
+    #     """
+    #     Updates the attributes with new attributes.
+
+    #     Args:
+    #         - new_attributes (dict): The new attributes to update.
+    #         - prioritize_old_values (bool, optional): Whether to prioritize old values or new values. Defaults to True.
+    #     """
+    #     updated_attrs = {}
+    #     for new_name in new_attributes:
+    #         if new_name not in Attributes.UPDATE_MAPPING:
+    #             raise AttributeError(f"Attribute {new_name} is not in the update mapping.")
+    #         old_name = Attributes.UPDATE_MAPPING[new_name]
+    #         if old_name is None:
+    #             updated_attrs[new_name] = new_attributes[new_name]
+    #         else:
+    #             updated_attrs[new_name] = self.get_attribute_copy(old_name)
+        
+    #     self.clear_attributes()
+    #     self.load_attributes_from_dict(updated_attrs)
+            
     def are_attributes_complete(self):
         """
         Checks if all attributes defined in ContextAttrNames are present in the
-        instance.
 
         Returns:
             - bool: True if all attributes are present, False otherwise.

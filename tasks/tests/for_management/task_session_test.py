@@ -264,54 +264,88 @@ class TestTaskSession(unittest.TestCase):
 
             self.assertTrue(os.path.exists(unknown_file_path))
 
-    def test_update_attributes(self):
+    def test_get_attribute_copy(self):
         with patch(
             "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
         ), patch(
-            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMockExtended
-        ), patch(
-            "tasks.configs.session_attributes.UPDATE_MAPPING", UpdateMappingMock
+            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
         ):
             session = TaskSession(
                 self.runner_root, load_attributes_from_storage=False
             )
-            session.load_attributes_from_dict(
-                {
-                    "cwd": "test_dir",
-                    "python_env": "test_env",
-                    "attr_3": "value3",
-                    "attr_4": "value4",
-                }
+            session.set_attribute("cwd", ["list", "of", "values"])
+            copied_value = session.get_attribute_copy("cwd")
+            copied_value[1] = "changed"
+            self.assertNotEqual(copied_value, session.cwd)
+
+    def test_clear_attributes(self):
+        with patch(
+            "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
+        ), patch(
+            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
+        ):
+            session = TaskSession(
+                self.runner_root, load_attributes_from_storage=False
             )
+            session.set_attribute("cwd", "test_dir")
+            session.set_attribute("python_env", "test_env")
+            self.assertTrue(hasattr(session, "cwd"))
+            self.assertTrue(hasattr(session, "python_env"))
+            self.assertEqual(session._all_attributes, {"cwd": "test_dir", "python_env": "test_env"})
 
-            new_attributes = {
-                "new_cwd": "new_test_dir",
-                "new_python_env": "new_test_env",
-            }
+            session.clear_attributes()
 
-            # Test with prioritize_old_values=True
-            session.update_attributes(new_attributes, prioritize_old_values=True)
             self.assertFalse(hasattr(session, "cwd"))
             self.assertFalse(hasattr(session, "python_env"))
-            self.assertEqual(session.new_cwd, "test_dir")
-            self.assertEqual(session.new_python_env, "test_env")
+            self.assertEqual(session._all_attributes, {})
+    # def test_update_attributes(self):
+    #     with patch(
+    #         "tasks.configs.constants.REGISTERED_RUNNERS_JSON", self.json_mock
+    #     ), patch(
+    #         "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMockExtended
+    #     ), patch(
+    #         "tasks.configs.session_attributes.UPDATE_MAPPING", UpdateMappingMock
+    #     ):
+    #         session = TaskSession(
+    #             self.runner_root, load_attributes_from_storage=False
+    #         )
+    #         session.load_attributes_from_dict(
+    #             {
+    #                 "cwd": "test_dir",
+    #                 "python_env": "test_env",
+    #                 "attr_3": "value3",
+    #                 "attr_4": "value4",
+    #             }
+    #         )
 
-            # Reload original attributes
-            session.load_attributes_from_dict(
-                {
-                    "cwd": "test_dir",
-                    "python_env": "test_env",
-                    "attr_3": "value3",
-                    "attr_4": "value4",
-                }
-            )
+    #         new_attributes = {
+    #             "new_cwd": "new_test_dir",
+    #             "new_python_env": "new_test_env",
+    #         }
 
-            # Test with prioritize_old_values=False
-            session.update_attributes(new_attributes, prioritize_old_values=False)
-            self.assertFalse(hasattr(session, "cwd"))
-            self.assertFalse(hasattr(session, "python_env"))
-            self.assertEqual(session.new_cwd, "new_test_dir")
-            self.assertEqual(session.new_python_env, "new_test_env")
+    #         # Test with prioritize_old_values=True
+    #         session.update_attributes(new_attributes, prioritize_old_values=True)
+    #         self.assertFalse(hasattr(session, "cwd"))
+    #         self.assertFalse(hasattr(session, "python_env"))
+    #         self.assertEqual(session.new_cwd, "test_dir")
+    #         self.assertEqual(session.new_python_env, "test_env")
+
+    #         # Reload original attributes
+    #         session.load_attributes_from_dict(
+    #             {
+    #                 "cwd": "test_dir",
+    #                 "python_env": "test_env",
+    #                 "attr_3": "value3",
+    #                 "attr_4": "value4",
+    #             }
+    #         )
+
+    #         # Test with prioritize_old_values=False
+    #         session.update_attributes(new_attributes, prioritize_old_values=False)
+    #         self.assertFalse(hasattr(session, "cwd"))
+    #         self.assertFalse(hasattr(session, "python_env"))
+    #         self.assertEqual(session.new_cwd, "new_test_dir")
+    #         self.assertEqual(session.new_python_env, "new_test_env")
 
 
 if __name__ == "__main__":
