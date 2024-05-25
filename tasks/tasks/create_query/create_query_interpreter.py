@@ -94,7 +94,11 @@ class CreateQueryInterpreter(MacroInterpreter):
         if result := line_validation_for_run_python_script(line):
             script_path = find_file(result, self.session.root, self.file_path)
             environment_path = self.session.runner_python_env
-            script_output = execute_python_module(script_path, environment_path)
+            script_output = execute_python_module(
+                script_path, 
+                environment_path,
+                cwd=self.session.cwd,
+                )
             default_title = "Python Script Output"
             return (MACROS.RUN_PYTHON_SCRIPT, default_title, script_output)
         return None
@@ -112,13 +116,14 @@ class CreateQueryInterpreter(MacroInterpreter):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
             script_path = find_file(name, self.session.root, self.file_path)
-            temp_script_path = get_temporary_script_path(self.session.cache)
+            temp_script_path = get_temporary_script_path(self.session.runners_cache)
             python_env = self.session.runner_python_env
+            cwd = self.session.cwd
             unittest_output = execute_python_module(
                 module=execute_unittests_from_file,
-                args=[script_path, str(verbosity)],
+                args=[script_path, cwd, str(verbosity)],
                 env_python_path=python_env,
-                cwd=self.session.root,
+                cwd=cwd,
                 temp_script_path=temp_script_path,
             )
             default_title = "Unittest Output"

@@ -53,7 +53,10 @@ class TaskBase(ABC):
         """
         self.session = TaskSession(self.task_runner_root)
         self.tasks_cache_dir = self.session.tasks_cache
+        self.runners_cache_dir = self.session.runners_cache
+
         os.makedirs(self.tasks_cache_dir, exist_ok=True)
+        os.makedirs(self.runners_cache_dir, exist_ok=True)
 
     @abstractmethod
     def execute(self):
@@ -69,7 +72,9 @@ class TaskBase(ABC):
         """
         if self.tasks_cache_dir and os.path.exists(self.tasks_cache_dir):
             shutil.rmtree(self.tasks_cache_dir)
-
+        if self.runners_cache_dir and os.path.exists(self.runners_cache_dir):
+            shutil.rmtree(self.runners_cache_dir)
+            
     def _print_execution_start(self):
         """
         Prints the start message for task execution.

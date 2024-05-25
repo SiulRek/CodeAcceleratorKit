@@ -13,21 +13,22 @@ class SessionAttrNames(Enum):
     configurable attributes for a session, each associated with a unique
     identifier and a file where its value might be found.
     """
-
     cwd = (1, "configs.json")
     runner_python_env = (2, "configs.json")
     tasks_cache = (3, "configs.json")
-    data_dir = (4, "configs.json")
-    fill_text_dir = (5, "configs.json")
-    query_templates_dir = (6, "configs.json")
-    output_dir = (7, "configs.json")
-    backup_dir = (8, "configs.json")
-    checkpoint_dir = (9, "configs.json")
-    query_file = (10, "configs.json")
-    response_file = (11, "configs.json")
-    tasks_python_env = (12, "configs.json")
-    max_backups = (13, "configs.json")
-    modules_info = (14, "modules_info.json")
+    runners_cache = (4, "configs.json")
+    data_dir = (5, "configs.json")
+    fill_text_dir = (6, "configs.json")
+    query_templates_dir = (7, "configs.json")
+    output_dir = (8, "configs.json")
+    backup_dir = (9, "configs.json")
+    checkpoint_dir = (10, "configs.json")
+    query_file = (11, "configs.json")
+    response_file = (12, "configs.json")
+    tasks_python_env = (13, "configs.json")
+    max_backups = (14, "configs.json")
+    modules_info = (15, "modules_info.json")
+
 
 UPDATE_MAPPING = {
     # New name: old name 
@@ -36,6 +37,7 @@ UPDATE_MAPPING = {
     "cwd": "cwd",
     "runner_python_env": "runner_python_env",
     "tasks_cache": "tasks_cache",
+    "runners_cache": "runners_cache",
     "data_dir": "data_dir",
     "fill_text_dir": "fill_text_dir",
     "query_templates_dir": "query_templates_dir",
@@ -58,6 +60,13 @@ class AttributesInitializer:
         """Initializes the tasks_cache directory path."""
         dir = normalize_path(TASKS_CACHE)
         return dir
+    
+    @classmethod
+    def _initialize_runners_cache(cls, primary_attrs):
+        """Initializes the runners_cache directory path."""
+        dir_ = normalize_path(primary_attrs.get("storage_dir"))
+        dir_ = os.path.join(dir_, "__taskscache__")
+        return dir_
 
     @classmethod
     def _initialize_data_dir(cls, primary_attrs):
