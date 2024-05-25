@@ -24,18 +24,18 @@ class TaskManager(Attributes.AttributesInitializer):
                 registration.
         """
         if not os.path.exists(REGISTERED_RUNNERS_JSON):
-            registered_variables = {}
+            registered_runners = {}
         else:
             with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
-                registered_variables = json.load(f)
-        if runner_root in registered_variables and not overwrite:
+                registered_runners = json.load(f)
+        if runner_root in registered_runners and not overwrite:
             msg = f"Task runner root {runner_root} is already registered."
             msg += " Use the overwrite flag to overwrite the registration."
             raise ValueError(msg)
         os.makedirs(storage_dir, exist_ok=True)
-        registered_variables[runner_root] = storage_dir
+        registered_runners[runner_root] = storage_dir
         with open(REGISTERED_RUNNERS_JSON, "w", encoding="utf-8") as f:
-            json.dump(registered_variables, f, indent=4)
+            json.dump(registered_runners, f, indent=4)
 
     @classmethod
     def _init_runner_attributes(cls, runner_root, storage_dir, python_env, cwd):
@@ -70,7 +70,7 @@ class TaskManager(Attributes.AttributesInitializer):
             "cwd": cwd,
             "runner_python_env": python_env,
         }
-        for attr in Attributes.SessionAttrNames.__members__.keys():
+        for attr in Attributes.SessionAttrNames.__members__:
             if attr in "cwd":
                 attributes[attr] = cwd if cwd is not None else runner_root
             elif attr in "runner_python_env":
@@ -90,7 +90,7 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         session = TaskSession(runner_root)
         created_dirs = []
-        for attr in Attributes.SessionAttrNames.__members__.keys():
+        for attr in Attributes.SessionAttrNames.__members__:
             if attr.endswith("_dir"):
                 path = getattr(session, attr)
                 os.makedirs(path, exist_ok=True)
@@ -177,37 +177,38 @@ class TaskManager(Attributes.AttributesInitializer):
             cls.sync_directories_of(runner_root)
         session = TaskSession(runner_root)
         return session
-    
+
     @classmethod
-    def update_runner(cls, runner_root, prioritize_old_values=True):
+    def update_runner(cls, runner_root):
         """
-        Updates the runner session with the latest attributes.
+        Updates the runner session with the latest attributes. The update
+        depends on UPDATE_MAPPING in session_attributes.py.
 
         Args:
             - runner_root (str): The root directory of the runner.
-            - prioritize_old_values (bool, optional): Whether to prioritize
-                the old values over the new values. Defaults to True.
         """
         session = TaskSession(runner_root)
-        new_attributes = cls._init_runner_attributes(
+        reinit_attrs = cls._init_runner_attributes(
             runner_root,
             session.storage_dir,
             session.runner_python_env,
             session.cwd,
         )
-        session.update_attributes(new_attributes, prioritize_old_values=prioritize_old_values)
+        session.update_attributes(reinit_attrs)
         session.save_attributes()
         TaskManager.sync_directories_of(runner_root)
-    
+
     @classmethod
     def update_registered_runners(cls):
-        """
-        Updates the attributes of all registered runners.
-        """
+        """Updates the attributes of all registered runners."""
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
-            registered_variables = json.load(f)
-        for runner_root in registered_variables.keys():
+            registered_runners = json.load(f)
+        for runner_root in registered_runners:
+            runner_name = os.path.basename(runner_root)
+            print(f"Updating runner {runner_name}...")
             cls.update_runner(runner_root)
+            print(f"Runner {runner_name} updated.")
+            print()
 
     @classmethod
     def delete_runner(cls, runner_root):
@@ -222,16 +223,16 @@ class TaskManager(Attributes.AttributesInitializer):
             msg = f"Runner root {runner_root} does not exist."
             raise NotADirectoryError(msg)
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
-            registered_variables = json.load(f)
-        if runner_root not in registered_variables:
+            registered_runners = json.load(f)
+        if runner_root not in registered_runners:
             msg = f"Runner root {runner_root} is not registered."
             raise ValueError(msg)
-        storage_dir = registered_variables[runner_root]
+        storage_dir = registered_runners[runner_root]
         shutil.rmtree(storage_dir)
-        del registered_variables[runner_root]
+        del registered_runners[runner_root]
         with open(REGISTERED_RUNNERS_JSON, "w", encoding="utf-8") as f:
-            json.dump(registered_variables, f, indent=4)
-            
+            json.dump(registered_runners, f, indent=4)
+
     def copy_data_files(self, source_runner_dir, dest_runner_dir):
         """
         Copies data files from the source runner to the destination runner.
@@ -244,7 +245,7 @@ class TaskManager(Attributes.AttributesInitializer):
         dest_session = TaskSession(dest_runner_dir)
         source_data_dir = source_session.data_dir
 
-        for attr in Attributes.SessionAttrNames.__members__.keys():
+        for attr in Attributes.SessionAttrNames.__members__:
             if attr.endswith("_dir"):
                 source_dir = getattr(source_session, attr)
                 dest_dir = getattr(dest_session, attr)
@@ -254,11 +255,3 @@ class TaskManager(Attributes.AttributesInitializer):
                         if os.path.isfile(source_path):
                             dest_path = os.path.join(dest_dir, name)
                             shutil.copy(source_path, dest_path)
-
-
-if __name__ == "__main__":
-    TaskManager.register_runner(
-        runner_root=r"/home/krakerlu/github/CodeAcceleratorKit",
-        python_env=r"/home/krakerlu/github/CodeAcceleratorKit/venv",
-        overwrite=True,
-    )
