@@ -54,9 +54,9 @@ class CleanupTask(TaskBase):
         if not checkpointing:
             checkpoint_dir = None
             
+        backup_handler.store_backup(file_path, "Before modification from cleanup task.")
         with open(file_path, "w") as file:
             file.write(updated_content)
-        backup_handler.store_backup(file_path, "Before modification from cleanup task.")
 
         cleanup_file(
             file_path=file_path,
