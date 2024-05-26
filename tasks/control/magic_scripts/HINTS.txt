@@ -1,0 +1,6 @@
+The scripts in this file are referred to as "magic" because they not only perform their intended purpose, but also automate tasks that would typically be done manually in combination with executing the functionality.
+
+Expectations for Magic Scripts:
+1. Root of the task code is registered.
+2. Usage of VSCode
+2. VScode's tasks.json located in the .vscode directory exists.
