@@ -228,7 +228,8 @@ class TaskManager(Attributes.AttributesInitializer):
             msg = f"Runner root {runner_root} is not registered."
             raise ValueError(msg)
         storage_dir = registered_runners[runner_root]
-        shutil.rmtree(storage_dir)
+        if os.path.exists(storage_dir):
+            shutil.rmtree(storage_dir)
         del registered_runners[runner_root]
         with open(REGISTERED_RUNNERS_JSON, "w", encoding="utf-8") as f:
             json.dump(registered_runners, f, indent=4)
