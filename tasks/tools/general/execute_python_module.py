@@ -31,7 +31,7 @@ def execute_python_module(module, env_python_path, cwd=None, temp_script_path=No
         shutil.copy(module, temp_script_path)
         module = temp_script_path
         
-    if sys.platform == "win32":
+    if sys.platform == "win32" or sys.platform == "win64":
         python_path = os.path.join(env_python_path, "Scripts", "python")
     else:
         python_path = os.path.join(env_python_path, "bin", "python")

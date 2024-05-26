@@ -14,7 +14,7 @@ def execute_pylint(python_file_path, environment_path):
     Returns:
         - str: The output of the pylint run.
     """
-    if sys.platform == "win32":
+    if sys.platform == "win32" or sys.platform == "win64":
         pylint_path = os.path.join(environment_path, "Scripts", "pylint")
     else:
         pylint_path = os.path.join(environment_path, "bin", "pylint")
