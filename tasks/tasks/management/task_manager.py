@@ -113,6 +113,28 @@ class TaskManager(Attributes.AttributesInitializer):
                 warnings.warn(f"Unknown directory {unknown_dir} from tasks storage.")
 
     @classmethod
+    def is_runner_registered(cls, runner_root, raise_error=False):
+        """
+        Checks if a runner is registered.
+
+        Args:
+            - runner_root (str): The root directory of the runner.
+            - raise_error (bool, optional): Whether to raise an error if the
+
+        Returns:
+            - bool: True if the runner is registered, False otherwise.
+        """
+        runner_root = normalize_path(runner_root)
+        with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
+            registered_runners = json.load(f)
+        if runner_root in registered_runners:
+            return True
+        if raise_error:
+            msg = f"Runner root {runner_root} is not registered."
+            raise ValueError(msg)
+        return False
+
+    @classmethod
     def register_runner(
         cls,
         runner_root,
@@ -173,6 +195,7 @@ class TaskManager(Attributes.AttributesInitializer):
             - TaskSession: The runner session after logging in.
         """
         runner_root = normalize_path(runner_root)
+        cls.is_runner_registered(runner_root, raise_error=True)
         if update_dirs:
             cls.sync_directories_of(runner_root)
         session = TaskSession(runner_root)
@@ -187,6 +210,7 @@ class TaskManager(Attributes.AttributesInitializer):
         Args:
             - runner_root (str): The root directory of the runner.
         """
+        cls.is_runner_registered(runner_root, raise_error=True)
         session = TaskSession(runner_root)
         reinit_attrs = cls._init_runner_attributes(
             runner_root,
@@ -218,10 +242,7 @@ class TaskManager(Attributes.AttributesInitializer):
         Args:
             - runner_root (str): The root directory of the runner.
         """
-        runner_root = normalize_path(runner_root)
-        if not os.path.exists(runner_root):
-            msg = f"Runner root {runner_root} does not exist."
-            raise NotADirectoryError(msg)
+        cls.is_runner_registered(runner_root, raise_error=True)
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_runners = json.load(f)
         if runner_root not in registered_runners:
@@ -243,6 +264,11 @@ class TaskManager(Attributes.AttributesInitializer):
             - source_runner_dir (str): The source runner directory.
             - dest_runner_dir (str): The destination runner directory.
         """
+        if not cls.is_runner_registered(source_runner_dir):
+            raise ValueError(f"Source runner {source_runner_dir} is not registered.")
+        if not cls.is_runner_registered(dest_runner_dir):
+            raise ValueError(f"Destination runner {dest_runner_dir} is not registered.")
+        
         source_session = TaskSession(source_runner_dir)
         dest_session = TaskSession(dest_runner_dir)
         source_data_dir = source_session.data_dir
@@ -257,4 +283,3 @@ class TaskManager(Attributes.AttributesInitializer):
                 if os.path.exists(dest_file):
                     warnings.warn(f"File {dest_file} already exists. Overwriting...")
                 shutil.copy2(file_abs_path, dest_file)
-

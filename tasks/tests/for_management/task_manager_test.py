@@ -210,6 +210,31 @@ class TestTaskManager(unittest.TestCase):
         self.assertIn(self.runner_root, registered_runners)
         self.assertEqual(registered_runners[self.runner_root], self.storage_dir)
 
+    def test_is_runner_registered(self):
+        with open(self.json_mock, "w", encoding="utf-8") as f:
+            json.dump({}, f, indent=4)
+
+        self.assertFalse(Manager.is_runner_registered(self.runner_root))
+
+        python_env_path = os.path.join(self.runner_root, "runner_python_env")
+        os.makedirs(python_env_path)
+
+        Manager.register_runner(
+            self.runner_root,
+            python_env_path,
+            storage_dir=self.storage_subfolder,
+            overwrite=False,
+            create_dirs=False,
+        )
+
+        self.assertTrue(Manager.is_runner_registered(self.runner_root))
+
+    def test_is_runner_registered_with_error(self):
+        with open(self.json_mock, "w", encoding="utf-8") as f:
+            json.dump({}, f, indent=4)
+        with self.assertRaises(ValueError):
+            Manager.is_runner_registered(self.runner_root, raise_error=True)
+
     def test_login_runner(self):
         python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
@@ -275,7 +300,7 @@ class TestTaskManager(unittest.TestCase):
         dest_data_dir = os.path.join(dest_runner_dir, "data")
         os.makedirs(dest_data_dir)
 
-        with patch("tasks.tasks.management.task_manager.TaskSession") as MockSession:
+        with patch("tasks.tasks.management.task_manager.TaskSession") as MockSession, patch.object(Manager, 'is_runner_registered', return_value=True):
             mock_source_session = MagicMock()
             mock_source_session.data_dir = source_data_dir
             mock_source_session.var1_dir = source_data_dir
