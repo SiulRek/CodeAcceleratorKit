@@ -233,7 +233,8 @@ class TaskManager(Attributes.AttributesInitializer):
         with open(REGISTERED_RUNNERS_JSON, "w", encoding="utf-8") as f:
             json.dump(registered_runners, f, indent=4)
 
-    def copy_data_files(self, source_runner_dir, dest_runner_dir):
+    @classmethod
+    def copy_data_files(cls, source_runner_dir, dest_runner_dir):
         """
         Copies data files from the source runner to the destination runner.
 
@@ -244,14 +245,15 @@ class TaskManager(Attributes.AttributesInitializer):
         source_session = TaskSession(source_runner_dir)
         dest_session = TaskSession(dest_runner_dir)
         source_data_dir = source_session.data_dir
+        dest_data_dir = dest_session.data_dir
 
-        for attr in Attributes.SessionAttrNames.__members__:
-            if attr.endswith("_dir"):
-                source_dir = getattr(source_session, attr)
-                dest_dir = getattr(dest_session, attr)
-                if source_dir.startswith(source_data_dir):
-                    for name in os.listdir(source_dir):
-                        source_path = os.path.join(source_dir, name)
-                        if os.path.isfile(source_path):
-                            dest_path = os.path.join(dest_dir, name)
-                            shutil.copy(source_path, dest_path)
+        for root, _, files in os.walk(source_data_dir):
+            for file in files:
+                file_abs_path = os.path.join(root, file)
+                file_rel_path = os.path.relpath(file_abs_path, source_data_dir)
+                dest_file = os.path.join(dest_data_dir, file_rel_path)
+                os.makedirs(os.path.dirname(dest_file), exist_ok=True)
+                if os.path.exists(dest_file):
+                    warnings.warn(f"File {dest_file} already exists. Overwriting...")
+                shutil.copy2(file_abs_path, dest_file)
+

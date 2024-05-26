@@ -267,7 +267,8 @@ class TestTaskManager(unittest.TestCase):
 
         source_data_dir = os.path.join(source_runner_dir, "data")
         os.makedirs(source_data_dir)
-        source_file_path = os.path.join(source_data_dir, "example_file.txt")
+        source_file_path = os.path.join(source_data_dir, "example_dir", "example_file.txt")
+        os.makedirs(os.path.dirname(source_file_path))
         with open(source_file_path, "w") as file:
             file.write("Sample data")
 
@@ -281,6 +282,7 @@ class TestTaskManager(unittest.TestCase):
             mock_source_session.var2_dir = source_data_dir
 
             mock_dest_session = MagicMock()
+            mock_dest_session.data_dir = dest_data_dir
             mock_dest_session.var1_dir = dest_data_dir
             mock_dest_session.var2_dir = dest_data_dir
 
@@ -288,7 +290,7 @@ class TestTaskManager(unittest.TestCase):
 
             Manager().copy_data_files(source_runner_dir, dest_runner_dir)
 
-        dest_file_path = os.path.join(dest_data_dir, "example_file.txt")
+        dest_file_path = os.path.join(dest_data_dir, "example_dir", "example_file.txt")
         self.assertTrue(os.path.isfile(dest_file_path))
         with open(dest_file_path, "r") as file:
             content = file.read()
