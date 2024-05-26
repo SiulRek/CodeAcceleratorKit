@@ -16,13 +16,13 @@ from tasks.tasks.create_query.line_validation import (
     line_validation_for_directory_tree,
     line_validation_for_summarize_python_script,
     line_validation_for_summarize_folder,
-    line_validation_for_query_template,
+    line_validation_for_macros_template,
     line_validation_for_make_query,
 )
 from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
 from tasks.tools.for_create_query.get_error_text import get_error_text
 from tasks.tools.for_create_query.get_fill_text import get_fill_text
-from tasks.tools.for_create_query.get_query_template import get_query_template
+from tasks.tools.for_create_query.get_macros_template import get_macros_template
 from tasks.tools.for_create_query.summarize_python_script import summarize_python_file
 from tasks.tools.general.execute_pylint import execute_pylint
 from tasks.tools.general.execute_python_module import execute_python_module
@@ -199,12 +199,12 @@ class CreateQueryInterpreter(MacroInterpreter):
             return macros_data
         return None
 
-    def validate_query_template_macro(self, line):
-        if result := line_validation_for_query_template(line):
-            query_template = get_query_template(
-                result, self.session.query_templates_dir
+    def validate_macros_template_macro(self, line):
+        if result := line_validation_for_macros_template(line):
+            macros_template = get_macros_template(
+                result, self.session.macros_templates_dir
             )
-            macros_data, _ = self.extract_macros_from_text(query_template)
+            macros_data, _ = self.extract_macros_from_text(macros_template)
             return macros_data
         return None
 

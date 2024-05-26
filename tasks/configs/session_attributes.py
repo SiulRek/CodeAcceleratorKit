@@ -19,7 +19,7 @@ class SessionAttrNames(Enum):
     runners_cache = (4, "configs.json")
     templates_dir = (5, "configs.json")
     fill_text_dir = (6, "configs.json")
-    query_templates_dir = (7, "configs.json")
+    macros_templates_dir = (7, "configs.json")
     output_dir = (8, "configs.json")
     backup_dir = (9, "configs.json")
     checkpoint_dir = (10, "configs.json")
@@ -39,7 +39,7 @@ UPDATE_MAPPING = {
     "runners_cache": "runners_cache",
     "templates_dir": "templates_dir",
     "fill_text_dir": "fill_text_dir",
-    "query_templates_dir": "query_templates_dir",
+    "macros_templates_dir": "macros_templates_dir",
     "output_dir": "output_dir",
     "backup_dir": "backup_dir",
     "checkpoint_dir": "checkpoint_dir",
@@ -84,11 +84,11 @@ class AttributesInitializer:
         return dir_
 
     @classmethod
-    def _initialize_query_templates_dir(cls, primary_attrs):
+    def _initialize_macros_templates_dir(cls, primary_attrs):
         """Initializes the query templates directory path based on the templates
         directory."""
         templates_dir = cls._initialize_templates_dir(primary_attrs)
-        dir_ = os.path.join(templates_dir, "query_templates")
+        dir_ = os.path.join(templates_dir, "macros_templates")
         dir_ = normalize_path(dir_)
         return dir_
 
