@@ -268,13 +268,14 @@ class TaskManager(Attributes.AttributesInitializer):
             json.dump(registered_runners, f, indent=4)
 
     @classmethod
-    def copy_data_files(cls, source_runner_dir, dest_runner_dir):
+    def copy_data_files(cls, source_runner_dir, dest_runner_dir, overwrite=False):
         """
         Copies data files from the source runner to the destination runner.
 
         Args:
             - source_runner_dir (str): The source runner directory.
             - dest_runner_dir (str): The destination runner directory.
+            - overwrite (bool, optional): Whether to overwrite existing files.
         """
         if not cls.is_runner_registered(source_runner_dir):
             raise ValueError(f"Source runner {source_runner_dir} is not registered.")
@@ -293,5 +294,8 @@ class TaskManager(Attributes.AttributesInitializer):
                 dest_file = os.path.join(dest_data_dir, file_rel_path)
                 os.makedirs(os.path.dirname(dest_file), exist_ok=True)
                 if os.path.exists(dest_file):
-                    warnings.warn(f"File {dest_file} already exists. Overwriting...")
+                    if not overwrite:
+                        warnings.warn(f"File {dest_file} already exists, skipping.")
+                        continue
+                    warnings.warn(f"Overwriting file {dest_file}.")
                 shutil.copy2(file_abs_path, dest_file)
