@@ -113,28 +113,6 @@ class TaskManager(Attributes.AttributesInitializer):
                 warnings.warn(f"Unknown directory {unknown_dir} from tasks storage.")
 
     @classmethod
-    def is_runner_registered(cls, runner_root, raise_error=False):
-        """
-        Checks if a runner is registered.
-
-        Args:
-            - runner_root (str): The root directory of the runner.
-            - raise_error (bool, optional): Whether to raise an error if the
-
-        Returns:
-            - bool: True if the runner is registered, False otherwise.
-        """
-        runner_root = normalize_path(runner_root)
-        with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
-            registered_runners = json.load(f)
-        if runner_root in registered_runners:
-            return True
-        if raise_error:
-            msg = f"Runner root {runner_root} is not registered."
-            raise ValueError(msg)
-        return False
-
-    @classmethod
     def register_runner(
         cls,
         runner_root,
@@ -180,6 +158,40 @@ class TaskManager(Attributes.AttributesInitializer):
         if create_dirs:
             cls.sync_directories_of(runner_root)
         return session
+    
+    @classmethod
+    def get_registered_runners(cls):
+        """
+        Gets the registered runners.
+
+        Returns:
+            - list: A list of registered runner roots.
+        """
+        with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
+            registered_runners = json.load(f)
+        return registered_runners.keys()
+
+    @classmethod
+    def is_runner_registered(cls, runner_root, raise_error=False):
+        """
+        Checks if a runner is registered.
+
+        Args:
+            - runner_root (str): The root directory of the runner.
+            - raise_error (bool, optional): Whether to raise an error if the
+
+        Returns:
+            - bool: True if the runner is registered, False otherwise.
+        """
+        runner_root = normalize_path(runner_root)
+        with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
+            registered_runners = json.load(f)
+        if runner_root in registered_runners:
+            return True
+        if raise_error:
+            msg = f"Runner root {runner_root} is not registered."
+            raise ValueError(msg)
+        return False
 
     @classmethod
     def login_runner(cls, runner_root, update_dirs=True):
