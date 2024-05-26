@@ -3,7 +3,6 @@ import sys
 import shutil
 import subprocess
 
-
 def execute_python_module(module, env_python_path, cwd=None, temp_script_path=None, args=None):
     """
     Executes a specified Python module using a designated Python interpreter from a virtual environment,
@@ -41,31 +40,29 @@ def execute_python_module(module, env_python_path, cwd=None, temp_script_path=No
         command = [python_path, "-u", module]
         if args:
             command.extend(args)
+        
+        env = os.environ.copy()
         if cwd:
-            completed_process = subprocess.run(
-                command,
-                cwd=cwd,
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-        else:
-            completed_process = subprocess.run(
-                command,
-                capture_output=True,
-                text=True,
-                check=True,
+            env['PYTHONPATH'] = cwd + os.pathsep + env.get('PYTHONPATH', '')
+
+        completed_process = subprocess.run(
+            command,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=True,
+            env=env
         )
+        
         return completed_process.stdout
     except subprocess.CalledProcessError as e:
         return (
             f"Error running script: {e}\nOutput: {e.output}\nError Output: {e.stderr}"
         )
 
-
 if __name__ == "__main__":
-    script_path = "/path/to/python/script.py"
-    env_python_path = "path/to/python/interpreter"
-    script_output = execute_python_module(script_path, env_python_path)
-    with open("output.txt", "w") as output_file:
-        output_file.write(script_output)
+    script_path = "/path/to/script.py"
+    env_python_path = "path/to/python/env"
+    cwd = "/path/to/cwd"
+    script_output = execute_python_module(script_path, env_python_path, cwd=cwd)
+    print(script_output)
