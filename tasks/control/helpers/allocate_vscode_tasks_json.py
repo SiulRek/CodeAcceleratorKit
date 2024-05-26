@@ -2,7 +2,7 @@ import json
 import os
 import warnings
 
-from tasks.control.TASK_ROOT import TASKS_ROOT
+from tasks.control.TASKS_ROOT import TASKS_ROOT
 
 MAIN_VSCODE_TASKS_JSON = os.path.join(TASKS_ROOT, ".vscode", "tasks.json")
 

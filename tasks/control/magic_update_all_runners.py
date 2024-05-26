@@ -1,6 +1,6 @@
 import os
 
-from tasks.control.TASK_ROOT import TASKS_ROOT
+from tasks.control.TASKS_ROOT import TASKS_ROOT
 from tasks.control.magic_register_runner import allocate_vscode_tasks_json
 from tasks.tasks.management.task_manager import TaskManager
 
