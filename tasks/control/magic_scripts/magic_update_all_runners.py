@@ -8,7 +8,7 @@ from tasks.tasks.management.task_manager import TaskManager
 def magic_update_all_runners():
     """
     A Magic function that not only updates all the registered runners but also
-    copies the data files from the main tasks root to the target runner root and
+    copies the templates files from the main tasks root to the target runner root and
     allocates the '.vscode/tasks.json'.
     """
     TaskManager.update_registered_runners()
@@ -18,7 +18,7 @@ def magic_update_all_runners():
     for runner_root in runner_roots:
         if runner_root == TASKS_ROOT:
             continue
-        TaskManager.copy_data_files(TASKS_ROOT, runner_root)
+        TaskManager.copy_templates_files(TASKS_ROOT, runner_root)
         allocate_vscode_tasks_json(runner_root)
         print(f"Runner {os.path.basename(runner_root)} updated successfully.")
 

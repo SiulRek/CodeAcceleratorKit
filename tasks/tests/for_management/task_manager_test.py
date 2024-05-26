@@ -283,43 +283,43 @@ class TestTaskManager(unittest.TestCase):
 
         self.assertFalse(os.path.exists(self.storage_dir))
 
-    def test_copy_data_files(self):
+    def test_copy_templates_files(self):
         source_runner_dir = os.path.join(self.temp_dir.name, "source_runner")
         os.makedirs(source_runner_dir)
 
         dest_runner_dir = os.path.join(self.temp_dir.name, "dest_runner")
         os.makedirs(dest_runner_dir)
 
-        source_data_dir = os.path.join(source_runner_dir, "data")
-        os.makedirs(source_data_dir)
-        source_file_path = os.path.join(source_data_dir, "example_dir", "example_file.txt")
+        source_templates_dir = os.path.join(source_runner_dir, "templates")
+        os.makedirs(source_templates_dir)
+        source_file_path = os.path.join(source_templates_dir, "example_dir", "example_file.txt")
         os.makedirs(os.path.dirname(source_file_path))
         with open(source_file_path, "w") as file:
-            file.write("Sample data")
+            file.write("Sample templates")
 
-        dest_data_dir = os.path.join(dest_runner_dir, "data")
-        os.makedirs(dest_data_dir)
+        dest_templates_dir = os.path.join(dest_runner_dir, "templates")
+        os.makedirs(dest_templates_dir)
 
         with patch("tasks.tasks.management.task_manager.TaskSession") as MockSession, patch.object(Manager, 'is_runner_registered', return_value=True):
             mock_source_session = MagicMock()
-            mock_source_session.data_dir = source_data_dir
-            mock_source_session.var1_dir = source_data_dir
-            mock_source_session.var2_dir = source_data_dir
+            mock_source_session.templates_dir = source_templates_dir
+            mock_source_session.var1_dir = source_templates_dir
+            mock_source_session.var2_dir = source_templates_dir
 
             mock_dest_session = MagicMock()
-            mock_dest_session.data_dir = dest_data_dir
-            mock_dest_session.var1_dir = dest_data_dir
-            mock_dest_session.var2_dir = dest_data_dir
+            mock_dest_session.templates_dir = dest_templates_dir
+            mock_dest_session.var1_dir = dest_templates_dir
+            mock_dest_session.var2_dir = dest_templates_dir
 
             MockSession.side_effect = [mock_source_session, mock_dest_session]
 
-            Manager().copy_data_files(source_runner_dir, dest_runner_dir)
+            Manager().copy_templates_files(source_runner_dir, dest_runner_dir)
 
-        dest_file_path = os.path.join(dest_data_dir, "example_dir", "example_file.txt")
+        dest_file_path = os.path.join(dest_templates_dir, "example_dir", "example_file.txt")
         self.assertTrue(os.path.isfile(dest_file_path))
         with open(dest_file_path, "r") as file:
             content = file.read()
-            self.assertEqual(content, "Sample data")
+            self.assertEqual(content, "Sample templates")
 
     def test_update_runner(self):
         with patch(

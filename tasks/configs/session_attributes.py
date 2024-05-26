@@ -17,7 +17,7 @@ class SessionAttrNames(Enum):
     runner_python_env = (2, "configs.json")
     tasks_cache = (3, "configs.json")
     runners_cache = (4, "configs.json")
-    data_dir = (5, "configs.json")
+    templates_dir = (5, "configs.json")
     fill_text_dir = (6, "configs.json")
     query_templates_dir = (7, "configs.json")
     output_dir = (8, "configs.json")
@@ -37,7 +37,7 @@ UPDATE_MAPPING = {
     "runner_python_env": "runner_python_env",
     "tasks_cache": "tasks_cache",
     "runners_cache": "runners_cache",
-    "data_dir": "data_dir",
+    "templates_dir": "templates_dir",
     "fill_text_dir": "fill_text_dir",
     "query_templates_dir": "query_templates_dir",
     "output_dir": "output_dir",
@@ -67,28 +67,28 @@ class AttributesInitializer:
         return dir_
 
     @classmethod
-    def _initialize_data_dir(cls, primary_attrs):
-        """Initializes the data directory path based on the storage_dir in primary
+    def _initialize_templates_dir(cls, primary_attrs):
+        """Initializes the templates directory path based on the storage_dir in primary
         attributes."""
         storage_dir = primary_attrs.get("storage_dir")
-        dir_ = os.path.join(storage_dir, "data")
+        dir_ = os.path.join(storage_dir, "templates")
         dir_ = normalize_path(dir_)
         return dir_
 
     @classmethod
     def _initialize_fill_text_dir(cls, primary_attrs):
-        """Initializes the fill text directory path based on the data directory."""
-        data_dir = cls._initialize_data_dir(primary_attrs)
-        dir_ = os.path.join(data_dir, "fill_texts")
+        """Initializes the fill text directory path based on the templates directory."""
+        templates_dir = cls._initialize_templates_dir(primary_attrs)
+        dir_ = os.path.join(templates_dir, "fill_texts")
         dir_ = normalize_path(dir_)
         return dir_
 
     @classmethod
     def _initialize_query_templates_dir(cls, primary_attrs):
-        """Initializes the query templates directory path based on the data
+        """Initializes the query templates directory path based on the templates
         directory."""
-        data_dir = cls._initialize_data_dir(primary_attrs)
-        dir_ = os.path.join(data_dir, "query_templates")
+        templates_dir = cls._initialize_templates_dir(primary_attrs)
+        dir_ = os.path.join(templates_dir, "query_templates")
         dir_ = normalize_path(dir_)
         return dir_
 

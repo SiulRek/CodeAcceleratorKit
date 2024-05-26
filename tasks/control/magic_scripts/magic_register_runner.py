@@ -13,7 +13,7 @@ def magic_register_runner(
 ):
     """
     A Magic runners registration function for lazy people like me. Not only
-    registers the runner but also copies the data files from the main tasks root
+    registers the runner but also copies the templates files from the main tasks root
     to the target runner root and allocates the '.vscode/tasks.json'.
 
     Args:
@@ -46,7 +46,7 @@ def magic_register_runner(
         create_dirs=create_dirs,
         cwd=cwd,
     )
-    TaskManager.copy_data_files(
+    TaskManager.copy_templates_files(
         source_runner_dir=TASKS_ROOT,
         dest_runner_dir=runner_root,
     )
