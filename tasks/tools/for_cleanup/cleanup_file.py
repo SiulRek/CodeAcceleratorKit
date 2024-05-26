@@ -1,30 +1,15 @@
-import warnings
 import os
+import warnings
 
-from tasks.tools.for_cleanup.format_docstrings import (
-    format_docstrings,
-)
-from tasks.tools.for_cleanup.rearrange_imports import (
-    rearrange_imports,
-)
-from tasks.tools.for_cleanup.refactore_exception import (
-    refactor_exception,
-)
-from tasks.tools.for_cleanup.remove_line_comments import (
-    remove_line_comments,
-)
-from tasks.tools.for_cleanup.remove_trailing_parts import (
-    remove_trailing_parts,
-)
-from tasks.tools.for_cleanup.remove_unused_imports import (
-    remove_unused_imports,
-)
-from tasks.tools.for_cleanup.run_black_formatting import (
-    format_with_black,
-)
-from tasks.tools.general.execute_pylint import execute_pylint
 from tasks.tasks.management.task_session import TaskSession
-
+from tasks.tools.for_cleanup.format_docstrings import format_docstrings
+from tasks.tools.for_cleanup.rearrange_imports import rearrange_imports
+from tasks.tools.for_cleanup.refactore_exception import refactor_exception
+from tasks.tools.for_cleanup.remove_line_comments import remove_line_comments
+from tasks.tools.for_cleanup.remove_trailing_parts import remove_trailing_parts
+from tasks.tools.for_cleanup.remove_unused_imports import remove_unused_imports
+from tasks.tools.for_cleanup.run_black_formatting import format_with_black
+from tasks.tools.general.execute_pylint import execute_pylint
 
 STRATEGIES = {
     "RT": (remove_trailing_parts, "Remove trailing parts", False),
@@ -79,7 +64,7 @@ def cleanup_file(
     select_not=None,
     checkpoint_dir=None,
     python_env_path=None,
-    modules_info=None
+    modules_info=None,
 ):
     """
     Apply cleanup strategies to a python file. The strategies are applied in the
@@ -89,11 +74,14 @@ def cleanup_file(
         - file_path (str): Path to the file to clean.
         - select_only (list): List of strategies to apply. Default to None.
         - select_not (list): List of strategies to exclude. Default to None.
-        - checkpoint_dir (str): Directory to save the checkpoints in. If specified, checkpointing is enabled.
-        - python_env_path (str): Path to the python environment to
-            use for subprocess cleaning. Required for subprocess cleaning.
-        - modules_info (dict): A dictionary containing information about the loaded modules. Keys are 'standard_library', 'third_party', and 'local'.
-        Used for rearranging imports. If None skips rearranging imports.
+        - checkpoint_dir (str): Directory to save the checkpoints in. If
+            specified, checkpointing is enabled.
+        - python_env_path (str): Path to the python environment to use for
+            subprocess cleaning. Required for subprocess cleaning.
+        - modules_info (dict): A dictionary containing information about the
+            loaded modules. Keys are 'standard_library', 'third_party', and
+            'local'. Used for rearranging imports. If None skips rearranging
+            imports.
     """
     if not file_path.endswith(".py"):
         msg = f"File {file_path} is not a python file"
@@ -132,16 +120,18 @@ def cleanup_file(
             if updated_code != code:
                 with open(file_path, "w") as file:
                     file.write(updated_code)
-            
+
             if message := function(file_path, python_env_path):
                 print(message)
             with open(file_path, "r") as file:
                 updated_code = file.read()
         elif function == rearrange_imports:
-                if not modules_info:
-                    warnings.warn("Modules info not provided. Skipping rearranging imports.")
-                    continue
-                updated_code = function(updated_code, modules_info)
+            if not modules_info:
+                warnings.warn(
+                    "Modules info not provided. Skipping rearranging imports."
+                )
+                continue
+            updated_code = function(updated_code, modules_info)
         else:
             updated_code = function(updated_code)
         file_name = os.path.basename(file_path)
@@ -149,10 +139,14 @@ def cleanup_file(
         if checkpointing:
             make_checkpoint(file_path, updated_code, description, checkpoint_dir)
 
+    with open(file_path, "w") as file:
+        file.write(updated_code)
+
 
 if __name__ == "__main__":
     path = r"tasks/tests/cleanup_test.py"
-    root_dir = os.path.abspath(os.path.join(path, "..", "..", ".."))
+
+    root_dir = os.path.abspath(os.path.join(path, "..", "..", "..", ".."))
     session = TaskSession(root_dir)
     cleanup_file(
         path,
