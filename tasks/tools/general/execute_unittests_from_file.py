@@ -52,7 +52,7 @@ def execute_unittests_from_file(file_path, cwd, verbosity=1):
 if __name__ == "__main__":
     if len(sys.argv) < 1:
         path = f"path/to/file"
-        cdw = f"path/to/cwd"
+        cwd = f"path/to/cwd"
         verbosity = 1
     else:
         # Assuming the arguments match
