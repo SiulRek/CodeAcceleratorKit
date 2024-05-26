@@ -115,6 +115,7 @@ class Finalizer:
                 model.
         """
         self._store_query(query)
+        print("Making query...")
         response = make_query(query, max_tokens) if max_tokens else make_query(query)
         return response
 
