@@ -165,3 +165,37 @@ class FileExecutionTracker:
         with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow(["File Path", "Status", "Comments"])
+    
+    def get_completed_files(self):
+        """
+        Returns the list of file paths marked as 'completed'.
+
+        Returns:
+            - list: A list of file paths.
+        """
+        completed_files = []
+        with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            next(reader)
+            for row in reader:
+                if row[1] == "completed":
+                    completed_files.append(row[0])
+
+        return completed_files
+    
+    def get_failed_files(self):
+        """
+        Returns the list of file paths marked as 'failed'.
+
+        Returns:
+            - list: A list of file paths.
+        """
+        failed_files = []
+        with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            next(reader)
+            for row in reader:
+                if row[1] == "failed":
+                    failed_files.append(row[0])
+
+        return failed_files
