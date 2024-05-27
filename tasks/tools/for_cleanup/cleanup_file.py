@@ -17,8 +17,8 @@ STRATEGIES = {
     "RE": (refactor_exception, "Refactor exception", False),
     "RI": (rearrange_imports, "Rearrange imports", False),
     "RU": (remove_unused_imports, "Remove unused imports", False),
-    "FM": (format_docstrings, "Format docstrings", False),
     "BF": (format_with_black, "Run Black formatting", True),
+    "FD": (format_docstrings, "Format docstrings", False),
     "PL": (execute_pylint, "Execute Pylint", True),
 }
 
@@ -144,7 +144,7 @@ def cleanup_file(
 
 
 if __name__ == "__main__":
-    path = r"tasks/tests/cleanup_test.py"
+    path = r"/home/krakerlu/github/CodeAcceleratorKit/tasks/tools/for_directory_runner/file_execution_tracker.py"
 
     root_dir = os.path.abspath(os.path.join(path, "..", "..", "..", ".."))
     profile = TaskRunnerProfile(root_dir)
@@ -152,5 +152,6 @@ if __name__ == "__main__":
         path,
         checkpoint_dir=profile.checkpoint_dir,
         python_env_path=profile.runner_python_env,
+        select_only=["FD"]
     )
     print(f"File cleaned of {path}")
