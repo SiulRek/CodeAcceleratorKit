@@ -62,6 +62,8 @@ class FileExecutionTracker:
     def verify_tracks(self):
         """Verifies the tracks in CSV file by checking if all files are either 'pending',
         'running', or 'completed'. Raises ValueError if any other status is found."""
+        if not os.path.isfile(self.csv_path):
+            raise FileNotFoundError(f"File '{self.csv_path}' does not exist.")
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
             reader = csv.reader(file)
             next(reader)
@@ -139,6 +141,24 @@ class FileExecutionTracker:
         with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerows(rows)
+    
+    def get_status_count(self):
+        """
+        Returns the number of files with each status.
+
+        Returns:
+            - dict: A dictionary with status as keys and the number of files
+                with that status as values.
+        """
+        with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            next(reader)
+
+            count_status = {"pending": 0, "running": 0, "completed": 0, "failed": 0}
+            for row in reader:
+                count_status[row[1]] += 1
+
+        return count_status
 
     def clear_tracks(self):
         """Clears the CSV file."""
