@@ -23,16 +23,19 @@ class ProfileAttrNames(Enum):
     runner_python_env = (2, "configs.json")
     tasks_cache = (3, "configs.json")
     runners_cache = (4, "configs.json")
-    templates_dir = (5, "configs.json")
-    fill_text_dir = (6, "configs.json")
-    macros_templates_dir = (7, "configs.json")
-    output_dir = (8, "configs.json")
-    backup_dir = (9, "configs.json")
-    checkpoint_dir = (10, "configs.json")
-    chats_dir = (11, "configs.json")
-    tasks_python_env = (12, "configs.json")
-    max_backups = (13, "configs.json")
-    modules_info = (14, "modules_info.json")
+    data_dir = (5, "configs.json")
+    execution_tracks_dir = (6, "configs.json")
+    templates_dir = (7, "configs.json")
+    fill_text_dir = (8, "configs.json")
+    macros_templates_dir = (9, "configs.json")
+    output_dir = (10, "configs.json")   
+    backup_dir = (11, "configs.json")
+    checkpoint_dir = (12, "configs.json")
+    chats_dir = (13, "configs.json")
+    tasks_python_env = (14, "configs.json")
+    max_backups = (15, "configs.json")
+    modules_info = (16, "modules_info.json")
+    directory_runner_config = (17, "directory_runner.json")
 
 
 UPDATE_MAPPING = {
@@ -42,6 +45,8 @@ UPDATE_MAPPING = {
     "runner_python_env": "runner_python_env",
     "tasks_cache": "tasks_cache",
     "runners_cache": "runners_cache",
+    "data_dir": None,
+    "execution_tracks_dir": None,
     "templates_dir": "templates_dir",
     "fill_text_dir": "fill_text_dir",
     "macros_templates_dir": "macros_templates_dir",
@@ -52,6 +57,7 @@ UPDATE_MAPPING = {
     "tasks_python_env": "tasks_python_env",
     "max_backups": "max_backups",
     "modules_info": "modules_info",
+    "directory_runner_config": None,
 }
 
 
@@ -72,6 +78,24 @@ class AttributesInitializer:
         """Initializes the runners_cache directory path."""
         dir_ = normalize_path(primary_attrs.get("storage_dir"))
         dir_ = os.path.join(dir_, "__taskscache__")
+        return dir_
+    
+    @classmethod
+    def _initialize_data_dir(cls, primary_attrs):
+        """Initializes the data directory path based on the storage_dir in
+        primaryattributes."""
+        storage_dir = primary_attrs.get("storage_dir")
+        dir_ = os.path.join(storage_dir, "data")
+        dir_ = normalize_path(dir_)
+        return dir_
+
+    @classmethod
+    def _initialize_execution_tracks_dir(cls, primary_attrs):
+        """Initializes the execution track directory path based on the storage_dir in
+        primaryattributes."""
+        data_dir = cls._initialize_data_dir(primary_attrs)
+        dir_ = os.path.join(data_dir, "execution_tracks")
+        dir_ = normalize_path(dir_)
         return dir_
 
     @classmethod
@@ -161,3 +185,16 @@ class AttributesInitializer:
             modules_info = json.load(f)
 
         return modules_info["modules_info"]
+    
+    @classmethod
+    def _initialize_directory_runner_config(cls, _):
+        """Initializes the directory runner configuration file."""
+        config = {
+            "task_name": "Task Name",  # or "Create Query Task"
+            "directory_path": "/path/to/directory",
+            "macros_text": ["sample macros text","as list of lines"],
+            "resume_from_last_stopped": False,
+            "excluded_files": ["only_py_file_name.py"],
+            "excluded_dirs": ["/must/be/absolute"]
+        }
+        return config
