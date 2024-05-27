@@ -3,7 +3,7 @@ import os
 
 
 class FileExecutionTracker:
-    """Class that tracks execution status of files."""
+    """ Class that tracks execution status of files. """
 
     def __init__(self, csv_path):
         self.csv_path = csv_path
@@ -60,10 +60,14 @@ class FileExecutionTracker:
         self.add_files(files)
 
     def verify_tracks(self):
-        """Verifies the tracks in CSV file by checking if all files are either 'pending',
-        'running', or 'completed'. Raises ValueError if any other status is found."""
+        """
+        Verifies the tracks in CSV file by checking if all files are either
+        'pending','running', or 'completed'. Raises ValueError if any other
+        status is found.
+        """
         if not os.path.isfile(self.csv_path):
-            raise FileNotFoundError(f"File '{self.csv_path}' does not exist.")
+            msg = f"File '{self.csv_path}' does not exist."
+            raise FileNotFoundError(msg)
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
             reader = csv.reader(file)
             next(reader)
@@ -103,11 +107,9 @@ class FileExecutionTracker:
             writer.writerows(rows)
 
         return next_pending_file
-    
+
     def mark_running_as_completed(self):
-        """
-        Transforms the 'running' file to 'completed'.
-        """
+        """ Transforms the 'running' file to 'completed'. """
         rows = []
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
             reader = csv.reader(file)
@@ -141,7 +143,7 @@ class FileExecutionTracker:
         with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerows(rows)
-    
+
     def get_status_count(self):
         """
         Returns the number of files with each status.
@@ -161,11 +163,11 @@ class FileExecutionTracker:
         return count_status
 
     def clear_tracks(self):
-        """Clears the CSV file."""
+        """ Clears the CSV file. """
         with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow(["File Path", "Status", "Comments"])
-    
+
     def get_completed_files(self):
         """
         Returns the list of file paths marked as 'completed'.
@@ -182,7 +184,7 @@ class FileExecutionTracker:
                     completed_files.append(row[0])
 
         return completed_files
-    
+
     def get_failed_files(self):
         """
         Returns the list of file paths marked as 'failed'.
