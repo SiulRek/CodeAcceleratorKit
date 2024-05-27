@@ -7,6 +7,7 @@ from tasks.tasks.cleanup.cleanup_task import CleanupTask
 from tasks.tasks.create_query.create_query_task import CreateQueryTask
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_directory_runner.file_execution_tracker import FileExecutionTracker
+from tasks.tools.general.backup_handler import BackupHandler
 
 
 class DirectoryRunnerTask(TaskBase):
@@ -25,6 +26,7 @@ class DirectoryRunnerTask(TaskBase):
             "resume_from_last_stopped",
             "excluded_files",
             "excluded_dirs",
+            "clear_backup_storage",
         ]
         for key in keys:
             if key not in directory_runner_args:
@@ -75,6 +77,10 @@ class DirectoryRunnerTask(TaskBase):
             + "_execution_tracks.csv"
         )
         file_execution_csv = os.path.join(execution_tracks_dir, csv_name)
+        
+        backup_handler = BackupHandler(self.profile.backup_dir, self.profile.max_backups)
+        if self.clear_backup_storage:
+            backup_handler.clear_storage()
 
         if not os.path.isdir(self.directory_path):
             msg = f"Directory path {self.directory_path} does not exist."

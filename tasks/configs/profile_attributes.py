@@ -35,7 +35,7 @@ class ProfileAttrNames(Enum):
     tasks_python_env = (14, "configs.json")
     max_backups = (15, "configs.json")
     modules_info = (16, "modules_info.json")
-    directory_runner_config = (17, "directory_runner.json")
+    directory_runner_config = (17, "directory_runner_template.json")
 
 
 UPDATE_MAPPING = {
@@ -45,8 +45,8 @@ UPDATE_MAPPING = {
     "runner_python_env": "runner_python_env",
     "tasks_cache": "tasks_cache",
     "runners_cache": "runners_cache",
-    "data_dir": None,
-    "execution_tracks_dir": None,
+    "data_dir": "data_dir",
+    "execution_tracks_dir": "execution_tracks_dir",
     "templates_dir": "templates_dir",
     "fill_text_dir": "fill_text_dir",
     "macros_templates_dir": "macros_templates_dir",
@@ -57,7 +57,7 @@ UPDATE_MAPPING = {
     "tasks_python_env": "tasks_python_env",
     "max_backups": "max_backups",
     "modules_info": "modules_info",
-    "directory_runner_config": None,
+    "directory_runner_config": "directory_runner_config"
 }
 
 
@@ -195,6 +195,7 @@ class AttributesInitializer:
             "macros_text": ["sample macros text","as list of lines"],
             "resume_from_last_stopped": False,
             "excluded_files": ["only_py_file_name.py"],
-            "excluded_dirs": ["/must/be/absolute"]
+            "excluded_dirs": ["/must/be/absolute"],
+            "clear_backup_storage": True,
         }
         return config
