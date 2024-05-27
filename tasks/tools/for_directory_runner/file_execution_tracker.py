@@ -25,11 +25,11 @@ class FileExecutionTracker:
             for file_path in files:
                 writer.writerow([file_path, "pending"])
 
-    def write_files_from_directory(
+    def add_files_from_directory(
         self, directory, excluded_dirs=None, excluded_files=None
     ):
         """
-        Writes all files from a directory to the CSV file with status set to
+        Add all files from a directory to the CSV file with status set to
         'pending'.
 
         Args:

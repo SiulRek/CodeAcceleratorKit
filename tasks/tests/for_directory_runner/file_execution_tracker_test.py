@@ -46,7 +46,7 @@ class TestFileExecutionTracker(unittest.TestCase):
             with open(path, "w") as f:
                 f.write("Test")
 
-        self.manager.write_files_from_directory(
+        self.manager.add_files_from_directory(
             self.temp_dir.name, excluded_files=["test_files.csv"]
         )
         with open(self.test_csv_path, "r", newline="") as file:
