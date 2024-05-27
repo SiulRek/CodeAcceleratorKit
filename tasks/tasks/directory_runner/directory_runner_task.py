@@ -130,6 +130,6 @@ if __name__ == "__main__":
         os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."
     )
     default_json = os.path.join(
-        default_root, "local", "tasks_storage", "profile", "directory_runner.json"
+        default_root, "local", "tasks_storage", "profile", "directory_runner_test.json"
     )
     DirectoryRunnerTask(default_root, default_json).main()
