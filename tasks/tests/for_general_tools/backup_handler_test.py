@@ -10,10 +10,11 @@ OUTPUT_DIRECTORY = os.path.join(ROOT_DIR, "tasks", "tests", "outputs")
 DATA_DIR = os.path.join(ROOT_DIR, "tasks", "tests", "data")
 
 TEXT_FILE_1_PATH = os.path.join(DATA_DIR, "test_file_1.txt")
+TEXT_FILE_1_PATH = os.path.normpath(TEXT_FILE_1_PATH)
 TEXT_FILE_2_PATH = os.path.join(DATA_DIR, "test_file_2.txt")
-
+TEXT_FILE_2_PATH = os.path.normpath(TEXT_FILE_2_PATH)
 TEXT_FILE_3_PATH = os.path.join(DATA_DIR, "reference_1.py")
-TEXT_FILE_3_PATH = os.path.join(DATA_DIR, "reference_2.py")
+TEXT_FILE_3_PATH = os.path.normpath(TEXT_FILE_3_PATH)
 
 
 class TestBackupHandler(unittest.TestCase):

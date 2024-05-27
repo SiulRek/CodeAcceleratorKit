@@ -18,12 +18,17 @@ class BackupHandler:
         - save_context(): Save the backup context to a CSV file.
         - store_backup(file_path, comment=None): Store a backup of a file in
             the backup directory.
-        - recover_backup(backup_file_name): Recover a specific backup file
+        - recover_backup(previous_file_name): Recover a specific backup file
             to its original location.
         - cleanup_storage(): Clean up excess backup files based on the
             `max_backups` limit.
         - get_backup_context(file_extension=None): Retrieve information
             about stored backup files.
+        - clear_storage(): Removes the content of the backup directory.
+        - get_backup_path(previous_file_path): Get the backup path of a
+            specific file.
+        - recover_last_backup(): Recover the last backup file to its original
+            location.
 
     Usage:
         - backup_dir = 'path/to/backup/directory' max_backups = 10
@@ -103,7 +108,7 @@ class BackupHandler:
         shutil.copy2(file_path, dest_file)
 
         context_entry = {
-            "previous_file_path": file_path,
+            "previous_file_path": os.path.normpath(file_path),
             "backup_file_name": os.path.basename(dest_file),
             "comment": comment,
         }
@@ -135,9 +140,7 @@ class BackupHandler:
         copy_context_data = deepcopy(self.context_data)
         copy_context_data.reverse()  # To get the last backup first
         for backup_file_context in copy_context_data:
-            source_file_path = os.path.normpath(
-                backup_file_context["previous_file_path"]
-            )
+            source_file_path = backup_file_context["previous_file_path"]
             if source_file_path == previous_file_path:
                 backup_file = os.path.join(
                     self.backup_dir, backup_file_context["backup_file_name"]
@@ -194,9 +197,7 @@ class BackupHandler:
         reversed_context_data = deepcopy(self.context_data)
         reversed_context_data.reverse()
         for backup_file_context in reversed_context_data:
-            source_file_path = os.path.normpath(
-                backup_file_context["previous_file_path"]
-            )
+            source_file_path = backup_file_context["previous_file_path"]
             if source_file_path == previous_file_path:
                 return os.path.join(
                     self.backup_dir, backup_file_context["backup_file_name"]
