@@ -91,7 +91,7 @@ class DirectoryRunnerTask(TaskBase):
 
         print(f"\nExecution Tracker initialized: {file_execution_csv}")
         count_status = execution_tracker.get_status_count()
-        pendings_at_start = count_status.get("pending", 0)
+        pendings_at_start = count_status.get("pending")
         print(f"Number of files pending at start: {pendings_at_start}\n")
 
         completed_files = 0
@@ -103,6 +103,7 @@ class DirectoryRunnerTask(TaskBase):
 
             task_class = self._get_task_class(self.task_name)
             task = task_class(self.task_runner_root, file_path, self.macros_text)
+            task.force_defaults() # Prevents the task from using the command line arguments
             try:
                 with self._suppress_stdout():
                     task.main()
