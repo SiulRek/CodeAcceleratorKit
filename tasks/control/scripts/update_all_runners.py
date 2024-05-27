@@ -4,4 +4,4 @@ if __name__ == "__main__":
     task_manager = TaskManager()
 
     task_manager.update_registered_runners()
-    # Do not forget to to update UPDATE_MAPPING in tasks/configs/session_attributes.py
+    # Do not forget to to update UPDATE_MAPPING in tasks/configs/profile_attributes.py

@@ -3,7 +3,7 @@ import os
 import sys
 import shutil
 
-from tasks.tasks.management.task_session import TaskSession
+from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
 
 
 class TaskBase(ABC):
@@ -49,11 +49,11 @@ class TaskBase(ABC):
     def setup(self):
         """
         Sets up the task environment.
-        Initializes the task session and creates the tasks_cache directory.
+        Initializes the task profile and creates the tasks_cache directory.
         """
-        self.session = TaskSession(self.task_runner_root)
-        self.tasks_cache_dir = self.session.tasks_cache
-        self.runners_cache_dir = self.session.runners_cache
+        self.profile = TaskRunnerProfile(self.task_runner_root)
+        self.tasks_cache_dir = self.profile.tasks_cache
+        self.runners_cache_dir = self.profile.runners_cache
 
         os.makedirs(self.tasks_cache_dir, exist_ok=True)
         os.makedirs(self.runners_cache_dir, exist_ok=True)

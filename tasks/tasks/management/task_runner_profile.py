@@ -7,12 +7,12 @@ import warnings
 
 import tasks.configs.constants as configs
 from tasks.tasks.management.normalize_path import normalize_path
-import tasks.configs.session_attributes as Attributes
+import tasks.configs.profile_attributes as Attributes
 
 
-class TaskSession:
+class TaskRunnerProfile:
     """
-    Stores the TaskSession, including loading and saving attributes.
+    Stores the TaskRunnerProfile, including loading and saving attributes.
 
     Args:
         - runner_root (str): The root directory of the runner.
@@ -23,7 +23,7 @@ class TaskSession:
     def __init__(self, runner_root, load_attributes_from_storage=True):
         self._root = normalize_path(runner_root)
         self._storage_dir = self._get_storage_dir(self.root)
-        self._configs_dir = os.path.join(self.storage_dir, configs.CONFIGS_SUBFOLDER)
+        self._profile_dir = os.path.join(self.storage_dir, configs.PROFILE_SUBFOLDER)
         self._all_attributes = {}
         if load_attributes_from_storage:
             self.load_attributes_from_storage()
@@ -49,7 +49,7 @@ class TaskSession:
         return self._storage_dir
 
     @property
-    def configs_dir(self):
+    def profile_dir(self):
         """
         Returns the directory path for storing configuration files inside the
         runner storage directory.
@@ -57,7 +57,7 @@ class TaskSession:
         Returns:
             - str: The configuration directory path.
         """
-        return self._configs_dir
+        return self._profile_dir
     
     @property
     def attributes(self):
@@ -95,8 +95,8 @@ class TaskSession:
             - attribute_name (str): The name of the attribute.
             - attribute_value (Any): The value of the attribute.
         """
-        if attribute_name not in Attributes.SessionAttrNames.__members__.keys():
-            warnings.warn(f"Attribute {attribute_name} is not defined in the SessionAttrNames.")
+        if attribute_name not in Attributes.ProfileAttrNames.__members__.keys():
+            warnings.warn(f"Attribute {attribute_name} is not defined in the ProfileAttrNames.")
         setattr(self, attribute_name, attribute_value)
         self._all_attributes[attribute_name] = attribute_value
     
@@ -134,19 +134,19 @@ class TaskSession:
 
     def load_attributes_from_storage(self):
         """Loads attributes from the storage/configs directory."""
-        if not os.path.isdir(self.configs_dir):
-            msg = f"Directory {self.configs_dir} does not exist. Please register the runner properly."
+        if not os.path.isdir(self.profile_dir):
+            msg = f"Directory {self.profile_dir} does not exist. Please register the runner properly."
             raise NotADirectoryError(msg)
         attributes_dict = {}
-        for dir_ in os.listdir(self.configs_dir):
+        for dir_ in os.listdir(self.profile_dir):
             if dir_.endswith(".json"):
                 with open(
-                    os.path.join(self.configs_dir, dir_), "r", encoding="utf-8"
+                    os.path.join(self.profile_dir, dir_), "r", encoding="utf-8"
                 ) as f:
                     attributes_dict = json.load(f)
                 self.load_attributes_from_dict(attributes_dict)
             elif dir_.endswith(".pkl"):
-                with open(os.path.join(self.configs_dir, dir_), "rb") as f:
+                with open(os.path.join(self.profile_dir, dir_), "rb") as f:
                     attributes_dict = pickle.load(f)
                 self.load_attributes_from_dict(attributes_dict)
                 
@@ -155,7 +155,7 @@ class TaskSession:
         Updates the attributes with the reinitialized attributes. The update depends on the UPDATE_MAPPING parameter.
 
         Args:
-            - reinitialized_attrs (dict): A dictionary containing the reinitialized attributes. It is expected that the keys corresponds to SessionAttrNames.
+            - reinitialized_attrs (dict): A dictionary containing the reinitialized attributes. It is expected that the keys corresponds to ProfileAttrNames.
         """
         updated_attrs = {}
         for reinit_name in reinitialized_attrs:
@@ -177,7 +177,7 @@ class TaskSession:
         Returns:
             - bool: True if all attributes are present, False otherwise.
         """
-        for attr in Attributes.SessionAttrNames.__members__.keys():
+        for attr in Attributes.ProfileAttrNames.__members__.keys():
             if not hasattr(self, attr):
                 return False
         return True
@@ -192,10 +192,10 @@ class TaskSession:
         if not self.are_attributes_complete():
             msg = "Missing context attribute(s) to save."
             raise AttributeError(msg)
-        os.makedirs(self.configs_dir, exist_ok=True)
+        os.makedirs(self.profile_dir, exist_ok=True)
 
         configs = {}
-        for member in Attributes.SessionAttrNames:
+        for member in Attributes.ProfileAttrNames:
             attr = member.name
             _, file_name = member.value
             if file_name not in configs:
@@ -203,7 +203,7 @@ class TaskSession:
             configs[file_name][attr] = getattr(self, attr)
         file_names = []
         for file_name, attributes in configs.items():
-            file_path = os.path.join(self.configs_dir, file_name)
+            file_path = os.path.join(self.profile_dir, file_name)
             if file_name.endswith(".json"):
                 with open(file_path, "w", encoding="utf-8") as f:
                     json.dump(attributes, f, indent=4)
@@ -213,6 +213,6 @@ class TaskSession:
             else:
                 raise ValueError(f"File name {file_name} is not supported.")
             file_names.append(file_name)
-        for name in os.listdir(self.configs_dir):
+        for name in os.listdir(self.profile_dir):
             if name not in file_names:
                 warnings.warn(f"File {name} is unknown and will be ignored.")

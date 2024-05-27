@@ -4,9 +4,9 @@ import shutil
 import warnings
 
 from tasks.configs.constants import REGISTERED_RUNNERS_JSON
-import tasks.configs.session_attributes as Attributes
+import tasks.configs.profile_attributes as Attributes
 from tasks.tasks.management.normalize_path import normalize_path
-from tasks.tasks.management.task_session import TaskSession
+from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
 
 
 class TaskManager(Attributes.AttributesInitializer):
@@ -70,7 +70,7 @@ class TaskManager(Attributes.AttributesInitializer):
             "cwd": cwd,
             "runner_python_env": python_env,
         }
-        for attr in Attributes.SessionAttrNames.__members__:
+        for attr in Attributes.ProfileAttrNames.__members__:
             if attr in "cwd":
                 attributes[attr] = cwd if cwd is not None else runner_root
             elif attr in "runner_python_env":
@@ -88,14 +88,14 @@ class TaskManager(Attributes.AttributesInitializer):
         Args:
             - runner_root (str): The root directory of the runner.
         """
-        session = TaskSession(runner_root)
+        profile = TaskRunnerProfile(runner_root)
         created_dirs = []
-        for attr in Attributes.SessionAttrNames.__members__:
+        for attr in Attributes.ProfileAttrNames.__members__:
             if attr.endswith("_dir"):
-                path = getattr(session, attr)
+                path = getattr(profile, attr)
                 os.makedirs(path, exist_ok=True)
                 created_dirs.append(path)
-        storage_dir = session.storage_dir
+        storage_dir = profile.storage_dir
         dirs_in_storage = os.listdir(storage_dir)
         dirs_in_storage = [os.path.join(storage_dir, dir_) for dir_ in dirs_in_storage]
         dirs_in_storage = [dir_ for dir_ in dirs_in_storage if os.path.isdir(dir_)]
@@ -103,14 +103,13 @@ class TaskManager(Attributes.AttributesInitializer):
         unknown_dirs = []
         for dir_in_storage in dirs_in_storage:
             for created_dir in created_dirs:
-                if dir_in_storage in created_dir or dir_in_storage.endswith("configs"):
+                if dir_in_storage in created_dir or dir_in_storage.endswith("profile"):
                     break
             else:
                 unknown_dirs.append(dir_in_storage)
 
         for unknown_dir in unknown_dirs:
-            for unknown_dir in unknown_dirs:
-                warnings.warn(f"Unknown directory {unknown_dir} from tasks storage.")
+            warnings.warn(f"Unknown directory {unknown_dir} from tasks storage.")
 
     @classmethod
     def register_runner(
@@ -138,7 +137,7 @@ class TaskManager(Attributes.AttributesInitializer):
                 runner.
 
         Returns:
-            - TaskSession: The runner session generated from the
+            - TaskRunnerProfile: The runner profile generated from the
                 registration.
         """
         if not os.path.exists(runner_root):
@@ -152,12 +151,12 @@ class TaskManager(Attributes.AttributesInitializer):
         attributes = cls._init_runner_attributes(
             runner_root, storage_dir, python_env, cwd
         )
-        session = TaskSession(runner_root, load_attributes_from_storage=False)
-        session.load_attributes_from_dict(attributes)
-        session.save_attributes()
+        profile = TaskRunnerProfile(runner_root, load_attributes_from_storage=False)
+        profile.load_attributes_from_dict(attributes)
+        profile.save_attributes()
         if create_dirs:
             cls.sync_directories_of(runner_root)
-        return session
+        return profile
     
     @classmethod
     def get_registered_runners(cls):
@@ -196,42 +195,42 @@ class TaskManager(Attributes.AttributesInitializer):
     @classmethod
     def login_runner(cls, runner_root, update_dirs=True):
         """
-        Logs in to an runner and initializes its session.
+        Logs in to an runner and initializes its profile.
 
         Args:
             - runner_root (str): The root directory of the runner.
             - update_dirs (bool, optional): Whether to update the
-                directories of the runner session. Defaults to True.
+                directories of the runner profile. Defaults to True.
 
         Returns:
-            - TaskSession: The runner session after logging in.
+            - TaskRunnerProfile: The runner profile after logging in.
         """
         runner_root = normalize_path(runner_root)
         cls.is_runner_registered(runner_root, raise_error=True)
         if update_dirs:
             cls.sync_directories_of(runner_root)
-        session = TaskSession(runner_root)
-        return session
+        profile = TaskRunnerProfile(runner_root)
+        return profile
 
     @classmethod
     def update_runner(cls, runner_root):
         """
-        Updates the runner session with the latest attributes. The update
-        depends on UPDATE_MAPPING in session_attributes.py.
+        Updates the runner profile with the latest attributes. The update
+        depends on UPDATE_MAPPING in profile_attributes.py.
 
         Args:
             - runner_root (str): The root directory of the runner.
         """
         cls.is_runner_registered(runner_root, raise_error=True)
-        session = TaskSession(runner_root)
+        profile = TaskRunnerProfile(runner_root)
         reinit_attrs = cls._init_runner_attributes(
             runner_root,
-            session.storage_dir,
-            session.runner_python_env,
-            session.cwd,
+            profile.storage_dir,
+            profile.runner_python_env,
+            profile.cwd,
         )
-        session.update_attributes(reinit_attrs)
-        session.save_attributes()
+        profile.update_attributes(reinit_attrs)
+        profile.save_attributes()
         TaskManager.sync_directories_of(runner_root)
 
     @classmethod
@@ -282,10 +281,10 @@ class TaskManager(Attributes.AttributesInitializer):
         if not cls.is_runner_registered(dest_runner_dir):
             raise ValueError(f"Destination runner {dest_runner_dir} is not registered.")
         
-        source_session = TaskSession(source_runner_dir)
-        dest_session = TaskSession(dest_runner_dir)
-        source_templates_dir = source_session.templates_dir
-        dest_templates_dir = dest_session.templates_dir
+        source_profile = TaskRunnerProfile(source_runner_dir)
+        dest_profile = TaskRunnerProfile(dest_runner_dir)
+        source_templates_dir = source_profile.templates_dir
+        dest_templates_dir = dest_profile.templates_dir
 
         for root, _, files in os.walk(source_templates_dir):
             for file in files:
@@ -299,3 +298,4 @@ class TaskManager(Attributes.AttributesInitializer):
                         continue
                     warnings.warn(f"Overwriting file {dest_file}.")
                 shutil.copy2(file_abs_path, dest_file)
+                

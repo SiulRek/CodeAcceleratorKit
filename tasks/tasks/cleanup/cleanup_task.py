@@ -31,14 +31,14 @@ class CleanupTask(TaskBase):
                 specified.
         """
         file_path = self.file_path
-        checkpoint_dir = self.session.checkpoint_dir
-        environment_path = self.session.tasks_python_env
+        checkpoint_dir = self.profile.checkpoint_dir
+        environment_path = self.profile.tasks_python_env
 
         backup_handler = BackupHandler(
-            self.session.backup_dir,
-            self.session.max_backups,
+            self.profile.backup_dir,
+            self.profile.max_backups,
         )
-        interpreter = CleanupInterpreter(self.session)
+        interpreter = CleanupInterpreter(self.profile)
 
         if self.macros_text:
             macros_data, _ = interpreter.extract_macros_from_text(self.macros_text, post_process=True)
@@ -64,7 +64,7 @@ class CleanupTask(TaskBase):
             select_not=select_not,
             checkpoint_dir=checkpoint_dir,
             python_env_path=environment_path,
-            modules_info=self.session.modules_info,
+            modules_info=self.profile.modules_info,
         )
 
 

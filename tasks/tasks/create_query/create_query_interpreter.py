@@ -61,9 +61,9 @@ class CreateQueryInterpreter(MacroInterpreter):
         if result := line_validation_for_files(line):
             referenced_files = []
             for file_name in result:
-                file_path = find_file(file_name, self.session.root, self.file_path)
+                file_path = find_file(file_name, self.profile.root, self.file_path)
                 with open(file_path, "r", encoding="utf-8") as file:
-                    relative_path = os.path.relpath(file_path, self.session.root)
+                    relative_path = os.path.relpath(file_path, self.profile.root)
                     default_title = f"File at {relative_path}"
                     referenced_file = (MACROS.FILE, default_title, file.read())
                     referenced_files.append(referenced_file)
@@ -72,32 +72,32 @@ class CreateQueryInterpreter(MacroInterpreter):
 
     def validate_current_file_macro(self, line):
         if line_validation_for_current_file_reference(line):
-            relative_path = os.path.relpath(self.file_path, self.session.root)
+            relative_path = os.path.relpath(self.file_path, self.profile.root)
             default_title = f"File at {relative_path}"
             return (MACROS.CURRENT_FILE, default_title, None)
         return None
 
     def validate_error_macro(self, line):
         if line_validation_for_error(line):
-            error_text = get_error_text(self.session.root, self.file_path)
+            error_text = get_error_text(self.profile.root, self.file_path)
             default_title = "Occured Errors"
             return (MACROS.LOGGED_ERROR, default_title, error_text)
         return None
 
     def validate_fill_text_macro(self, line):
         if result := line_validation_for_fill_text(line):
-            fill_text, default_title = get_fill_text(result, self.session.fill_text_dir)
+            fill_text, default_title = get_fill_text(result, self.profile.fill_text_dir)
             return (MACROS.FILL_TEXT, default_title, fill_text)
         return None
 
     def validate_run_python_script_macro(self, line):
         if result := line_validation_for_run_python_script(line):
-            script_path = find_file(result, self.session.root, self.file_path)
-            environment_path = self.session.runner_python_env
+            script_path = find_file(result, self.profile.root, self.file_path)
+            environment_path = self.profile.runner_python_env
             script_output = execute_python_module(
                 script_path, 
                 environment_path,
-                cwd=self.session.cwd,
+                cwd=self.profile.cwd,
                 )
             default_title = "Python Script Output"
             return (MACROS.RUN_PYTHON_SCRIPT, default_title, script_output)
@@ -105,8 +105,8 @@ class CreateQueryInterpreter(MacroInterpreter):
 
     def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
-            script_path = find_file(result, self.session.root, self.file_path)
-            environment_path = self.session.tasks_python_env
+            script_path = find_file(result, self.profile.root, self.file_path)
+            environment_path = self.profile.tasks_python_env
             pylint_output = execute_pylint(script_path, environment_path)
             default_title = "Pylint Output"
             return (MACROS.RUN_PYLINT, default_title, pylint_output)
@@ -115,10 +115,10 @@ class CreateQueryInterpreter(MacroInterpreter):
     def validate_run_unittest_macro(self, line):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
-            script_path = find_file(name, self.session.root, self.file_path)
-            temp_script_path = get_temporary_script_path(self.session.runners_cache)
-            python_env = self.session.runner_python_env
-            cwd = self.session.cwd
+            script_path = find_file(name, self.profile.root, self.file_path)
+            temp_script_path = get_temporary_script_path(self.profile.runners_cache)
+            python_env = self.profile.runner_python_env
+            cwd = self.profile.cwd
             unittest_output = execute_python_module(
                 module=execute_unittests_from_file,
                 args=[script_path, cwd, str(verbosity)],
@@ -133,7 +133,7 @@ class CreateQueryInterpreter(MacroInterpreter):
     def validate_directory_tree_macro(self, line):
         if result := line_validation_for_directory_tree(line):
             dir, max_depth, include_files, ignore_list = result
-            dir = find_dir(dir, self.session.root, self.file_path)
+            dir = find_dir(dir, self.profile.root, self.file_path)
             directory_tree = generate_directory_tree(
                 dir, max_depth, include_files, ignore_list
             )
@@ -144,7 +144,7 @@ class CreateQueryInterpreter(MacroInterpreter):
     def validate_summarize_python_script_macro(self, line):
         if result := line_validation_for_summarize_python_script(line):
             name, include_definitions_without_docstrings = result
-            script_path = find_file(name, self.session.root, self.file_path)
+            script_path = find_file(name, self.profile.root, self.file_path)
             script_summary = summarize_python_file(
                 script_path, include_definitions_without_docstrings
             )
@@ -164,13 +164,13 @@ class CreateQueryInterpreter(MacroInterpreter):
                 excluded_dirs,
                 excluded_files,
             ) = result
-            folder_path = find_dir(folder_path, self.session.root, self.file_path)
+            folder_path = find_dir(folder_path, self.profile.root, self.file_path)
             excluded_dirs = [
-                find_dir(dir, self.session.root, self.file_path)
+                find_dir(dir, self.profile.root, self.file_path)
                 for dir in excluded_dirs
             ]
             excluded_files = [
-                find_file(file, self.session.root, self.file_path)
+                find_file(file, self.profile.root, self.file_path)
                 for file in excluded_files
             ]
             macros_data = []
@@ -202,7 +202,7 @@ class CreateQueryInterpreter(MacroInterpreter):
     def validate_macros_template_macro(self, line):
         if result := line_validation_for_macros_template(line):
             macros_template = get_macros_template(
-                result, self.session.macros_templates_dir
+                result, self.profile.macros_templates_dir
             )
             macros_data, _ = self.extract_macros_from_text(macros_template)
             return macros_data

@@ -1,7 +1,7 @@
 import os
 import warnings
 
-from tasks.tasks.management.task_session import TaskSession
+from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
 from tasks.tools.for_cleanup.format_docstrings import format_docstrings
 from tasks.tools.for_cleanup.rearrange_imports import rearrange_imports
 from tasks.tools.for_cleanup.refactore_exception import refactor_exception
@@ -147,10 +147,10 @@ if __name__ == "__main__":
     path = r"tasks/tests/cleanup_test.py"
 
     root_dir = os.path.abspath(os.path.join(path, "..", "..", "..", ".."))
-    session = TaskSession(root_dir)
+    profile = TaskRunnerProfile(root_dir)
     cleanup_file(
         path,
-        checkpoint_dir=session.checkpoint_dir,
-        python_env_path=session.runner_python_env,
+        checkpoint_dir=profile.checkpoint_dir,
+        python_env_path=profile.runner_python_env,
     )
     print(f"File cleaned of {path}")

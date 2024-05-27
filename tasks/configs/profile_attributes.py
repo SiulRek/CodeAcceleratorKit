@@ -2,17 +2,23 @@ from enum import Enum
 import json
 import os
 
-from tasks.configs.constants import CONFIGS_SUBFOLDER, TASKS_PYTHON_ENV, TASKS_CACHE, MAX_BACKUPS
+from tasks.configs.constants import (
+    PROFILE_SUBFOLDER,
+    TASKS_PYTHON_ENV,
+    TASKS_CACHE,
+    MAX_BACKUPS,
+)
 from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tools.general.retrieve_modules import retrieve_modules
 
 
-class SessionAttrNames(Enum):
+class ProfileAttrNames(Enum):
     """
-    Enumeration for context attribute names, representing different
-    configurable attributes for a session, each associated with a unique
-    identifier and a file where its value might be found.
+    Enumerated constants that define attribute names for a profile's configuration file. 
+    The attribute name is associated with a unique identifier. The associated file
+    is where the value of the attribute might be found.
     """
+
     cwd = (1, "configs.json")
     runner_python_env = (2, "configs.json")
     tasks_cache = (3, "configs.json")
@@ -30,9 +36,8 @@ class SessionAttrNames(Enum):
 
 
 UPDATE_MAPPING = {
-    # New name: old name 
-    # New Name should cover all names from SessionAttrNames
-    # Old name None is accepted
+    # New Name: Old Name
+    # Old Name None is accepted
     "cwd": "cwd",
     "runner_python_env": "runner_python_env",
     "tasks_cache": "tasks_cache",
@@ -43,22 +48,25 @@ UPDATE_MAPPING = {
     "output_dir": "output_dir",
     "backup_dir": "backup_dir",
     "checkpoint_dir": "checkpoint_dir",
-    "chats_dir": None,
+    "chats_dir": "chats_dir",
     "tasks_python_env": "tasks_python_env",
     "max_backups": "max_backups",
-    "modules_info": "modules_info"
+    "modules_info": "modules_info",
 }
 
 
 class AttributesInitializer:
-    """Class responsible for initializing various session attributes. It is used during registration of new task runners with the TaskManager class."""
+    """
+    Class that initializes various profile attributes. It is used 
+    during registration of new task runners with the TaskManager class.
+    """
 
     @classmethod
     def _initialize_tasks_cache(cls, primary_attrs):
         """Initializes the tasks_cache directory path."""
         dir = normalize_path(TASKS_CACHE)
         return dir
-    
+
     @classmethod
     def _initialize_runners_cache(cls, primary_attrs):
         """Initializes the runners_cache directory path."""
@@ -68,8 +76,8 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_templates_dir(cls, primary_attrs):
-        """Initializes the templates directory path based on the storage_dir in primary
-        attributes."""
+        """Initializes the templates directory path based on the storage_dir in
+        primaryattributes."""
         storage_dir = primary_attrs.get("storage_dir")
         dir_ = os.path.join(storage_dir, "templates")
         dir_ = normalize_path(dir_)
@@ -77,7 +85,8 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_fill_text_dir(cls, primary_attrs):
-        """Initializes the fill text directory path based on the templates directory."""
+        """Initializes the fill text directory path based on the templates
+        directory."""
         templates_dir = cls._initialize_templates_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "fill_texts")
         dir_ = normalize_path(dir_)
@@ -85,17 +94,17 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_macros_templates_dir(cls, primary_attrs):
-        """Initializes the query templates directory path based on the templates
-        directory."""
+        """Initializes the query templates directory path based on the
+        templatesdirectory."""
         templates_dir = cls._initialize_templates_dir(primary_attrs)
-        dir_ = os.path.join(templates_dir, "macros_templates")
+        dir_ = os.path.join(templates_dir, "macros")
         dir_ = normalize_path(dir_)
         return dir_
 
     @classmethod
     def _initialize_output_dir(cls, primary_attrs):
-        """Initializes the output directory path based on the storage_dir in
-        primary attributes."""
+        """Initializes the output directory path based on the storage_dir inprimary
+        attributes."""
         storage_dir = primary_attrs.get("storage_dir")
         dir_ = os.path.join(storage_dir, "outputs")
         dir_ = normalize_path(dir_)
@@ -134,15 +143,15 @@ class AttributesInitializer:
     def _initialize_max_backups(cls, _):
         """Initializes the maximum number of backups to keep."""
         return MAX_BACKUPS
-     
+
     @classmethod
     def _initialize_modules_info(cls, primary_attrs):
-        """Initializes the modules information by retrieving and loading the
-        modules_info.json file."""
+        """Initializes the modules information by retrieving and loading
+        themodules_info.json file."""
         storage_dir = primary_attrs.get("storage_dir")
-        config_dir = os.path.join(storage_dir, CONFIGS_SUBFOLDER)
-        name = SessionAttrNames.modules_info.value[1]
-        module_info_json = os.path.join(config_dir, name)
+        profile_dir = os.path.join(storage_dir, PROFILE_SUBFOLDER)
+        name = ProfileAttrNames.modules_info.value[1]
+        module_info_json = os.path.join(profile_dir, name)
 
         if not os.path.exists(module_info_json):
             cwd = primary_attrs.get("cwd")

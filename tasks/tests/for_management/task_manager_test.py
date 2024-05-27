@@ -9,7 +9,7 @@ import warnings
 import tasks
 from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tasks.management.task_manager import TaskManager as Manager
-from tasks.tasks.management.task_session import TaskSession
+from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
 
 class AttrNamesMock(Enum):
     var1_dir = (1, "configs.pkl")
@@ -50,7 +50,7 @@ class TestTaskManager(unittest.TestCase):
         self.mock_REGISTERED_RUNNERS_JSON = patcher2.start()
 
         patcher3 = patch(
-            "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock
+            "tasks.configs.profile_attributes.ProfileAttrNames", AttrNamesMock
         )
         self.addCleanup(patcher3.stop)
         self.mock_variable_names = patcher3.start()
@@ -80,7 +80,7 @@ class TestTaskManager(unittest.TestCase):
         python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
 
-        session = Manager.register_runner(
+        profile = Manager.register_runner(
             self.runner_root,
             python_env_path,
             storage_dir=self.storage_subfolder,
@@ -94,10 +94,10 @@ class TestTaskManager(unittest.TestCase):
         self.assertIn(self.runner_root, registered_runners)
         self.assertEqual(registered_runners[self.runner_root], self.storage_dir)
 
-        self.assertEqual(session.var1_dir, os.path.join(self.storage_dir, "value1"))
-        self.assertEqual(session.var2_dir, os.path.join(self.storage_dir, "value2"))
-        self.assertEqual(session.cwd, self.runner_root)
-        self.assertEqual(session.runner_python_env, normalize_path(python_env_path))
+        self.assertEqual(profile.var1_dir, os.path.join(self.storage_dir, "value1"))
+        self.assertEqual(profile.var2_dir, os.path.join(self.storage_dir, "value2"))
+        self.assertEqual(profile.cwd, self.runner_root)
+        self.assertEqual(profile.runner_python_env, normalize_path(python_env_path))
 
     def test_initialize_attributes(self):
         python_env_path = os.path.join(self.runner_root, "runner_python_env")
@@ -121,7 +121,7 @@ class TestTaskManager(unittest.TestCase):
         python_env_path = os.path.join(self.runner_root, "runner_python_env")
         os.makedirs(python_env_path)
 
-        session = Manager.register_runner(
+        profile = Manager.register_runner(
             self.runner_root,
             python_env_path,
             storage_dir=self.storage_subfolder,
@@ -129,10 +129,10 @@ class TestTaskManager(unittest.TestCase):
             create_dirs=True,
         )
 
-        self.assertTrue(os.path.exists(session.var1_dir))
-        self.assertTrue(os.path.exists(session.var2_dir))
-        self.assertTrue(os.path.exists(session.cwd))
-        self.assertTrue(os.path.exists(session.runner_python_env))
+        self.assertTrue(os.path.exists(profile.var1_dir))
+        self.assertTrue(os.path.exists(profile.var2_dir))
+        self.assertTrue(os.path.exists(profile.cwd))
+        self.assertTrue(os.path.exists(profile.runner_python_env))
 
     def test_sync_directories_of(self):
         with patch.object(Manager, "sync_directories_of") as mock_sync:
@@ -247,15 +247,15 @@ class TestTaskManager(unittest.TestCase):
             create_dirs=False,
         )
 
-        session = Manager.login_runner(self.runner_root, update_dirs=False)
+        profile = Manager.login_runner(self.runner_root, update_dirs=False)
 
-        self.assertEqual(session.root, self.runner_root)
-        self.assertEqual(session.storage_dir, self.storage_dir)
-        self.assertEqual(session.configs_dir, os.path.join(self.storage_dir, "configs"))
-        self.assertEqual(session.var1_dir, os.path.join(self.storage_dir, "value1"))
-        self.assertEqual(session.var2_dir, os.path.join(self.storage_dir, "value2"))
-        self.assertEqual(session.cwd, self.runner_root)
-        self.assertEqual(session.runner_python_env, normalize_path(python_env_path))
+        self.assertEqual(profile.root, self.runner_root)
+        self.assertEqual(profile.storage_dir, self.storage_dir)
+        self.assertEqual(profile.profile_dir, os.path.join(self.storage_dir, "profile"))
+        self.assertEqual(profile.var1_dir, os.path.join(self.storage_dir, "value1"))
+        self.assertEqual(profile.var2_dir, os.path.join(self.storage_dir, "value2"))
+        self.assertEqual(profile.cwd, self.runner_root)
+        self.assertEqual(profile.runner_python_env, normalize_path(python_env_path))
 
     def test_delete_runner(self):
         python_env_path = os.path.join(self.runner_root, "runner_python_env")
@@ -300,18 +300,18 @@ class TestTaskManager(unittest.TestCase):
         dest_templates_dir = os.path.join(dest_runner_dir, "templates")
         os.makedirs(dest_templates_dir)
 
-        with patch("tasks.tasks.management.task_manager.TaskSession") as MockSession, patch.object(Manager, 'is_runner_registered', return_value=True):
-            mock_source_session = MagicMock()
-            mock_source_session.templates_dir = source_templates_dir
-            mock_source_session.var1_dir = source_templates_dir
-            mock_source_session.var2_dir = source_templates_dir
+        with patch("tasks.tasks.management.task_manager.TaskRunnerProfile") as MockProfile, patch.object(Manager, 'is_runner_registered', return_value=True):
+            mock_source_profile = MagicMock()
+            mock_source_profile.templates_dir = source_templates_dir
+            mock_source_profile.var1_dir = source_templates_dir
+            mock_source_profile.var2_dir = source_templates_dir
 
-            mock_dest_session = MagicMock()
-            mock_dest_session.templates_dir = dest_templates_dir
-            mock_dest_session.var1_dir = dest_templates_dir
-            mock_dest_session.var2_dir = dest_templates_dir
+            mock_dest_profile = MagicMock()
+            mock_dest_profile.templates_dir = dest_templates_dir
+            mock_dest_profile.var1_dir = dest_templates_dir
+            mock_dest_profile.var2_dir = dest_templates_dir
 
-            MockSession.side_effect = [mock_source_session, mock_dest_session]
+            MockProfile.side_effect = [mock_source_profile, mock_dest_profile]
 
             Manager().copy_templates_files(source_runner_dir, dest_runner_dir)
 
@@ -337,11 +337,11 @@ class TestTaskManager(unittest.TestCase):
             )
 
             with patch(
-                "tasks.configs.session_attributes.SessionAttrNames", AttrNamesMockOld
+                "tasks.configs.profile_attributes.ProfileAttrNames", AttrNamesMockOld
             ):
-                session = TaskSession(self.runner_root, load_attributes_from_storage=False)
+                profile = TaskRunnerProfile(self.runner_root, load_attributes_from_storage=False)
                 old_value1 = os.path.join(self.storage_dir, "old_value1")
-                session.load_attributes_from_dict(
+                profile.load_attributes_from_dict(
                     {
                         "old_var1_dir": old_value1,
                         "old_var2_dir": "old_value2",
@@ -349,7 +349,7 @@ class TestTaskManager(unittest.TestCase):
                         "runner_python_env": "old_python_env",
                     }
                 )
-                session.save_attributes()
+                profile.save_attributes()
 
             new_value2 = os.path.join(self.storage_dir, "new_value2")
             reinit_attrs = {
@@ -366,16 +366,16 @@ class TestTaskManager(unittest.TestCase):
                 "runner_python_env": "runner_python_env",
             }
             with patch.object(Manager, "_init_runner_attributes", return_value=reinit_attrs), patch(
-            "tasks.configs.session_attributes.UPDATE_MAPPING", update_mapping
-            ), patch("tasks.configs.session_attributes.SessionAttrNames", AttrNamesMock):
+            "tasks.configs.profile_attributes.UPDATE_MAPPING", update_mapping
+            ), patch("tasks.configs.profile_attributes.ProfileAttrNames", AttrNamesMock):
                 Manager().update_runner(self.runner_root)
-                updated_session = TaskSession(self.runner_root, load_attributes_from_storage=True)
-                self.assertEqual(updated_session.var1_dir, old_value1)
-                self.assertEqual(updated_session.var2_dir, new_value2)
-                self.assertEqual(updated_session.cwd, "old_cwd")
-                self.assertEqual(updated_session.runner_python_env, "old_python_env")
-                self.assertFalse(hasattr(updated_session, "old_var1_dir"))
-                self.assertFalse(hasattr(updated_session, "old_var2_dir"))
+                updated_profile = TaskRunnerProfile(self.runner_root, load_attributes_from_storage=True)
+                self.assertEqual(updated_profile.var1_dir, old_value1)
+                self.assertEqual(updated_profile.var2_dir, new_value2)
+                self.assertEqual(updated_profile.cwd, "old_cwd")
+                self.assertEqual(updated_profile.runner_python_env, "old_python_env")
+                self.assertFalse(hasattr(updated_profile, "old_var1_dir"))
+                self.assertFalse(hasattr(updated_profile, "old_var2_dir"))
                 self.assertTrue(os.path.exists(old_value1))
                 self.assertTrue(os.path.exists(new_value2))
 

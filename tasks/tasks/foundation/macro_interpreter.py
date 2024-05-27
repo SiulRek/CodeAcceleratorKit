@@ -6,12 +6,12 @@ class MacroInterpreter(ABC):
     A base class for extracting macros from files based on specified validation
     methods used in Tasks.
 
-    This class stores the session object of the running task and provides the
+    This class stores the profile object of the running task and provides the
     foundational mechanisms to identify and extract macros from the current file
     types.
 
     Attributes:
-        - session (object): The current session object of the running task.
+        - profile (object): The current profile object of the running task.
 
     Methods:
         - extract_macros: Extract macros from a file and separate them from
@@ -20,14 +20,14 @@ class MacroInterpreter(ABC):
             process the extracted macros.
     """
 
-    def __init__(self, session):
+    def __init__(self, profile):
         """
-        Initializes the MacroInterpreter with the provided session.
+        Initializes the MacroInterpreter with the provided profile.
 
         Args:
-            - session (object): The session object of the running task.
+            - profile (object): The profile object of the running task.
         """
-        self.session = session
+        self.profile = profile
         self.initialize_validation_methods()
 
     def initialize_validation_methods(self):

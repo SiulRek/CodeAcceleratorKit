@@ -27,8 +27,8 @@ class RestoreFileTask(TaskBase):
         file_path = self.file_path
 
         backup_handler = BackupHandler(
-            self.session.backup_dir,
-            self.session.max_backups,
+            self.profile.backup_dir,
+            self.profile.max_backups,
         )
 
         try:
