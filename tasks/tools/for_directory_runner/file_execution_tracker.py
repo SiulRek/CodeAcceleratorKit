@@ -59,9 +59,9 @@ class FileExecutionTracker:
 
         self.add_files(files)
 
-    def verify_csv(self):
-        """Verifies the CSV file by checking if all files are either 'pending',
-        'running', or 'completed'."""
+    def verify_tracks(self):
+        """Verifies the tracks in CSV file by checking if all files are either 'pending',
+        'running', or 'completed'. Raises ValueError if any other status is found."""
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
             reader = csv.reader(file)
             next(reader)
@@ -91,10 +91,7 @@ class FileExecutionTracker:
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
             reader = csv.reader(file)
             for row in reader:
-                # Assumes all running are completed
-                if row[1] == "running":
-                    row[1] = "completed"
-                elif row[1] == "pending" and next_pending_file is None:
+                if row[1] == "pending" and next_pending_file is None:
                     row[1] = "running"
                     next_pending_file = row[0]
                 rows.append(row)
@@ -104,6 +101,22 @@ class FileExecutionTracker:
             writer.writerows(rows)
 
         return next_pending_file
+    
+    def mark_running_as_completed(self):
+        """
+        Transforms the 'running' file to 'completed'.
+        """
+        rows = []
+        with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if row[1] == "running":
+                    row[1] = "completed"
+                rows.append(row)
+
+        with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerows(rows)
 
     def mark_running_as_failed(self, error_message):
         """
@@ -126,3 +139,9 @@ class FileExecutionTracker:
         with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerows(rows)
+
+    def clear_tracks(self):
+        """Clears the CSV file."""
+        with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(["File Path", "Status", "Comments"])

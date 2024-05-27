@@ -66,7 +66,7 @@ class TestFileExecutionTracker(unittest.TestCase):
             writer.writerow(["file_4", "invalid_status", "-"])
 
         with self.assertRaises(ValueError) as context:
-            self.manager.verify_csv()
+            self.manager.verify_tracks()
         self.assertIn("Invalid status 'invalid_status'", str(context.exception))
 
     def test_take_next_pending(self):
@@ -82,6 +82,7 @@ class TestFileExecutionTracker(unittest.TestCase):
             self.assertEqual(rows[1], ["file_2", "pending", "-"])
             self.assertEqual(rows[2], ["file_3", "pending", "-"])
 
+        self.manager.mark_running_as_completed()
         next_task = self.manager.take_next_pending()
         self.assertEqual(next_task, "file_2")
         with open(self.test_csv_path, "r", newline="") as file:
@@ -93,6 +94,7 @@ class TestFileExecutionTracker(unittest.TestCase):
             self.assertEqual(rows[1], ["file_2", "running", "-"])
             self.assertEqual(rows[2], ["file_3", "pending", "-"])
 
+        self.manager.mark_running_as_completed()
         next_task = self.manager.take_next_pending()
         self.assertEqual(next_task, "file_3")
         with open(self.test_csv_path, "r", newline="") as file:
@@ -104,7 +106,7 @@ class TestFileExecutionTracker(unittest.TestCase):
             self.assertEqual(rows[1], ["file_2", "completed", "-"])
             self.assertEqual(rows[2], ["file_3", "running", "-"])
 
-        next_task = self.manager.take_next_pending()
+        next_task = self.manager.mark_running_as_completed()
         self.assertIsNone(next_task)
         with open(self.test_csv_path, "r", newline="") as file:
             reader = csv.reader(file)
@@ -114,6 +116,22 @@ class TestFileExecutionTracker(unittest.TestCase):
             self.assertEqual(rows[0], ["file_1", "completed", "-"])
             self.assertEqual(rows[1], ["file_2", "completed", "-"])
             self.assertEqual(rows[2], ["file_3", "completed", "-"])
+
+    def test_mark_running_as_completed(self):
+        files = ["file_1", "file_2", "file_3"]
+        self.manager.add_files(files)
+        next_task = self.manager.take_next_pending()
+        self.assertEqual(next_task, "file_1")
+
+        self.manager.mark_running_as_completed()
+        with open(self.test_csv_path, "r", newline="") as file:
+            reader = csv.reader(file)
+            next(reader)
+            rows = list(reader)
+
+            self.assertEqual(rows[0], ["file_1", "completed", "-"])
+            self.assertEqual(rows[1], ["file_2", "pending", "-"])
+            self.assertEqual(rows[2], ["file_3", "pending", "-"])
 
     def test_mark_running_as_failed(self):
         files = ["file_1", "file_2"]
@@ -128,6 +146,19 @@ class TestFileExecutionTracker(unittest.TestCase):
             rows = list(reader)
             self.assertEqual(rows[0], ["file_1", "failed", "Some error occurred"])
             self.assertEqual(rows[1], ["file_2", "pending", "-"])
+
+    def test_clear_tracks(self):
+        files = ["file_1", "file_2"]
+        self.manager.add_files(files)
+        self.manager.clear_tracks()
+
+        with open(self.test_csv_path, "r", newline="") as file:
+            reader = csv.reader(file)
+            headers = next(reader)
+
+            self.assertEqual(headers, ["File Path", "Status", "Comments"])
+            with self.assertRaises(StopIteration):
+                next(reader)
 
 
 if __name__ == "__main__":
