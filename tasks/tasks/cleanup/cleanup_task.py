@@ -10,7 +10,7 @@ class CleanupTask(TaskBase):
     """A task for cleaning up python files by removing or refactoring specific parts based on
     macros."""
 
-    NAME = "Cleanup"
+    NAME = "Clean Up"
 
     def setup(self):
         """Sets up the CleanupTask by initializing the file path from additional
