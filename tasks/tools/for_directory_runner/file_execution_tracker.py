@@ -24,8 +24,25 @@ class FileExecutionTracker:
             for file_path in files:
                 writer.writerow([file_path, "pending", "-"])
 
+    def _check_extension(self, file_path, extensions):
+        """
+        Check if file_path has an extension in extensions.
+
+        Args:
+            - file_path (str): The file path to check.
+            - extensions (list): A list of file extensions to check.
+
+        Returns:
+            - bool: True if file_path has an extension in extensions, False
+                otherwise.
+        """
+        if extensions is None:
+            return True
+        _, ext = os.path.splitext(file_path)
+        return ext in extensions
+
     def add_files_from_directory(
-        self, directory, excluded_dirs=None, excluded_files=None
+        self, directory, excluded_dirs=None, excluded_files=None, extensions=None
     ):
         """
         Add all files from a directory to the CSV file with status set to
@@ -35,6 +52,8 @@ class FileExecutionTracker:
             - directory (str): The directory to write files from.
             - excluded_dirs (list): A list of directory names to exclude.
             - excluded_files (list): A list of file names to exclude.
+            - extensions (list): A list of file extensions to restrict the
+                files. None for all files.
         """
         if excluded_dirs is None:
             excluded_dirs = []
@@ -54,11 +73,12 @@ class FileExecutionTracker:
             else:
                 filenames.sort()
                 for filename in filenames:
-                    if filename not in excluded_files:
+                    is_extension_allowed = self._check_extension(filename, extensions)
+                    if filename not in excluded_files and is_extension_allowed:
                         files.append(os.path.join(root, filename))
 
         self.add_files(files)
-    
+
     def remove_file(self, file_path):
         """
         Removes a file from the CSV file.

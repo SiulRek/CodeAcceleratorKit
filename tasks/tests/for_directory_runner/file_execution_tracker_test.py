@@ -58,6 +58,35 @@ class TestFileExecutionTracker(unittest.TestCase):
             for row, path in zip(rows, file_paths):
                 self.assertEqual(row, [path, "pending", "-"])
 
+    def test_write_files_from_directory_with_extensions(self):
+        os.makedirs(os.path.join(self.temp_dir.name, "subdir"), exist_ok=True)
+        file_paths = [
+            os.path.join(self.temp_dir.name, "file1.txt"),
+            os.path.join(self.temp_dir.name, "file2.py"),
+            os.path.join(self.temp_dir.name, "subdir", "file3.py"),
+            os.path.join(self.temp_dir.name, "subdir", "file4.md"),
+        ]
+        for path in file_paths:
+            with open(path, "w") as f:
+                f.write("Test")
+
+        # Only include .py files
+        self.tracker.add_files_from_directory(
+            self.temp_dir.name, excluded_files=["test_files.csv"], extensions=[".py"]
+        )
+        with open(self.test_csv_path, "r", newline="") as file:
+            reader = csv.reader(file)
+            next(reader)
+
+            rows = list(reader)
+            expected_paths = [
+                os.path.join(self.temp_dir.name, "file2.py"),
+                os.path.join(self.temp_dir.name, "subdir", "file3.py"),
+            ]
+            self.assertEqual(len(rows), len(expected_paths))
+            for row, path in zip(rows, expected_paths):
+                self.assertEqual(row, [path, "pending", "-"])
+
     def test_verify_csv(self):
         files = ["file_1", "file_2", "file_3"]
         self.tracker.add_files(files)
