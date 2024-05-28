@@ -6,4 +6,4 @@ if __name__ == "__main__":
     profile = task_manager.login_runner(
         # runner_root="/path/to/runner",
     )
-    pass
+    pass # Set a breakpoint here to inspect the profile object
