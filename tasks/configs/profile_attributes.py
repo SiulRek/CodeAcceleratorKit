@@ -29,13 +29,14 @@ class ProfileAttrNames(Enum):
     fill_text_dir = (8, "configs.json")
     macros_templates_dir = (9, "configs.json")
     output_dir = (10, "configs.json")   
-    backup_dir = (11, "configs.json")
-    checkpoint_dir = (12, "configs.json")
-    chats_dir = (13, "configs.json")
-    tasks_python_env = (14, "configs.json")
-    max_backups = (15, "configs.json")
-    modules_info = (16, "modules_info.json")
-    directory_runner_config = (17, "directory_runner_template.json")
+    log_dir = (11, "configs.json")
+    backup_dir = (12, "configs.json")
+    checkpoint_dir = (13, "configs.json")
+    chats_dir = (14, "configs.json")
+    tasks_python_env = (15, "configs.json")
+    max_backups = (16, "configs.json")
+    modules_info = (17, "modules_info.json")
+    directory_runner_config = (18, "directory_runner_template.json")
 
 
 UPDATE_MAPPING = {
@@ -51,6 +52,7 @@ UPDATE_MAPPING = {
     "fill_text_dir": "fill_text_dir",
     "macros_templates_dir": "macros_templates_dir",
     "output_dir": "output_dir",
+    "log_dir": "log_dir",
     "backup_dir": "backup_dir",
     "checkpoint_dir": "checkpoint_dir",
     "chats_dir": "chats_dir",
@@ -134,6 +136,14 @@ class AttributesInitializer:
         dir_ = normalize_path(dir_)
         return dir_
 
+    @classmethod
+    def _initialize_log_dir(cls, primary_attrs):
+        """Initializes the log directory path based on the output directory."""
+        output_dir = cls._initialize_output_dir(primary_attrs)
+        dir_ = os.path.join(output_dir, "logs")
+        dir_ = normalize_path(dir_)
+        return dir_
+    
     @classmethod
     def _initialize_backup_dir(cls, primary_attrs):
         """Initializes the backup directory path based on the output directory."""
