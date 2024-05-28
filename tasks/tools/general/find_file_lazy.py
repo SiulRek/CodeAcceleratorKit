@@ -48,7 +48,7 @@ def find_file_from_path_fragment(path_fragment, root_dir):
     )
 
 
-def find_file(string, root_dir, current_file_path):
+def find_file_lazy(lazy_string, root_dir, current_file_path):
     """
     Function to find the file from the string. If the string contains a path
     fragment, the function will search for the file from the path fragment. If
@@ -56,16 +56,16 @@ def find_file(string, root_dir, current_file_path):
     nearest file to the current file.
 
     Args:
-        - string (str): The string to be searched.
-        - root_dir (str): The root directory of the project.
-        - root_dir (str): The root directory of the project.
-        - current_file_path (str): The path to the current file.
+        - file_name_fragment (str): The name or a fragment of the file name to search for.
+        - root_dir (str): The root directory to start the search from.
+        - current_file_path (str, optional): The current file path to assist in finding 
+          the nearest file if not found directly under root_dir. Default is None.
 
     Returns:
         - file_path (str): The path to the file.
     """
-    if "\\" in string or "/" in string:
-        file = find_file_from_path_fragment(string, root_dir)
+    if "\\" in lazy_string or "/" in lazy_string:
+        file = find_file_from_path_fragment(lazy_string, root_dir)
     else:
-        file = find_nearest_file(string, root_dir, current_file_path)
+        file = find_nearest_file(lazy_string, root_dir, current_file_path)
     return os.path.normpath(file)

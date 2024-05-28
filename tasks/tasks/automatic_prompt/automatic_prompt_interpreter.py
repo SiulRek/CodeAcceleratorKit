@@ -27,8 +27,8 @@ from tasks.tools.for_automatic_prompt.summarize_python_script import summarize_p
 from tasks.tools.general.execute_pylint import execute_pylint
 from tasks.tools.general.execute_python_module import execute_python_module
 import tasks.tools.general.execute_unittests_from_file as execute_unittests_from_file
-from tasks.tools.general.find_dir import find_dir
-from tasks.tools.general.find_file import find_file
+from tasks.tools.general.find_dir_lazy import find_dir_lazy
+from tasks.tools.general.find_file_lazy import find_file_lazy
 from tasks.tools.general.generate_directory_tree import generate_directory_tree
 from tasks.tools.general.get_temporary_script_path import get_temporary_script_path
 
@@ -61,7 +61,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         if result := line_validation_for_files(line):
             referenced_files = []
             for file_name in result:
-                file_path = find_file(file_name, self.profile.root, self.file_path)
+                file_path = find_file_lazy(file_name, self.profile.root, self.file_path)
                 with open(file_path, "r", encoding="utf-8") as file:
                     relative_path = os.path.relpath(file_path, self.profile.root)
                     default_title = f"File at {relative_path}"
@@ -93,7 +93,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_run_python_script_macro(self, line):
         if result := line_validation_for_run_python_script(line):
-            script_path = find_file(result, self.profile.root, self.file_path)
+            script_path = find_file_lazy(result, self.profile.root, self.file_path)
             environment_path = self.profile.runner_python_env
             script_output = execute_python_module(
                 script_path, 
@@ -106,7 +106,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
-            script_path = find_file(result, self.profile.root, self.file_path)
+            script_path = find_file_lazy(result, self.profile.root, self.file_path)
             environment_path = self.profile.tasks_python_env
             pylint_output = execute_pylint(script_path, environment_path)
             default_title = "Pylint Output"
@@ -116,7 +116,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_run_unittest_macro(self, line):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
-            script_path = find_file(name, self.profile.root, self.file_path)
+            script_path = find_file_lazy(name, self.profile.root, self.file_path)
             temp_script_path = get_temporary_script_path(self.profile.runners_cache)
             python_env = self.profile.runner_python_env
             cwd = self.profile.cwd
@@ -134,7 +134,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_directory_tree_macro(self, line):
         if result := line_validation_for_directory_tree(line):
             dir, max_depth, include_files, ignore_list = result
-            dir = find_dir(dir, self.profile.root, self.file_path)
+            dir = find_dir_lazy(dir, self.profile.root, self.file_path)
             directory_tree = generate_directory_tree(
                 dir, max_depth, include_files, ignore_list
             )
@@ -145,7 +145,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_summarize_python_script_macro(self, line):
         if result := line_validation_for_summarize_python_script(line):
             name, include_definitions_without_docstrings = result
-            script_path = find_file(name, self.profile.root, self.file_path)
+            script_path = find_file_lazy(name, self.profile.root, self.file_path)
             script_summary = summarize_python_file(
                 script_path, include_definitions_without_docstrings
             )
@@ -165,13 +165,13 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 excluded_dirs,
                 excluded_files,
             ) = result
-            folder_path = find_dir(folder_path, self.profile.root, self.file_path)
+            folder_path = find_dir_lazy(folder_path, self.profile.root, self.file_path)
             excluded_dirs = [
-                find_dir(dir, self.profile.root, self.file_path)
+                find_dir_lazy(dir, self.profile.root, self.file_path)
                 for dir in excluded_dirs
             ]
             excluded_files = [
-                find_file(file, self.profile.root, self.file_path)
+                find_file_lazy(file, self.profile.root, self.file_path)
                 for file in excluded_files
             ]
             macros_data = []
