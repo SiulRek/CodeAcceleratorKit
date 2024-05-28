@@ -1,7 +1,7 @@
 import os
 
 from tasks.tasks.cleanup.cleanup_interpreter import CleanupInterpreter
-from tasks.tools.general.backup_handler import BackupHandler
+from tasks.tools.shared.backup_handler import BackupHandler
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_cleanup.cleanup_file import cleanup_file
 

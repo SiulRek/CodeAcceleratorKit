@@ -24,13 +24,13 @@ from tasks.tools.for_automatic_prompt.get_error_text import get_error_text
 from tasks.tools.for_automatic_prompt.get_fill_text import get_fill_text
 from tasks.tools.for_automatic_prompt.get_macros_template import get_macros_template
 from tasks.tools.for_automatic_prompt.summarize_python_script import summarize_python_file
-from tasks.tools.general.execute_pylint import execute_pylint
-from tasks.tools.general.execute_python_module import execute_python_module
-import tasks.tools.general.execute_unittests_from_file as execute_unittests_from_file
-from tasks.tools.general.find_dir_sloppy import find_dir_sloppy
-from tasks.tools.general.find_file_sloppy import find_file_sloppy
-from tasks.tools.general.generate_directory_tree import generate_directory_tree
-from tasks.tools.general.get_temporary_script_path import get_temporary_script_path
+from tasks.tools.shared.execute_pylint import execute_pylint
+from tasks.tools.for_automatic_prompt.execute_python_module import execute_python_module
+import tasks.tools.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
+from tasks.tools.shared.find_dir_sloppy import find_dir_sloppy
+from tasks.tools.shared.find_file_sloppy import find_file_sloppy
+from tasks.tools.for_automatic_prompt.generate_directory_tree import generate_directory_tree
+from tasks.tools.for_automatic_prompt.get_temporary_script_path import get_temporary_script_path
 
 
 class AutomaticPromptInterpreter(MacroInterpreter):

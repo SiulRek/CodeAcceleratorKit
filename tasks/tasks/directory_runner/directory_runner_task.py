@@ -5,8 +5,8 @@ from tasks.tasks.cleanup.cleanup_task import CleanupTask
 from tasks.tasks.automatic_prompt.automatic_prompt_task import AutomaticPromptTask
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_directory_runner.file_execution_tracker import FileExecutionTracker
-from tasks.tools.general.backup_handler import BackupHandler
-from tasks.tools.general.log_outputs_to_file import log_outputs_to_file
+from tasks.tools.shared.backup_handler import BackupHandler
+from tasks.tools.for_directory_runner.log_outputs_to_file import log_outputs_to_file
 
 
 class DirectoryRunnerTask(TaskBase):

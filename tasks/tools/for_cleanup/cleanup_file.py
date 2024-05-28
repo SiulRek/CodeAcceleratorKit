@@ -9,7 +9,7 @@ from tasks.tools.for_cleanup.remove_line_comments import remove_line_comments
 from tasks.tools.for_cleanup.remove_trailing_parts import remove_trailing_parts
 from tasks.tools.for_cleanup.remove_unused_imports import remove_unused_imports
 from tasks.tools.for_cleanup.run_black_formatting import format_with_black
-from tasks.tools.general.execute_pylint import execute_pylint
+from tasks.tools.shared.execute_pylint import execute_pylint
 
 STRATEGIES = {
     # Abbreviation: (function, description, cleaning_with_subprocess, forcing_required)

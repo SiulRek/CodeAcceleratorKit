@@ -2,8 +2,8 @@ import os
 import warnings
 
 from tasks.tasks.automatic_prompt.line_validation import line_validation_for_checksum
-from tasks.tools.general.extract_python_code import extract_python_code
-from tasks.tools.general.send_prompt import send_prompt
+from tasks.tools.for_automatic_prompt.extract_python_code import extract_python_code
+from tasks.tools.for_automatic_prompt.send_prompt import send_prompt
 
 
 def write_to_file(file_path, content):

@@ -35,7 +35,7 @@ from tasks.tasks.automatic_prompt.automatic_prompt_interpreter import AutomaticP
 from tasks.tasks.automatic_prompt.finalizer import Finalizer
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_automatic_prompt.add_text_tags import add_text_tags
-from tasks.tools.general.backup_handler import BackupHandler
+from tasks.tools.shared.backup_handler import BackupHandler
 
 
 class ChapterTitleManager:
