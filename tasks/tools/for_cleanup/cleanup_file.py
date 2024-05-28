@@ -12,16 +12,16 @@ from tasks.tools.for_cleanup.run_black_formatting import format_with_black
 from tasks.tools.general.execute_pylint import execute_pylint
 
 STRATEGIES = {
-    "RT": (remove_trailing_parts, "Remove trailing parts", False),
-    "RL": (remove_line_comments, "Remove line comments", False),
-    "RE": (refactor_exception, "Refactor exception", False),
-    "RI": (rearrange_imports, "Rearrange imports", False),
-    "RU": (remove_unused_imports, "Remove unused imports", False),
-    "BF": (format_with_black, "Run Black formatting", True),
-    "FD": (format_docstrings, "Format docstrings", False),
-    "PL": (execute_pylint, "Execute Pylint", True),
+    # Abbreviation: (function, description, cleaning_with_subprocess, forcing_required)
+    "RT": (remove_trailing_parts, "Remove trailing parts", False, False),
+    "RL": (remove_line_comments, "Remove line comments", False, True),
+    "RE": (refactor_exception, "Refactor exception", False, False),
+    "RI": (rearrange_imports, "Rearrange imports", False, False),
+    "RU": (remove_unused_imports, "Remove unused imports", False, False),
+    "BF": (format_with_black, "Run Black formatting", True, False),
+    "FD": (format_docstrings, "Format docstrings", False, False), 
+    "PL": (execute_pylint, "Execute Pylint", True, False),
 }
-
 
 def make_checkpoint(file_path, updated_code, description, checkpoint_dir):
     """
@@ -57,11 +57,11 @@ def make_checkpoint(file_path, updated_code, description, checkpoint_dir):
         file.write(updated_code)
     print(f"--------> Checkpoint created at {checkpoint_path}")
 
-
 def cleanup_file(
     file_path,
-    select_only=None,
-    select_not=None,
+    select_only=[],
+    select_not=[],
+    force_select_of=[],
     checkpoint_dir=None,
     python_env_path=None,
     modules_info=None,
@@ -72,8 +72,11 @@ def cleanup_file(
 
     Args:
         - file_path (str): Path to the file to clean.
-        - select_only (list): List of strategies to apply. Default to None.
-        - select_not (list): List of strategies to exclude. Default to None.
+        - select_only (list): List of strategy abbreviations to apply. If
+            specified, only the strategies in the list are applied. Default is [].
+        - select_not (list): List of strategy abbreviations to exclude. If
+            specified, all strategies except the ones in the list are applied. Default is [].
+        - force_select_of (list): List of strategy abbreviations to force apply, as some are not applied by default. Default is [].
         - checkpoint_dir (str): Directory to save the checkpoints in. If
             specified, checkpointing is enabled.
         - python_env_path (str): Path to the python environment to use for
@@ -83,6 +86,8 @@ def cleanup_file(
             'local'. Used for rearranging imports. If None skips rearranging
             imports.
     """
+    selected_to_force = force_select_of
+
     if not file_path.endswith(".py"):
         msg = f"File {file_path} is not a python file"
         raise ValueError(msg)
@@ -100,18 +105,23 @@ def cleanup_file(
     if select_only and select_not:
         msg = "Cannot have both select_only and select_not options specified."
         raise ValueError(msg)
-
+    
+    is_forcable = {key: STRATEGIES[key][3] for key in STRATEGIES}
+    strategies = {}
     if select_only:
+        # Also forcable strategies can be included in select_only
         strategies = {key: STRATEGIES[key] for key in select_only}
     elif select_not:
-        strategies = {
-            key: STRATEGIES[key] for key in STRATEGIES if key not in select_not
-        }
+        strategies = {key: STRATEGIES[key] for key in STRATEGIES if key not in select_not and not is_forcable[key]}
     else:
-        strategies = STRATEGIES
+        strategies = {key: value for key, value in STRATEGIES.items() if not is_forcable[key]}
+
+    if selected_to_force:
+        for key in selected_to_force:
+            strategies[key] = STRATEGIES[key]
 
     updated_code = code
-    for _, (function, description, cleaning_with_subprocess) in strategies.items():
+    for _, (function, description, cleaning_with_subprocess, _) in strategies.items():
         if cleaning_with_subprocess:
             if not python_env_path:
                 raise ValueError(
@@ -144,7 +154,7 @@ def cleanup_file(
 
 
 if __name__ == "__main__":
-    path = r"/home/krakerlu/github/CodeAcceleratorKit/tasks/tools/for_directory_runner/file_execution_tracker.py"
+    path = r"tasks/tests/for_tasks/cleanup_test.py"
 
     root_dir = os.path.abspath(os.path.join(path, "..", "..", "..", ".."))
     profile = TaskRunnerProfile(root_dir)
@@ -152,6 +162,6 @@ if __name__ == "__main__":
         path,
         checkpoint_dir=profile.checkpoint_dir,
         python_env_path=profile.runner_python_env,
-        select_only=["FD"]
+        #select_only=["FD"]
     )
-    print(f"File cleaned of {path}")
+    print(f"File cleaned at {path}")

@@ -61,9 +61,11 @@ DOC_QUOTE = '"""'
 class CLEANUP_MACROS(Enum):
     SELECT_ONLY = "select_only"
     SELECT_NOT = "select_not"
+    FORCE_SELECT_OF = "force_select_of"
     CHECKPOINTING = "checkpointing"
 
 class CLEANUP_TAGS(Enum):
     SELECT_ONLY = "#only"
     SELECT_NOT = "#not"
+    FORCE_SELECT_OF = "#force"
     CHECKPOINTS = "#checkpointing"

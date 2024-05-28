@@ -46,7 +46,7 @@ class CleanupTask(TaskBase):
                 updated_content = file.read()
         else:
             macros_data, updated_content = interpreter.extract_macros_from_file(file_path)
-        select_only, select_not, checkpointing = macros_data
+        select_only, select_not, force_select_of, checkpointing = macros_data
 
         if select_only is not None and select_not is not None:
             msg = "Cannot have both select_only and select_not options specified."
@@ -62,6 +62,7 @@ class CleanupTask(TaskBase):
             file_path=file_path,
             select_only=select_only,
             select_not=select_not,
+            force_select_of=force_select_of,
             checkpoint_dir=checkpoint_dir,
             python_env_path=environment_path,
             modules_info=self.profile.modules_info,
