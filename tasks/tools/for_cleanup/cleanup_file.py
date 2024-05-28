@@ -4,7 +4,7 @@ import warnings
 from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
 from tasks.tools.for_cleanup.format_docstrings import format_docstrings
 from tasks.tools.for_cleanup.rearrange_imports import rearrange_imports
-from tasks.tools.for_cleanup.refactore_exception import refactor_exception
+from tasks.tools.for_cleanup.refactor_exception import refactor_exception
 from tasks.tools.for_cleanup.remove_line_comments import remove_line_comments
 from tasks.tools.for_cleanup.remove_trailing_parts import remove_trailing_parts
 from tasks.tools.for_cleanup.remove_unused_imports import remove_unused_imports
