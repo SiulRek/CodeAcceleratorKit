@@ -84,7 +84,10 @@ class DirectoryRunnerTask(TaskBase):
         else:
             execution_tracker.clear_tracks()
             execution_tracker.add_files_from_directory(
-                self.directory_path, self.excluded_dirs, self.excluded_files
+                self.directory_path, 
+                excluded_files=self.excluded_files,
+                excluded_dirs=self.excluded_dirs,
+                extensions=[".py"]
             )
 
         print(f"\nExecution Tracker initialized: {file_execution_csv}")
