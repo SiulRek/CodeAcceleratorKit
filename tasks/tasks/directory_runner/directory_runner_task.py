@@ -65,7 +65,7 @@ class DirectoryRunnerTask(TaskBase):
             + "_execution_tracks.csv"
         )
         file_execution_csv = os.path.join(execution_tracks_dir, csv_name)
-        output_log_name = csv_name.replace("_execution_tracks.csv", "_output.txt")
+        output_log_name = csv_name.replace("_execution_tracks.csv", "_output.log")
         output_log_file = os.path.join(self.profile.log_dir, output_log_name)
 
         backup_handler = BackupHandler(
