@@ -61,7 +61,7 @@ class DirectoryRunnerTask(TaskBase):
         thefiles in the directory. """
         execution_tracks_dir = self.profile.execution_tracks_dir
         csv_name = (
-            os.path.basename(self.directory_path).split(".")[0]
+            os.path.basename(self.directory_runner_json).split(".")[0]
             + "_execution_tracks.csv"
         )
         file_execution_csv = os.path.join(execution_tracks_dir, csv_name)
