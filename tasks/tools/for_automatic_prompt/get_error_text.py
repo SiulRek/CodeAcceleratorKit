@@ -1,6 +1,6 @@
 from tasks.configs.constants import TEST_RESULTS_FILE
 from tasks.configs.constants import TEST_RESULT_PATTERN
-from tasks.tools.general.find_file_lazy import find_file_lazy
+from tasks.tools.general.find_file_sloppy import find_file_sloppy
 
 
 def _extract_error_messages(log_text):
@@ -36,7 +36,7 @@ def get_error_text(root_dir, reference_file_path):
     Returns:
         - str: The error text.
     """
-    log_path = find_file_lazy(TEST_RESULTS_FILE, root_dir, reference_file_path)
+    log_path = find_file_sloppy(TEST_RESULTS_FILE, root_dir, reference_file_path)
     with open(log_path) as f:
         log_text = f.read()
     return _extract_error_messages(log_text)

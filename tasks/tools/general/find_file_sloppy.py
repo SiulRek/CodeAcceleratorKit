@@ -48,7 +48,7 @@ def find_file_from_path_fragment(path_fragment, root_dir):
     )
 
 
-def find_file_lazy(lazy_string, root_dir, current_file_path):
+def find_file_sloppy(sloppy_string, root_dir, current_file_path):
     """
     Function to find the file from the string. If the string contains a path
     fragment, the function will search for the file from the path fragment. If
@@ -64,8 +64,8 @@ def find_file_lazy(lazy_string, root_dir, current_file_path):
     Returns:
         - file_path (str): The path to the file.
     """
-    if "\\" in lazy_string or "/" in lazy_string:
-        file = find_file_from_path_fragment(lazy_string, root_dir)
+    if "\\" in sloppy_string or "/" in sloppy_string:
+        file = find_file_from_path_fragment(sloppy_string, root_dir)
     else:
-        file = find_nearest_file(lazy_string, root_dir, current_file_path)
+        file = find_nearest_file(sloppy_string, root_dir, current_file_path)
     return os.path.normpath(file)

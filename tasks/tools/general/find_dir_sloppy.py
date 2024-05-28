@@ -45,7 +45,7 @@ def find_dir_from_path_fragment(path_fragment, root_dir):
     raise FileNotFoundError(msg)
 
 
-def find_dir_lazy(lazy_string, root_dir, reference_dir):
+def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
     """
     Function to find the directory from the string. If the string contains a
     path fragment, the function will search for the directory from the path
@@ -62,8 +62,8 @@ def find_dir_lazy(lazy_string, root_dir, reference_dir):
     Returns:
         - dir_path (str): The path to the directory.
     """
-    if "\\" in lazy_string or "/" in lazy_string:
-        dir = find_dir_from_path_fragment(lazy_string, root_dir)
+    if "\\" in sloppy_string or "/" in sloppy_string:
+        dir = find_dir_from_path_fragment(sloppy_string, root_dir)
     else:
-        dir = find_nearest_dir(lazy_string, root_dir, reference_dir)
+        dir = find_nearest_dir(sloppy_string, root_dir, reference_dir)
     return os.path.normpath(dir)
