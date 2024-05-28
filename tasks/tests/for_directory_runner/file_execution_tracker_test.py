@@ -211,6 +211,18 @@ class TestFileExecutionTracker(unittest.TestCase):
         failed_files = self.tracker.get_failed_files()
         self.assertEqual(failed_files, ["file_1", "file_2"])
 
+    def test_remove_file(self):
+        files = ["file_1", "file_2", "file_3"]
+        self.tracker.add_files(files)
+        self.tracker.remove_file("file_2")
+
+        with open(self.test_csv_path, "r", newline="") as file:
+            reader = csv.reader(file)
+            rows = list(reader)
+            self.assertEqual(len(rows), 3)
+
+            self.assertNotIn(["file_2", "pending", "-"], rows)
+
 
 if __name__ == "__main__":
     unittest.main()

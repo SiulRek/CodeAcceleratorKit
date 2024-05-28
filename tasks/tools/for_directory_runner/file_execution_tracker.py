@@ -58,6 +58,24 @@ class FileExecutionTracker:
                         files.append(os.path.join(root, filename))
 
         self.add_files(files)
+    
+    def remove_file(self, file_path):
+        """
+        Removes a file from the CSV file.
+
+        Args:
+            - file_path (str): The file path to remove.
+        """
+        rows = []
+        with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if row[0] != file_path:
+                    rows.append(row)
+
+        with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerows(rows)
 
     def verify_tracks(self):
         """
