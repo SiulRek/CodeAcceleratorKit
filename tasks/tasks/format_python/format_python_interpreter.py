@@ -1,5 +1,5 @@
-from tasks.configs.constants import CLEANUP_MACROS as MACROS
-from tasks.tasks.cleanup.line_validation import (
+from tasks.configs.constants import FORMAT_PYTHON_MACROS as MACROS
+from tasks.tasks.format_python.line_validation import (
     line_validation_for_select_only,
     line_validation_for_select_not,
     line_validation_for_force_select_of,
@@ -8,8 +8,8 @@ from tasks.tasks.cleanup.line_validation import (
 from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
 
 
-class CleanupInterpreter(MacroInterpreter):
-    """ A class for interpreting cleanup macros from text. """
+class FormatPythonInterpreter(MacroInterpreter):
+    """ A class for interpreting format python macros from text. """
 
     def validate_select_only_macro(self, line):
         if result := line_validation_for_select_only(line):

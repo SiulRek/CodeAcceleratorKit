@@ -2,17 +2,17 @@ import os
 import warnings
 
 from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
-from tasks.tools.for_cleanup.format_docstrings import format_docstrings
-from tasks.tools.for_cleanup.rearrange_imports import rearrange_imports
-from tasks.tools.for_cleanup.refactor_exception import refactor_exception
-from tasks.tools.for_cleanup.remove_line_comments import remove_line_comments
-from tasks.tools.for_cleanup.remove_trailing_parts import remove_trailing_parts
-from tasks.tools.for_cleanup.remove_unused_imports import remove_unused_imports
-from tasks.tools.for_cleanup.run_black_formatting import format_with_black
+from tasks.tools.for_format_python.format_docstrings import format_docstrings
+from tasks.tools.for_format_python.rearrange_imports import rearrange_imports
+from tasks.tools.for_format_python.refactor_exception import refactor_exception
+from tasks.tools.for_format_python.remove_line_comments import remove_line_comments
+from tasks.tools.for_format_python.remove_trailing_parts import remove_trailing_parts
+from tasks.tools.for_format_python.remove_unused_imports import remove_unused_imports
+from tasks.tools.for_format_python.run_black_formatting import format_with_black
 from tasks.tools.shared.execute_pylint import execute_pylint
 
 STRATEGIES = {
-    # Abbreviation: (function, description, cleaning_with_subprocess, forcing_required)
+    # Abbreviation: (function, description, format_with_subprocess, forcing_required)
     "RT": (remove_trailing_parts, "Remove trailing parts", False, False),
     "RL": (remove_line_comments, "Remove line comments", False, True),
     "RE": (refactor_exception, "Refactor exception", False, False),
@@ -57,7 +57,7 @@ def make_checkpoint(file_path, updated_code, description, checkpoint_dir):
         file.write(updated_code)
     print(f"--------> Checkpoint created at {checkpoint_path}")
 
-def cleanup_file(
+def format_python_file(
     file_path,
     select_only=[],
     select_not=[],
@@ -67,11 +67,11 @@ def cleanup_file(
     modules_info=None,
 ):
     """
-    Apply cleanup strategies to a python file. The strategies are applied in the
+    Apply formatting strategies to a python file. The strategies are applied in the
     order they are defined in the STRATEGIES dictionary.
 
     Args:
-        - file_path (str): Path to the file to clean.
+        - file_path (str): Path to the file to format.
         - select_only (list): List of strategy abbreviations to apply. If
             specified, only the strategies in the list are applied. Default is [].
         - select_not (list): List of strategy abbreviations to exclude. If
@@ -80,7 +80,7 @@ def cleanup_file(
         - checkpoint_dir (str): Directory to save the checkpoints in. If
             specified, checkpointing is enabled.
         - python_env_path (str): Path to the python environment to use for
-            subprocess cleaning. Required for subprocess cleaning.
+            subprocess formatting. Required for strategies using subprocesses.
         - modules_info (dict): A dictionary containing information about the
             loaded modules. Keys are 'standard_library', 'third_party', and
             'local'. Used for rearranging imports. If None skips rearranging
@@ -121,11 +121,11 @@ def cleanup_file(
             strategies[key] = STRATEGIES[key]
 
     updated_code = code
-    for _, (function, description, cleaning_with_subprocess, _) in strategies.items():
-        if cleaning_with_subprocess:
+    for _, (function, description, format_with_subprocess, _) in strategies.items():
+        if format_with_subprocess:
             if not python_env_path:
                 raise ValueError(
-                    "Python environment path is required for cleaning with subprocess."
+                    "Python environment path is required for format with subprocess."
                 )
             if updated_code != code:
                 with open(file_path, "w") as file:
@@ -154,14 +154,14 @@ def cleanup_file(
 
 
 if __name__ == "__main__":
-    path = r"tasks/tests/for_tasks/cleanup_test.py"
+    path = r"tasks/tests/for_tasks/format_python_test.py"
 
     root_dir = os.path.abspath(os.path.join(path, "..", "..", "..", ".."))
     profile = TaskRunnerProfile(root_dir)
-    cleanup_file(
+    format_python_file(
         path,
         checkpoint_dir=profile.checkpoint_dir,
         python_env_path=profile.runner_python_env,
         #select_only=["FD"]
     )
-    print(f"File cleaned at {path}")
+    print(f"File Formatted at {path}")

@@ -1,7 +1,7 @@
 import json
 import os
 
-from tasks.tasks.cleanup.cleanup_task import CleanupTask
+from tasks.tasks.format_python.format_python_task import FormatPythonTask
 from tasks.tasks.automatic_prompt.automatic_prompt_task import AutomaticPromptTask
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_directory_runner.file_execution_tracker import FileExecutionTracker
@@ -40,8 +40,8 @@ class DirectoryRunnerTask(TaskBase):
                 setattr(self, key, directory_runner_args[key])
 
     def _get_task_class(self, task_name):
-        if task_name == CleanupTask.NAME:
-            return CleanupTask
+        if task_name == FormatPythonTask.NAME:
+            return FormatPythonTask
         if task_name == AutomaticPromptTask.NAME:
             return AutomaticPromptTask
         msg = f"Task {task_name} is not supported."

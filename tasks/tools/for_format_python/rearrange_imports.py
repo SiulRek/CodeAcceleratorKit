@@ -1,9 +1,9 @@
 import warnings
 
-from tasks.tools.for_cleanup.extract_module_path import (
+from tasks.tools.for_format_python.extract_module_path import (
     extract_module_path,
 )
-from tasks.tools.for_cleanup.separate_imports import separate_imports
+from tasks.tools.for_format_python.separate_imports import separate_imports
 
 
 def extract_module_docstring(code_text):

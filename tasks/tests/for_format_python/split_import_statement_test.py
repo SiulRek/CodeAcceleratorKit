@@ -1,6 +1,6 @@
 import unittest
 
-from tasks.tools.for_cleanup.split_import_statement import (
+from tasks.tools.for_format_python.split_import_statement import (
     split_import_statement,
 )
 

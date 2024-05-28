@@ -53,18 +53,18 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
 
 TEST_RESULT_PATTERN = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (ERROR|INFO) - .*)")
 
-# ----------------- For Clean Up -----------------
+# ----------------- For Format Python -----------------
 LINE_WIDTH = 80
 INTEND = " " * 4
 DOC_QUOTE = '"""'
 
-class CLEANUP_MACROS(Enum):
+class FORMAT_PYTHON_MACROS(Enum):
     SELECT_ONLY = "select_only"
     SELECT_NOT = "select_not"
     FORCE_SELECT_OF = "force_select_of"
     CHECKPOINTING = "checkpointing"
 
-class CLEANUP_TAGS(Enum):
+class FORMAT_PYTHON_TAGS(Enum):
     SELECT_ONLY = "#only"
     SELECT_NOT = "#not"
     FORCE_SELECT_OF = "#force"

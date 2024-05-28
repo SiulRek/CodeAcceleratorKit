@@ -1,11 +1,11 @@
 import os
 import re
 
-from tasks.tools.for_cleanup.is_specifier_used import (
+from tasks.tools.for_format_python.is_specifier_used import (
     is_specifier_used,
 )
-from tasks.tools.for_cleanup.separate_imports import separate_imports
-from tasks.tools.for_cleanup.split_import_statement import (
+from tasks.tools.for_format_python.separate_imports import separate_imports
+from tasks.tools.for_format_python.split_import_statement import (
     split_import_statement,
 )
 

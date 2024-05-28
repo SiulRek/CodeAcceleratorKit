@@ -1,6 +1,6 @@
 import os
 
-from tasks.tools.for_cleanup.separate_imports import separate_imports
+from tasks.tools.for_format_python.separate_imports import separate_imports
 
 
 TEST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")

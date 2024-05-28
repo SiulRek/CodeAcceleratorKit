@@ -1,4 +1,4 @@
-from tasks.configs.constants import CLEANUP_TAGS as TAGS
+from tasks.configs.constants import FORMAT_PYTHON_TAGS as TAGS
 
 SELECT_ONLY_TAG = TAGS.SELECT_ONLY.value
 SELECT_NOT_TAG = TAGS.SELECT_NOT.value

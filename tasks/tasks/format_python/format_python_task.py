@@ -1,19 +1,19 @@
 import os
 
-from tasks.tasks.cleanup.cleanup_interpreter import CleanupInterpreter
+from tasks.tasks.format_python.format_python_interpreter import FormatPythonInterpreter
 from tasks.tools.shared.backup_handler import BackupHandler
 from tasks.tasks.foundation.task_base import TaskBase
-from tasks.tools.for_cleanup.cleanup_file import cleanup_file
+from tasks.tools.for_format_python.format_python_file import format_python_file
 
 
-class CleanupTask(TaskBase):
-    """A task for cleaning up python files by removing or refactoring specific parts based on
+class FormatPythonTask(TaskBase):
+    """A task for formatting python files by removing or refactoring specific parts based on
     macros."""
 
-    NAME = "Clean Up"
+    NAME = "Format Python"
 
     def setup(self):
-        """Sets up the CleanupTask by initializing the file path from additional
+        """Sets up the FormatPythonTask by initializing the file path from additional
         arguments."""
         super().setup()
         self.file_path = self.additional_args[0]
@@ -23,8 +23,8 @@ class CleanupTask(TaskBase):
 
     def execute(self):
         """
-        Executes the cleanup task, extracting macros from the file and
-        performing the cleanup.
+        Executes the format python task, extracting macros from the file and
+        performing the python formatting.
 
         Raises:
             - ValueError: If both select_only and select_not options are
@@ -38,7 +38,7 @@ class CleanupTask(TaskBase):
             self.profile.backup_dir,
             self.profile.max_backups,
         )
-        interpreter = CleanupInterpreter(self.profile)
+        interpreter = FormatPythonInterpreter(self.profile)
 
         if self.macros_text:
             macros_data, _ = interpreter.extract_macros_from_text(self.macros_text, post_process=True)
@@ -54,11 +54,11 @@ class CleanupTask(TaskBase):
         if not checkpointing:
             checkpoint_dir = None
             
-        backup_handler.store_backup(file_path, "Before modification from cleanup task.")
+        backup_handler.store_backup(file_path, "Before modification from format python task.")
         with open(file_path, "w") as file:
             file.write(updated_content)
 
-        cleanup_file(
+        format_python_file(
             file_path=file_path,
             select_only=select_only,
             select_not=select_not,
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         "tasks",
         "tests",
         "for_tasks",
-        "cleanup_test.py",
+        "format_python_test.py",
     )
-    task = CleanupTask(default_root, default_file_path)
+    task = FormatPythonTask(default_root, default_file_path)
     task.main()

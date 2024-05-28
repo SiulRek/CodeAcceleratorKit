@@ -1,6 +1,6 @@
 #TODO: Handle the case of string with """ that is not a docstring
 from textwrap import wrap as wrap_text
-from tasks.tools.for_cleanup.wrap_text import wrap_text
+from tasks.tools.for_format_python.wrap_text import wrap_text
 from tasks.configs.constants import DOC_QUOTE, LINE_WIDTH, INTEND
 
 
