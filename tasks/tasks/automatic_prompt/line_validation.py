@@ -1,6 +1,6 @@
 import re
 
-from tasks.configs.constants import CREATE_QUERY_TAGS as TAGS
+from tasks.configs.constants import AUTOMATIC_PROMPT_TAGS as TAGS
 from tasks.configs.constants import FILE_TAG
 from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
 from tasks.tasks.foundation.line_validation_utils import (
@@ -33,7 +33,7 @@ TITLE_TAG = TAGS.TITLE.value
 COMMENT_TAG = TAGS.COMMENT.value
 CURRENT_FILE_TAG = TAGS.CURRENT_FILE.value
 ERROR_TAG = TAGS.ERROR.value
-MAKE_QUERY_TAG = TAGS.MAKE_QUERY.value
+SEND_PROMPT_TAG = TAGS.SEND_PROMPT.value
 
 def line_validation_for_begin_text(line):
     """Validate if the line is a start tag."""
@@ -176,9 +176,9 @@ def line_validation_for_macros_template(line):
     return None
 
 
-def line_validation_for_make_query(line):
-    """Validate the line to check if it is a valid line to make a query."""
-    if MAKE_QUERY_TAG in line:
+def line_validation_for_send_prompt(line):
+    """Validate the line to check if it is a valid line to make a prompt."""
+    if SEND_PROMPT_TAG in line:
         modify_inplace = False
         max_tokens = None
         if arguments := retrieve_optional_arguments(line):

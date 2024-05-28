@@ -1,7 +1,7 @@
 import os
 
-from tasks.configs.constants import MAKE_QUERY_MACROS as MACROS
-from tasks.tasks.create_query.line_validation import (
+from tasks.configs.constants import AUTOMATIC_PROMPT_MACROS as MACROS
+from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_begin_text,
     line_validation_for_end_text,
     line_validation_for_title,
@@ -17,13 +17,13 @@ from tasks.tasks.create_query.line_validation import (
     line_validation_for_summarize_python_script,
     line_validation_for_summarize_folder,
     line_validation_for_macros_template,
-    line_validation_for_make_query,
+    line_validation_for_send_prompt,
 )
 from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
-from tasks.tools.for_create_query.get_error_text import get_error_text
-from tasks.tools.for_create_query.get_fill_text import get_fill_text
-from tasks.tools.for_create_query.get_macros_template import get_macros_template
-from tasks.tools.for_create_query.summarize_python_script import summarize_python_file
+from tasks.tools.for_automatic_prompt.get_error_text import get_error_text
+from tasks.tools.for_automatic_prompt.get_fill_text import get_fill_text
+from tasks.tools.for_automatic_prompt.get_macros_template import get_macros_template
+from tasks.tools.for_automatic_prompt.summarize_python_script import summarize_python_file
 from tasks.tools.general.execute_pylint import execute_pylint
 from tasks.tools.general.execute_python_module import execute_python_module
 import tasks.tools.general.execute_unittests_from_file as execute_unittests_from_file
@@ -33,8 +33,8 @@ from tasks.tools.general.generate_directory_tree import generate_directory_tree
 from tasks.tools.general.get_temporary_script_path import get_temporary_script_path
 
 
-class CreateQueryInterpreter(MacroInterpreter):
-    """Interpreter for creating a query from macros within text lines."""
+class AutomaticPromptInterpreter(MacroInterpreter):
+    """Interpreter for creating a prompt from macros within text lines."""
 
     def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):
@@ -78,6 +78,7 @@ class CreateQueryInterpreter(MacroInterpreter):
         return None
 
     def validate_error_macro(self, line):
+        # Tailored for specific test_results.log
         if line_validation_for_error(line):
             error_text = get_error_text(self.profile.root, self.file_path)
             default_title = "Occured Errors"
@@ -208,9 +209,9 @@ class CreateQueryInterpreter(MacroInterpreter):
             return macros_data
         return None
 
-    def validate_make_query_macro(self, line):
-        if results := line_validation_for_make_query(line):
-            return (MACROS.MAKE_QUERY, results, None)
+    def validate_send_prompt_macro(self, line):
+        if results := line_validation_for_send_prompt(line):
+            return (MACROS.SEND_PROMPT, results, None)
         return None
 
     def post_process_macros(self, macros_data):
@@ -259,18 +260,19 @@ class CreateQueryInterpreter(MacroInterpreter):
         begin_text = "\n".join(begin_text) if begin_text else ""
         end_text = "\n".join(end_text) if end_text else ""
 
-        # Organize the make query reference
+        # Manage the send prompt macro
         updated_macros_data_2 = []
-        make_query_kwargs = {}
+        send_prompt_kwargs = {}
         for macro_data in updated_macros_data_1:
-            if macro_data[0] == MACROS.MAKE_QUERY:
-                # if len(make_query_kwargs) > 0:
-                #     msg = "Multiple make_query macros found in the query."
-                #     raise ValueError(msg) # Last make_query macro will be used
+            if macro_data[0] == MACROS.SEND_PROMPT:
+                # if len(send_prompt) > 0:
+                #     msg = "Multiple send_prompt macros found in the prompt."
+                #     raise ValueError(msg) 
+                # Last send_prompt macro will be used
                 modify_inplace, max_tokens = macro_data[1]
-                make_query_kwargs["modify_inplace"] = modify_inplace
-                make_query_kwargs["max_tokens"] = max_tokens
+                send_prompt_kwargs["modify_inplace"] = modify_inplace
+                send_prompt_kwargs["max_tokens"] = max_tokens
             else:
                 updated_macros_data_2.append(macro_data)
-        make_query_kwargs = make_query_kwargs or None
-        return (updated_macros_data_2, begin_text, end_text, make_query_kwargs)
+        send_prompt_kwargs = send_prompt_kwargs or None
+        return (updated_macros_data_2, begin_text, end_text, send_prompt_kwargs)

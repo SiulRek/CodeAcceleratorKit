@@ -2,7 +2,7 @@ import json
 import os
 
 from tasks.tasks.cleanup.cleanup_task import CleanupTask
-from tasks.tasks.create_query.create_query_task import CreateQueryTask
+from tasks.tasks.automatic_prompt.automatic_prompt_task import AutomaticPromptTask
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_directory_runner.file_execution_tracker import FileExecutionTracker
 from tasks.tools.general.backup_handler import BackupHandler
@@ -42,8 +42,8 @@ class DirectoryRunnerTask(TaskBase):
     def _get_task_class(self, task_name):
         if task_name == CleanupTask.NAME:
             return CleanupTask
-        if task_name == CreateQueryTask.NAME:
-            return CreateQueryTask
+        if task_name == AutomaticPromptTask.NAME:
+            return AutomaticPromptTask
         msg = f"Task {task_name} is not supported."
         raise ValueError(msg)
 

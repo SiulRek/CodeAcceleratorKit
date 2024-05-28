@@ -1,7 +1,7 @@
 import unittest
 
 from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS as DEFAULTS
-from tasks.tasks.create_query.line_validation import line_validation_for_directory_tree
+from tasks.tasks.automatic_prompt.line_validation import line_validation_for_directory_tree
 
 
 class TestLineValidationForDirectoryTree(unittest.TestCase):

@@ -120,7 +120,7 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_macros_templates_dir(cls, primary_attrs):
-        """Initializes the query templates directory path based on the
+        """Initializes the prompt templates directory path based on the
         templatesdirectory."""
         templates_dir = cls._initialize_templates_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "macros")
@@ -200,7 +200,7 @@ class AttributesInitializer:
     def _initialize_directory_runner_config(cls, _):
         """Initializes the directory runner configuration file."""
         config = {
-            "task_name": "Task Name",  # or "Create Query Task"
+            "task_name": "Task Name",
             "directory_path": "/path/to/directory",
             "macros_text": ["sample macros text","as list of lines"],
             "resume_from_last_stopped": False,

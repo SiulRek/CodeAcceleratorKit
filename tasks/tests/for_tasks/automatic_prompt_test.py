@@ -38,5 +38,5 @@ class Car:
     #C This is another comment
     #L
     #E The end of the code
-    # makequery (True, 100)
+    # send (False, 100)
     #checksum 21

@@ -12,8 +12,8 @@ TASKS_PYTHON_ENV = os.path.join(TASKS_ROOT, "venv")
 TASKS_CACHE = os.path.join(TASKS_ROOT, "tasks", "__taskscache__")
 MAX_BACKUPS = 70
 
-# ----------------- For Create Query -----------------
-class MAKE_QUERY_MACROS(Enum):
+# ----------------- For Automatic Prompt -----------------
+class AUTOMATIC_PROMPT_MACROS(Enum):
     BEGIN_TEXT = "begin_text",
     END_TEXT = "end_text",
     COMMENT = "comment"
@@ -28,10 +28,10 @@ class MAKE_QUERY_MACROS(Enum):
     SUMMARIZE_FOLDER = "summarize_folder" # Summarize all Python scripts in a folder
     FILL_TEXT = "fill_text"
     TITLE = "title"
-    MAKE_QUERY = "make_query"
+    SEND_PROMPT = "send_prompt"
 
 
-class CREATE_QUERY_TAGS(Enum):
+class AUTOMATIC_PROMPT_TAGS(Enum):
     BEGIN = "#B "
     END = "#E "
     RUN_PYLINT = "#pylint"
@@ -49,7 +49,7 @@ class CREATE_QUERY_TAGS(Enum):
     TITLE = "#T "
     COMMENT = "#C "
     CURRENT_FILE = f"#{FILE_TAG}"
-    MAKE_QUERY = "#makequery"
+    SEND_PROMPT = "#send"
 
 TEST_RESULT_PATTERN = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (ERROR|INFO) - .*)")
 

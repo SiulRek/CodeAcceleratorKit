@@ -3,14 +3,14 @@ import os
 
 def get_macros_template(name, macros_template_dir):
     """
-    Get a query template by name.
+    Get a prompt template by name.
 
     Args:
-        - name (str): The name of the query template.
-        - macros_template_dir (str): The directory containing the query templates.
+        - name (str): The name of the prompt template.
+        - macros_template_dir (str): The directory containing the prompt templates.
 
     Returns:
-        - str: The query template.
+        - str: The prompt template.
     """
     for file in os.listdir(macros_template_dir):
         base, _ = os.path.splitext(file)
