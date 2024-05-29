@@ -2,24 +2,24 @@
 This module generates an automatic prompt based on macro statements that are retrieved from either a file or a string passed as an argument. The prompt, typically a query, is then finalized and saved in a file.
 
 Available reference types:
-| Name                    | Description                           | Pattern                                          | Arguments                                            |
-|-------------------------|---------------------------------------|--------------------------------------------------|-----------------------------------------------------|
-| start tag               | Place start text                      | #S <start_text>                                  | -                                                   |
-| end tag                 | Place end text                        | #E <end_text>                                    | -                                                   |
-| title                   | Title of the reference                | #T <title>                                       | -                                                   |
-| comment                 | Comment text                          | #C <comment>                                     | -                                                   |
-| file reference          | Reference to file/s                   | #File <file_path> or <file_path_1, file_path_2>  | -                                                   |
-| current_file_reference  | Current file content                  | #File                                            | -                                                   |
-| error                   | Get logged errors                     | #L                                               | -                                                   |
-| fill_text               | Add a fill text                       | #*<fill_text_name>                               | -                                                   |
-| run_python_script       | Run a Python script                   | #run <script_path>                 | -                                                   |
-| run_pylint              | Run pylint on a file                  | #run_pylint <file_path>                          | -                                                   |
-| run_unittest            | Run unittest on a file                | #run_unittest <file_path>                        | <verbosity> -                                                   |
-| directory_tree          | Get directory tree                    | #tree <directory_path>                 | <max_depth, include_files, ignore_list (semicolon-separated list)> |
-| summarize_python_script | Summarize a Python script             | #summarize <script_path>           | <include_definitions_with_docstrings>               |
-| summarize_folder       | Summarize Python scripts in a folder  | #summarize_folder <folder_path>     | <include_definitions_with_docstrings, excluded_dirs, excluded_files> |
-| send_prompt              | Send a prompt from a temporary file    | #send_prompt                                       | <create_python_script, max_tokens>                  |
-| checksum                | Check if provided checksum corresponds | #checksum <number_of_references>                 | -                                                   |
+| Name                    | Description                           | Pattern                                          | Arguments                                                                                 |
+|-------------------------|---------------------------------------|--------------------------------------------------|------------------------------------------------------------------------------------------|
+| begin tag               | Place start text                      | #B <begin_text>                                  | -                                                                                        |
+| end tag                 | Place end text                        | #E <end_text>                                    | -                                                                                        |
+| title                   | Title of the reference                | #T <title>                                       | -                                                                                        |
+| comment                 | Comment text                          | #C <comment>                                     | -                                                                                        |
+| paste files             | Paste file/s                          | # <file_path> or <file_path_1, file_path_2>      | -                                                                                        |
+| current_file_reference  | Current file content                  | #File                                            | -                                                                                        |
+| error                   | Get logged errors                     | #L                                               | -                                                                                        |
+| fill_text               | Add a fill text                       | #*<fill_text_name>                               | -                                                                                        |
+| run_python_script       | Run a Python script                   | #run <script_path>                               | -                                                                                        |
+| run_pylint              | Run pylint on a file                  | #run_pylint <file_path>                          | -                                                                                        |
+| run_unittest            | Run unittest on a file                | #run_unittest <file_path>                        | <verbosity>                                                                              |
+| directory_tree          | Get directory tree                    | #tree <directory_path>                           | <max_depth, include_files, ignore_list (semicolon-separated list)>                       |
+| summarize_python_script | Summarize a Python script             | #summarize <script_path>                         | <include_definitions_with_docstrings>                                                    |
+| summarize_folder        | Summarize Python scripts in a folder  | #summarize_folder <folder_path>                  | <include_definitions_with_docstrings, excluded_dirs, excluded_files>                     |
+| send_prompt             | Send a prompt from a temporary file   | #send_prompt                                     | <create_python_script, max_tokens>                                                       |
+| checksum                | Check if provided checksum corresponds| #checksum <number_of_references>                 | -                                                                                        |
 
 Note: Replace angled brackets and their contents with appropriate values when using patterns.
 
@@ -28,6 +28,7 @@ TODO when adding new macros:
 2. Add the MACRO to AUTOMATIC_PROMPT_MACROS.
 3. Add a new validation method for the new macro in AutomaticPromptInterpreter.
 """
+
 import os
 
 from tasks.configs.constants import AUTOMATIC_PROMPT_MACROS as MACROS

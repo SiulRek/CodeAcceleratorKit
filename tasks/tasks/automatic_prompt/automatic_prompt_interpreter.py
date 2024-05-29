@@ -6,7 +6,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_end_text,
     line_validation_for_title,
     line_validation_for_comment,
-    line_validation_for_files,
+    line_validation_for_paste_files,
     line_validation_for_error,
     line_validation_for_fill_text,
     line_validation_for_run_python_script,
@@ -57,20 +57,22 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.COMMENT, default_title, result)
         return None
 
-    def validate_files_macro(self, line):
-        if result := line_validation_for_files(line):
+    def validate_paste_files_macro(self, line):
+        if result := line_validation_for_paste_files(line):
             referenced_files = []
             for file_name in result:
                 file_path = find_file_sloppy(file_name, self.profile.root, self.file_path)
                 with open(file_path, "r", encoding="utf-8") as file:
                     relative_path = os.path.relpath(file_path, self.profile.root)
                     default_title = f"File at {relative_path}"
-                    referenced_file = (MACROS.FILE, default_title, file.read())
+                    referenced_file = (MACROS.PASTE_FILE, default_title, file.read())
                     referenced_files.append(referenced_file)
             return referenced_files
         return None
 
     def validate_current_file_macro(self, line):
+        # Required as the interest is in the file content without macros
+        # in case there are any.
         if line_validation_for_current_file_reference(line):
             relative_path = os.path.relpath(self.file_path, self.profile.root)
             default_title = f"File at {relative_path}"
@@ -78,7 +80,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         return None
 
     def validate_error_macro(self, line):
-        # Tailored for specific test_results.log
+        # Tailored for specific test_results.log file
         if line_validation_for_error(line):
             error_text = get_error_text(self.profile.root, self.file_path)
             default_title = "Occured Errors"

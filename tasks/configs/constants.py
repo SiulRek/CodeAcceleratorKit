@@ -17,7 +17,7 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     BEGIN_TEXT = "begin_text",
     END_TEXT = "end_text",
     COMMENT = "comment"
-    FILE = "reference"
+    PASTE_FILE = "paste_file"
     LOGGED_ERROR = "error"
     CURRENT_FILE = "current_file"
     RUN_PYTHON_SCRIPT = "run_python_script"
@@ -43,7 +43,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     MACROS_TEMPLATE_START = "#"
     MACROS_TEMPLATE_END = "_macros"
     CHECKSUM = "#checksum"
-    FILE = "#"
+    PASTE_FILES = "#"
     FILL_TEXT = r"#\*"
     ERROR = "#L"
     TITLE = "#T "

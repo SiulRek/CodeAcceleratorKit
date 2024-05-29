@@ -8,11 +8,8 @@ from tasks.tasks.foundation.line_validation_utils import (
 )
 from tasks.tasks.foundation.line_validation_utils import check_type
 
-FILE_PATTERN = re.compile(
-    rf"{TAGS.FILE.value}\s*((?:\S+\.(?:py|txt|log|md|csv))\s*(?:,\s*\S+\.(?:py|txt|log|md|csv)\s*)*|{FILE_TAG})"
-)
-FILE_WITH_DIR = re.compile(
-    rf"{TAGS.FILE.value}\s([\w/\\.-]+[\\/][\w.-]+\.(py|txt|log|md|csv))"
+PASTE_FILES_PATTERN = re.compile(
+    rf"{TAGS.PASTE_FILES.value}\s*((?:\S+\.(?:py|txt|log|md|csv))\s*(?:,\s*\S+\.(?:py|txt|log|md|csv)\s*)*|{FILE_TAG})"
 )
 FILL_TEXT_PATTERN = re.compile(rf"^{TAGS.FILL_TEXT.value}\s*(.*)")
 RUN_SCRIPT_PATTERN = re.compile(rf"{TAGS.RUN_SCRIPT.value}\s(\S+\.py|{FILE_TAG})")
@@ -65,9 +62,9 @@ def line_validation_for_comment(line):
     return None
 
 
-def line_validation_for_files(line):
-    """ Validate if the line is a file. """
-    if match := re.search(FILE_PATTERN, line):
+def line_validation_for_paste_files(line):
+    """ Validate if the line contains references to files. """
+    if match := re.search(PASTE_FILES_PATTERN, line):
         file_names = match.group(1).split(",")
         file_names = [file_name.strip() for file_name in file_names]
         return file_names
