@@ -1,5 +1,7 @@
 import os
 
+from tasks.configs.constants import CURRENT_DIRECTORY_TAG
+
 
 def find_nearest_dir(dir_name, root_dir, reference_dir):
     root_dir = os.path.abspath(root_dir)
@@ -47,10 +49,11 @@ def find_dir_from_path_fragment(path_fragment, root_dir):
 
 def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
     """
-    Function to find the directory from the string. If the string contains a
-    path fragment, the function will search for the directory from the path
-    fragment. If the string contains only the directory name, the function will
-    search for the nearest directory to the reference directory.
+    Function to find the directory from a "sloppy" (not full path) written
+    string. If the string contains a path fragment, the function will search for
+    the directory from the path fragment. If the string contains only the
+    directory name, the function will search for the nearest directory to the
+    reference directory.
 
     Args:
         - string (str): The string to be searched, which could be a path
@@ -62,6 +65,15 @@ def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
     Returns:
         - dir_path (str): The path to the directory.
     """
+    sloppy_string = sloppy_string.strip()
+    root_dir = os.path.abspath(root_dir)
+    reference_dir = os.path.abspath(reference_dir)
+    root_dir = os.path.normpath(root_dir)
+    reference_dir = os.path.normpath(reference_dir)
+
+    if sloppy_string == CURRENT_DIRECTORY_TAG:
+        return reference_dir
+
     if "\\" in sloppy_string or "/" in sloppy_string:
         dir = find_dir_from_path_fragment(sloppy_string, root_dir)
     else:

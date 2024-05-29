@@ -6,6 +6,7 @@ import re
 TASKS_ROOT = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
 TEST_RESULTS_FILE = "test_results.log"
 CURRENT_FILE_TAG = "File"
+CURRENT_DIRECTORY_TAG = "Dir"
 REGISTERED_RUNNERS_JSON = os.path.join(TASKS_ROOT, "tasks", "configs", "registered_runners.json")
 PROFILE_SUBFOLDER = "profile"
 TASKS_PYTHON_ENV = os.path.join(TASKS_ROOT, "venv")
