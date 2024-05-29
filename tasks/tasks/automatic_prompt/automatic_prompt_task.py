@@ -92,7 +92,7 @@ def format_text_from_macros(macros_data, updated_content):
 
         if content_type == MACROS.TITLE:
             title_manager.set(default_title)
-        elif content_type == MACROS.CURRENT_FILE:
+        elif content_type == MACROS.PASTE_CURRENT_FILE:
             prompt += f"\n\n--- {title} ---\n{updated_content}"
         elif content_type in MACROS:
             prompt += f"\n\n--- {title} ---\n{text}"
@@ -129,7 +129,7 @@ class AutomaticPromptTask(TaskBase):
         )
 
         if self.macros_text:
-            interpreter.file_path = self.file_path  # Allows for current file macros
+            interpreter.file_path = self.file_path  # Allows for paste current file macro
             macros_data, _ = interpreter.extract_macros_from_text(
                 self.macros_text, post_process=True
             )

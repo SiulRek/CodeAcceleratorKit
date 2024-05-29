@@ -1,7 +1,7 @@
 import re
 
 from tasks.configs.constants import AUTOMATIC_PROMPT_TAGS as TAGS
-from tasks.configs.constants import FILE_TAG
+from tasks.configs.constants import CURRENT_FILE_TAG
 from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
 from tasks.tasks.foundation.line_validation_utils import (
     retrieve_arguments_in_round_brackets,
@@ -9,15 +9,19 @@ from tasks.tasks.foundation.line_validation_utils import (
 from tasks.tasks.foundation.line_validation_utils import check_type
 
 PASTE_FILES_PATTERN = re.compile(
-    rf"{TAGS.PASTE_FILES.value}\s*((?:\S+\.(?:py|txt|log|md|csv))\s*(?:,\s*\S+\.(?:py|txt|log|md|csv)\s*)*|{FILE_TAG})"
+    rf"{TAGS.PASTE_FILES.value}\s*((?:\S+\.(?:py|txt|log|md|csv))\s*(?:,\s*\S+\.(?:py|txt|log|md|csv)\s*)*|{CURRENT_FILE_TAG})"
 )
 FILL_TEXT_PATTERN = re.compile(rf"^{TAGS.FILL_TEXT.value}\s*(.*)")
-RUN_SCRIPT_PATTERN = re.compile(rf"{TAGS.RUN_SCRIPT.value}\s(\S+\.py|{FILE_TAG})")
-RUN_PYLINT_PATTERN = re.compile(rf"{TAGS.RUN_PYLINT.value}\s(\S+\.py|{FILE_TAG})")
-UNITTEST_PATTERN = re.compile(rf"{TAGS.UNITTEST.value}\s(\S+\.py|{FILE_TAG})")
+RUN_SCRIPT_PATTERN = re.compile(
+    rf"{TAGS.RUN_SCRIPT.value}\s(\S+\.py|{CURRENT_FILE_TAG})"
+)
+RUN_PYLINT_PATTERN = re.compile(
+    rf"{TAGS.RUN_PYLINT.value}\s(\S+\.py|{CURRENT_FILE_TAG})"
+)
+UNITTEST_PATTERN = re.compile(rf"{TAGS.UNITTEST.value}\s(\S+\.py|{CURRENT_FILE_TAG})")
 DIRECTORY_TREE_PATTERN = re.compile(rf"{TAGS.DIRECTORY_TREE.value}\s(\S+)")
 SUMMARIZE_PYTHON_SCRIPT_PATTERN = re.compile(
-    rf"{TAGS.SUMMARIZE_PYTHON_SCRIPT.value}\s(\S+\.py|{FILE_TAG})"
+    rf"{TAGS.SUMMARIZE_PYTHON_SCRIPT.value}\s(\S+\.py|{CURRENT_FILE_TAG})"
 )
 SUMMARIZE_FOLDER_PATTERN = re.compile(rf"{TAGS.SUMMARIZE_FOLDER.value}\s(\S+)")
 MACROS_TEMPLATE_PATTERN = re.compile(
@@ -29,7 +33,7 @@ BEGIN_TAG = TAGS.BEGIN.value
 END_TAG = TAGS.END.value
 TITLE_TAG = TAGS.TITLE.value
 COMMENT_TAG = TAGS.COMMENT.value
-CURRENT_FILE_TAG = TAGS.CURRENT_FILE.value
+PASTE_CURRENT_FILE_TAG = TAGS.PASTE_CURRENT_FILE.value
 ERROR_TAG = TAGS.ERROR.value
 SEND_PROMPT_TAG = TAGS.SEND_PROMPT.value
 
@@ -62,19 +66,19 @@ def line_validation_for_comment(line):
     return None
 
 
+def line_validation_for_paste_current_file(line):
+    """ Validate if the line is a current file reference. """
+    if PASTE_CURRENT_FILE_TAG in line:
+        return True
+    return None
+
+
 def line_validation_for_paste_files(line):
     """ Validate if the line contains references to files. """
     if match := re.search(PASTE_FILES_PATTERN, line):
         file_names = match.group(1).split(",")
         file_names = [file_name.strip() for file_name in file_names]
         return file_names
-    return None
-
-
-def line_validation_for_current_file_reference(line):
-    """ Validate if the line is a current file reference. """
-    if CURRENT_FILE_TAG in line:
-        return True
     return None
 
 

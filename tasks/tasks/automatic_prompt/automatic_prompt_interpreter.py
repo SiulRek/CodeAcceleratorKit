@@ -12,7 +12,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_run_python_script,
     line_validation_for_run_pylint,
     line_validation_for_run_unittest,
-    line_validation_for_current_file_reference,
+    line_validation_for_paste_current_file,
     line_validation_for_directory_tree,
     line_validation_for_summarize_python_script,
     line_validation_for_summarize_folder,
@@ -57,6 +57,15 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.COMMENT, default_title, result)
         return None
 
+    def validate_paste_current_file_macro(self, line):
+        # Special File paste case as the interest is in the file content
+        # without macros in case there are any
+        if line_validation_for_paste_current_file(line):
+            relative_path = os.path.relpath(self.file_path, self.profile.root)
+            default_title = f"File at {relative_path}"
+            return (MACROS.PASTE_CURRENT_FILE, default_title, None)
+        return None
+
     def validate_paste_files_macro(self, line):
         if result := line_validation_for_paste_files(line):
             referenced_files = []
@@ -68,15 +77,6 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                     referenced_file = (MACROS.PASTE_FILE, default_title, file.read())
                     referenced_files.append(referenced_file)
             return referenced_files
-        return None
-
-    def validate_current_file_macro(self, line):
-        # Required as the interest is in the file content without macros
-        # in case there are any.
-        if line_validation_for_current_file_reference(line):
-            relative_path = os.path.relpath(self.file_path, self.profile.root)
-            default_title = f"File at {relative_path}"
-            return (MACROS.CURRENT_FILE, default_title, None)
         return None
 
     def validate_error_macro(self, line):
@@ -135,10 +135,10 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_directory_tree_macro(self, line):
         if result := line_validation_for_directory_tree(line):
-            dir, max_depth, include_files, ignore_list = result
-            dir = find_dir_sloppy(dir, self.profile.root, self.file_path)
+            dir_, max_depth, include_files, ignore_list = result
+            dir_ = find_dir_sloppy(dir_, self.profile.root, self.file_path)
             directory_tree = generate_directory_tree(
-                dir, max_depth, include_files, ignore_list
+                dir_, max_depth, include_files, ignore_list
             )
             default_title = "Directory Tree"
             return (MACROS.DIRECTORY_TREE, default_title, directory_tree)
@@ -169,8 +169,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             ) = result
             folder_path = find_dir_sloppy(folder_path, self.profile.root, self.file_path)
             excluded_dirs = [
-                find_dir_sloppy(dir, self.profile.root, self.file_path)
-                for dir in excluded_dirs
+                find_dir_sloppy(dir_, self.profile.root, self.file_path)
+                for dir_ in excluded_dirs
             ]
             excluded_files = [
                 find_file_sloppy(file, self.profile.root, self.file_path)

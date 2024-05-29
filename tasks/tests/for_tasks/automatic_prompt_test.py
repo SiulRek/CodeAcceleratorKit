@@ -31,7 +31,7 @@ class Car:
     #summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
     #T Reference File Title
     # reference_2.py, data/reference_3.txt
-    #File
+    # File
     #tree . (2, False, ['temp', 'log'])
     #unittest File (2)
     #pylint data/example_script.py

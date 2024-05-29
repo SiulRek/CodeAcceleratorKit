@@ -1,16 +1,11 @@
 import os
 
-from tasks.configs.constants import FILE_TAG
+from tasks.configs.constants import CURRENT_FILE_TAG
 
 
 def find_nearest_file(file_name, root_dir, reference_file):
-    root_dir = os.path.abspath(root_dir)
-    reference_file = os.path.abspath(reference_file)
     closest_file = None
     min_distance = float("inf")
-
-    if file_name == FILE_TAG:
-        return reference_file
     for dirpath, _, filenames in os.walk(root_dir):
         if file_name in filenames:
             current_file = os.path.join(dirpath, file_name)
@@ -35,7 +30,6 @@ def find_nearest_file(file_name, root_dir, reference_file):
 
 
 def find_file_from_path_fragment(path_fragment, root_dir):
-    root_dir = os.path.abspath(root_dir)
     path_fragment = path_fragment.replace("\\", os.sep).replace("/", os.sep)
 
     for dirpath, _, filenames in os.walk(root_dir):
@@ -48,24 +42,35 @@ def find_file_from_path_fragment(path_fragment, root_dir):
     )
 
 
-def find_file_sloppy(sloppy_string, root_dir, current_file_path):
+def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     """
-    Function to find the file from the string. If the string contains a path
-    fragment, the function will search for the file from the path fragment. If
-    the string contains only the file name, the function will search for the
-    nearest file to the current file.
+    Function to find the file from a "sloppy" (not full path) written string: The function
+    expects the file to be found in the root directory. If the string contains a
+    path fragment, the function will search for the file from the path fragment.
+    If the string contains only the file name, the function will search for the
+    nearest file to the reference file.
 
     Args:
-        - file_name_fragment (str): The name or a fragment of the file name to search for.
+        - file_name_fragment (str): The name or a fragment of the file name
+            to search for.
         - root_dir (str): The root directory to start the search from.
-        - current_file_path (str, optional): The current file path to assist in finding 
-          the nearest file if not found directly under root_dir. Default is None.
+        - reference_file_path (str, optional): The reference file path to
+            assist in finding the nearest file if not found directly under
+            root_dir. Default is None.
 
     Returns:
         - file_path (str): The path to the file.
     """
+    sloppy_string = sloppy_string.strip()
+    root_dir = os.path.abspath(root_dir)
+    root_dir = os.path.normpath(root_dir)
+    reference_file_path = os.path.abspath(reference_file_path)
+    reference_file_path = os.path.normpath(reference_file_path)
+    
+    if sloppy_string == CURRENT_FILE_TAG:
+        return reference_file_path
     if "\\" in sloppy_string or "/" in sloppy_string:
         file = find_file_from_path_fragment(sloppy_string, root_dir)
     else:
-        file = find_nearest_file(sloppy_string, root_dir, current_file_path)
+        file = find_nearest_file(sloppy_string, root_dir, reference_file_path)
     return os.path.normpath(file)
