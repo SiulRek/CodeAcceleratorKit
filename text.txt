@@ -1,0 +1,89 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=0.99in}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{hyperref}
+\setstretch{0.9} % Reduce line spacing
+
+% Define JSON style
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{lightgray},
+    literate=
+     *{0}{{{\color{blue}0}}}{1}
+      {1}{{{\color{blue}1}}}{1}
+      {2}{{{\color{blue}2}}}{1}
+      {3}{{{\color{blue}3}}}{1}
+      {4}{{{\color{blue}4}}}{1}
+      {5}{{{\color{blue}5}}}{1}
+      {6}{{{\color{blue}6}}}{1}
+      {7}{{{\color{blue}7}}}{1}
+      {8}{{{\color{blue}8}}}{1}
+      {9}{{{\color{blue}9}}}{1}
+      {:}{{{\color{red}{:}}}}{1}
+      {,}{{{\color{red}{,}}}}{1}
+      {\{}{{{\color{violet}{\{}}}}{1}
+      {\}}{{{\color{violet}{\}}}}}{1}
+      {[}{{{\color{violet}{[}}}}{1}
+      {]}{{{\color{violet}{]}}}}{1},
+}
+
+\begin{document}
+
+\title{Automatic Prompt One Pager}
+\author{Dient zur kurzen Beschreibung des Automatic Prompt Projecktes}
+\date{}
+\maketitle
+
+\section*{Zielsetzung}
+Das Automatic Prompt Projekt zielt darauf ab, das Erstellen von Prompts zu vereinfachen und zu automatisieren. Es soll Programmierern helfen, abstrakte Planungen und Wünsche, die zu Beginn oft nur in den Gedanken existieren und noch nicht aus bestehenden Python-Modulen ersichtlich sind, zu formulieren und mit Hilfe Künstlicher Intelligenz zu lösen. Dabei geht es nicht darum, Werkzeuge wie Copilot zu ersetzen, sondern eine ergänzende Lösung zu bieten. Die Hoffnung ist, dass das Projekt dazu beiträgt, die Effizienz und Kreativität in der Software Entwicklung zu erhöhen.
+
+\section*{Implementation}
+Das Projekt ermöglicht die automatisierte Erstellung von Prompts basierend auf Makro-Anweisungen, die aus einem als Argument übergebenen String abgerufen werden. Die erstellten Prompts werden in einer Datei gespeichert. Verschiedene Makro-Typen wie \texttt{BeginText}, \texttt{EndText}, \texttt{ChapterTitle}, \texttt{Comment}, \texttt{PasteFile}, \texttt{ExecuteFile}, \texttt{ExecutePylint}, \texttt{ExecuteUnittest} bis hin zu benutzerdefinierten Funktionen werden zurzeit unterstützt, um flexible, dynamische und strukturierte Prompts zu generieren.
+
+\section*{Verwendung}
+Das JSON-Beispiel unten zeigt, wie eine typische Konfiguration zur Ausführung des Tasks aussieht- Die Makros \texttt{BeginText}, \texttt{PasteCurrentFile} und \texttt{ExecutePylint} werden verwendet, um den gewünschten Prompt zu generieren und das Ergebnis (separat nun auch möglich) zu speichern.
+
+
+
+
+
+
+
+
+\begin{lstlisting}[language=json]
+{
+    "directory_runner_config": {
+        "task_name": "Task Name",
+        "directory_path": "/path/to/directory",
+        "macros_text": [
+            "#BeginText Provide Feedback based on the output of pylint",
+            "#PasteCurrentFile",
+            "#ExecutePylint CurrentFile
+        ],
+        "output_path": "/path/to/output",
+        // Additional Parameters ...
+    }
+}
+
+\end{lstlisting}
+
+\section*{Letzte Worte}
+Ich nutze den Task bereits selbst und muss ehrlich sagen, dass er meine Programmierarbeit tatsächlich beschleunigt. Auch möchte ich erwähnen, dass ich mich von Anfang bemüht habe, eine gute Softwarequalität zu liefern, um den Code nicht nur funktionsfähig, sondern auch lesbar zu halten - Von Anfang an habe ich mich bemüht, eine gute Softwarequalität zu liefern, um den Code nicht nur funktionsfähig, sondern auch lesbar zu halten -–soweit es meinen bisherigen Fähigkeiten entspricht.
+
+Falls es möglich ist, das Projekt in das ENDLESS-Projekt zu integrieren, würde ich mich natürlich sehr freuen. Ich bin sicher, dass längere Feedback- und Refactoring-Zyklen erforderlich sein werden, ich aber meine Masterarbeit priorisieren muss. Ich hoffe, dass ich auf Sie zurückkommen darf, sobald ich mehr Zeit dafür habe.\\
+
+\textit{Repository}\\
+Quellcode im GitHub Repository Branch \texttt{task\_handling} (wenn gibt sonst \texttt{master}) verfügbar: \href{https://github.com/SiulRek/CodeAcceleratorKit.git}{CodeAcceleratorKit}.
+
+\end{document}

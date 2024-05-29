@@ -1,30 +1,39 @@
+import ast
 import re
 
-
 ROUND_BRACKET_PATTERN = re.compile(r"\((.*?)\)")
-SQUARE_BRACKET_PATTERN = re.compile(r"\[(.*?)\]")
 
-def retrieve_list_in_square_brackets(string, error_message):
-    """ Get the list in square brackets."""
-    match = SQUARE_BRACKET_PATTERN.match(string)
-    if not match:
-        raise ValueError(error_message)
-    out_list = match.group(1).split(";")
-    out_list = [elem.strip() for elem in out_list]
-    out_list = '' if (len(out_list) == 1 and out_list[0] == '') else out_list
-    return out_list
+def check_type(value, expected_type, additional_error_message=""):
+    """Check if the value is of the expected type."""
+    if not isinstance(value, expected_type):
+        msg = f"Expected {expected_type}, but got {type(value)}"
+        msg += f"{additional_error_message}"
+        raise ValueError(msg)
 
+def retrieve_arguments_in_round_brackets(string, max_args=float("inf")):
+    """
+    Retrieve the arguments in round brackets.
 
-def retrieve_optional_arguments(string):
-    """ Get optional arguments from a string."""
-    result = re.search(ROUND_BRACKET_PATTERN, string)
-    if result:
-        arguments = result.group(1).split(",")
-        arguments = [argument.strip() for argument in arguments]
-        return arguments
-    return None
+    Args:
+        - string (str): The string to retrieve the arguments from.
+        - max_args (int): The maximum number of arguments expected.
+            Otherwise, an error is raised.
 
-
-def retrieve_bool(string):
-    """ Get a boolean value from a string."""
-    return True if string.strip().lower() == "true" else False
+    Returns:
+        - tuple: The arguments in the round brackets or None if there are no arguments.
+    """
+    match = re.search(ROUND_BRACKET_PATTERN, string)
+    if match:
+        try:
+            literal = match.group(0).replace(")", ",)")
+            result = ast.literal_eval(literal)
+            if len(result) > max_args:
+                msg = f"Expected at most {max_args} arguments, but got {len(result)}"
+                raise ValueError(msg)
+            return result
+        except (ValueError, SyntaxError) as e:
+            msg = f"Evaluation of the arguments in round brackets failed: {str(e)}"
+            raise ValueError(msg)
+    else:
+        return None
+    
