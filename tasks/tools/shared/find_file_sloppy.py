@@ -44,7 +44,7 @@ def find_file_from_path_fragment(path_fragment, root_dir):
 
 def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     """
-    Function to find the file from a "sloppy" (not full path) written string: The function
+    Function to find the file from a "sloppy" (partial or incomplete path) written string: The function
     expects the file to be found in the root directory. If the string contains a
     path fragment, the function will search for the file from the path fragment.
     If the string contains only the file name, the function will search for the

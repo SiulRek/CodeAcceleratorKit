@@ -49,9 +49,10 @@ def find_dir_from_path_fragment(path_fragment, root_dir):
 
 def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
     """
-    Function to find the directory from a "sloppy" (not full path) written
-    string. If the string contains a path fragment, the function will search for
-    the directory from the path fragment. If the string contains only the
+    Function to find the directory from a "sloppy" (partial or incomplete path)
+    written string. The function expects the directory to be found in the root
+    directory. If the string contains a path fragment, the function will search
+    for the directory from the path fragment. If the string contains only the
     directory name, the function will search for the nearest directory to the
     reference directory.
 
