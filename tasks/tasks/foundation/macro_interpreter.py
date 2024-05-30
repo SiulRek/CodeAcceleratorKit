@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+import inspect
 
 class MacroInterpreter(ABC):
     """
@@ -31,12 +31,21 @@ class MacroInterpreter(ABC):
         self.initialize_validation_methods()
 
     def initialize_validation_methods(self):
-        """Initializes the validation methods for extracting macros from the text."""
+        """Initializes the validation methods for oextracting macros from the text."""
+        source = inspect.getsource(self.__class__)
+
+        # The order of the methods corresponds to the order of their occurrence in the source code.
+        method_names = [
+            line.split()[1].split('(')[0]
+            for line in source.splitlines()
+            if line.strip().startswith('def validate_')
+        ]
         self.validation_methods = [
             getattr(self, method)
-            for method in dir(self)
-            if callable(getattr(self, method)) and method.startswith("validate_")
+            for method in method_names
+            if callable(getattr(self, method))
         ]
+
 
     def extract_macros_from_text(self, text, post_process=False):
         """

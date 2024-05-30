@@ -9,6 +9,8 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_paste_files,
     line_validation_for_error,
     line_validation_for_fill_text,
+    line_validation_for_macros_template,
+    line_validation_for_macros_template_with_args,
     line_validation_for_run_python_script,
     line_validation_for_run_pylint,
     line_validation_for_run_unittest,
@@ -16,25 +18,33 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_directory_tree,
     line_validation_for_summarize_python_script,
     line_validation_for_summarize_folder,
-    line_validation_for_macros_template,
     line_validation_for_send_prompt,
 )
 from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
-from tasks.tools.for_automatic_prompt.get_error_text import get_error_text
-from tasks.tools.for_automatic_prompt.get_fill_text import get_fill_text
-from tasks.tools.for_automatic_prompt.get_macros_template import get_macros_template
-from tasks.tools.for_automatic_prompt.summarize_python_script import summarize_python_file
-from tasks.tools.shared.execute_pylint import execute_pylint
 from tasks.tools.for_automatic_prompt.execute_python_module import execute_python_module
 import tasks.tools.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
+from tasks.tools.for_automatic_prompt.generate_directory_tree import (
+    generate_directory_tree,
+)
+from tasks.tools.for_automatic_prompt.get_error_text import get_error_text
+from tasks.tools.for_automatic_prompt.get_fill_text import get_fill_text
+from tasks.tools.for_automatic_prompt.get_macros_template import (
+    get_macros_template,
+    get_macros_template_file,
+)
+from tasks.tools.for_automatic_prompt.get_temporary_script_path import (
+    get_temporary_script_path,
+)
+from tasks.tools.for_automatic_prompt.summarize_python_script import (
+    summarize_python_file,
+)
+from tasks.tools.shared.execute_pylint import execute_pylint
 from tasks.tools.shared.find_dir_sloppy import find_dir_sloppy
 from tasks.tools.shared.find_file_sloppy import find_file_sloppy
-from tasks.tools.for_automatic_prompt.generate_directory_tree import generate_directory_tree
-from tasks.tools.for_automatic_prompt.get_temporary_script_path import get_temporary_script_path
 
 
 class AutomaticPromptInterpreter(MacroInterpreter):
-    """Interpreter for creating a prompt from macros within text lines."""
+    """ Interpreter for creating a prompt from macros within text lines. """
 
     def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):
@@ -70,7 +80,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         if result := line_validation_for_paste_files(line):
             referenced_files = []
             for file_name in result:
-                file_path = find_file_sloppy(file_name, self.profile.root, self.file_path)
+                file_path = find_file_sloppy(
+                    file_name, self.profile.root, self.file_path
+                )
                 with open(file_path, "r", encoding="utf-8") as file:
                     relative_path = os.path.relpath(file_path, self.profile.root)
                     default_title = f"File at {relative_path}"
@@ -93,15 +105,41 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.FILL_TEXT, default_title, fill_text)
         return None
 
+    def validate_macros_template_with_args_macro(self, line):
+        if result := line_validation_for_macros_template_with_args(line):
+            name, args = result
+            args = [str(arg) for arg in args]
+            template_file = get_macros_template_file(
+                name, self.profile.macros_templates_with_args_dir
+            )
+            macros_template = execute_python_module(
+                module=template_file,
+                args=args,
+                env_python_path=self.profile.runner_python_env,
+                cwd=self.profile.cwd,
+            )
+            macros_data, _ = self.extract_macros_from_text(macros_template)
+            return macros_data
+        return None
+
+    def validate_macros_template_macro(self, line):
+        if result := line_validation_for_macros_template(line):
+            macros_template = get_macros_template(
+                result, self.profile.macros_templates_dir
+            )
+            macros_data, _ = self.extract_macros_from_text(macros_template)
+            return macros_data
+        return None
+
     def validate_run_python_script_macro(self, line):
         if result := line_validation_for_run_python_script(line):
             script_path = find_file_sloppy(result, self.profile.root, self.file_path)
             environment_path = self.profile.runner_python_env
             script_output = execute_python_module(
-                script_path, 
+                script_path,
                 environment_path,
                 cwd=self.profile.cwd,
-                )
+            )
             default_title = "Python Script Output"
             return (MACROS.RUN_PYTHON_SCRIPT, default_title, script_output)
         return None
@@ -167,7 +205,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 excluded_dirs,
                 excluded_files,
             ) = result
-            folder_path = find_dir_sloppy(folder_path, self.profile.root, self.file_path)
+            folder_path = find_dir_sloppy(
+                folder_path, self.profile.root, self.file_path
+            )
             excluded_dirs = [
                 find_dir_sloppy(dir_, self.profile.root, self.file_path)
                 for dir_ in excluded_dirs
@@ -199,15 +239,6 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                                 script_summary,
                             )
                         )
-            return macros_data
-        return None
-
-    def validate_macros_template_macro(self, line):
-        if result := line_validation_for_macros_template(line):
-            macros_template = get_macros_template(
-                result, self.profile.macros_templates_dir
-            )
-            macros_data, _ = self.extract_macros_from_text(macros_template)
             return macros_data
         return None
 
@@ -247,7 +278,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                     )
                     macros_data.pop(index)
                 macros_data[start] = macro_data
-                
+
         # Merge begin_text and end_text in the referenced contents
         begin_text = []
         end_text = []
@@ -269,7 +300,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             if macro_data[0] == MACROS.SEND_PROMPT:
                 # if len(send_prompt) > 0:
                 #     msg = "Multiple send_prompt macros found in the prompt."
-                #     raise ValueError(msg) 
+                #     raise ValueError(msg)
                 # Last send_prompt macro will be used
                 modify_inplace, max_tokens = macro_data[1]
                 send_prompt_kwargs["modify_inplace"] = modify_inplace

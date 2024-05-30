@@ -20,6 +20,7 @@ class Car:
 
     #B Hello Darkness my Old Friend
     # reference_1.py
+    #template_macros+ (True, 5)
     #*test_1
     #summarize data/example_script_2.py (True)
     #test_1_macros
@@ -39,4 +40,4 @@ class Car:
     #L
     #E The end of the code
     # send (False, 100)
-    #checksum 21
+    #checksum 22

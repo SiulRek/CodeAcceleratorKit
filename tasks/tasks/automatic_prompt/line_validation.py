@@ -12,6 +12,12 @@ PASTE_FILES_PATTERN = re.compile(
     rf"{TAGS.PASTE_FILES.value}\s*((?:\S+\.(?:py|txt|log|md|csv))\s*(?:,\s*\S+\.(?:py|txt|log|md|csv)\s*)*|{CURRENT_FILE_TAG})"
 )
 FILL_TEXT_PATTERN = re.compile(rf"^{TAGS.FILL_TEXT.value}\s*(.*)")
+MACROS_TEMPLATE_PATTERN = re.compile(
+    rf"{TAGS.MACROS_TEMPLATE_START.value}(.*?){TAGS.MACROS_TEMPLATE_END.value}"
+)
+MACROS_TEMPLATE_WITH_ARGS_PATTERN = re.compile(
+    rf"{TAGS.MACROS_TEMPLATE_WITH_ARGS_START.value}(.*?){TAGS.MACROS_TEMPLATE_WITH_ARGS_END.value}"
+)
 RUN_SCRIPT_PATTERN = re.compile(
     rf"{TAGS.RUN_SCRIPT.value}\s(\S+\.py|{CURRENT_FILE_TAG})"
 )
@@ -24,9 +30,6 @@ SUMMARIZE_PYTHON_SCRIPT_PATTERN = re.compile(
     rf"{TAGS.SUMMARIZE_PYTHON_SCRIPT.value}\s(\S+\.py|{CURRENT_FILE_TAG})"
 )
 SUMMARIZE_FOLDER_PATTERN = re.compile(rf"{TAGS.SUMMARIZE_FOLDER.value}\s(\S+)")
-MACROS_TEMPLATE_PATTERN = re.compile(
-    rf"{TAGS.MACROS_TEMPLATE_START.value}(.*?){TAGS.MACROS_TEMPLATE_END.value}"
-)
 CHECKSUM_PATTERN = re.compile(rf"{TAGS.CHECKSUM.value}\s(\S+)")
 
 BEGIN_TAG = TAGS.BEGIN.value
@@ -94,6 +97,22 @@ def line_validation_for_fill_text(line):
     if match := FILL_TEXT_PATTERN.match(line):
         placeholder = match.group(1)
         return placeholder
+    return None
+
+
+def line_validation_for_macros_template(line):
+    """ Validate if the line is a macros template. """
+    if result := MACROS_TEMPLATE_PATTERN.match(line):
+        return result.group(1)
+    return None
+
+
+def line_validation_for_macros_template_with_args(line):
+    """ Validate if the line is a macros template with arguments. """
+    if match := MACROS_TEMPLATE_WITH_ARGS_PATTERN.match(line):
+        name = match.group(1)
+        arguments = retrieve_arguments_in_round_brackets(line)
+        return name, arguments
     return None
 
 
@@ -176,12 +195,6 @@ def line_validation_for_summarize_folder(line):
             excluded_dirs,
             excluded_files,
         )
-
-
-def line_validation_for_macros_template(line):
-    if result := MACROS_TEMPLATE_PATTERN.match(line):
-        return result.group(1)
-    return None
 
 
 def line_validation_for_send_prompt(line):
