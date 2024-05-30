@@ -21,9 +21,10 @@ class Car:
     #B Hello Darkness my Old Friend
     # reference_1.py
     #template_macros+ (True, 5)
-    #*test_1
+    #*template
+    #template_costum (True, 5)
     #summarize data/example_script_2.py (True)
-    #test_1_macros
+    #template_macros
     #T Comment Title
     #C Wow Thats a good comment
     #C The line continues even here
@@ -40,4 +41,4 @@ class Car:
     #L
     #E The end of the code
     # send (False, 100)
-    #checksum 22
+    #checksum 23

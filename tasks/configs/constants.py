@@ -23,7 +23,7 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     PASTE_FILE = "paste_file"
     LOGGED_ERROR = "error"
     FILL_TEXT = "fill_text"
-    # COSTUM_FUNCTION = "costum_function"
+    COSTUM_FUNCTION = "costum_function"
     RUN_PYTHON_SCRIPT = "run_python_script"
     RUN_PYLINT = "run_pylint"
     RUN_UNITTEST = "run_unittest"
@@ -47,6 +47,8 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     # Same here
     MACROS_TEMPLATE_WITH_ARGS_START = "#"
     MACROS_TEMPLATE_WITH_ARGS_END = r"_macros\+"
+    COSTUM_FUNCTION_START = "#"
+    COSTUM_FUNCTION_END = "_costum"
     FILL_TEXT = r"#\*"
     RUN_SCRIPT = "#run"
     RUN_PYLINT = "#pylint"

@@ -11,6 +11,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_fill_text,
     line_validation_for_macros_template,
     line_validation_for_macros_template_with_args,
+    line_validation_for_costum_function,
     line_validation_for_run_python_script,
     line_validation_for_run_pylint,
     line_validation_for_run_unittest,
@@ -23,15 +24,13 @@ from tasks.tasks.automatic_prompt.line_validation import (
 from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
 from tasks.tools.for_automatic_prompt.execute_python_module import execute_python_module
 import tasks.tools.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
+from tasks.tools.for_automatic_prompt.find_file_in_1st_level_subdir import (
+    find_file_in_1st_level_subdir,
+)
 from tasks.tools.for_automatic_prompt.generate_directory_tree import (
     generate_directory_tree,
 )
 from tasks.tools.for_automatic_prompt.get_error_text import get_error_text
-from tasks.tools.for_automatic_prompt.get_fill_text import get_fill_text
-from tasks.tools.for_automatic_prompt.get_macros_template import (
-    get_macros_template,
-    get_macros_template_file,
-)
 from tasks.tools.for_automatic_prompt.get_temporary_script_path import (
     get_temporary_script_path,
 )
@@ -45,6 +44,16 @@ from tasks.tools.shared.find_file_sloppy import find_file_sloppy
 
 class AutomaticPromptInterpreter(MacroInterpreter):
     """ Interpreter for creating a prompt from macros within text lines. """
+
+    def _check_exists(self, file_path, usage_description):
+        if not os.path.exists(file_path):
+            msg = f"File for {usage_description} in {file_path} does not exist."
+            raise FileNotFoundError(msg)
+
+    def _read_file(self, file_path, usage_description):
+        self._check_exists(file_path, usage_description)
+        with open(file_path, "r", encoding="utf-8") as file:
+            return file.read()
 
     def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):
@@ -77,6 +86,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         return None
 
     def validate_paste_files_macro(self, line):
+        # TODO change here!!!!!!!!
         if result := line_validation_for_paste_files(line):
             referenced_files = []
             for file_name in result:
@@ -92,7 +102,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         return None
 
     def validate_error_macro(self, line):
-        # Tailored for specific test_results.log file
+        # Tailored for specific test_results.log files
         if line_validation_for_error(line):
             error_text = get_error_text(self.profile.root, self.file_path)
             default_title = "Occured Errors"
@@ -101,17 +111,20 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_fill_text_macro(self, line):
         if result := line_validation_for_fill_text(line):
-            fill_text, default_title = get_fill_text(result, self.profile.fill_text_dir)
-            return (MACROS.FILL_TEXT, default_title, fill_text)
+            file_path, subdir_name = find_file_in_1st_level_subdir(
+                result, self.profile.fill_text_dir, prettify=True
+            )
+            fill_text = self._read_file(file_path, "fill text reference")
+            return (MACROS.FILL_TEXT, subdir_name, fill_text)
         return None
 
     def validate_macros_template_with_args_macro(self, line):
         if result := line_validation_for_macros_template_with_args(line):
             name, args = result
             args = [str(arg) for arg in args]
-            template_file = get_macros_template_file(
-                name, self.profile.macros_templates_with_args_dir
-            )
+            dir_ = self.profile.macros_templates_with_args_dir
+            template_file = os.path.join(dir_, f"{name}.py")
+            self._check_exists(template_file, "macros template with args reference")
             macros_template = execute_python_module(
                 module=template_file,
                 args=args,
@@ -124,11 +137,31 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_macros_template_macro(self, line):
         if result := line_validation_for_macros_template(line):
-            macros_template = get_macros_template(
-                result, self.profile.macros_templates_dir
+            name = result
+            dir_ = self.profile.macros_templates_dir
+            template_file = os.path.join(dir_, f"{name}.py")
+            macros_template = self._read_file(
+                template_file, "macros template reference"
             )
             macros_data, _ = self.extract_macros_from_text(macros_template)
             return macros_data
+        return None
+
+    def validate_costum_function_macro(self, line):
+        if result := line_validation_for_costum_function(line):
+            name, args = result
+            args = [str(arg) for arg in args]
+            costum_functions_dir = self.profile.costum_functions_dir
+            costum_file, subdir_name = find_file_in_1st_level_subdir(
+                name, costum_functions_dir, prettify=True
+            )
+            output = execute_python_module(
+                costum_file,
+                args=args,
+                env_python_path=self.profile.runner_python_env,
+                cwd=self.profile.cwd,
+            )
+            return (MACROS.COSTUM_FUNCTION, subdir_name, output)
         return None
 
     def validate_run_python_script_macro(self, line):

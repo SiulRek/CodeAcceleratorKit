@@ -18,6 +18,9 @@ MACROS_TEMPLATE_PATTERN = re.compile(
 MACROS_TEMPLATE_WITH_ARGS_PATTERN = re.compile(
     rf"{TAGS.MACROS_TEMPLATE_WITH_ARGS_START.value}(.*?){TAGS.MACROS_TEMPLATE_WITH_ARGS_END.value}"
 )
+COSTUM_FUNCTION_PATTERN = re.compile(
+    rf"{TAGS.COSTUM_FUNCTION_START.value}(.*?){TAGS.COSTUM_FUNCTION_END.value}"
+)
 RUN_SCRIPT_PATTERN = re.compile(
     rf"{TAGS.RUN_SCRIPT.value}\s(\S+\.py|{CURRENT_FILE_TAG})"
 )
@@ -110,6 +113,15 @@ def line_validation_for_macros_template(line):
 def line_validation_for_macros_template_with_args(line):
     """ Validate if the line is a macros template with arguments. """
     if match := MACROS_TEMPLATE_WITH_ARGS_PATTERN.match(line):
+        name = match.group(1)
+        arguments = retrieve_arguments_in_round_brackets(line)
+        return name, arguments
+    return None
+
+
+def line_validation_for_costum_function(line):
+    """ Validate if the line is a costum function. """
+    if match := COSTUM_FUNCTION_PATTERN.match(line):
         name = match.group(1)
         arguments = retrieve_arguments_in_round_brackets(line)
         return name, arguments
