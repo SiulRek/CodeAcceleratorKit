@@ -39,7 +39,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     TITLE = "#T "
     COMMENT = "#C "
     PASTE_CURRENT_FILE = f"# {CURRENT_FILE_TAG}"
-    PASTE_FILES = "#"
+    PASTE_FILES = "# "
     ERROR = "#L"
     # MACROS_TEMPLATE is not a macro itself, but a combination of macros
     MACROS_TEMPLATE_START = "#"
