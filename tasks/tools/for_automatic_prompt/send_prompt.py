@@ -1,6 +1,6 @@
 import openai
 
-from local.private.keys import OPENAI_KEY
+from keys import OPENAI_KEY
 
 
 def send_prompt(prompt_message, max_response_tokens=3000):
