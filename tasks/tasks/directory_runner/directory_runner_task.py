@@ -1,3 +1,29 @@
+"""
+This module defines the DirectoryRunnerTask, a task for running specific tasks on a directory of files.
+
+The DirectoryRunnerTask class sets up the environment, reads configurations from a JSON file, and executes the specified task on each file within a directory. It supports resuming from the last stopped file and excludes specified files and directories.
+
+Available tasks:
+- FormatPythonTask: Formats Python files by removing or refactoring specific parts based on macros.
+- AutomaticPromptTask: Generates automatic prompts based on macro statements.
+
+The module includes the following key functionalities:
+- Reading configuration from a JSON file.
+- Initializing and setting up the task environment.
+- Tracking the execution status of each file.
+- Logging outputs to a specified file.
+- Handling backups of files before modifications.
+- Supporting resumption from the last stopped file in case of interruptions.
+
+Usage example:
+# Initialize the task with a root directory and a configuration JSON file.
+DirectoryRunnerTask(root_directory, config_json).main()
+
+TODO when adding new tasks:
+1. Ensure the task class is imported and recognized in _get_task_class method.
+2. Update the configuration JSON schema if new attributes are needed.
+3. Implement necessary methods in the task class for integration.
+"""
 import json
 import os
 

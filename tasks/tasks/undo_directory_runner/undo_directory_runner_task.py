@@ -1,3 +1,11 @@
+"""
+This module defines the UndoDirectoryRunnerTask, a task for undoing the effects of a previously executed directory runner task.
+
+The UndoDirectoryRunnerTask class sets up the environment, reads configurations from a JSON file, and uses the FileExecutionTracker and BackupHandler to revert changes made by the directory runner task.
+
+Usage example:
+UndoDirectoryRunnerTask(root_directory, config_json).main()
+"""
 import os
 
 from tasks.tasks.foundation.task_base import TaskBase

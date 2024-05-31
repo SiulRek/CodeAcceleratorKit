@@ -12,19 +12,31 @@ Available macros:
 | select_only              | Selects only the specified sections                    | #only                  | <List of strategies abbreviations> |
 | select_not               | Excludes the specified sections                        | #not                   | <List of strategies abbreviations> |
 | force_select_of          | Forces selection of the specified sections             | #force                 | <List of strategies abbreviations> |
-| checkpoints              | Marks the points in the code for checkpoints           | #checkpointing         | -                                  |     
+| checkpoints              | Marks the points in the code for checkpoints           | #checkpointing         | -                                  |
+
+Available strategies:
+| Abbreviation | Description                        | Comments                           |
+|--------------|------------------------------------|------------------------------------|
+| RT           | Remove trailing parts              |                                    |
+| RL           | Remove line comments               | Needs to be forced                 |
+| RE           | Refactor exception                 |                                    |
+| RI           | Rearrange imports                  |                                    |                                   
+| RU           | Remove unused imports              |                                    |
+| BF           | Run Black formatting               |                                    |
+| FD           | Format docstrings                  |                                    |
+| PL           | Execute Pylint                     |                                    |
 
 Usage example:
-#only RL, FD
-#checkpointing
+macros_text = "#only RL, FD\n#checkpointing"
+FormatPythonTask(root_directory, file_path, macros_text).main()
 
 TODO when adding new macros:
 1. Add the validation function in line_validation.py.
 2. Add the macro to FORMAT_PYTHON_MACROS in constants.py.
 3. Add a new validation method for the macro in FormatPythonInterpreter.
 """
-import os
 
+import os
 from tasks.tasks.format_python.format_python_interpreter import FormatPythonInterpreter
 from tasks.tools.shared.backup_handler import BackupHandler
 from tasks.tasks.foundation.task_base import TaskBase

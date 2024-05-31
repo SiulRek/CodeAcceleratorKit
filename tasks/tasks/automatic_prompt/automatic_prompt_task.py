@@ -4,12 +4,12 @@ This module generates an automatic prompt based on macro statements that are ret
 Available reference types:
 | Name                    | Description                           | Pattern                                          | Arguments                                                                                |
 |-------------------------|---------------------------------------|--------------------------------------------------|------------------------------------------------------------------------------------------|
-| begin tag               | Place start text                      | #B <begin_text>                                  | -                                                                                        |
-| end tag                 | Place end text                        | #E <end_text>                                    | -                                                                                        |
+| begin_text              | Place start text                      | #B <begin_text>                                  | -                                                                                        |
+| end_text                | Place end text                        | #E <end_text>                                    | -                                                                                        |
 | title                   | Title of the reference                | #T <title>                                       | -                                                                                        |
 | comment                 | Comment text                          | #C <comment>                                     | -                                                                                        |
-| paste files             | Paste file/s                          | # <file_path> or <file_path_1, file_path_2>      | -                                                                                        |
-| Paste Current file      | Paste Current file                    | # File                                           | -                                                                                        |
+| paste_files             | Paste file/s                          | # <file_path> or <file_path_1, file_path_2>      | -                                                                                        |
+| paste_current_file      | Paste Current file                    | # File                                           | -                                                                                        |
 | error                   | Get logged errors                     | #L                                               | -                                                                                        |
 | fill_text               | Add a fill text                       | #*<file_name_without_ext>                        | -                                                                                        |
 | meta_macros             | Interprete predifined meta macros     | #<file_name_without_ext>_meta                    | -                                                                                        |
@@ -21,10 +21,18 @@ Available reference types:
 | directory_tree          | Get directory tree                    | #tree <directory_path>                           | <max_depth, include_files, ignore_list (semicolon-separated list)>                       |
 | summarize_python_script | Summarize a Python script             | #summarize <script_path>                         | <include_definitions_with_docstrings>                                                    |
 | summarize_folder        | Summarize Python scripts in a folder  | #summarize_folder <folder_path>                  | <include_definitions_with_docstrings, excluded_dirs, excluded_files>                     |
-| send_prompt             | Send a prompt from a temporary file   | #send_prompt                                     | <create_python_script, max_tokens>                                                       |
+| send_prompt             | Send a prompt from a temporary file   | #send                                            | <create_python_script, max_tokens>                                                       |
 | checksum                | Check if provided checksum corresponds| #checksum <number_of_references>                 | -                                                                                        |
 
-Note: Replace angled brackets and their contents with appropriate values when using patterns.
+Usage Example:
+macros_text = (
+    "#T This is the Start of the prompt\n"
+    "#C Some text\n"
+    "#T New Chapter\n"
+    "#run example_script.py\n"
+    "#E Now that we paste the output of example_script.py we come to the end of prompt\n"#
+)
+AutomaticPromptTask(default_root, default_file_path, "".join(macros_text)).main()
 
 TODO when adding new macros:
 1. Make line validation function in line_validation.py.
