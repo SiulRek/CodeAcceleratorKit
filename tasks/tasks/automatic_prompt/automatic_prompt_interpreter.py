@@ -9,8 +9,8 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_paste_files,
     line_validation_for_error,
     line_validation_for_fill_text,
-    line_validation_for_macros_template,
-    line_validation_for_macros_template_with_args,
+    line_validation_for_meta_macros,
+    line_validation_for_meta_macros_with_args,
     line_validation_for_costum_function,
     line_validation_for_run_python_script,
     line_validation_for_run_pylint,
@@ -118,33 +118,33 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.FILL_TEXT, subdir_name, fill_text)
         return None
 
-    def validate_macros_template_with_args_reference(self, line):
-        if result := line_validation_for_macros_template_with_args(line):
+    def validate_meta_macros_with_args(self, line):
+        if result := line_validation_for_meta_macros_with_args(line):
             name, args = result
             if args:
                 args = [str(arg) for arg in args]
-            dir_ = self.profile.macros_templates_with_args_dir
+            dir_ = self.profile.meta_macros_with_args_dir
             template_file = os.path.join(dir_, f"{name}.py")
-            self._check_exists(template_file, "macros template with args reference")
-            macros_template = execute_python_module(
+            self._check_exists(template_file, "meta macros with args reference")
+            macros_text = execute_python_module(
                 module=template_file,
                 args=args,
                 env_python_path=self.profile.runner_python_env,
                 cwd=self.profile.cwd,
             )
-            macros_data, _ = self.extract_macros_from_text(macros_template)
+            macros_data, _ = self.extract_macros_from_text(macros_text)
             return macros_data
         return None
 
-    def validate_macros_template_reference(self, line):
-        if result := line_validation_for_macros_template(line):
+    def validate_meta_macros(self, line):
+        if result := line_validation_for_meta_macros(line):
             name = result
-            dir_ = self.profile.macros_templates_dir
+            dir_ = self.profile.meta_macros_dir
             template_file = os.path.join(dir_, f"{name}.py")
-            macros_template = self._read_file(
-                template_file, "macros template reference"
+            macros_text = self._read_file(
+                template_file, "meta macros reference"
             )
-            macros_data, _ = self.extract_macros_from_text(macros_template)
+            macros_data, _ = self.extract_macros_from_text(macros_text)
             return macros_data
         return None
 

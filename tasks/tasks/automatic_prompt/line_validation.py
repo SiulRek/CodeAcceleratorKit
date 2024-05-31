@@ -12,11 +12,11 @@ PASTE_FILES_PATTERN = re.compile(
     rf"{TAGS.PASTE_FILES.value}\s*((?:\S+\.(?:py|txt|log|md|csv))\s*(?:,\s*\S+\.(?:py|txt|log|md|csv)\s*)*|{CURRENT_FILE_TAG})"
 )
 FILL_TEXT_PATTERN = re.compile(rf"^{TAGS.FILL_TEXT.value}\s*(.*)")
-MACROS_TEMPLATE_PATTERN = re.compile(
-    rf"{TAGS.MACROS_TEMPLATE_START.value}(.*?){TAGS.MACROS_TEMPLATE_END.value}"
+META_MACROS_PATTERN = re.compile(
+    rf"{TAGS.META_MACROS_START.value}(.*?){TAGS.META_MACROS_END.value}"
 )
-MACROS_TEMPLATE_WITH_ARGS_PATTERN = re.compile(
-    rf"{TAGS.MACROS_TEMPLATE_WITH_ARGS_START.value}(.*?){TAGS.MACROS_TEMPLATE_WITH_ARGS_END.value}"
+META_MACROS_WITH_ARGS_PATTERN = re.compile(
+    rf"{TAGS.META_MACROS_WITH_ARGS_START.value}(.*?){TAGS.META_MACROS_WITH_ARGS_END.value}"
 )
 COSTUM_FUNCTION_PATTERN = re.compile(
     rf"{TAGS.COSTUM_FUNCTION_START.value}(.*?){TAGS.COSTUM_FUNCTION_END.value}"
@@ -103,16 +103,16 @@ def line_validation_for_fill_text(line):
     return None
 
 
-def line_validation_for_macros_template(line):
-    """ Validate if the line is a macros template. """
-    if result := MACROS_TEMPLATE_PATTERN.match(line):
+def line_validation_for_meta_macros(line):
+    """ Validate if the line is a meta macros. """
+    if result := META_MACROS_PATTERN.match(line):
         return result.group(1)
     return None
 
 
-def line_validation_for_macros_template_with_args(line):
-    """ Validate if the line is a macros template with arguments. """
-    if match := MACROS_TEMPLATE_WITH_ARGS_PATTERN.match(line):
+def line_validation_for_meta_macros_with_args(line):
+    """ Validate if the line is a meta macros with arguments. """
+    if match := META_MACROS_WITH_ARGS_PATTERN.match(line):
         name = match.group(1)
         arguments = retrieve_arguments_in_round_brackets(line)
         return name, arguments

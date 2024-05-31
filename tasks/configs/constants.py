@@ -41,12 +41,10 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     PASTE_CURRENT_FILE = f"# {CURRENT_FILE_TAG}"
     PASTE_FILES = "# "
     ERROR = "#L"
-    # MACROS_TEMPLATE is not a macro itself, but a combination of macros
-    MACROS_TEMPLATE_START = "#"
-    MACROS_TEMPLATE_END = "_macros"
-    # Same here
-    MACROS_TEMPLATE_WITH_ARGS_START = "#"
-    MACROS_TEMPLATE_WITH_ARGS_END = r"_macros\+"
+    META_MACROS_START = "#"
+    META_MACROS_END = "_macros"
+    META_MACROS_WITH_ARGS_START = "#"
+    META_MACROS_WITH_ARGS_END = r"_macros\+"
     COSTUM_FUNCTION_START = "#"
     COSTUM_FUNCTION_END = "_costum"
     FILL_TEXT = r"#\*"

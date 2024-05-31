@@ -28,8 +28,8 @@ class ProfileAttrNames(Enum):
     execution_tracks_dir = (6, "configs.json")
     costumizations_dir = (7, "configs.json")
     fill_text_dir = (8, "configs.json")
-    macros_templates_dir = (9, "configs.json")
-    macros_templates_with_args_dir = (10, "configs.json")
+    meta_macros_dir = (9, "configs.json")
+    meta_macros_with_args_dir = (10, "configs.json")
     costum_functions_dir = (11, "configs.json")
     output_dir = (12, "configs.json")
     log_dir = (13, "configs.json")
@@ -54,8 +54,8 @@ UPDATE_MAPPING = {
     "costumizations_dir": "costumizations_dir",
     "fill_text_dir": "fill_text_dir",
     "costum_functions_dir": "costum_functions_dir",
-    "macros_templates_dir": "macros_templates_dir",
-    "macros_templates_with_args_dir": "macros_templates_with_args_dir",
+    "meta_macros_dir": "meta_macros_dir",
+    "meta_macros_with_args_dir": "meta_macros_with_args_dir",
     "output_dir": "output_dir",
     "log_dir": "log_dir",
     "backup_dir": "backup_dir",
@@ -122,20 +122,20 @@ class AttributesInitializer:
         return dir_
 
     @classmethod
-    def _initialize_macros_templates_dir(cls, primary_attrs):
+    def _initialize_meta_macros_dir(cls, primary_attrs):
         """ Initializes the prompt templates directory path based on
         the templates directory. """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
-        dir_ = os.path.join(templates_dir, "macros")
+        dir_ = os.path.join(templates_dir, "meta_macros")
         dir_ = normalize_path(dir_)
         return dir_
 
     @classmethod
-    def _initialize_macros_templates_with_args_dir(cls, primary_attrs):
+    def _initialize_meta_macros_with_args_dir(cls, primary_attrs):
         """ Initializes the templates with arguments directory path based on
         the templates directory. """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
-        dir_ = os.path.join(templates_dir, "macros_with_args")
+        dir_ = os.path.join(templates_dir, "meta_macros_with_args")
         dir_ = normalize_path(dir_)
         return dir_
 
