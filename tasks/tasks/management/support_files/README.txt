@@ -1,0 +1,2 @@
+The goal of the support files from this directory is to describe the usage of the Tasks Kit. The support files are going to be loaded to `storage_dir
+of the `runner_root` when executing register_runner.py script.

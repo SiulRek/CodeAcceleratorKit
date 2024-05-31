@@ -1,0 +1,9 @@
+from tasks.tasks.management.task_manager import TaskManager
+
+if __name__ == "__main__":
+    task_manager = TaskManager()
+
+    task_manager.load_support_files_to(
+        runner_root="/home/krakerlu/github/CodeAcceleratorKitTest",
+    )
+    print("Support files loaded successfully.")

@@ -1,0 +1,7 @@
+Write some text here.
+Generally, you can call the fill text:
+#*<file_name_without_ext>
+For instance this module is called with:
+#*template_4
+Note the file must be in a subdir of fill_text_dir, the subdir name is going to 
+be the macro title of the text here.

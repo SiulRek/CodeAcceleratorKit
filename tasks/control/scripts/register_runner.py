@@ -11,3 +11,7 @@ if __name__ == "__main__":
         # # overwrite=True
         # # create_dirs=True
     )
+    task_manager.load_support_files_to(
+        runner_root="/path/to/runner_root",
+    )
+    print("Runner registered successfully.")

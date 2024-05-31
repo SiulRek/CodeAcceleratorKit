@@ -3,14 +3,18 @@ import os
 import shutil
 import warnings
 
-from tasks.configs.constants import REGISTERED_RUNNERS_JSON
+from tasks.configs.constants import REGISTERED_RUNNERS_JSON, TASKS_ROOT
 import tasks.configs.profile_attributes as Attributes
 from tasks.tasks.management.normalize_path import normalize_path
 from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
 
+SUPPORT_FILES_DIR = os.path.join(
+    TASKS_ROOT, "tasks", "tasks", "management", "support_files"
+)
+
 
 class TaskManager(Attributes.AttributesInitializer):
-    """Manages the registration and initialization of new task runners."""
+    """ Manages the registration and initialization of new task runners. """
 
     @classmethod
     def _register_runner(cls, runner_root, storage_dir, overwrite):
@@ -157,7 +161,7 @@ class TaskManager(Attributes.AttributesInitializer):
         if create_dirs:
             cls.sync_directories_of(runner_root)
         return profile
-    
+
     @classmethod
     def get_registered_runners(cls):
         """
@@ -235,7 +239,7 @@ class TaskManager(Attributes.AttributesInitializer):
 
     @classmethod
     def update_registered_runners(cls):
-        """Updates the attributes of all registered runners."""
+        """ Updates the attributes of all registered runners. """
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_runners = json.load(f)
         for runner_root in registered_runners:
@@ -267,20 +271,26 @@ class TaskManager(Attributes.AttributesInitializer):
             json.dump(registered_runners, f, indent=4)
 
     @classmethod
-    def copy_costumizations_files(cls, source_runner_dir, dest_runner_dir, overwrite=False):
+    def copy_costumizations_files(
+        cls, source_runner_dir, dest_runner_dir, overwrite=False
+    ):
         """
-        Copies costumizations files from the source runner to the destination runner.
+        Copies costumizations files from the source runner to the destination
+        runner.
 
         Args:
             - source_runner_dir (str): The source runner directory.
             - dest_runner_dir (str): The destination runner directory.
-            - overwrite (bool, optional): Whether to overwrite existing files.
+            - overwrite (bool, optional): Whether to overwrite existing
+                files.
         """
         if not cls.is_runner_registered(source_runner_dir):
-            raise ValueError(f"Source runner {source_runner_dir} is not registered.")
+            msg = f"Source runner {source_runner_dir} is not registered."
+            raise ValueError(msg)
         if not cls.is_runner_registered(dest_runner_dir):
-            raise ValueError(f"Destination runner {dest_runner_dir} is not registered.")
-        
+            msg = f"Destination runner {dest_runner_dir} is not registered."
+            raise ValueError(msg)
+
         source_profile = TaskRunnerProfile(source_runner_dir)
         dest_profile = TaskRunnerProfile(dest_runner_dir)
         source_costumizations_dir = source_profile.costumizations_dir
@@ -289,7 +299,9 @@ class TaskManager(Attributes.AttributesInitializer):
         for root, _, files in os.walk(source_costumizations_dir):
             for file in files:
                 file_abs_path = os.path.join(root, file)
-                file_rel_path = os.path.relpath(file_abs_path, source_costumizations_dir)
+                file_rel_path = os.path.relpath(
+                    file_abs_path, source_costumizations_dir
+                )
                 dest_file = os.path.join(dest_costumizations_dir, file_rel_path)
                 os.makedirs(os.path.dirname(dest_file), exist_ok=True)
                 if os.path.exists(dest_file):
@@ -298,4 +310,47 @@ class TaskManager(Attributes.AttributesInitializer):
                         continue
                     warnings.warn(f"Overwriting file {dest_file}.")
                 shutil.copy2(file_abs_path, dest_file)
-                
+
+    @classmethod
+    def load_support_files_to(cls, runner_root):
+        """
+        Loads support files to the runner.
+
+        Args:
+            - runner_root (str): The root directory of the runner.
+        """
+        profile = TaskRunnerProfile(runner_root)
+        cheatsheet = os.path.join(SUPPORT_FILES_DIR, "CHEATSHEET.md")
+        template_1 = os.path.join(SUPPORT_FILES_DIR, "template_1.py")
+        template_2 = os.path.join(SUPPORT_FILES_DIR, "template_2.py")
+        template_3 = os.path.join(
+            SUPPORT_FILES_DIR, "costum_function_template", "template_3.py"
+        )
+        costum_function_example = os.path.join(
+            SUPPORT_FILES_DIR, "costum_function_template", "costum_function_example.py"
+        )
+        template_4 = os.path.join(SUPPORT_FILES_DIR, "fill_text_template", "template_4.txt")
+
+        load_mapping = [
+            # (source_file, dest_dir, subdir_to_create)
+            (cheatsheet, profile.storage_dir, None),
+            (template_1, profile.meta_macros_dir, None),
+            (template_2, profile.meta_macros_with_args_dir, None),
+            (template_3, profile.costum_functions_dir, "costum_function_template"),
+            (
+                costum_function_example,
+                profile.costum_functions_dir,
+                "costum_function_template",
+            ),
+            (template_4, profile.fill_text_dir, "fill_text_template"),
+        ]
+
+        for source_file, dest_dir, subdir in load_mapping:
+            if subdir is not None:
+                dest_dir = os.path.join(dest_dir, subdir)
+                os.makedirs(dest_dir, exist_ok=True)
+            dest_file = os.path.join(dest_dir, os.path.basename(source_file))
+            if os.path.exists(dest_file):
+                warnings.warn(f"File {dest_file} already exists, skipping.")
+                continue
+            shutil.copy2(source_file, dest_file)
