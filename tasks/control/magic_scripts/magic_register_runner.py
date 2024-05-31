@@ -46,7 +46,7 @@ def magic_register_runner(
         create_dirs=create_dirs,
         cwd=cwd,
     )
-    TaskManager.copy_templates_files(
+    TaskManager.copy_costumizations_files(
         source_runner_dir=TASKS_ROOT,
         dest_runner_dir=runner_root,
     )

@@ -267,9 +267,9 @@ class TaskManager(Attributes.AttributesInitializer):
             json.dump(registered_runners, f, indent=4)
 
     @classmethod
-    def copy_templates_files(cls, source_runner_dir, dest_runner_dir, overwrite=False):
+    def copy_costumizations_files(cls, source_runner_dir, dest_runner_dir, overwrite=False):
         """
-        Copies templates files from the source runner to the destination runner.
+        Copies costumizations files from the source runner to the destination runner.
 
         Args:
             - source_runner_dir (str): The source runner directory.
@@ -283,14 +283,14 @@ class TaskManager(Attributes.AttributesInitializer):
         
         source_profile = TaskRunnerProfile(source_runner_dir)
         dest_profile = TaskRunnerProfile(dest_runner_dir)
-        source_templates_dir = source_profile.templates_dir
-        dest_templates_dir = dest_profile.templates_dir
+        source_costumizations_dir = source_profile.costumizations_dir
+        dest_costumizations_dir = dest_profile.costumizations_dir
 
-        for root, _, files in os.walk(source_templates_dir):
+        for root, _, files in os.walk(source_costumizations_dir):
             for file in files:
                 file_abs_path = os.path.join(root, file)
-                file_rel_path = os.path.relpath(file_abs_path, source_templates_dir)
-                dest_file = os.path.join(dest_templates_dir, file_rel_path)
+                file_rel_path = os.path.relpath(file_abs_path, source_costumizations_dir)
+                dest_file = os.path.join(dest_costumizations_dir, file_rel_path)
                 os.makedirs(os.path.dirname(dest_file), exist_ok=True)
                 if os.path.exists(dest_file):
                     if not overwrite:

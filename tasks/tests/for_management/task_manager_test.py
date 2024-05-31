@@ -283,43 +283,43 @@ class TestTaskManager(unittest.TestCase):
 
         self.assertFalse(os.path.exists(self.storage_dir))
 
-    def test_copy_templates_files(self):
+    def test_copy_costumizations_files(self):
         source_runner_dir = os.path.join(self.temp_dir.name, "source_runner")
         os.makedirs(source_runner_dir)
 
         dest_runner_dir = os.path.join(self.temp_dir.name, "dest_runner")
         os.makedirs(dest_runner_dir)
 
-        source_templates_dir = os.path.join(source_runner_dir, "templates")
-        os.makedirs(source_templates_dir)
-        source_file_path = os.path.join(source_templates_dir, "example_dir", "example_file.txt")
+        source_costumizations_dir = os.path.join(source_runner_dir, "costumizations")
+        os.makedirs(source_costumizations_dir)
+        source_file_path = os.path.join(source_costumizations_dir, "example_dir", "example_file.txt")
         os.makedirs(os.path.dirname(source_file_path))
         with open(source_file_path, "w") as file:
-            file.write("Sample templates")
+            file.write("Sample costumizations")
 
-        dest_templates_dir = os.path.join(dest_runner_dir, "templates")
-        os.makedirs(dest_templates_dir)
+        dest_costumizations_dir = os.path.join(dest_runner_dir, "costumizations")
+        os.makedirs(dest_costumizations_dir)
 
         with patch("tasks.tasks.management.task_manager.TaskRunnerProfile") as MockProfile, patch.object(Manager, 'is_runner_registered', return_value=True):
             mock_source_profile = MagicMock()
-            mock_source_profile.templates_dir = source_templates_dir
-            mock_source_profile.var1_dir = source_templates_dir
-            mock_source_profile.var2_dir = source_templates_dir
+            mock_source_profile.costumizations_dir = source_costumizations_dir
+            mock_source_profile.var1_dir = source_costumizations_dir
+            mock_source_profile.var2_dir = source_costumizations_dir
 
             mock_dest_profile = MagicMock()
-            mock_dest_profile.templates_dir = dest_templates_dir
-            mock_dest_profile.var1_dir = dest_templates_dir
-            mock_dest_profile.var2_dir = dest_templates_dir
+            mock_dest_profile.costumizations_dir = dest_costumizations_dir
+            mock_dest_profile.var1_dir = dest_costumizations_dir
+            mock_dest_profile.var2_dir = dest_costumizations_dir
 
             MockProfile.side_effect = [mock_source_profile, mock_dest_profile]
 
-            Manager().copy_templates_files(source_runner_dir, dest_runner_dir)
+            Manager().copy_costumizations_files(source_runner_dir, dest_runner_dir)
 
-        dest_file_path = os.path.join(dest_templates_dir, "example_dir", "example_file.txt")
+        dest_file_path = os.path.join(dest_costumizations_dir, "example_dir", "example_file.txt")
         self.assertTrue(os.path.isfile(dest_file_path))
         with open(dest_file_path, "r") as file:
             content = file.read()
-            self.assertEqual(content, "Sample templates")
+            self.assertEqual(content, "Sample costumizations")
 
     def test_update_runner(self):
         with patch(

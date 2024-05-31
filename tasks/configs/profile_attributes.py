@@ -26,7 +26,7 @@ class ProfileAttrNames(Enum):
     runners_cache = (4, "configs.json")
     data_dir = (5, "configs.json")
     execution_tracks_dir = (6, "configs.json")
-    templates_dir = (7, "configs.json")
+    costumizations_dir = (7, "configs.json")
     fill_text_dir = (8, "configs.json")
     macros_templates_dir = (9, "configs.json")
     macros_templates_with_args_dir = (10, "configs.json")
@@ -51,7 +51,7 @@ UPDATE_MAPPING = {
     "runners_cache": "runners_cache",
     "data_dir": "data_dir",
     "execution_tracks_dir": "execution_tracks_dir",
-    "templates_dir": "templates_dir",
+    "costumizations_dir": "costumizations_dir",
     "fill_text_dir": "fill_text_dir",
     "costum_functions_dir": "costum_functions_dir",
     "macros_templates_dir": "macros_templates_dir",
@@ -104,11 +104,11 @@ class AttributesInitializer:
         return dir_
 
     @classmethod
-    def _initialize_templates_dir(cls, primary_attrs):
+    def _initialize_costumizations_dir(cls, primary_attrs):
         """ Initializes the templates directory path based on the storage_dir
         inprimaryattributes. """
         storage_dir = primary_attrs.get("storage_dir")
-        dir_ = os.path.join(storage_dir, "templates")
+        dir_ = os.path.join(storage_dir, "costumizations")
         dir_ = normalize_path(dir_)
         return dir_
 
@@ -116,7 +116,7 @@ class AttributesInitializer:
     def _initialize_fill_text_dir(cls, primary_attrs):
         """ Initializes the fill text directory path based on the
         templatesdirectory. """
-        templates_dir = cls._initialize_templates_dir(primary_attrs)
+        templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "fill_texts")
         dir_ = normalize_path(dir_)
         return dir_
@@ -125,7 +125,7 @@ class AttributesInitializer:
     def _initialize_macros_templates_dir(cls, primary_attrs):
         """ Initializes the prompt templates directory path based on
         the templates directory. """
-        templates_dir = cls._initialize_templates_dir(primary_attrs)
+        templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "macros")
         dir_ = normalize_path(dir_)
         return dir_
@@ -134,7 +134,7 @@ class AttributesInitializer:
     def _initialize_macros_templates_with_args_dir(cls, primary_attrs):
         """ Initializes the templates with arguments directory path based on
         the templates directory. """
-        templates_dir = cls._initialize_templates_dir(primary_attrs)
+        templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "macros_with_args")
         dir_ = normalize_path(dir_)
         return dir_
@@ -143,7 +143,7 @@ class AttributesInitializer:
     def _initialize_costum_functions_dir(cls, primary_attrs):
         """ Initializes the costum functions directory path based on the
         templatesdirectory. """
-        templates_dir = cls._initialize_templates_dir(primary_attrs)
+        templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "costum_functions")
         dir_ = normalize_path(dir_)
         return dir_

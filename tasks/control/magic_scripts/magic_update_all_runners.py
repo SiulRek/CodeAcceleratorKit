@@ -18,7 +18,7 @@ def magic_update_all_runners():
     for runner_root in runner_roots:
         if runner_root == TASKS_ROOT:
             continue
-        TaskManager.copy_templates_files(TASKS_ROOT, runner_root)
+        TaskManager.copy_costumizations_files(TASKS_ROOT, runner_root)
         allocate_vscode_tasks_json(runner_root)
         print(f"Runner {os.path.basename(runner_root)} updated successfully.")
 
