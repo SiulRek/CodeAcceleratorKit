@@ -144,7 +144,7 @@ class AttributesInitializer:
         """ Initializes the costum functions directory path based on the
         templatesdirectory. """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
-        dir_ = os.path.join(templates_dir, "costum_functions")
+        dir_ = os.path.join(templates_dir, "functions")
         dir_ = normalize_path(dir_)
         return dir_
 
