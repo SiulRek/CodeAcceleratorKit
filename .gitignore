@@ -9,7 +9,8 @@ __pycache__/
 
 # Local and Temporary Files
 **/local/
-**/temp*
+**/temp/*
+**/temp.*
 **/test.*
 tasks/tests/outputs/test_results_simple.log
 tasks/tests/outputs/test_results.log
