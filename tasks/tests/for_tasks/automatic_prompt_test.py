@@ -4,7 +4,7 @@ TODO:
     2. check the temporary file for the output.
 """
 
-class Car:
+class ExampleClassCar:
     def __init__(self, brand, model):
         self.brand = brand
         self.model = model
@@ -18,28 +18,69 @@ class Car:
     def get_car(self):
         return self.brand, self.model
 
-    #B Hello Darkness my Old Friend
-    # reference_1.py
-    #template_meta+ (True, 5)
-    #*template
-    #template_func (True, 5)
-    #summarize data/example_script_2.py (True)
-    #template_meta
-    #T Comment Title
-    #C Wow Thats a good comment
-    #C The line continues even here
-    #C The comment is so long.
-    #run data/example_script.py
-    #summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
-    #T Reference File Title
-    # reference_2.py, data/reference_3.txt
-    # File
-    #tree . (2, False, ['temp', 'log'])
-    #unittest File (2)
-    #pylint data/example_script.py
-    #C This is another comment
-    #L
-    #E The end of the code
-    # send (False, 100)
-    #copy_output_costu
-    #checksum 23
+# ------------ MACROS TEXT START ------------------------------------
+
+# Begin Text Macro
+#B Start of Prompt
+#B Merge begin text in multiple lines
+
+# End Text Macro
+#E End of prompt
+#E Merge end text in multiple lines
+
+# Chapter title macro
+#T Title of the chapter
+
+# Comment macro
+#C Comment text
+#C Merge comments in multiple lines
+
+# Paste files macro
+# reference_1.py, data\reference_2.py
+
+# Paste current file
+# File
+
+# Logged error macro
+#L
+
+# Fill text macro
+#*template_4
+
+# Meta macro
+#template_1_meta
+
+# Meta macro with arguments
+#template_2_meta+ (True, 5)
+
+# Costum unction macro
+#template_3_func (True, 5)
+
+# Run script macro
+#run data/example_script.py
+
+# Run pylint macro
+#pylint data/example_script.py
+
+# Run unittest macro
+#unittest File (2)
+
+# Create directory tree macro
+#tree . (2, False, ['temp', 'log'])
+
+# Summarize python script macro
+#summarize data/example_script_2.py (True)
+
+# Summarize folder macro
+#summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
+
+# Send Prompt Macro (remove space in '# send')
+# send (False, 100)
+
+# Checksum Macro
+#checksum 21
+
+# Not a macro
+#copy_output_fun
+
+# ------------ MACROS TEXT END ------------------------------------

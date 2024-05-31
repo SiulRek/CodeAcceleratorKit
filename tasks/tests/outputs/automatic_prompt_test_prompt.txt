@@ -1,15 +1,145 @@
-Hello Darkness my Old Friend
+Start of Prompt
+Merge begin text in multiple lines
 
 **********
 
 
 
+--- Title of the chapter ---
+Comment text
+Merge comments in multiple lines
+
 --- File at tasks/tests/data/reference_1.py ---
 # This is the reference 1 file.
 # Here is the reference 1 file finished.
 
+--- File at tasks/tests/data/reference_2.py ---
+# This is the reference 2 file.
+# Here is the reference 2 file finished.
+
+--- File at tasks/tests/for_tasks/automatic_prompt_test.py ---
+"""
+TODO:
+    1. Run the task Load File and References
+    2. check the temporary file for the output.
+"""
+
+class ExampleClassCar:
+    def __init__(self, brand, model):
+        self.brand = brand
+        self.model = model
+
+    def __eq__(self, other):
+        return self.brand == other.brand and self.model == other.model
+
+    def __str__(self):
+        return f"{self.brand} {self.model}"
+
+    def get_car(self):
+        return self.brand, self.model
+
+# ------------ MACROS TEXT START ------------------------------------
+
+# Begin Text Macro
+
+# End Text Macro
+
+# Chapter title macro
+
+# Comment macro
+
+# Paste files macro
+
+# Paste current file
+
+# Logged error macro
+
+# Fill text macro
+
+# Meta macro
+
+# Meta macro with arguments
+
+# Costum unction macro
+
+# Run script macro
+
+# Run pylint macro
+
+# Run unittest macro
+
+# Create directory tree macro
+
+# Summarize python script macro
+
+# Summarize folder macro
+
+# Send Prompt Macro (remove space in '# send')
+# send (False, 100)
+
+# Checksum Macro
+#checksum 21
+
+# Not a macro
+#copy_output_fun
+
+# ------------ MACROS TEXT END ------------------------------------
+
+--- Occured Errors ---
+
+2024-05-11 18:10:41,841 - INFO - -------------- This is a Title -------------------------------
+2024-05-11 18:10:41,841 - ERROR - Test raised exc: test_example_error
+Message: Traceback (most recent call last):
+  File "/home/no_name/github/pcb-defect-detection/source/utils/testing/test_result_logger.py", line 146, in test_example_error
+    raise ValueError()
+ValueError
+
+2024-05-11 18:10:41,841 - ERROR - Test failure: test_example_fail
+Message: Traceback (most recent call last):
+  File "/home/no_name/github/pcb-defect-detection/source/utils/testing/test_result_logger.py", line 143, in test_example_fail
+    self.assertEqual(1, 2)
+AssertionError: 1 != 2
+
+
+--- Fill Text Template ---
+Write some text here.
+Generally, you can call the fill text:
+#*<file_name_without_ext>
+For instance this module is called with:
+#*template_4
+Note the file must be in a subdir of fill_text_dir, the subdir name is going to 
+be the macro title of the text here.
+
+--- How to make Meta Macros ---
+List every macro you want here
+Generally you can call this meta macro with:
+#<name_of_file_without_ext>_macros
+Specifically call this template with:
+#template_1_macros
+And all the macros you defined here are going to be processed
+Lets try it out, I hope you have an example_script.py somewhere
+
+--- Python Script Output ---
+Prime numbers up to 100: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
+
+--- Pylint Output ---
+************* Module example_script
+tasks/tests/data/example_script.py:12:0: C0304: Final newline missing (missing-final-newline)
+tasks/tests/data/example_script.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tasks/tests/data/example_script.py:4:4: C0103: Constant name "isPrime" doesn't conform to UPPER_CASE naming style (invalid-name)
+tasks/tests/data/example_script.py:7:12: C0103: Constant name "isPrime" doesn't conform to UPPER_CASE naming style (invalid-name)
+
+------------------------------------------------------------------
+Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
+
+
+
+--- Comment ---
+Now call me
+
 --- This is the Start of the macros_with_args template ---
-Juhuuu
+text
 
 --- Chapter dedicated to argument_1 ---
 argument_1 was set to True
@@ -23,21 +153,61 @@ Iteration 3
 Iteration 4
 Iteration 5
 
---- Fill Text Template ---
-Write some text here.
-You can refere to fill text generally:
-#*<file_name_without_ext>
-For instance this module is refered as:
-#*template
-
 --- Costum Function Template ---
 This is the Start of the costum_function output text
-Juhuuu
+text
 This is argument_1: True
 This is argument_2: 5
 The End of the costum_function output text
 
 
+
+--- Python Script Output ---
+Prime numbers up to 100: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
+
+--- Pylint Output ---
+************* Module example_script
+tasks/tests/data/example_script.py:12:0: C0304: Final newline missing (missing-final-newline)
+tasks/tests/data/example_script.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tasks/tests/data/example_script.py:4:4: C0103: Constant name "isPrime" doesn't conform to UPPER_CASE naming style (invalid-name)
+tasks/tests/data/example_script.py:7:12: C0103: Constant name "isPrime" doesn't conform to UPPER_CASE naming style (invalid-name)
+
+------------------------------------------------------------------
+Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
+
+
+
+--- Unittest Output ---
+
+----------------------------------------------------------------------
+Ran 0 tests in 0.000s
+
+OK
+
+
+
+--- Directory Tree ---
+CodeAcceleratorKit/
+├── __pycache__/
+├── local/
+│   ├── demonstration/
+│   ├── management/
+│   ├── private/
+│   ├── tasks_storage/
+│   └── waste/
+├── tasks/
+│   ├── __taskscache__/
+│   ├── configs/
+│   ├── control/
+│   ├── tasks/
+│   ├── tests/
+│   └── tools/
+└── venv/
+    ├── bin/
+    ├── include/
+    ├── lib/
+    ├── lib64/
 
 --- Summarized Python Script example_script_2.py ---
 class FileManager:
@@ -72,40 +242,6 @@ def main():
     """
     Main function to execute some operations.
     """
-
---- This is a title ---
-You can use every macro you want here
-Generally you can make a reference to such macros_template with:
-#<name_of_file_without_ext>_macros
-Make a reference to this template with:
-#template_macros
-And all the macros you defined here are going to be processed
-Lets try it out, I hope you have an example_script.py somewhere
-
---- Python Script Output ---
-Prime numbers up to 100: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
-
-
---- Pylint Output ---
-************* Module example_script
-tasks/tests/data/example_script.py:12:0: C0304: Final newline missing (missing-final-newline)
-tasks/tests/data/example_script.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-tasks/tests/data/example_script.py:4:4: C0103: Constant name "isPrime" doesn't conform to UPPER_CASE naming style (invalid-name)
-tasks/tests/data/example_script.py:7:12: C0103: Constant name "isPrime" doesn't conform to UPPER_CASE naming style (invalid-name)
-
-------------------------------------------------------------------
-Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
-
-
-
---- Comment Title ---
-Wow Thats a good comment
-The line continues even here
-The comment is so long.
-
---- Python Script Output ---
-Prime numbers up to 100: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
-
 
 --- Summarized Python Script example_script_2.py ---
 class FileManager:
@@ -157,101 +293,7 @@ def generate_random_number():
 def check_age(age):
 
 
---- Reference File Title ---
-# This is the reference 2 file.
-# Here is the reference 2 file finished.
-
---- File at tasks/tests/data/reference_3.txt ---
-Here is the reference 3 file.
-Here is the reference 3 file finished.
-
---- File at tasks/tests/for_tasks/automatic_prompt_test.py ---
-"""
-TODO:
-    1. Run the task Load File and References
-    2. check the temporary file for the output.
-"""
-
-class Car:
-    def __init__(self, brand, model):
-        self.brand = brand
-        self.model = model
-
-    def __eq__(self, other):
-        return self.brand == other.brand and self.model == other.model
-
-    def __str__(self):
-        return f"{self.brand} {self.model}"
-
-    def get_car(self):
-        return self.brand, self.model
-
-    # send (False, 100)
-    # copy_output_costu
-    #checksum 23
-
---- Directory Tree ---
-CodeAcceleratorKit/
-├── __pycache__/
-├── local/
-│   ├── demonstration/
-│   ├── management/
-│   ├── private/
-│   ├── tasks_storage/
-│   └── waste/
-├── tasks/
-│   ├── __taskscache__/
-│   ├── configs/
-│   ├── control/
-│   ├── tasks/
-│   ├── tests/
-│   └── tools/
-└── venv/
-    ├── bin/
-    ├── include/
-    ├── lib/
-    ├── lib64/
-
---- Unittest Output ---
-
-----------------------------------------------------------------------
-Ran 0 tests in 0.000s
-
-OK
-
-
-
---- Pylint Output ---
-************* Module example_script
-tasks/tests/data/example_script.py:12:0: C0304: Final newline missing (missing-final-newline)
-tasks/tests/data/example_script.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-tasks/tests/data/example_script.py:4:4: C0103: Constant name "isPrime" doesn't conform to UPPER_CASE naming style (invalid-name)
-tasks/tests/data/example_script.py:7:12: C0103: Constant name "isPrime" doesn't conform to UPPER_CASE naming style (invalid-name)
-
-------------------------------------------------------------------
-Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
-
-
-
---- Comment ---
-This is another comment
-
---- Occured Errors ---
-
-2024-05-11 18:10:41,841 - INFO - -------------- This is a Title -------------------------------
-2024-05-11 18:10:41,841 - ERROR - Test raised exc: test_example_error
-Message: Traceback (most recent call last):
-  File "/home/no_name/github/pcb-defect-detection/source/utils/testing/test_result_logger.py", line 146, in test_example_error
-    raise ValueError()
-ValueError
-
-2024-05-11 18:10:41,841 - ERROR - Test failure: test_example_fail
-Message: Traceback (most recent call last):
-  File "/home/no_name/github/pcb-defect-detection/source/utils/testing/test_result_logger.py", line 143, in test_example_fail
-    self.assertEqual(1, 2)
-AssertionError: 1 != 2
-
-
 **********
 
-The end of the code
+End of prompt
+Merge end text in multiple lines
