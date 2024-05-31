@@ -1,10 +1,34 @@
+"""
+This module defines the FormatPythonTask, a task for formatting Python files by removing or refactoring specific parts based on strategies
+that can be configured by macros.
+
+The FormatPythonTask class sets up the environment, extracts macros from the given Python files, and applies the specified formatting.
+
+The specific macros and their interpretation are defined in the FormatPythonInterpreter.
+
+Available macros:
+| Name                     | Description                                            | Macro                  | Arguments                          |
+|--------------------------|--------------------------------------------------------|------------------------|------------------------------------|
+| select_only              | Selects only the specified sections                    | #only                  | <List of strategies abbreviations> |
+| select_not               | Excludes the specified sections                        | #not                   | <List of strategies abbreviations> |
+| force_select_of          | Forces selection of the specified sections             | #force                 | <List of strategies abbreviations> |
+| checkpoints              | Marks the points in the code for checkpoints           | #checkpointing         | -                                  |     
+
+Usage example:
+#only RL, FD
+#checkpointing
+
+TODO when adding new macros:
+1. Add the validation function in line_validation.py.
+2. Add the macro to FORMAT_PYTHON_MACROS in constants.py.
+3. Add a new validation method for the macro in FormatPythonInterpreter.
+"""
 import os
 
 from tasks.tasks.format_python.format_python_interpreter import FormatPythonInterpreter
 from tasks.tools.shared.backup_handler import BackupHandler
 from tasks.tasks.foundation.task_base import TaskBase
 from tasks.tools.for_format_python.format_python_file import format_python_file
-
 
 class FormatPythonTask(TaskBase):
     """A task for formatting python files by removing or refactoring specific parts based on
