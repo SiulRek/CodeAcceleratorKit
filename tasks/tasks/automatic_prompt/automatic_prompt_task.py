@@ -2,16 +2,19 @@
 This module generates an automatic prompt based on macro statements that are retrieved from either a file or a string passed as an argument. The prompt, typically a query, is then finalized and saved in a file.
 
 Available reference types:
-| Name                    | Description                           | Pattern                                          | Arguments                                                                                 |
+| Name                    | Description                           | Pattern                                          | Arguments                                                                                |
 |-------------------------|---------------------------------------|--------------------------------------------------|------------------------------------------------------------------------------------------|
 | begin tag               | Place start text                      | #B <begin_text>                                  | -                                                                                        |
 | end tag                 | Place end text                        | #E <end_text>                                    | -                                                                                        |
 | title                   | Title of the reference                | #T <title>                                       | -                                                                                        |
 | comment                 | Comment text                          | #C <comment>                                     | -                                                                                        |
 | paste files             | Paste file/s                          | # <file_path> or <file_path_1, file_path_2>      | -                                                                                        |
-| current_file_reference  | Current file content                  | #File                                            | -                                                                                        |
+| Paste Current file      | Paste Current file                    | # File                                           | -                                                                                        |
 | error                   | Get logged errors                     | #L                                               | -                                                                                        |
-| fill_text               | Add a fill text                       | #*<fill_text_name>                               | -                                                                                        |
+| fill_text               | Add a fill text                       | #*<file_name_without_ext>                        | -                                                                                        |
+| meta_macros             | Interprete predifined meta macros     | #<file_name_without_ext>_meta                    | -                                                                                        |
+| meta_macros_with_args   | "" meta macros with args              | #<file_name_without_ext>_meta+                   | <arg_1, arg_2, ...>                                                                      |
+| costum_function         | Paste the output of costum function   | #<file_name_without_ext>_func+                   | <arg_1, arg_2, ...>                                                                      |
 | run_python_script       | Run a Python script                   | #run <script_path>                               | -                                                                                        |
 | run_pylint              | Run pylint on a file                  | #run_pylint <file_path>                          | -                                                                                        |
 | run_unittest            | Run unittest on a file                | #run_unittest <file_path>                        | <verbosity>                                                                              |
