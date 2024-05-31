@@ -118,7 +118,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.FILL_TEXT, subdir_name, fill_text)
         return None
 
-    def validate_macros_template_with_args_macro(self, line):
+    def validate_macros_template_with_args_reference(self, line):
         if result := line_validation_for_macros_template_with_args(line):
             name, args = result
             args = [str(arg) for arg in args]
@@ -135,7 +135,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return macros_data
         return None
 
-    def validate_macros_template_macro(self, line):
+    def validate_macros_template_reference(self, line):
         if result := line_validation_for_macros_template(line):
             name = result
             dir_ = self.profile.macros_templates_dir
