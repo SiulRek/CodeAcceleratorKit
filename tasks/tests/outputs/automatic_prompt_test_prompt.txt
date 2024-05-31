@@ -187,6 +187,7 @@ class Car:
         return self.brand, self.model
 
     # send (False, 100)
+    # copy_output_costu
     #checksum 23
 
 --- Directory Tree ---
