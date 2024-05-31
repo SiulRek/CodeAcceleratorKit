@@ -21,7 +21,7 @@ if len(sys.argv) > 2:
 # 4. Write the macros text based on the arguments
 macros_text = (
     "#T This is the Start of the macros_with_args template\n"
-    "#C Juhuuu\n"
+    "#C text\n"
     "#T Chapter dedicated to argument_1\n"
 )
 
