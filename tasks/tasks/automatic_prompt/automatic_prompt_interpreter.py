@@ -121,7 +121,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_macros_template_with_args_reference(self, line):
         if result := line_validation_for_macros_template_with_args(line):
             name, args = result
-            args = [str(arg) for arg in args]
+            if args:
+                args = [str(arg) for arg in args]
             dir_ = self.profile.macros_templates_with_args_dir
             template_file = os.path.join(dir_, f"{name}.py")
             self._check_exists(template_file, "macros template with args reference")
@@ -150,7 +151,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_costum_function_macro(self, line):
         if result := line_validation_for_costum_function(line):
             name, args = result
-            args = [str(arg) for arg in args]
+            if args:
+                args = [str(arg) for arg in args]
             costum_functions_dir = self.profile.costum_functions_dir
             costum_file, subdir_name = find_file_in_1st_level_subdir(
                 name, costum_functions_dir, prettify=True
