@@ -50,7 +50,7 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 |-------------------------|---------------------------------------|--------------------------------------------------|--------------------------------------|
 | begin_text              | Place start text                      | #B `<begin_text>`                                | -                                    |
 | end_text                | Place end text                        | #E `<end_text>`                                  | -                                    |
-| title                   | Title of the reference                | #T `<title>`                                     | -                                    |
+| title                   | Title of the text                     | #T `<title>`                                     | -                                    |
 | comment                 | Comment text                          | #C `<comment>`                                   | -                                    |
 | paste_files             | Paste file/s                          | # `<file_path>` or `<file_path_1, file_path_2>`  | -                                    |
 | paste_current_file      | Paste Current file                    | # File                                           | -                                    |
