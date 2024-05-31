@@ -1,0 +1,28 @@
+- cursorLineEnd -> alt + ae
+- cursorLineStart -> alt + shift + ae
+- Navigate between tabls -> ctrl + <num of tab>
+- Make new Line above -> ctrl + shift + enter 
+- Make new Line below -> ctrl + enter
+- Github Copilot: Open Completition Panel -> alt + shitf + enter
+- Edit Breakpoint -> shift + f9
+- Navigate to last edit location -> alt + shift + ue 
+- Navigate to last cursor location -> alt + ue
+- Toggle Minimap -> ctrl + shift + p than Toggle Minimap
+- move right -> ae
+- move left -> oe
+- move word right -> ctrl + ae
+- move word left -> ctrl + oe
+- move line end -> ctrl + shift + ae
+- move line start -> ctrl + shift + oe
+- move down -> ue
+- move up -> shift + ue
+- move start of file -> ctrl + shift + ue
+- move end of file -> ctrl + ue
+- select line down -> shift + ctrl + ue
+- Select word right -> ctrl + alt + ae
+- select line up -> shift + ctrl + ue
+- select word left -> ctrl + alt + oe
+- Go to last edit cursor position -> ctrl + shift + z
+- move line up -> alt + shift + ue
+- move line down -> alt + ue
+- toggle tab move focus -> alt + m (changed from ctrl+m)

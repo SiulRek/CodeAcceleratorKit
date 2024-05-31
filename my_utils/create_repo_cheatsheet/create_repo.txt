@@ -1,0 +1,53 @@
+Create a GitHub Repository:
+	Create a repository on GitHub with a specified name, description, and owner.
+	
+Initialize and Configure Git:
+	Run git init in the project directory.
+	Add remote repository: git remote add origin https://github.com/SiulRek/CodeAcceleratorKit.git
+
+	
+	Create and switch to the main branch: git checkout -b main.
+	Pull from the main branch: git pull origin main.
+	
+VSCode Setup:
+	Create a .vscode folder in the project directory.
+	Open the project folder in VSCode and save it as a workspace.
+	Modify the path in the workspace file to "../".
+	Open the workspace from the saved file.
+
+Configure .gitignore:
+	Create a .gitignore file and add the following:
+
+	# Visual Studio Code
+	.vscode/
+
+	# Virtual Environment
+	venv/
+
+	# Python Caches
+	__pycache__/
+
+	# Local and Temporary Files
+	**/local/
+	#**/temp.*
+	#**/test.*
+	
+Setting Up Python Environment:
+	Open terminal in VSCode.
+	Create a virtual environment: python -m venv venv.
+	Select the created environment as the Python interpreter.
+
+Python Path Configuration:
+	Create a .pth file with the repository's name.
+	Move the .pth file to venv/lib/site-packages.
+	Write the absolute path to the repository in the .pth file.
+
+Initial Commit and Publish:
+	Make the first commit by committing the .gitignore file from VSCode.
+	Publish the branch to the remote repository.
+
+Testing with a Python Script:
+	Create a "Hello World" Python file.
+	Run it to ensure everything is set up correctly.
+	
+Your Repository is ready!
