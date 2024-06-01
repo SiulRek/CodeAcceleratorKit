@@ -14,7 +14,7 @@ This README will give you a brief overview about the tasks of CodeAcceleratorKit
 
 ## Setup
 
-To set up the tasks on a new local workspace, you will need to register the runner using our provided script `register_runner.py`. This will create the appropriate directories and initialize their attributes. A link to the script can be found [here](./tasks/control/scripts/register_runner.py). After registering the runner, you can start using the tasks by running the corresponding task scripts with the required arguments. Note, the Kit organizes both the Python environments of the CodeAcceleratorKit and the workspace runner environments carefully to avoid conflicts. Additionally, if you want to use sending prompts to OpenAI's API, you will need to set up an API key and import it in [send_prompt.py](./tasks/tools/for_automatic_prompt/send_prompt.py).
+To set up the tasks on a new local workspace, you will need to register the runner using our provided script `register_runner.py`. This will create the appropriate directories and initialize their attributes. A link to the script can be found [here](./tasks/controllers/scripts/register_runner.py). After registering the runner, you can start using the tasks by running the corresponding task scripts with the required arguments. Note, the Kit organizes both the Python environments of the CodeAcceleratorKit and the workspace runner environments carefully to avoid conflicts. Additionally, if you want to use sending prompts to OpenAI's API, you will need to set up an API key and import it in [send_prompt.py](./tasks/tools/for_automatic_prompt/send_prompt.py).
 
 ## Conventions
 
