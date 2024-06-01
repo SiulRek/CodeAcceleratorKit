@@ -38,7 +38,7 @@ CHECKSUM_PATTERN = re.compile(rf"{TAGS.CHECKSUM.value}\s(\S+)")
 BEGIN_TAG = TAGS.BEGIN.value
 END_TAG = TAGS.END.value
 TITLE_TAG = TAGS.TITLE.value
-COMMENT_TAG = TAGS.COMMENT.value
+NORMAL_TEXT_TAG = TAGS.NORMAL_TEXT.value
 PASTE_CURRENT_FILE_TAG = TAGS.PASTE_CURRENT_FILE.value
 ERROR_TAG = TAGS.ERROR.value
 SEND_PROMPT_TAG = TAGS.SEND_PROMPT.value
@@ -65,10 +65,10 @@ def line_validation_for_title(line):
     return None
 
 
-def line_validation_for_comment(line):
-    """ Validate if the line is a comment. """
-    if COMMENT_TAG in line:
-        return line.replace(COMMENT_TAG, "").strip()
+def line_validation_for_normal_text(line):
+    """ Validate if the line is a normal text. """
+    if NORMAL_TEXT_TAG in line:
+        return line.replace(NORMAL_TEXT_TAG, "").strip()
     return None
 
 

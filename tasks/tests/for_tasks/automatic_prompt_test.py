@@ -31,9 +31,9 @@ class ExampleClassCar:
 # Chapter title macro
 #T Title of the chapter
 
-# Comment macro
-#C Comment text
-#C Merge comments in multiple lines
+# Normal text macro
+#N The Normal text
+#N Merge normal texts in multiple lines
 
 # Paste files macro
 # reference_1.py, data\reference_2.py

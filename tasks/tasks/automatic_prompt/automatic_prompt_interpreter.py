@@ -5,7 +5,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_begin_text,
     line_validation_for_end_text,
     line_validation_for_title,
-    line_validation_for_comment,
+    line_validation_for_normal_text,
     line_validation_for_paste_files,
     line_validation_for_error,
     line_validation_for_fill_text,
@@ -70,10 +70,10 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.TITLE, result, None)
         return None
 
-    def validate_comment_macro(self, line):
-        if result := line_validation_for_comment(line):
-            default_title = "Comment"
-            return (MACROS.COMMENT, default_title, result)
+    def validate_normal_text_macro(self, line):
+        if result := line_validation_for_normal_text(line):
+            default_title = "Normal Text"
+            return (MACROS.NORMAL_TEXT, default_title, result)
         return None
 
     def validate_paste_current_file_macro(self, line):
@@ -298,11 +298,11 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         """
         # Merge comments in sequence to one comment
         for macro_data in macros_data:
-            if macro_data[0] == MACROS.COMMENT:
+            if macro_data[0] == MACROS.NORMAL_TEXT:
                 start = macros_data.index(macro_data)
                 index = start + 1
                 while (
-                    index < len(macros_data) and macros_data[index][0] == MACROS.COMMENT
+                    index < len(macros_data) and macros_data[index][0] == MACROS.NORMAL_TEXT
                 ):
                     merged_text = f"{macro_data[2].strip()}\n"
                     merged_text += f"{macros_data[index][2].strip()}"

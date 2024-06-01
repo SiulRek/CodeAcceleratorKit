@@ -18,7 +18,7 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 | Name            | Description                                  | Macro          | Arguments                            |
 |-----------------|----------------------------------------------|----------------|--------------------------------------|
 | select_only     | Selects only the specified strategy          | #only          | `<List of strategies abbreviations>` |
-| select_not      | Excludes the specified strategy              | #not           | `<List of strategies abbreviations>` |
+| select_not      | Excludes the specified strategy              | #Cot           | `<List of strategies abbreviations>` |
 | force_select_of | Forces selection of the specified strategy   | #force         | `<List of strategies abbreviations>` |
 | checkpoints     | Marks the points in the code for checkpoints | #checkpointing | -                                    |
 
@@ -51,7 +51,7 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 | begin_text              | Place start text                      | #B `<begin_text>`                                | -                                    |
 | end_text                | Place end text                        | #E `<end_text>`                                  | -                                    |
 | title                   | Title of the text                     | #T `<title>`                                     | -                                    |
-| comment                 | Comment text                          | #C `<comment>`                                   | -                                    |
+| normal_text             | Normal text                           | #N `<normal_text>`                               | -                                    |
 | paste_files             | Paste file/s                          | # `<file_path>` or `<file_path_1, file_path_2>`  | -                                    |
 | paste_current_file      | Paste Current file                    | # File                                           | -                                    |
 | error                   | Get logged errors                     | #L                                               | -                                    |

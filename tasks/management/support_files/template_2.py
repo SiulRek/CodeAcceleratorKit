@@ -21,22 +21,22 @@ if len(sys.argv) > 2:
 # 4. Write the macros text based on the arguments
 macros_text = (
     "#T This is the Start of the macros_with_args template\n"
-    "#C text\n"
+    "#N text\n"
     "#T Chapter dedicated to argument_1\n"
 )
 
 if argument_1:
-    macros_text += f"#C argument_1 was set to {argument_1}\n"
+    macros_text += f"#N argument_1 was set to {argument_1}\n"
 
 macros_text += (
     "#T Chapter dedicated to argument_2\n"
-    f"#C argument_2 was set to {argument_2}\n"
-    "#C \n"
-    "#C Iterations Start:\n"
+    f"#N argument_2 was set to {argument_2}\n"
+    "#N \n"
+    "#N Iterations Start:\n"
 )
 
 for i in range(argument_2):
-    macros_text += f"#C Iteration {i + 1}\n"
+    macros_text += f"#N Iteration {i + 1}\n"
 
 # 5. Print the macros text; stdout is used to return the text to the calling script
 print(macros_text)

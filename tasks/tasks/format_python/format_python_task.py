@@ -10,7 +10,7 @@ Available macros:
 | Name                     | Description                                            | Macro                  | Arguments                          |
 |--------------------------|--------------------------------------------------------|------------------------|------------------------------------|
 | select_only              | Selects only the specified sections                    | #only                  | <List of strategies abbreviations> |
-| select_not               | Excludes the specified sections                        | #not                   | <List of strategies abbreviations> |
+| select_not               | Excludes the specified sections                        | #Cot                   | <List of strategies abbreviations> |
 | force_select_of          | Forces selection of the specified sections             | #force                 | <List of strategies abbreviations> |
 | checkpoints              | Marks the points in the code for checkpoints           | #checkpointing         | -                                  |
 

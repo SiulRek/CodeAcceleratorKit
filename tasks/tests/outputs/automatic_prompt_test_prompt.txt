@@ -6,8 +6,8 @@ Merge begin text in multiple lines
 
 
 --- Title of the chapter ---
-Comment text
-Merge comments in multiple lines
+The Normal text
+Merge normal texts in multiple lines
 
 --- File at tasks/tests/data/reference_1.py ---
 # This is the reference 1 file.
@@ -46,7 +46,7 @@ class ExampleClassCar:
 
 # Chapter title macro
 
-# Comment macro
+# Normal text macro
 
 # Paste files macro
 
@@ -135,7 +135,7 @@ Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
 
 
 
---- Comment ---
+--- Normal Text ---
 Now call me
 
 --- This is the Start of the macros_with_args template ---

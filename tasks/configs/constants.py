@@ -18,7 +18,7 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     BEGIN_TEXT = "begin_text",
     END_TEXT = "end_text",
     TITLE = "title"
-    COMMENT = "comment"
+    NORMAL_TEXT = "normal_text"
     PASTE_CURRENT_FILE = "paste_current_file"
     PASTE_FILE = "paste_file"
     LOGGED_ERROR = "error"
@@ -37,7 +37,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     BEGIN = "#B "
     END = "#E "
     TITLE = "#T "
-    COMMENT = "#C "
+    NORMAL_TEXT = "#N "
     PASTE_CURRENT_FILE = f"# {CURRENT_FILE_TAG}"
     PASTE_FILES = "# "
     ERROR = "#L"
@@ -73,6 +73,6 @@ class FORMAT_PYTHON_MACROS(Enum):
 
 class FORMAT_PYTHON_TAGS(Enum):
     SELECT_ONLY = "#only"
-    SELECT_NOT = "#not"
+    SELECT_NOT = "#Cot"
     FORCE_SELECT_OF = "#force"
     CHECKPOINTS = "#checkpointing"
