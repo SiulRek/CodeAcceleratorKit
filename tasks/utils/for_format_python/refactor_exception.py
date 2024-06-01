@@ -4,6 +4,24 @@ from tasks.configs.constants import LINE_WIDTH
 from tasks.utils.for_format_python.wrap_text import wrap_text
 
 
+def add_quotes(string, quote):
+    """
+    Adds quotes to the provided string.
+
+    Args:
+        - string (str): The string to which quotes are to be added.
+        - quote (str): The quote to be added.
+
+    Returns:
+        - str: The string with quotes added.
+    """
+    if "{" in string and "}" in string:
+        string = f"f{quote}{string}{quote}"
+    else:
+        string = f"{quote}{string}{quote}"
+    return string
+
+
 def refactor_exception(code):
     """
     Refactors the exception code in the provided code. The refactored code will
@@ -25,28 +43,27 @@ def refactor_exception(code):
         if match:
             indent = match.group(1)
             exception_type = match.group(2)
-            msg = match.group(4)
-            if msg.startswith("f"):
-                q_start = msg[:2]
-                q_end = msg[1]
+            msg_with_q = match.group(4)
+            q = msg_with_q[-1]
+            if msg_with_q.startswith("f"):
+                msg = msg_with_q[2:-1]
             else:
-                q_start = msg[0]
-                q_end = msg[0]
-            msg = wrap_text(msg, LINE_WIDTH - len(indent) - 6)
-            if len(msg.splitlines()) > 1:
-                for i, msg_line in enumerate(msg.splitlines()):
-                    if i == 0:
-                        updated_line = f"{indent}msg = {msg_line}{q_end}"
-                        updated_lines.append(updated_line)
-                    elif i == len(msg.splitlines()) - 1:
-                        updated_line = f"{indent}msg += {q_start}{msg_line}"
-                        updated_lines.append(updated_line)
-                    else:
-                        updated_line = f"{indent}msg += {q_start}{msg_line}{q_end}"
-                        updated_lines.append(updated_line)
-            else:
-                updated_line = f"{indent}msg = {msg}"
-                updated_lines.append(updated_line)
+                msg = msg_with_q[1:-1]
+
+            msg = wrap_text(
+                msg, LINE_WIDTH - len(indent) - 9
+            )  # 9 is the max length of "msg = " and quotes
+
+            start = True
+            for msg_line in msg.splitlines():
+                if start:
+                    start = False
+                    updated_line = f"{indent}msg = {add_quotes(msg_line, q)}"
+                    updated_lines.append(updated_line)
+                else:
+                    updated_line = f"{indent}msg += {add_quotes(msg_line, q)}"
+                    updated_lines.append(updated_line)
+
             updated_line = f"{indent}raise {exception_type}(msg)"
             updated_lines.append(updated_line)
         else:
@@ -71,3 +88,4 @@ def refactor_exception_from_file(file_path):
 if __name__ == "__main__":
     path = r"tasks/tests/data/example_script_4.py"
     refactor_exception_from_file(path)
+    print(f"Refactored exception code in {path}")
