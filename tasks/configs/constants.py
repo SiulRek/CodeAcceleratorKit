@@ -73,6 +73,6 @@ class FORMAT_PYTHON_MACROS(Enum):
 
 class FORMAT_PYTHON_TAGS(Enum):
     SELECT_ONLY = "#only"
-    SELECT_NOT = "#Cot"
+    SELECT_NOT = "#not"
     FORCE_SELECT_OF = "#force"
     CHECKPOINTS = "#checkpointing"

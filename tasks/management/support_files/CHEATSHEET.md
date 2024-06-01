@@ -18,7 +18,7 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 | Name            | Description                                  | Macro          | Arguments                            |
 |-----------------|----------------------------------------------|----------------|--------------------------------------|
 | select_only     | Selects only the specified strategy          | #only          | `<List of strategies abbreviations>` |
-| select_not      | Excludes the specified strategy              | #Cot           | `<List of strategies abbreviations>` |
+| select_not      | Excludes the specified strategy              | #not           | `<List of strategies abbreviations>` |
 | force_select_of | Forces selection of the specified strategy   | #force         | `<List of strategies abbreviations>` |
 | checkpoints     | Marks the points in the code for checkpoints | #checkpointing | -                                    |
 

@@ -20,7 +20,7 @@ To set up the tasks on a new local workspace, you will need to register the runn
 
 In CodeAcceleratorKit, various key definitions are used:
 
-- **Macro**: A statement that configures our tasks. For example, `#only`, `#Cot`, `#force`, and `#checkpointing`.
+- **Macro**: A statement that configures our tasks. For example, `#only`, `#not`, `#force`, and `#checkpointing`.
 - **Interpreter**: In this context, an interpreter refers to the system that interprets macro statements in our tasks.
 - **Runner**: A registered environment where tasks are executed, usually an external workspace.
 - **tasks_storage**: A storage directory that contains all runner data including profiles, backups, and status of running tasks. It is located in the root directory of the runner.
@@ -48,7 +48,7 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 | Name            | Description                                  | Macro          | Arguments                            |
 |-----------------|----------------------------------------------|----------------|--------------------------------------|
 | select_only     | Selects only the specified strategy          | #only          | `<List of strategies abbreviations>` |
-| select_not      | Excludes the specified strategy              | #Cot           | `<List of strategies abbreviations>` |
+| select_not      | Excludes the specified strategy              | #not           | `<List of strategies abbreviations>` |
 | force_select_of | Forces selection of the specified strategy   | #force         | `<List of strategies abbreviations>` |
 | checkpoints     | Marks the points in the code for checkpoints | #checkpointing | -                                    |
 
