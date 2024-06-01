@@ -18,7 +18,7 @@ Available reference types:
 | run_python_script       | Run a Python script                   | #run <script_path>                               | -                                                                                        |
 | run_pylint              | Run pylint on a file                  | #run_pylint <file_path>                          | -                                                                                        |
 | run_unittest            | Run unittest on a file                | #run_unittest <file_path>                        | <verbosity>                                                                              |
-| directory_tree          | Get directory tree                    | #tree <directory_path>                           | <max_depth, include_files, ignore_list (semicolon-separated list)>                       |
+| directory_tree          | Get directory tree                    | #tree <directory_path>                           | <max_depth, include_files, ignore_list >                       |
 | summarize_python_script | Summarize a Python script             | #summarize <script_path>                         | <include_definitions_with_docstrings>                                                    |
 | summarize_folder        | Summarize Python scripts in a folder  | #summarize_folder <folder_path>                  | <include_definitions_with_docstrings, excluded_dirs, excluded_files>                     |
 | send_prompt             | Send a prompt from a temporary file   | #send                                            | <create_python_script, max_tokens>                                                       |
@@ -26,11 +26,12 @@ Available reference types:
 
 Usage Example:
 macros_text = (
-    "#T This is the Start of the prompt\n"
-    "#C Some text\n"
-    "#T New Chapter\n"
-    "#run example_script.py\n"
-    "#E Now that we paste the output of example_script.py we come to the end of prompt\n"#
+    "#T This is the Start of the prompt\n",
+    "#C Some text\n",
+    "#T New Chapter\n",
+    "#run example_script.py\n",
+    "#E Now that we paste the output of example_script.py we come to the end of prompt\n",
+    "#send (True)"
 )
 AutomaticPromptTask(default_root, default_file_path, "".join(macros_text)).main()
 

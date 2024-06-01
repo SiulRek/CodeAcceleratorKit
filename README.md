@@ -77,12 +77,12 @@ python path/to/format_python_task.py <root_directory> <macro_file_path>
 The `AutomaticPromptTask` generates an automatic prompt based on macro statements retrieved from either a file or a string passed as an argument. The prompt is typically a query, which is then finalized and saved in a file.
 
 **Available Reference Types**:
-| Name                    | Description                           | Pattern                                          | Arguments                            |
+| Name                    | Description                           | Pattern                                          | Optional Arguments                   |
 |-------------------------|---------------------------------------|--------------------------------------------------|--------------------------------------|
 | begin_text              | Place start text                      | #B `<begin_text>`                                | -                                    |
 | end_text                | Place end text                        | #E `<end_text>`                                  | -                                    |
 | title                   | Title of the text                     | #T `<title>`                                     | -                                    |
-| normal_text                 | Normal text                          | #N `<normal_text>`                                   | -                                    |
+| normal_text             | Normal text                           | #N `<normal_text>`                                   | -                                    |
 | paste_files             | Paste file/s                          | # `<file_path>` or `<file_path_1, file_path_2>`  | -                                    |
 | paste_current_file      | Paste Current file                    | # File                                           | -                                    |
 | error                   | Get logged errors                     | #L                                               | -                                    |
@@ -93,11 +93,13 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 | run_python_script       | Run a Python script                   | #run `<script_path>`                             | -                                    |
 | run_pylint              | Run pylint on a file                  | #pylint `<file_path>`                            | -                                    |
 | run_unittest            | Run unittest on a file                | #unittest `<file_path>`                          | `<verbosity>`                        |
-| directory_tree          | Get directory tree                    | #tree `<directory_path>`                         | `<max_depth, include_files, ignore_list (semicolon-separated list)>` |
+| directory_tree          | Get directory tree                    | #tree `<directory_path>`                         | `<max_depth, include_files, ignore_list >` |
 | summarize_python_script | Summarize a Python script             | #summarize `<script_path>`                       | `<include_definitions_with_docstrings>` |
 | summarize_folder        | Summarize Python scripts in a folder  | #summarize_folder `<folder_path>`                | `<include_definitions_with_docstrings, excluded_dirs, excluded_files>` |
 | send_prompt             | Send a prompt from a temporary file   | #send                                            | `<create_python_script, max_tokens>` |
 | checksum                | Check if provided checksum corresponds| #checksum `<number_of_references>`               | -                                    |
+
+**Note:** The optional arguments of the macro statements are passed in round parantheses. For example, `#send (True, 100)`.
 
 **Usage from command line**:  
 ```sh

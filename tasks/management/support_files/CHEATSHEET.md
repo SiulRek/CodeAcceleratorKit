@@ -63,7 +63,7 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 | run_python_script       | Run a Python script                   | #run `<script_path>`                             | -                                    |
 | run_pylint              | Run pylint on a file                  | #pylint `<file_path>`                            | -                                    |
 | run_unittest            | Run unittest on a file                | #unittest `<file_path>`                          | `<verbosity>`                        |
-| directory_tree          | Get directory tree                    | #tree `<directory_path>`                         | `<max_depth, include_files, ignore_list (semicolon-separated list)>` |
+| directory_tree          | Get directory tree                    | #tree `<directory_path>`                         | `<max_depth, include_files, ignore_list >` |
 | summarize_python_script | Summarize a Python script             | #summarize `<script_path>`                       | `<include_definitions_with_docstrings>` |
 | summarize_folder        | Summarize Python scripts in a folder  | #summarize_folder `<folder_path>`                | `<include_definitions_with_docstrings, excluded_dirs, excluded_files>` |
 | send_prompt             | Send a prompt from a temporary file   | #send                                            | `<create_python_script, max_tokens>` |
