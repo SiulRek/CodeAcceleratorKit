@@ -9,7 +9,7 @@ from tasks.management.normalize_path import normalize_path
 from tasks.management.task_runner_profile import TaskRunnerProfile
 
 SUPPORT_FILES_DIR = os.path.join(
-    TASKS_ROOT, "tasks", "tasks", "management", "support_files"
+    TASKS_ROOT, "tasks", "management", "support_files"
 )
 
 
