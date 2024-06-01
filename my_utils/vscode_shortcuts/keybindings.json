@@ -3,12 +3,12 @@
     {
     "key": "f1", 
     "command": "workbench.action.tasks.runTask",
-    "args": "Clean Up"
+    "args": "Format Python"
     },
     {
     "key": "f3", 
     "command": "workbench.action.tasks.runTask",
-    "args": "Create Query"
+    "args": "Automatic Prompt"
     },
     {
         "key": "ctrl+r",
@@ -972,12 +972,12 @@
         "when": "editorTextFocus && github.copilot.activated && !commentEditorFocused && !inInteractiveInput && !interactiveEditorFocused"
     },
     {
-        "key": "ctrl+alt+oem_7",
+        "key": "ctrl+shift+alt+oem_7",
         "command": "cursorWordEndRightSelect",
         "when": "textInputFocus && !accessibilityModeEnabled"
     },
     {
-        "key": "ctrl+alt+oem_3",
+        "key": "ctrl+shift+alt+oem_3",
         "command": "cursorWordLeftSelect",
         "when": "textInputFocus && !accessibilityModeEnabled"
     },
@@ -1108,5 +1108,47 @@
         "key": "shift+alt+oem_1",
         "command": "showPrevParameterHint",
         "when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+    },
+    {
+        "key": "alt+m",
+        "command": "editor.action.toggleTabFocusMode"
+    },
+    {
+        "key": "ctrl+m",
+        "command": "-editor.action.toggleTabFocusMode"
+    },
+    {
+        "key": "ctrl+m",
+        "command": "workbench.action.terminal.moveIntoNewWindow"
+    },
+    {
+        "key": "ctrl+alt+oem_7",
+        "command": "cursorRightSelect",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+alt+oem_7",
+        "command": "cursorColumnSelectRight",
+        "when": "editorColumnSelection && textInputFocus"
+    },
+    {
+        "key": "ctrl+alt+oem_3",
+        "command": "cursorColumnSelectLeft",
+        "when": "editorColumnSelection && textInputFocus"
+    },
+    {
+        "key": "shift+left",
+        "command": "-cursorColumnSelectLeft",
+        "when": "editorColumnSelection && textInputFocus"
+    },
+    {
+        "key": "ctrl+alt+oem_3",
+        "command": "cursorLeftSelect",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "shift+left",
+        "command": "cursorLeftSelect",
+        "when": "textInputFocus"
     }
 ]
