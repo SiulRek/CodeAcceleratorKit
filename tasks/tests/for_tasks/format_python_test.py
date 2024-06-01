@@ -1,3 +1,4 @@
+#checkpointing
 import os
 import csv
 import time, datetime
@@ -47,7 +48,6 @@ class BackupHandler:
         self.load_context()
         self.max_backups = max_backups
 
-#checkpoints
     def load_context(self):
         """
         Load the backup context from a CSV file.
