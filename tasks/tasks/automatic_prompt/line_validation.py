@@ -3,10 +3,10 @@ import re
 from tasks.configs.constants import AUTOMATIC_PROMPT_TAGS as TAGS
 from tasks.configs.constants import CURRENT_FILE_TAG
 from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
-from tasks.tasks.foundation.line_validation_utils import (
+from tasks.tasks.core.line_validation_utils import (
     retrieve_arguments_in_round_brackets,
 )
-from tasks.tasks.foundation.line_validation_utils import check_type
+from tasks.tasks.core.line_validation_utils import check_type
 
 PASTE_FILES_PATTERN = re.compile(
     rf"{TAGS.PASTE_FILES.value}\s*((?:\S+\.(?:py|txt|log|md|csv))\s*(?:,\s*\S+\.(?:py|txt|log|md|csv)\s*)*|{CURRENT_FILE_TAG})"

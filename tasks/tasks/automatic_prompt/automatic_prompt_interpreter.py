@@ -21,7 +21,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_summarize_folder,
     line_validation_for_send_prompt,
 )
-from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
+from tasks.tasks.core.macro_interpreter import MacroInterpreter
 from tasks.tools.for_automatic_prompt.execute_python_module import execute_python_module
 import tasks.tools.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
 from tasks.tools.for_automatic_prompt.find_file_in_1st_level_subdir import (

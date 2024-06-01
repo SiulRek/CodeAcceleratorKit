@@ -5,7 +5,7 @@ from tasks.tasks.format_python.line_validation import (
     line_validation_for_force_select_of,
     line_validation_for_checkpoints,
 )
-from tasks.tasks.foundation.macro_interpreter import MacroInterpreter
+from tasks.tasks.core.macro_interpreter import MacroInterpreter
 
 
 class FormatPythonInterpreter(MacroInterpreter):

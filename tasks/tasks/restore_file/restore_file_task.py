@@ -9,7 +9,7 @@ RestoreFileTask(root_directory, backup_file_path).main()
 
 import os
 
-from tasks.tasks.foundation.task_base import TaskBase
+from tasks.tasks.core.task_base import TaskBase
 from tasks.tools.shared.backup_handler import BackupHandler
 
 

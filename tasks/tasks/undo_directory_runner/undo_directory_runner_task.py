@@ -8,7 +8,7 @@ UndoDirectoryRunnerTask(root_directory, config_json).main()
 """
 import os
 
-from tasks.tasks.foundation.task_base import TaskBase
+from tasks.tasks.core.task_base import TaskBase
 from tasks.tools.for_directory_runner.file_execution_tracker import FileExecutionTracker
 from tasks.tools.shared.backup_handler import BackupHandler
 

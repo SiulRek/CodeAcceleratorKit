@@ -39,7 +39,7 @@ TODO when adding new macros:
 import os
 from tasks.tasks.format_python.format_python_interpreter import FormatPythonInterpreter
 from tasks.tools.shared.backup_handler import BackupHandler
-from tasks.tasks.foundation.task_base import TaskBase
+from tasks.tasks.core.task_base import TaskBase
 from tasks.tools.for_format_python.format_python_file import format_python_file
 
 class FormatPythonTask(TaskBase):
