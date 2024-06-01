@@ -27,7 +27,8 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 |---------------|---------------------------|--------------------|
 | RT            | Remove trailing parts     |                    |
 | RL            | Remove line comments      | Needs to be forced |
-| RE            | Refactor exception        |                    |
+| RE            | Refactor exceptions       |                    |
+| RW            | Refactor warnings         |                    |
 | RI            | Rearrange imports         |                    |
 | RU            | Remove unused imports     |                    |
 | BF            | Run Black formatting      |                    |

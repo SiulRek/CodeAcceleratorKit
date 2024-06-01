@@ -20,6 +20,7 @@ Available strategies:
 | RT           | Remove trailing parts              |                                    |
 | RL           | Remove line comments               | Needs to be forced                 |
 | RE           | Refactor exception                 |                                    |
+| RW           | Refactor warnings                  |                                    |
 | RI           | Rearrange imports                  |                                    |                                   
 | RU           | Remove unused imports              |                                    |
 | BF           | Run Black formatting               |                                    |

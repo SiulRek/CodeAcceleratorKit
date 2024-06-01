@@ -5,6 +5,7 @@ from tasks.management.task_runner_profile import TaskRunnerProfile
 from tasks.utils.for_format_python.format_docstrings import format_docstrings
 from tasks.utils.for_format_python.rearrange_imports import rearrange_imports
 from tasks.utils.for_format_python.refactor_exception import refactor_exception
+from tasks.utils.for_format_python.refactor_warnings import refactor_warnings
 from tasks.utils.for_format_python.remove_line_comments import remove_line_comments
 from tasks.utils.for_format_python.remove_trailing_parts import remove_trailing_parts
 from tasks.utils.for_format_python.remove_unused_imports import remove_unused_imports
@@ -16,6 +17,7 @@ STRATEGIES = {
     "RT": (remove_trailing_parts, "Remove trailing parts", False, False),
     "RL": (remove_line_comments, "Remove line comments", False, True),
     "RE": (refactor_exception, "Refactor exception", False, False),
+    "RW": (refactor_warnings, "Refactor warnings", False, False),
     "RI": (rearrange_imports, "Rearrange imports", False, False),
     "RU": (remove_unused_imports, "Remove unused imports", False, False),
     "BF": (format_with_black, "Run Black formatting", True, False),
