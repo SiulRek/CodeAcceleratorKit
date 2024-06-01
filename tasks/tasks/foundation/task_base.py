@@ -3,7 +3,7 @@ import os
 import shutil
 import sys
 
-from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
+from tasks.management.task_runner_profile import TaskRunnerProfile
 
 
 class TaskBase(ABC):

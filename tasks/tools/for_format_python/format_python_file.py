@@ -1,7 +1,7 @@
 import os
 import warnings
 
-from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
+from tasks.management.task_runner_profile import TaskRunnerProfile
 from tasks.tools.for_format_python.format_docstrings import format_docstrings
 from tasks.tools.for_format_python.rearrange_imports import rearrange_imports
 from tasks.tools.for_format_python.refactor_exception import refactor_exception

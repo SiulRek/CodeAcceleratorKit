@@ -6,7 +6,7 @@ import pickle
 import warnings
 
 import tasks.configs.constants as configs
-from tasks.tasks.management.normalize_path import normalize_path
+from tasks.management.normalize_path import normalize_path
 import tasks.configs.profile_attributes as Attributes
 
 

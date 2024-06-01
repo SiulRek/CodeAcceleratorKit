@@ -7,9 +7,9 @@ from unittest.mock import patch, MagicMock
 import warnings
 
 import tasks
-from tasks.tasks.management.normalize_path import normalize_path
-from tasks.tasks.management.task_manager import TaskManager as Manager
-from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
+from tasks.management.normalize_path import normalize_path
+from tasks.management.task_manager import TaskManager as Manager
+from tasks.management.task_runner_profile import TaskRunnerProfile
 
 class AttrNamesMock(Enum):
     var1_dir = (1, "configs.pkl")
@@ -36,7 +36,7 @@ class TestTaskManager(unittest.TestCase):
             os.path.join(self.temp_dir.name, "registered_variables.json")
         )
         patcher1 = patch.object(
-            tasks.tasks.management.task_manager,
+            tasks.management.task_manager,
             "REGISTERED_RUNNERS_JSON",
             self.json_mock,
         )
@@ -56,7 +56,7 @@ class TestTaskManager(unittest.TestCase):
         self.mock_variable_names = patcher3.start()
 
         patcher4 = patch(
-            "tasks.tasks.management.task_manager.Attributes.AttributesInitializer",
+            "tasks.management.task_manager.Attributes.AttributesInitializer",
             new_callable=MagicMock,
         )
         self.addCleanup(patcher4.stop)
@@ -300,7 +300,7 @@ class TestTaskManager(unittest.TestCase):
         dest_costumizations_dir = os.path.join(dest_runner_dir, "costumizations")
         os.makedirs(dest_costumizations_dir)
 
-        with patch("tasks.tasks.management.task_manager.TaskRunnerProfile") as MockProfile, patch.object(Manager, 'is_runner_registered', return_value=True):
+        with patch("tasks.management.task_manager.TaskRunnerProfile") as MockProfile, patch.object(Manager, 'is_runner_registered', return_value=True):
             mock_source_profile = MagicMock()
             mock_source_profile.costumizations_dir = source_costumizations_dir
             mock_source_profile.var1_dir = source_costumizations_dir

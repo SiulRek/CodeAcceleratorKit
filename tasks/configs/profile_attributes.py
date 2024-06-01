@@ -8,7 +8,7 @@ from tasks.configs.constants import (
     TASKS_CACHE,
     MAX_BACKUPS,
 )
-from tasks.tasks.management.normalize_path import normalize_path
+from tasks.management.normalize_path import normalize_path
 from tasks.tools.for_format_python.retrieve_modules import retrieve_modules
 
 

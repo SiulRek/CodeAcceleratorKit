@@ -5,8 +5,8 @@ import warnings
 
 from tasks.configs.constants import REGISTERED_RUNNERS_JSON, TASKS_ROOT
 import tasks.configs.profile_attributes as Attributes
-from tasks.tasks.management.normalize_path import normalize_path
-from tasks.tasks.management.task_runner_profile import TaskRunnerProfile
+from tasks.management.normalize_path import normalize_path
+from tasks.management.task_runner_profile import TaskRunnerProfile
 
 SUPPORT_FILES_DIR = os.path.join(
     TASKS_ROOT, "tasks", "tasks", "management", "support_files"
