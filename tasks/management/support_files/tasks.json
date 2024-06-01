@@ -1,0 +1,105 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Format Python",
+            "command": "bash",
+            "args": [
+                "-c",
+                "source /path/to/venv/bin/activate && python /path/to/repository/tasks/tasks/format_python/format_python_task.py ${workspaceFolder} ${file}"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Automatic Prompt",
+            "command": "bash",
+            "args": [
+                "-c",
+                "source /path/to/venv/bin/activate && python /path/to/repository/tasks/tasks/automatic_prompt/automatic_prompt_task.py ${workspaceFolder} ${file}"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Restore File",
+            "command": "bash",
+            "args": [
+                "-c",
+                "source /path/to/venv/bin/activate && python /path/to/repository/tasks/tasks/restore_file/restore_file_task.py ${workspaceFolder} ${file}"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Directory Runner",
+            "command": "bash",
+            "args": [
+                "-c",
+                "source /path/to/venv/bin/activate && python /path/to/repository/tasks/tasks/directory_runner/directory_runner_task.py ${workspaceFolder} ${file}"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Undo Directory Runner",
+            "command": "bash",
+            "args": [
+                "-c",
+                "source /path/to/venv/bin/activate && python /path/to/repository/tasks/tasks/undo_directory_runner/undo_directory_runner_task.py ${workspaceFolder} ${file}"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        }
+    ]
+}

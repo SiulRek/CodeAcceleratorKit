@@ -75,19 +75,19 @@ class DirectoryRunnerTask(TaskBase):
 
     def setup(self):
         super().setup()
-        self.directory_runner_json = self.additional_args[0]
-        if not self.directory_runner_json.endswith(".json"):
+        self.current_file = self.additional_args[0]
+        if not self.current_file.endswith(".json"):
             msg = "Directory Runner JSON is not json. Hint: Currently active"
             msg += "file must be the Directory Runner JSON."
             raise ValueError(msg)
-        self._set_attributes_from_json(self.directory_runner_json)
+        self._set_attributes_from_json(self.current_file)
 
     def execute(self):
         """ Executes the directory runner task, running the specified task on
         thefiles in the directory. """
         execution_tracks_dir = self.profile.execution_tracks_dir
         csv_name = (
-            os.path.basename(self.directory_runner_json).split(".")[0]
+            os.path.basename(self.current_file).split(".")[0]
             + "_execution_tracks.csv"
         )
         file_execution_csv = os.path.join(execution_tracks_dir, csv_name)

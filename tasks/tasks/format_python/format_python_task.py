@@ -52,7 +52,7 @@ class FormatPythonTask(TaskBase):
         """Sets up the FormatPythonTask by initializing the file path from additional
         arguments."""
         super().setup()
-        self.file_path = self.additional_args[0]
+        self.current_file = self.additional_args[0]
         self.macros_text = None
         if len(self.additional_args) > 1:
             self.macros_text = self.additional_args[1]
@@ -66,7 +66,7 @@ class FormatPythonTask(TaskBase):
             - ValueError: If both select_only and select_not options are
                 specified.
         """
-        file_path = self.file_path
+        current_file = self.current_file
         checkpoint_dir = self.profile.checkpoint_dir
         environment_path = self.profile.tasks_python_env
 
@@ -78,10 +78,10 @@ class FormatPythonTask(TaskBase):
 
         if self.macros_text:
             macros_data, _ = interpreter.extract_macros_from_text(self.macros_text, post_process=True)
-            with open(file_path, "r") as file:
+            with open(current_file, "r") as file:
                 updated_content = file.read()
         else:
-            macros_data, updated_content = interpreter.extract_macros_from_file(file_path)
+            macros_data, updated_content = interpreter.extract_macros_from_file(current_file)
         select_only, select_not, force_select_of, checkpointing = macros_data
 
         if select_only is not None and select_not is not None:
@@ -90,12 +90,12 @@ class FormatPythonTask(TaskBase):
         if not checkpointing:
             checkpoint_dir = None
             
-        backup_handler.store_backup(file_path, "Before modification from format python task.")
-        with open(file_path, "w") as file:
+        backup_handler.store_backup(current_file, "Before modification from format python task.")
+        with open(current_file, "w") as file:
             file.write(updated_content)
 
         format_python_file(
-            file_path=file_path,
+            file_path=current_file,
             select_only=select_only,
             select_not=select_not,
             force_select_of=force_select_of,

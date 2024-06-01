@@ -127,7 +127,7 @@ class AutomaticPromptTask(TaskBase):
     def setup(self):
         """Sets up the AutomaticPrompt task by initializing the file path."""
         super().setup()
-        self.file_path = self.additional_args[0]
+        self.current_file = self.additional_args[0]
         self.macros_text = None
         if len(self.additional_args) > 1:
             self.macros_text = self.additional_args[1]
@@ -140,15 +140,15 @@ class AutomaticPromptTask(TaskBase):
         )
 
         if self.macros_text:
-            interpreter.file_path = self.file_path  # Allows for paste current file macro
+            interpreter.current_file = self.current_file  # Allows for paste current file macro
             macros_data, _ = interpreter.extract_macros_from_text(
                 self.macros_text, post_process=True
             )
-            with open(self.file_path, "r") as file:
+            with open(self.current_file, "r") as file:
                 updated_content = file.read()
         else:
             macros_data, updated_content = interpreter.extract_macros_from_file(
-                self.file_path
+                self.current_file
             )
         macros_data, begin_text, end_text, send_prompt_kwargs = macros_data
 
@@ -158,7 +158,7 @@ class AutomaticPromptTask(TaskBase):
 
         finalizer = Finalizer()
         finalizer.set_directories(
-            self.file_path,
+            self.current_file,
             self.profile.chats_dir,
         )
         finalizer.set_backup_handler(backup_handler)

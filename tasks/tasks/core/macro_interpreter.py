@@ -102,7 +102,7 @@ class MacroInterpreter(ABC):
                 post-processing the extracted macros, defined in child classes,
                 and the second element is the updated text stripped of macros.
         """
-        self.file_path = file_path
+        self.current_file = file_path
 
         with open(file_path, "r", encoding="utf-8") as file:
             text = file.read()

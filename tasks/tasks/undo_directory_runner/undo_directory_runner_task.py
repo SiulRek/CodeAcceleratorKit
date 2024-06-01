@@ -20,8 +20,8 @@ class UndoDirectoryRunnerTask(TaskBase):
 
     def setup(self):
         super().setup()
-        self.directory_runner_json = self.additional_args[0]
-        if not self.directory_runner_json.endswith(".json"):
+        self.current_file = self.additional_args[0]
+        if not self.current_file.endswith(".json"):
             msg = "Directory Runner JSON is not json. Hint: Currently active"
             msg += "file must be the Directory Runner JSON from which to undo."
             raise ValueError(msg)
@@ -31,7 +31,7 @@ class UndoDirectoryRunnerTask(TaskBase):
         files in the directory. """
         execution_tracks_dir = self.profile.execution_tracks_dir
         csv_name = (
-            os.path.basename(self.directory_runner_json).split(".")[0]
+            os.path.basename(self.current_file).split(".")[0]
             + "_execution_tracks.csv"
         ) # Same as the one in directory_runner_task.py
         file_execution_csv = os.path.join(execution_tracks_dir, csv_name)

@@ -22,7 +22,7 @@ class RestoreFileTask(TaskBase):
         """Sets up the RestoreFileTask by initializing the file path from
         additional arguments."""
         super().setup()
-        self.file_path = self.additional_args[0]
+        self.current_file = self.additional_args[0]
 
     def execute(self):
         """
@@ -33,7 +33,7 @@ class RestoreFileTask(TaskBase):
             - FileNotFoundError: If the specified backup file does not
                 exist.
         """
-        file_path = self.file_path
+        file_path = self.current_file
 
         backup_handler = BackupHandler(
             self.profile.backup_dir,

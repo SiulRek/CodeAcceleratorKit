@@ -80,31 +80,30 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         # Special File paste case as the interest is in the file content
         # without macros in case there are any
         if line_validation_for_paste_current_file(line):
-            relative_path = os.path.relpath(self.file_path, self.profile.root)
+            relative_path = os.path.relpath(self.current_file, self.profile.root)
             default_title = f"File at {relative_path}"
             return (MACROS.PASTE_CURRENT_FILE, default_title, None)
         return None
 
     def validate_paste_files_macro(self, line):
-        # TODO change here!!!!!!!!
         if result := line_validation_for_paste_files(line):
             referenced_files = []
             for file_name in result:
                 file_path = find_file_sloppy(
-                    file_name, self.profile.root, self.file_path
+                    file_name, self.profile.root, self.current_file
                 )
-                with open(file_path, "r", encoding="utf-8") as file:
-                    relative_path = os.path.relpath(file_path, self.profile.root)
-                    default_title = f"File at {relative_path}"
-                    referenced_file = (MACROS.PASTE_FILE, default_title, file.read())
-                    referenced_files.append(referenced_file)
+                file_content = self._read_file(file_path, "paste files reference")
+                relative_path = os.path.relpath(file_path, self.profile.root)
+                default_title = f"File at {relative_path}"
+                referenced_file = (MACROS.PASTE_FILE, default_title, file_content)
+                referenced_files.append(referenced_file)
             return referenced_files
         return None
 
     def validate_error_macro(self, line):
         # Tailored for specific test_results.log files
         if line_validation_for_error(line):
-            error_text = get_error_text(self.profile.root, self.file_path)
+            error_text = get_error_text(self.profile.root, self.current_file)
             default_title = "Occured Errors"
             return (MACROS.LOGGED_ERROR, default_title, error_text)
         return None
@@ -168,7 +167,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_run_python_script_macro(self, line):
         if result := line_validation_for_run_python_script(line):
-            script_path = find_file_sloppy(result, self.profile.root, self.file_path)
+            script_path = find_file_sloppy(result, self.profile.root, self.current_file)
             environment_path = self.profile.runner_python_env
             script_output = execute_python_module(
                 script_path,
@@ -181,7 +180,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
-            script_path = find_file_sloppy(result, self.profile.root, self.file_path)
+            script_path = find_file_sloppy(result, self.profile.root, self.current_file)
             environment_path = self.profile.tasks_python_env
             pylint_output = execute_pylint(script_path, environment_path)
             default_title = "Pylint Output"
@@ -191,7 +190,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_run_unittest_macro(self, line):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
-            script_path = find_file_sloppy(name, self.profile.root, self.file_path)
+            script_path = find_file_sloppy(name, self.profile.root, self.current_file)
             temp_script_path = get_temporary_script_path(self.profile.runners_cache)
             python_env = self.profile.runner_python_env
             cwd = self.profile.cwd
@@ -209,7 +208,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_directory_tree_macro(self, line):
         if result := line_validation_for_directory_tree(line):
             dir_, max_depth, include_files, ignore_list = result
-            dir_ = find_dir_sloppy(dir_, self.profile.root, self.file_path)
+            dir_ = find_dir_sloppy(dir_, self.profile.root, self.current_file)
             directory_tree = generate_directory_tree(
                 dir_, max_depth, include_files, ignore_list
             )
@@ -220,7 +219,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_summarize_python_script_macro(self, line):
         if result := line_validation_for_summarize_python_script(line):
             name, include_definitions_without_docstrings = result
-            script_path = find_file_sloppy(name, self.profile.root, self.file_path)
+            script_path = find_file_sloppy(name, self.profile.root, self.current_file)
             script_summary = summarize_python_file(
                 script_path, include_definitions_without_docstrings
             )
@@ -241,14 +240,14 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 excluded_files,
             ) = result
             folder_path = find_dir_sloppy(
-                folder_path, self.profile.root, self.file_path
+                folder_path, self.profile.root, self.current_file
             )
             excluded_dirs = [
-                find_dir_sloppy(dir_, self.profile.root, self.file_path)
+                find_dir_sloppy(dir_, self.profile.root, self.current_file)
                 for dir_ in excluded_dirs
             ]
             excluded_files = [
-                find_file_sloppy(file, self.profile.root, self.file_path)
+                find_file_sloppy(file, self.profile.root, self.current_file)
                 for file in excluded_files
             ]
             macros_data = []
