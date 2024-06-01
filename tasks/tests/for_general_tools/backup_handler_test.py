@@ -3,7 +3,7 @@ import os
 import shutil
 import unittest
 
-from tasks.tools.shared.backup_handler import BackupHandler
+from tasks.utils.shared.backup_handler import BackupHandler
 
 ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")
 OUTPUT_DIRECTORY = os.path.join(ROOT_DIR, "tasks", "tests", "outputs")

@@ -206,7 +206,7 @@ CodeAcceleratorKit/
 │   ├── management/
 │   ├── tasks/
 │   ├── tests/
-│   └── tools/
+│   └── utils/
 └── venv/
     ├── bin/
     ├── include/

@@ -2,14 +2,14 @@ import os
 import warnings
 
 from tasks.management.task_runner_profile import TaskRunnerProfile
-from tasks.tools.for_format_python.format_docstrings import format_docstrings
-from tasks.tools.for_format_python.rearrange_imports import rearrange_imports
-from tasks.tools.for_format_python.refactor_exception import refactor_exception
-from tasks.tools.for_format_python.remove_line_comments import remove_line_comments
-from tasks.tools.for_format_python.remove_trailing_parts import remove_trailing_parts
-from tasks.tools.for_format_python.remove_unused_imports import remove_unused_imports
-from tasks.tools.for_format_python.run_black_formatting import format_with_black
-from tasks.tools.shared.execute_pylint import execute_pylint
+from tasks.utils.for_format_python.format_docstrings import format_docstrings
+from tasks.utils.for_format_python.rearrange_imports import rearrange_imports
+from tasks.utils.for_format_python.refactor_exception import refactor_exception
+from tasks.utils.for_format_python.remove_line_comments import remove_line_comments
+from tasks.utils.for_format_python.remove_trailing_parts import remove_trailing_parts
+from tasks.utils.for_format_python.remove_unused_imports import remove_unused_imports
+from tasks.utils.for_format_python.run_black_formatting import format_with_black
+from tasks.utils.shared.execute_pylint import execute_pylint
 
 STRATEGIES = {
     # Abbreviation: (function, description, format_with_subprocess, forcing_required)

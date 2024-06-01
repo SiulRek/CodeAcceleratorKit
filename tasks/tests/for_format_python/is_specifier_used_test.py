@@ -1,6 +1,6 @@
 import unittest
 
-from tasks.tools.for_format_python.is_specifier_used import is_specifier_used
+from tasks.utils.for_format_python.is_specifier_used import is_specifier_used
 
 
 class TestIsSpecifierUsed(unittest.TestCase):

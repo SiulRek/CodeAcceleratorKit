@@ -38,9 +38,9 @@ TODO when adding new macros:
 
 import os
 from tasks.tasks.format_python.format_python_interpreter import FormatPythonInterpreter
-from tasks.tools.shared.backup_handler import BackupHandler
+from tasks.utils.shared.backup_handler import BackupHandler
 from tasks.tasks.core.task_base import TaskBase
-from tasks.tools.for_format_python.format_python_file import format_python_file
+from tasks.utils.for_format_python.format_python_file import format_python_file
 
 class FormatPythonTask(TaskBase):
     """A task for formatting python files by removing or refactoring specific parts based on

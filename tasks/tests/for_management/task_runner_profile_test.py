@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from tasks.management.task_runner_profile import TaskRunnerProfile
 from tasks.management.normalize_path import normalize_path
-from tasks.tools.for_testing.test_result_logger import TestResultLogger
+from tasks.utils.for_testing.test_result_logger import TestResultLogger
 
 ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")
 OUTPUT_DIR = os.path.join(ROOT_DIR, "tasks", "tests", "outputs")

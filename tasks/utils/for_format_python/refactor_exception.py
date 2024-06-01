@@ -1,7 +1,7 @@
 import re
 
 from tasks.configs.constants import LINE_WIDTH
-from tasks.tools.for_format_python.wrap_text import wrap_text
+from tasks.utils.for_format_python.wrap_text import wrap_text
 
 
 def refactor_exception(code):

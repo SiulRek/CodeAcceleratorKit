@@ -22,24 +22,24 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_send_prompt,
 )
 from tasks.tasks.core.macro_interpreter import MacroInterpreter
-from tasks.tools.for_automatic_prompt.execute_python_module import execute_python_module
-import tasks.tools.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
-from tasks.tools.for_automatic_prompt.find_file_in_1st_level_subdir import (
+from tasks.utils.for_automatic_prompt.execute_python_module import execute_python_module
+import tasks.utils.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
+from tasks.utils.for_automatic_prompt.find_file_in_1st_level_subdir import (
     find_file_in_1st_level_subdir,
 )
-from tasks.tools.for_automatic_prompt.generate_directory_tree import (
+from tasks.utils.for_automatic_prompt.generate_directory_tree import (
     generate_directory_tree,
 )
-from tasks.tools.for_automatic_prompt.get_error_text import get_error_text
-from tasks.tools.for_automatic_prompt.get_temporary_script_path import (
+from tasks.utils.for_automatic_prompt.get_error_text import get_error_text
+from tasks.utils.for_automatic_prompt.get_temporary_script_path import (
     get_temporary_script_path,
 )
-from tasks.tools.for_automatic_prompt.summarize_python_script import (
+from tasks.utils.for_automatic_prompt.summarize_python_script import (
     summarize_python_file,
 )
-from tasks.tools.shared.execute_pylint import execute_pylint
-from tasks.tools.shared.find_dir_sloppy import find_dir_sloppy
-from tasks.tools.shared.find_file_sloppy import find_file_sloppy
+from tasks.utils.shared.execute_pylint import execute_pylint
+from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
+from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 
 
 class AutomaticPromptInterpreter(MacroInterpreter):
