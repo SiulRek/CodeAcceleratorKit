@@ -21,6 +21,9 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_summarize_folder,
     line_validation_for_send_prompt,
 )
+from tasks.tasks.automatic_prompt.process_tagged_arguments import (
+    process_tagged_arguments,
+)
 from tasks.tasks.core.macro_interpreter import MacroInterpreter
 from tasks.utils.for_automatic_prompt.execute_python_module import execute_python_module
 import tasks.utils.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
@@ -120,6 +123,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_meta_macros_with_args(self, line):
         if result := line_validation_for_meta_macros_with_args(line):
             name, args = result
+            args = process_tagged_arguments(args, self.profile.root, self.current_file)
             if args:
                 args = [str(arg) for arg in args]
             dir_ = self.profile.meta_macros_with_args_dir
@@ -140,9 +144,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             name = result
             dir_ = self.profile.meta_macros_dir
             template_file = os.path.join(dir_, f"{name}.py")
-            macros_text = self._read_file(
-                template_file, "meta macros reference"
-            )
+            macros_text = self._read_file(template_file, "meta macros reference")
             macros_data, _ = self.extract_macros_from_text(macros_text)
             return macros_data
         return None
@@ -150,6 +152,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_costum_function_macro(self, line):
         if result := line_validation_for_costum_function(line):
             name, args = result
+            args = process_tagged_arguments(args, self.profile.root, self.current_file)
             if args:
                 args = [str(arg) for arg in args]
             costum_functions_dir = self.profile.costum_functions_dir
@@ -301,7 +304,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 start = macros_data.index(macro_data)
                 index = start + 1
                 while (
-                    index < len(macros_data) and macros_data[index][0] == MACROS.NORMAL_TEXT
+                    index < len(macros_data)
+                    and macros_data[index][0] == MACROS.NORMAL_TEXT
                 ):
                     merged_text = f"{macro_data[2].strip()}\n"
                     merged_text += f"{macros_data[index][2].strip()}"
