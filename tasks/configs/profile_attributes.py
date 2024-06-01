@@ -63,7 +63,7 @@ UPDATE_MAPPING = {
     "chats_dir": "chats_dir",
     "tasks_python_env": "tasks_python_env",
     "max_backups": "max_backups",
-    "modules_info": "modules_info",
+    "modules_info": None,   # Forces update of modules_info
     "directory_runner_config": "directory_runner_config",
 }
 

@@ -226,7 +226,11 @@ class TaskManager(Attributes.AttributesInitializer):
             - runner_root (str): The root directory of the runner.
         """
         cls.is_runner_registered(runner_root, raise_error=True)
+
         profile = TaskRunnerProfile(runner_root)
+        modules_info_file = os.path.join(profile.profile_dir, "modules_info.json")
+        if os.path.exists(modules_info_file):
+            os.remove(modules_info_file) # Is going to be regenereted in the next step
         reinit_attrs = cls._init_runner_attributes(
             runner_root,
             profile.storage_dir,
