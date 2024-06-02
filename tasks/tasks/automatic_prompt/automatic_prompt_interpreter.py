@@ -184,7 +184,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
             script_path = find_file_sloppy(result, self.profile.root, self.current_file)
-            environment_path = self.profile.tasks_python_env
+            environment_path = self.profile.runner_python_env
             pylint_output = execute_pylint(script_path, environment_path)
             default_title = "Pylint Output"
             return (MACROS.RUN_PYLINT, default_title, pylint_output)
