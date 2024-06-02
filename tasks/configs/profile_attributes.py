@@ -10,7 +10,7 @@ from tasks.configs.constants import (
 )
 from tasks.management.normalize_path import normalize_path
 from tasks.utils.shared.execute_python_module import execute_python_module
-import tasks.utils.for_format_python.retrieve_modules as retrieve_modules
+import tasks.utils.shared.retrieve_modules as retrieve_modules
 
 
 class ProfileAttrNames(Enum):
