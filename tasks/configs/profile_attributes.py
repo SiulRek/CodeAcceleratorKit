@@ -9,7 +9,7 @@ from tasks.configs.constants import (
     MAX_BACKUPS,
 )
 from tasks.management.normalize_path import normalize_path
-from tasks.utils.for_automatic_prompt.execute_python_module import execute_python_module
+from tasks.utils.shared.execute_python_module import execute_python_module
 import tasks.utils.for_format_python.retrieve_modules as retrieve_modules
 
 

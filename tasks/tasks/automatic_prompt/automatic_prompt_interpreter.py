@@ -25,7 +25,7 @@ from tasks.tasks.automatic_prompt.process_tagged_arguments import (
     process_tagged_arguments,
 )
 from tasks.tasks.core.macro_interpreter import MacroInterpreter
-from tasks.utils.for_automatic_prompt.execute_python_module import execute_python_module
+from tasks.utils.shared.execute_python_module import execute_python_module
 import tasks.utils.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
 from tasks.utils.for_automatic_prompt.find_file_in_1st_level_subdir import (
     find_file_in_1st_level_subdir,
@@ -123,8 +123,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_meta_macros_with_args(self, line):
         if result := line_validation_for_meta_macros_with_args(line):
             name, args = result
-            args = process_tagged_arguments(args, self.profile.root, self.current_file)
             if args:
+                args = process_tagged_arguments(args, self.profile.root, self.current_file)
                 args = [str(arg) for arg in args]
             dir_ = self.profile.meta_macros_with_args_dir
             template_file = os.path.join(dir_, f"{name}.py")
@@ -152,8 +152,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_costum_function_macro(self, line):
         if result := line_validation_for_costum_function(line):
             name, args = result
-            args = process_tagged_arguments(args, self.profile.root, self.current_file)
             if args:
+                args = process_tagged_arguments(args, self.profile.root, self.current_file)
                 args = [str(arg) for arg in args]
             costum_functions_dir = self.profile.costum_functions_dir
             costum_file, subdir_name = find_file_in_1st_level_subdir(
