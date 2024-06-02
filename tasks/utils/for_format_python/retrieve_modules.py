@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 import pkg_resources
 import stdlib_list
@@ -14,23 +15,16 @@ package_to_import_name = {
 }
 
 
-def retrieve_modules(cwd, json_file, mkdir=True):
+def retrieve_modules(cwd):
     """
     Retrieves names of standard library modules and third-party modules in the
     current Python environment. Stores them in a JSON file under
     'standard_library' and 'third_party' keys.
 
     Args:
-        - cwd (str): The current working directory.
-        - json_file (str): The path to the JSON file to store the modules
-            information.
-        - mkdir (bool): Whether to create the directory of the JSON file if
-            it does not exist.
+        - cwd (str): The current working directory. Used to find local modules.
     """
-    if mkdir:
-        json_dir = os.path.dirname(json_file)
-        os.makedirs(json_dir, exist_ok=True)
-        
+
     standard_libs = stdlib_list.stdlib_list()
     standard_libs = [lib for lib in standard_libs if "." not in lib]
     for i, lib in enumerate(standard_libs):
@@ -53,12 +47,20 @@ def retrieve_modules(cwd, json_file, mkdir=True):
     }
 
     modules_info = {"modules_info": modules_dict}
-    with open(json_file, "w") as file:
-        json.dump(modules_info, file, indent=4)
-
-    print(f"Modules information stored in {json_file}")
+    return modules_info
 
 
 if __name__ == "__main__":
-    json_file = "./tasks/configs/modules_info.json"
-    retrieve_modules(json_file)
+    cwd = os.getcwd()
+    json_path = None
+
+    if len(sys.argv) > 2:
+        cwd = sys.argv[1]
+        json_path = sys.argv[2]
+
+    modules_info = retrieve_modules(cwd)
+
+    if json_path:
+        print(f"Writing modules info to {json_path}")
+        with open(json_path, "w", encoding="utf-8") as f: 
+            json.dump(modules_info, f)

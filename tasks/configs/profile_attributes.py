@@ -9,7 +9,8 @@ from tasks.configs.constants import (
     MAX_BACKUPS,
 )
 from tasks.management.normalize_path import normalize_path
-from tasks.utils.for_format_python.retrieve_modules import retrieve_modules
+from tasks.utils.for_automatic_prompt.execute_python_module import execute_python_module
+import tasks.utils.for_format_python.retrieve_modules as retrieve_modules
 
 
 class ProfileAttrNames(Enum):
@@ -63,7 +64,7 @@ UPDATE_MAPPING = {
     "chats_dir": "chats_dir",
     "tasks_python_env": "tasks_python_env",
     "max_backups": "max_backups",
-    "modules_info": None,   # Forces update of modules_info
+    "modules_info": None,  # Forces update of modules_info
     "directory_runner_config": "directory_runner_config",
 }
 
@@ -73,10 +74,10 @@ class AttributesInitializer:
     registration of new task runners with the TaskManager class. """
 
     @classmethod
-    def _initialize_tasks_cache(cls, primary_attrs):
+    def _initialize_tasks_cache(cls, _):
         """ Initializes the tasks_cache directory path. """
-        dir = normalize_path(TASKS_CACHE)
-        return dir
+        dir_ = normalize_path(TASKS_CACHE)
+        return dir_
 
     @classmethod
     def _initialize_runners_cache(cls, primary_attrs):
@@ -123,8 +124,8 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_meta_macros_dir(cls, primary_attrs):
-        """ Initializes the prompt templates directory path based on
-        the templates directory. """
+        """ Initializes the prompt templates directory path based on the templates
+        directory. """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "meta_macros")
         dir_ = normalize_path(dir_)
@@ -132,8 +133,8 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_meta_macros_with_args_dir(cls, primary_attrs):
-        """ Initializes the templates with arguments directory path based on
-        the templates directory. """
+        """ Initializes the templates with arguments directory path based on the
+        templates directory. """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "meta_macros_with_args")
         dir_ = normalize_path(dir_)
@@ -201,16 +202,23 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_modules_info(cls, primary_attrs):
-        """ Initializes the modules information by retrieving and
-        loadingthemodules_info.json file. """
+        """ Initializes the modules information by retrieving and loading the
+        modules_info.json file. """
         storage_dir = primary_attrs.get("storage_dir")
+        cwd = primary_attrs.get("cwd")
+        runner_python_env = primary_attrs.get("runner_python_env")
         profile_dir = os.path.join(storage_dir, PROFILE_SUBFOLDER)
+        os.makedirs(profile_dir, exist_ok=True)
         name = ProfileAttrNames.modules_info.value[1]
         module_info_json = os.path.join(profile_dir, name)
-
-        if not os.path.exists(module_info_json):
-            cwd = primary_attrs.get("cwd")
-            retrieve_modules(cwd, module_info_json, mkdir=True)
+        temp_script_path = os.path.join(profile_dir, "retrieve_modules.py")
+        execute_python_module(
+            module=retrieve_modules,
+            args=[cwd, module_info_json],
+            env_python_path=runner_python_env,
+            cwd=cwd,
+            temp_script_path=temp_script_path,
+        )
 
         with open(module_info_json, "r") as f:
             modules_info = json.load(f)
