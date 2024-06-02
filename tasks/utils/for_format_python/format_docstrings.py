@@ -78,7 +78,7 @@ def clean_docstrings(docstrings):
                 parts = line.split(DOC_QUOTE)
                 leading_spaces = " " * count_leading_spaces(parts[0])
                 cleaned_docstring += leading_spaces + DOC_QUOTE + "\n"
-                cleaned_docstring += leading_spaces + parts[1]
+                cleaned_docstring += leading_spaces + parts[1] + "\n"
             elif stripped_line.endswith(DOC_QUOTE) and not stripped_line.startswith(
                 DOC_QUOTE
             ):
@@ -242,6 +242,6 @@ def format_docstrings_from_file(file_path):
 
 
 if __name__ == "__main__":
-    path = r"path/to/file.py"
+    path = r"/home/krakerlu/github/CodeAcceleratorKit/tasks/tests/for_tasks/format_python_test.py"
     format_docstrings_from_file(path)
     print(f"Docstrings formatted of {path}")
