@@ -139,7 +139,7 @@ python path/to/undo_directory_runner_task.py <root_directory> <config_file_path>
 
 ## Special Chapter for VSCode Users
 
-To utilize the CodeAcceleratorKit within VSCode, you need to create a `tasks.json` file in the `.vscode` folder of your project. Here you find a configuration example that sets up tasks: [tasks.json](./tasks/management/support_files/tasks.json). Ensure the paths are correctly set according to your environment. After setting up the tasks, you can run them by pressing `Ctrt+Shift+P`, move to `Run Task`, and select the desired task.
+To utilize the CodeAcceleratorKit within VSCode, you need to create a `tasks.json` file in the `.vscode` folder of your project. Here you find a configuration example that sets up tasks: [windows](./tasks/management/support_files/windows/tasks.json) and [linux](./tasks/management/support_files/linux/tasks.json). Ensure the paths are correctly set according to your environment. After setting up the tasks, you can run them by pressing `Ctrt+Shift+P`, move to `Run Task`, and select the desired task.
 
 **Note:**
 Use the `${workspaceFolder}` and `${file}` placeholders to refer to your project folder and currently opened file, respectively. When you run a task, `workspaceFolder` will correspond to `root` and `file` to `current_file` in the related task class.
