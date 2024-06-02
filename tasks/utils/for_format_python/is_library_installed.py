@@ -1,27 +1,29 @@
+import os
 import subprocess
 
 
-def is_library_installed(env_path, library_name):
+def is_library_installed(req, venv_path):
     """
-    Check if a specific library is installed in a given Python environment.
+    Check if the 'black' library is installed in the specified virtual
+    environment.
 
     Parameters:
-        - env_path (str): Path to the Python environment.
-        - library_name (str): Name of the library to check.
+        - req (str): The name of the library to check.
+        - venv_path (str): Path to the virtual environment.
 
     Returns:
-        - bool: True if the library is installed, False otherwise.
+        - bool: True if 'black' is installed, False otherwise.
     """
     try:
-        command = [env_path, "-m", "pip", "show", library_name]
+        python_executable = os.path.join(
+            venv_path, "Scripts" if os.name == "nt" else "bin", "python"
+        )
+
+        command = [python_executable, "-m", "pip", "show", req]
 
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        if result.returncode == 0:
-            return True
-        else:
-            return False
+        return result.returncode == 0
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return False
-
+        raise ValueError(f"Error checking if {req} is installed.") from e
+    
