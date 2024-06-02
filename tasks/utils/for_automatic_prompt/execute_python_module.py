@@ -59,6 +59,9 @@ def execute_python_module(module, env_python_path, cwd=None, temp_script_path=No
         return (
             f"Error running script: {e}\nOutput: {e.output}\nError Output: {e.stderr}"
         )
+    finally:
+        if temp_script_path:
+            os.remove(temp_script_path)
 
 if __name__ == "__main__":
     script_path = "/path/to/script.py"
