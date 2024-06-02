@@ -107,6 +107,7 @@ class DirectoryRunnerTask(TaskBase):
         execution_tracker = FileExecutionTracker(file_execution_csv)
         if self.resume_from_last_stopped:
             execution_tracker.verify_tracks()
+            log_append = True
         else:
             execution_tracker.clear_tracks()
             execution_tracker.add_files_from_directory(
@@ -115,6 +116,7 @@ class DirectoryRunnerTask(TaskBase):
                 excluded_dirs=self.excluded_dirs,
                 extensions=[".py"]
             )
+            log_append = False
 
         print(f"\nExecution Tracker initialized: {file_execution_csv}")
         print(f"Output log file: {output_log_file}\n")
@@ -124,7 +126,6 @@ class DirectoryRunnerTask(TaskBase):
 
         completed_files = 0
         failed_files = 0
-        append = False
         while True:
             file_path = execution_tracker.take_next_pending()
             if file_path is None:
@@ -134,8 +135,8 @@ class DirectoryRunnerTask(TaskBase):
             subtask = subtask_class(self.task_runner_root, file_path, self.macros_text)
             subtask.force_defaults()  # Prevents the task from using the command line arguments
             try:
-                with log_outputs_to_file(output_log_file, append=append):
-                    append = True
+                with log_outputs_to_file(output_log_file, append=log_append):
+                    log_append = True
                     subtask.main()
                     print(f"\n\n")
                 execution_tracker.mark_running_as_completed()
