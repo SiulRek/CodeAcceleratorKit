@@ -11,6 +11,7 @@ package_to_import_name = {
     "_warnings": "warnings",
     "PyYAML": "yaml",
     "python-dateutil": "dateutil",
+    "opencv-python": "cv2",
     # Add other package names here
 }
 
