@@ -202,7 +202,7 @@ CodeAcceleratorKit/
 ├── tasks/
 │   ├── __taskscache__/
 │   ├── configs/
-│   ├── control/
+│   ├── controllers/
 │   ├── management/
 │   ├── tasks/
 │   ├── tests/
@@ -294,7 +294,9 @@ def generate_random_number():
 
 
 --- Summarized Python Script example_script_4.py ---
-def check_age(age):
+def check_age_raising_exception(age):
+
+def check_age_sending_warnings(age):
 
 
 **********
