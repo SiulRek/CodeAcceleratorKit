@@ -38,7 +38,6 @@ TODO when adding new macros:
 """
 
 import os
-import warnings
 
 from tasks.tasks.format_python.format_python_interpreter import FormatPythonInterpreter
 from tasks.utils.shared.backup_handler import BackupHandler
@@ -65,22 +64,6 @@ class FormatPythonTask(TaskBase):
         if len(self.additional_args) > 1:
             self.macros_text = self.additional_args[1]
 
-    def _get_environment_path(self, profile):
-        """Returns the environment path for the task."""
-        runner_env = profile.runner_python_env
-        tasks_env = profile.tasks_python_env
-
-        requirements_installed = True
-        for req in requirements:
-            if not is_library_installed(req, runner_env):
-                warnings.warn(f"Suggested library '{req}' is not installed in the environment.")
-                requirements_installed = False
-        
-        if not requirements_installed:
-            warnings.warn("Tasks environment will be used for formatting.")
-            return tasks_env
-        return runner_env
-
     def execute(self):
         """
         Executes the format python task, extracting macros from the file and
@@ -92,7 +75,7 @@ class FormatPythonTask(TaskBase):
         """
         current_file = self.current_file
         checkpoint_dir = self.profile.checkpoint_dir
-        environment_path = self._get_environment_path(self.profile)
+        environment_path = self.profile.runner_python_env
 
         backup_handler = BackupHandler(
             self.profile.backup_dir,
