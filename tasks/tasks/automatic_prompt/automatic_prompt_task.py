@@ -107,7 +107,8 @@ def format_text_from_macros(macros_data, updated_content):
         elif content_type == MACROS.PASTE_CURRENT_FILE:
             prompt += f"\n\n--- {title} ---\n{updated_content}"
         elif content_type in MACROS:
-            prompt += f"\n\n--- {title} ---\n{text}"
+            if text:
+                prompt += f"\n\n--- {title} ---\n{text}"
         else:
             msg = f"Unknown content type: {content_type}"
             raise ValueError(msg)
