@@ -1,6 +1,10 @@
 from tasks.controllers.shared.TASKS_ROOT import TASKS_ROOT
-from tasks.controllers.shared.allocate_vscode_tasks_json import allocate_vscode_tasks_json
+from tasks.controllers.shared.allocate_vscode_tasks_json import (
+    allocate_vscode_tasks_json,
+)
 from tasks.management.task_manager import TaskManager
+from tasks.management.task_manager import TaskManager
+from tasks.utils.shared.is_library_installed import is_library_installed
 
 
 def magic_register_runner(
@@ -13,8 +17,8 @@ def magic_register_runner(
 ):
     """
     A Magic runners registration function for lazy people like me. Not only
-    registers the runner but also copies the templates files from the main tasks root
-    to the target runner root and allocates the '.vscode/tasks.json'.
+    registers the runner but also copies the templates files from the main tasks
+    root to the target runner root and allocates the '.vscode/tasks.json'.
 
     Args:
         - runner_root (str): The root directory of the runner.
@@ -30,13 +34,13 @@ def magic_register_runner(
         TaskManager.login_runner(TASKS_ROOT)
     except Exception as e:
         raise Exception(f"Probably main runner not registered") from e
-    
+
     try:
         TaskManager.login_runner(runner_root)
         raise Exception(f"Runner '{runner_root}' already registered.")
     except Exception as e:
         pass
-        
+
     allocate_vscode_tasks_json(runner_root)
     TaskManager.register_runner(
         runner_root,
@@ -54,11 +58,16 @@ def magic_register_runner(
 
 
 if __name__ == "__main__":
+    #TODO: Assign runner paths.
+    runner_root = "/path/to/runner"
+    runner_env = "/path/to/venv"
+
+    for lib in ["black", "pylint", "stdlib-list"]:
+        if not is_library_installed(lib, runner_env):
+            msg = f"Library '{lib}' not installed in the specified virtual"
+            msg += "environment."
+            raise ValueError(msg)
     magic_register_runner(
-        runner_root="/home/krakerlu/github/CodeAcceleratorKitTest",
-        python_env="/home/krakerlu/github/CodeAcceleratorKitTest/venv",
-        # storage_dir="/path/to/runner/storage",
-        # cwd="/path/to/runner/cwd",
-        # overwrite=True
-        # create_dirs=True
+        runner_root=runner_root,
+        python_env=runner_env,
     )
