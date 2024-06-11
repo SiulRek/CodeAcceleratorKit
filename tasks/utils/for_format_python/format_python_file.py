@@ -11,11 +11,13 @@ from tasks.utils.for_format_python.remove_trailing_parts import remove_trailing_
 from tasks.utils.for_format_python.remove_unused_imports import remove_unused_imports
 from tasks.utils.for_format_python.run_black_formatting import format_with_black
 from tasks.utils.shared.execute_pylint import execute_pylint
+from tasks.utils.for_format_python.add_encoding_to_open import add_encoding_to_open
 
 STRATEGIES = {
     # Abbreviation: (function, description, format_with_subprocess, forcing_required)
-    "RT": (remove_trailing_parts, "Remove trailing parts", False, False),
     "RL": (remove_line_comments, "Remove line comments", False, True),
+    "RT": (remove_trailing_parts, "Remove trailing parts", False, False),
+    "AE": (add_encoding_to_open, "Add encoding to open", False, False),
     "RE": (refactor_exception, "Refactor exception", False, False),
     "RW": (refactor_warnings, "Refactor warnings", False, False),
     "RI": (rearrange_imports, "Rearrange imports", False, False),

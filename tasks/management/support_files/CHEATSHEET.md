@@ -25,8 +25,9 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 **Available Strategies**:
 | Abbreviation  | Description               | Comments           |
 |---------------|---------------------------|--------------------|
-| RT            | Remove trailing parts     |                    |
 | RL            | Remove line comments      | Needs to be forced |
+| AE            | Add encoding to open      |                    |
+| RT            | Remove trailing parts     |                    |
 | RE            | Refactor exceptions       |                    |
 | RW            | Refactor warnings         |                    |
 | RI            | Rearrange imports         |                    |

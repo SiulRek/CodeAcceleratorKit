@@ -17,11 +17,12 @@ Available macros:
 Available strategies:
 | Abbreviation | Description                        | Comments                           |
 |--------------|------------------------------------|------------------------------------|
-| RT           | Remove trailing parts              |                                    |
 | RL           | Remove line comments               | Needs to be forced                 |
+| AE           | Add encoding to open               |                                    |
+| RT           | Remove trailing parts              |                                    |
 | RE           | Refactor exception                 |                                    |
 | RW           | Refactor warnings                  |                                    |
-| RI           | Rearrange imports                  |                                    |                                   
+| RI           | Rearrang imports                   |                                    |
 | RU           | Remove unused imports              |                                    |
 | BF           | Run Black formatting               |                                    |
 | FD           | Format docstrings                  |                                    |
