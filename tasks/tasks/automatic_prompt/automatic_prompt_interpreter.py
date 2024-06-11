@@ -91,15 +91,14 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_paste_files_macro(self, line):
         if result := line_validation_for_paste_files(line):
-            file_names, args = result
-            edit = args[0] if args else False
+            file_names, edit_content = result
             referenced_files = []
             for file_name in file_names:
                 file_path = find_file_sloppy(
                     file_name, self.profile.root, self.current_file
                 )
                 file_content = self._read_file(file_path, "paste files reference")
-                if edit:
+                if edit_content:
                     file_content = edit_text(file_content, self.profile.replace_mapping)
 
                 relative_path = os.path.relpath(file_path, self.profile.root)
