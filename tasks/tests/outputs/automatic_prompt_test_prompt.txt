@@ -17,7 +17,7 @@ Merge normal texts in multiple lines
 --- File at tasks/tests/data/reference_2.py ---
 # This is the reference 2 file.
 #cut_up
-# This line does not appear in post-editing
+# This line the only line that appears in post-editing
 #cut_down
 # Here is the reference 2 file finished.
 
@@ -28,7 +28,7 @@ Merge normal texts in multiple lines
 
 
 --- File at tasks/tests/data/reference_2.py ---
-# This line does not appear in post-editing
+# This line the only line that appears in post-editing
 
 
 --- File at tasks/tests/for_tasks/automatic_prompt_test.py ---
