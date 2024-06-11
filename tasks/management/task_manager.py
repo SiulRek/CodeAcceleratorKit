@@ -354,7 +354,4 @@ class TaskManager(Attributes.AttributesInitializer):
                 dest_dir = os.path.join(dest_dir, subdir)
                 os.makedirs(dest_dir, exist_ok=True)
             dest_file = os.path.join(dest_dir, os.path.basename(source_file))
-            if os.path.exists(dest_file):
-                warnings.warn(f"File {dest_file} already exists, skipping.")
-                continue
             shutil.copy2(source_file, dest_file)
