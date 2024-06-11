@@ -89,8 +89,8 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 | begin_text              | Place start text                      | #B `<begin_text>`                                | -                                    |
 | end_text                | Place end text                        | #E `<end_text>`                                  | -                                    |
 | title                   | Title of the text                     | #T `<title>`                                     | -                                    |
-| normal_text             | Normal text                           | #N `<normal_text>`                                   | -                                    |
-| paste_files             | Paste file/s                          | # `<file_path>` or `<file_path_1, file_path_2>`  | -                                    |
+| normal_text             | Normal text                           | #N `<normal_text>`                               | -                                    |
+| paste_files             | Paste file/s                          | # `<file_path>` or `<file_path_1, file_path_2>`  | <edit_text>                          |
 | paste_current_file      | Paste Current file                    | # File                                           | -                                    |
 | error                   | Get logged errors                     | #L                                               | -                                    |
 | fill_text               | Add a fill text   | #*`<file_name_without_ext>`  | -                                    |
