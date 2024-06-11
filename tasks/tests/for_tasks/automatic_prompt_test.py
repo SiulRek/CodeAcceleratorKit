@@ -38,6 +38,9 @@ class ExampleClassCar:
 # Paste files macro
 # reference_1.py, data\reference_2.py
 
+# Paste files macro with post editing
+# reference_1.py, data\reference_2.py (True)
+
 # Paste current file
 # File
 
@@ -78,7 +81,7 @@ class ExampleClassCar:
 # send (False, 100)
 
 # Checksum Macro
-#checksum 21
+#checksum 22
 
 # Not a macro
 #copy_output_fun

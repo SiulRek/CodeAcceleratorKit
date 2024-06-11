@@ -25,7 +25,7 @@ from tasks.tasks.automatic_prompt.process_tagged_arguments import (
     process_tagged_arguments,
 )
 from tasks.tasks.core.macro_interpreter import MacroInterpreter
-from tasks.utils.shared.execute_python_module import execute_python_module
+from tasks.utils.for_automatic_prompt.edit_text import edit_text
 import tasks.utils.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
 from tasks.utils.for_automatic_prompt.find_file_in_1st_level_subdir import (
     find_file_in_1st_level_subdir,
@@ -41,6 +41,7 @@ from tasks.utils.for_automatic_prompt.summarize_python_script import (
     summarize_python_file,
 )
 from tasks.utils.shared.execute_pylint import execute_pylint
+from tasks.utils.shared.execute_python_module import execute_python_module
 from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
 from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 
@@ -90,12 +91,17 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_paste_files_macro(self, line):
         if result := line_validation_for_paste_files(line):
+            file_names, args = result
+            edit = args[0] if args else False
             referenced_files = []
-            for file_name in result:
+            for file_name in file_names:
                 file_path = find_file_sloppy(
                     file_name, self.profile.root, self.current_file
                 )
                 file_content = self._read_file(file_path, "paste files reference")
+                if edit:
+                    file_content = edit_text(file_content, self.profile.replace_mapping)
+
                 relative_path = os.path.relpath(file_path, self.profile.root)
                 default_title = f"File at {relative_path}"
                 referenced_file = (MACROS.PASTE_FILE, default_title, file_content)
@@ -124,7 +130,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         if result := line_validation_for_meta_macros_with_args(line):
             name, args = result
             if args:
-                args = process_tagged_arguments(args, self.profile.root, self.current_file)
+                args = process_tagged_arguments(
+                    args, self.profile.root, self.current_file
+                )
                 args = [str(arg) for arg in args]
             dir_ = self.profile.meta_macros_with_args_dir
             template_file = os.path.join(dir_, f"{name}.py")
@@ -153,7 +161,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         if result := line_validation_for_costum_function(line):
             name, args = result
             if args:
-                args = process_tagged_arguments(args, self.profile.root, self.current_file)
+                args = process_tagged_arguments(
+                    args, self.profile.root, self.current_file
+                )
                 args = [str(arg) for arg in args]
             costum_functions_dir = self.profile.costum_functions_dir
             costum_file, subdir_name = find_file_in_1st_level_subdir(
@@ -291,12 +301,12 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
         Args:
             - macros_data (list): A list of tuples containing macro data,
-                where each tuple is in the format (macro_type, title, content).
+        where each tuple is in the format (macro_type, title, content).
 
         Returns:
             - tuple: A tuple containing processed macro data, aggregated
-                beginning text, aggregated ending text, and a dictionary of
-                keyword arguments for the MAKE_QUERY macro.
+        beginning text, aggregated ending text, and a dictionary of
+        keyword arguments for the MAKE_QUERY macro.
         """
         # Merge comments in sequence to one comment
         for macro_data in macros_data:

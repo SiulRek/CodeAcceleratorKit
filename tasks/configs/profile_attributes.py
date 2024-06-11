@@ -41,6 +41,7 @@ class ProfileAttrNames(Enum):
     max_backups = (18, "configs.json")
     modules_info = (19, "modules_info.json")
     directory_runner_config = (20, "directory_runner_template.json")
+    replace_mapping = (21, "replace_mapping.json")
 
 
 UPDATE_MAPPING = {
@@ -66,12 +67,13 @@ UPDATE_MAPPING = {
     "max_backups": "max_backups",
     "modules_info": None,  # Forces update of modules_info
     "directory_runner_config": "directory_runner_config",
+    "replace_mapping": "replace_mapping",
 }
 
 
 class AttributesInitializer:
     """ Class that initializes various profile attributes. It is used during
-    registration of new task runners with the TaskManager class. """
+    registration of new task runners wOith the TaskManager class. """
 
     @classmethod
     def _initialize_tasks_cache(cls, _):
@@ -238,3 +240,8 @@ class AttributesInitializer:
             "clear_backup_storage": True,
         }
         return config
+    
+    @classmethod
+    def _initialize_replace_mapping(cls, _):
+        """ Initializes the replace mapping file. """
+        return {}

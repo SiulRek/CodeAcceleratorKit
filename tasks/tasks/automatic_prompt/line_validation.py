@@ -84,7 +84,8 @@ def line_validation_for_paste_files(line):
     if match := re.search(PASTE_FILES_PATTERN, line):
         file_names = match.group(1).split(",")
         file_names = [file_name.strip() for file_name in file_names]
-        return file_names
+        arguments = retrieve_arguments_in_round_brackets(line)
+        return file_names, arguments
     return None
 
 

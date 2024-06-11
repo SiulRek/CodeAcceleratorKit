@@ -12,10 +12,24 @@ Merge normal texts in multiple lines
 --- File at tasks/tests/data/reference_1.py ---
 # This is the reference 1 file.
 # Here is the reference 1 file finished.
+# In Post-editing: REPLACE_ME == I_HAVE_BEEN_REPLACED
 
 --- File at tasks/tests/data/reference_2.py ---
 # This is the reference 2 file.
+#cut_up
+# This line does not appear in post-editing
+#cut_down
 # Here is the reference 2 file finished.
+
+--- File at tasks/tests/data/reference_1.py ---
+# This is the reference 1 file.
+# Here is the reference 1 file finished.
+# In Post-editing: I_HAVE_BEEN_REPLACED == I_HAVE_BEEN_REPLACED
+
+
+--- File at tasks/tests/data/reference_2.py ---
+# This line does not appear in post-editing
+
 
 --- File at tasks/tests/for_tasks/automatic_prompt_test.py ---
 """
@@ -50,6 +64,8 @@ class ExampleClassCar:
 
 # Paste files macro
 
+# Paste files macro with post editing
+
 # Paste current file
 
 # Logged error macro
@@ -78,7 +94,7 @@ class ExampleClassCar:
 # send (False, 100)
 
 # Checksum Macro
-#checksum 21
+#checksum 22
 
 # Not a macro
 #copy_output_fun

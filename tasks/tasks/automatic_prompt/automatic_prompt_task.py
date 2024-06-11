@@ -8,7 +8,7 @@ Available reference types:
 | end_text                | Place end text                        | #E <end_text>                                    | -                                                                                        |
 | title                   | Title of the reference                | #T <title>                                       | -                                                                                        |
 | normal_text             | Normal text                           | #N <normal_text>                                 | -                                                                                        |
-| paste_files             | Paste file/s                          | # <file_path> or <file_path_1, file_path_2>      | -                                                                                        |
+| paste_files             | Paste file/s                          | # <file_path> or <file_path_1, file_path_2>      | <edit_text>                                                                              |
 | paste_current_file      | Paste Current file                    | # File                                           | -                                                                                        |
 | error                   | Get logged errors                     | #L                                               | -                                                                                        |
 | fill_text               | Add a fill text                       | #*<file_name_without_ext>                        | -                                                                                        |
@@ -98,19 +98,19 @@ def format_text_from_macros(macros_data, updated_content):
     prompt = ""
     title_manager = ChapterTitleManager()
     for macros_data in macros_data:
-        content_type, default_title, text = macros_data
+        macro_type, default_title, text = macros_data
         current_title = title_manager.get()
         title = current_title if current_title else default_title
 
-        if content_type == MACROS.TITLE:
+        if macro_type == MACROS.TITLE:
             title_manager.set(default_title)
-        elif content_type == MACROS.PASTE_CURRENT_FILE:
+        elif macro_type == MACROS.PASTE_CURRENT_FILE and text is None:
             prompt += f"\n\n--- {title} ---\n{updated_content}"
-        elif content_type in MACROS:
+        elif macro_type in MACROS:
             if text:
                 prompt += f"\n\n--- {title} ---\n{text}"
         else:
-            msg = f"Unknown content type: {content_type}"
+            msg = f"Unknown macro type: {macro_type}"
             raise ValueError(msg)
 
     return prompt

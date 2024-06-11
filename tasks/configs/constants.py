@@ -57,6 +57,11 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     SEND_PROMPT = "#send"
     CHECKSUM = "#checksum" # Not a macro as used in Finalizer not in Interpreter
 
+class EDIT_TEXT_FLAGS(Enum):
+    CUT_UP = "#cut_up"
+    CUT_DOWN = "#cut_down"
+    END_OF_TEXT = None
+    
 
 TEST_RESULT_PATTERN = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (ERROR|INFO) - .*)")
 
