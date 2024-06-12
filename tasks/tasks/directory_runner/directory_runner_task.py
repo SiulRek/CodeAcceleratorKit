@@ -1,38 +1,48 @@
 """
-This module defines the DirectoryRunnerTask, a task for running specific tasks on a directory of files.
+This module defines the DirectoryRunnerTask, a task for running specific tasks
+on a directory of files.
 
-The DirectoryRunnerTask class sets up the environment, reads configurations from a JSON file, and executes the specified task on each file within a directory. It supports resuming from the last stopped file and excludes specified files and directories.
+The DirectoryRunnerTask class sets up the environment, reads configurations from
+a JSON file, and executes the specified task on each file within a directory. It
+supports resuming from the last stopped file and excludes specified files and
+directories.
 
 Available tasks:
-- FormatPythonTask: Formats Python files by removing or refactoring specific parts based on macros.
-- AutomaticPromptTask: Generates automatic prompts based on macro statements.
+    - FormatPythonTask: Formats Python files by removing or refactoring
+        specific parts based on macros.
+    - AutomaticPromptTask: Generates automatic prompts based on macro
+        statements.
 
 The module includes the following key functionalities:
-- Reading configuration from a JSON file.
-- Initializing and setting up the task environment.
-- Tracking the execution status of each file.
-- Logging outputs to a specified file.
-- Handling backups of files before modifications.
-- Supporting resumption from the last stopped file in case of interruptions.
+    - Reading configuration from a JSON file.
+    - Initializing and setting up the task environment.
+    - Tracking the execution status of each file.
+    - Logging outputs to a specified file.
+    - Handling backups of files before modifications.
+    - Supporting resumption from the last stopped file in case of
+        interruptions.
 
 Usage example:
-# Initialize the task with a root directory and a configuration JSON file.
-DirectoryRunnerTask(root_directory, config_json).main()
+    - # Initialize the task with a root directory and a configuration JSON
+        file. DirectoryRunnerTask(root_directory, config_json).main()
 
 TODO when adding new tasks:
-1. Ensure the task class is imported and recognized in _get_task_class method.
-2. Update the configuration JSON schema if new attributes are needed.
-3. Implement necessary methods in the task class for integration.
+    - 1. Ensure the task class is imported and recognized in _get_task_class
+        method. 2. Update the configuration JSON schema if new attributes are
+        needed. 3. Implement necessary methods in the task class for
+        integration.
 """
+
 import json
 import os
 
-from tasks.tasks.format_python.format_python_task import FormatPythonTask
 from tasks.tasks.automatic_prompt.automatic_prompt_task import AutomaticPromptTask
 from tasks.tasks.core.task_base import TaskBase
+from tasks.tasks.format_python.format_python_task import FormatPythonTask
+from tasks.tasks.pylint_report.pylint_report_task import PylintReportTask
 from tasks.utils.for_directory_runner.file_execution_tracker import FileExecutionTracker
-from tasks.utils.shared.backup_handler import BackupHandler
 from tasks.utils.for_directory_runner.log_outputs_to_file import log_outputs_to_file
+from tasks.utils.shared.backup_handler import BackupHandler
 
 
 class DirectoryRunnerTask(TaskBase):
@@ -70,6 +80,9 @@ class DirectoryRunnerTask(TaskBase):
             return FormatPythonTask
         if task_name == AutomaticPromptTask.NAME:
             return AutomaticPromptTask
+        if task_name == PylintReportTask.NAME:
+            msg = "PylintReportTask is currently not supported, Comming soon."
+            raise ValueError(msg)
         msg = f"Task {task_name} is not supported."
         raise ValueError(msg)
 
@@ -87,8 +100,7 @@ class DirectoryRunnerTask(TaskBase):
         thefiles in the directory. """
         execution_tracks_dir = self.profile.execution_tracks_dir
         csv_name = (
-            os.path.basename(self.current_file).split(".")[0]
-            + "_execution_tracks.csv"
+            os.path.basename(self.current_file).split(".")[0] + "_execution_tracks.csv"
         )
         file_execution_csv = os.path.join(execution_tracks_dir, csv_name)
         output_log_name = csv_name.replace("_execution_tracks.csv", "_output.log")
@@ -111,10 +123,10 @@ class DirectoryRunnerTask(TaskBase):
         else:
             execution_tracker.clear_tracks()
             execution_tracker.add_files_from_directory(
-                self.directory_path, 
+                self.directory_path,
                 excluded_files=self.excluded_files,
                 excluded_dirs=self.excluded_dirs,
-                extensions=[".py"]
+                extensions=[".py"],
             )
             log_append = False
 
