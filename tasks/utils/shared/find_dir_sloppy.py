@@ -31,7 +31,7 @@ def find_nearest_dir(dir_name, root_dir, reference_dir):
 
     if not closest_dir:
         msg = f"Directory '{dir_name}' not found near '{reference_dir}'"
-        raise FileNotFoundError(msg)
+        raise NotADirectoryError(msg)
 
     return closest_dir
 
@@ -44,7 +44,7 @@ def find_dir_from_path_fragment(path_fragment, root_dir):
             return dirpath
 
     msg = f"Directory from fragment '{path_fragment}' not found in '{root_dir}'"
-    raise FileNotFoundError(msg)
+    raise NotADirectoryError(msg)
 
 
 def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
