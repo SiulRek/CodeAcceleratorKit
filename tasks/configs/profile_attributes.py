@@ -37,11 +37,12 @@ class ProfileAttrNames(Enum):
     backup_dir = (14, "configs.json")
     checkpoint_dir = (15, "configs.json")
     chats_dir = (16, "configs.json")
-    tasks_python_env = (17, "configs.json")
-    max_backups = (18, "configs.json")
-    modules_info = (19, "modules_info.json")
-    directory_runner_config = (20, "directory_runner_template.json")
-    replace_mapping = (21, "replace_mapping.json")
+    reports_dir = (17, "configs.json")
+    tasks_python_env = (18, "configs.json")
+    max_backups = (19, "configs.json")
+    modules_info = (20, "modules_info.json")
+    directory_runner_config = (21, "directory_runner_template.json")
+    replace_mapping = (22, "replace_mapping.json")
 
 
 UPDATE_MAPPING = {
@@ -63,6 +64,7 @@ UPDATE_MAPPING = {
     "backup_dir": "backup_dir",
     "checkpoint_dir": "checkpoint_dir",
     "chats_dir": "chats_dir",
+    "reports_dir": "reports_dir",
     "tasks_python_env": "tasks_python_env",
     "max_backups": "max_backups",
     "modules_info": None,  # Forces update of modules_info
@@ -192,6 +194,14 @@ class AttributesInitializer:
         dir_ = normalize_path(dir_)
         return dir_
 
+    @classmethod
+    def _initialize_reports_dir(cls, primary_attrs):
+        """ Initializes the reports directory path based on the output directory. """
+        output_dir = cls._initialize_output_dir(primary_attrs)
+        dir_ = os.path.join(output_dir, "reports")
+        dir_ = normalize_path(dir_)
+        return dir_
+    
     @classmethod
     def _initialize_tasks_python_env(cls, _):
         """ Initializes the tasks Python environment variable. """
