@@ -32,7 +32,7 @@ def add_encoding_to_open(code):
         else:
             updated_lines.append(line)
 
-    return "\n".join(updated_lines)
+    return "\n".join(updated_lines) + "\n"
 
 
 def add_encoding_to_open_from_file(file_path):
