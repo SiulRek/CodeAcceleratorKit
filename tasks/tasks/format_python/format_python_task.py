@@ -19,6 +19,7 @@ Available strategies:
 |--------------|------------------------------------|------------------------------------|
 | RL           | Remove line comments               | Needs to be forced                 |
 | AE           | Add encoding to open               |                                    |
+| RF           | Remove f from empty fstrings       |                                    |
 | RT           | Remove trailing parts              |                                    |
 | RE           | Refactor exception                 |                                    |
 | RW           | Refactor warnings                  |                                    |
