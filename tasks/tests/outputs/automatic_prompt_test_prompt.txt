@@ -37,7 +37,8 @@ TODO:
     1. Run the task Load File and References
     2. check the temporary file for the output.
 """
-
+#cut_up
+#REPLACE_ME
 class ExampleClassCar:
     def __init__(self, brand, model):
         self.brand = brand
@@ -51,6 +52,7 @@ class ExampleClassCar:
 
     def get_car(self):
         return self.brand, self.model
+#cut_down
 
 # ------------ MACROS TEXT START ------------------------------------
 
@@ -67,6 +69,10 @@ class ExampleClassCar:
 # Paste files macro with post editing
 
 # Paste current file
+
+
+# Paste current file with post editing
+ (True)
 
 # Logged error macro
 
@@ -94,12 +100,29 @@ class ExampleClassCar:
 # send (False, 100)
 
 # Checksum Macro
-#checksum 22
+#checksum 23
 
 # Not a macro
 #copy_output_fun
 
 # ------------ MACROS TEXT END ------------------------------------
+
+--- File at tasks/tests/for_tasks/automatic_prompt_test.py ---
+#I_HAVE_BEEN_REPLACED
+class ExampleClassCar:
+    def __init__(self, brand, model):
+        self.brand = brand
+        self.model = model
+
+    def __eq__(self, other):
+        return self.brand == other.brand and self.model == other.model
+
+    def __str__(self):
+        return f"{self.brand} {self.model}"
+
+    def get_car(self):
+        return self.brand, self.model
+
 
 --- Occured Errors ---
 

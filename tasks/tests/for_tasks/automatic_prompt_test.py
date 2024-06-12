@@ -3,7 +3,8 @@ TODO:
     1. Run the task Load File and References
     2. check the temporary file for the output.
 """
-
+#cut_up
+#REPLACE_ME
 class ExampleClassCar:
     def __init__(self, brand, model):
         self.brand = brand
@@ -17,6 +18,7 @@ class ExampleClassCar:
 
     def get_car(self):
         return self.brand, self.model
+#cut_down
 
 # ------------ MACROS TEXT START ------------------------------------
 
@@ -43,6 +45,9 @@ class ExampleClassCar:
 
 # Paste current file
 # File
+
+# Paste current file with post editing
+# File (True)
 
 # Logged error macro
 #L
@@ -81,7 +86,7 @@ class ExampleClassCar:
 # send (False, 100)
 
 # Checksum Macro
-#checksum 22
+#checksum 23
 
 # Not a macro
 #copy_output_fun

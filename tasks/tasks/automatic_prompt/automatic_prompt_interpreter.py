@@ -83,10 +83,21 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_paste_current_file_macro(self, line):
         # Special File paste case as the interest is in the file content
         # without macros in case there are any
-        if line_validation_for_paste_current_file(line):
+        if result := line_validation_for_paste_current_file(line):
+            current_content = self._read_file(
+                self.current_file, "paste current file reference"
+            )
+            # Remove current line to avoid infinite loop in next step
+            current_content = current_content.replace(line, "")
+            # Remove any macros from the content
+            _, current_content = self.extract_macros_from_text(current_content)
+            if result[1]:  # Argument for editing the content
+                current_content = edit_text(
+                    current_content, self.profile.replace_mapping
+                )
             relative_path = os.path.relpath(self.current_file, self.profile.root)
             default_title = f"File at {relative_path}"
-            return (MACROS.PASTE_CURRENT_FILE, default_title, None)
+            return (MACROS.PASTE_CURRENT_FILE, default_title, current_content)
         return None
 
     def validate_paste_files_macro(self, line):
@@ -300,12 +311,12 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
         Args:
             - macros_data (list): A list of tuples containing macro data,
-        where each tuple is in the format (macro_type, title, content).
+                where each tuple is in the format (macro_type, title, content).
 
         Returns:
             - tuple: A tuple containing processed macro data, aggregated
-        beginning text, aggregated ending text, and a dictionary of
-        keyword arguments for the MAKE_QUERY macro.
+                beginning text, aggregated ending text, and a dictionary of
+                keyword arguments for the MAKE_QUERY macro.
         """
         # Merge comments in sequence to one comment
         for macro_data in macros_data:

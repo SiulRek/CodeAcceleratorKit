@@ -47,7 +47,7 @@ class MacroInterpreter(ABC):
         ]
 
 
-    def extract_macros_from_text(self, text, post_process=False):
+    def extract_macros_from_text(self, text, post_process=False, stop_recurse=False):
         """
         Extracts macros and updated text from the input text based on validation
         methods.
@@ -56,6 +56,7 @@ class MacroInterpreter(ABC):
             - text (str): The text to extract macros from.
             - post_process (bool): Whether to post-process the extracted
                 macros or not.
+            - stop_recurse (bool): Whether to stop the recursion or not.
 
         Returns:
             - tuple: macros_data or the post-processed macros.

@@ -8,8 +8,8 @@ Available reference types:
 | end_text                | Place end text                        | #E <end_text>                                    | -                                                                                        |
 | title                   | Title of the reference                | #T <title>                                       | -                                                                                        |
 | normal_text             | Normal text                           | #N <normal_text>                                 | -                                                                                        |
-| paste_files             | Paste file/s                          | # <file_path> or <file_path_1, file_path_2>      | <edit_content>                                                                              |
-| paste_current_file      | Paste Current file                    | # File                                           | -                                                                                        |
+| paste_files             | Paste file/s                          | # <file_path> or <file_path_1, file_path_2>      | <edit_content>                                                                           |
+| paste_current_file      | Paste Current file                    | # File                                           | <edit_content>                                                                           |
 | error                   | Get logged errors                     | #L                                               | -                                                                                        |
 | fill_text               | Add a fill text                       | #*<file_name_without_ext>                        | -                                                                                        |
 | meta_macros             | Interprete predifined meta macros     | #<file_name_without_ext>_meta                    | -                                                                                        |
@@ -104,8 +104,6 @@ def format_text_from_macros(macros_data, updated_content):
 
         if macro_type == MACROS.TITLE:
             title_manager.set(default_title)
-        elif macro_type == MACROS.PASTE_CURRENT_FILE and text is None:
-            prompt += f"\n\n--- {title} ---\n{updated_content}"
         elif macro_type in MACROS:
             if text:
                 prompt += f"\n\n--- {title} ---\n{text}"

@@ -75,7 +75,11 @@ def line_validation_for_normal_text(line):
 def line_validation_for_paste_current_file(line):
     """ Validate if the line is a current file reference. """
     if PASTE_CURRENT_FILE_TAG in line:
-        return True
+        edit_content = False
+        if args := retrieve_arguments_in_round_brackets(line, 1):
+            edit_content = args[0]
+            check_type(edit_content, bool, "for paste current file")
+        return True, edit_content
     return None
 
 
@@ -84,8 +88,10 @@ def line_validation_for_paste_files(line):
     if match := re.search(PASTE_FILES_PATTERN, line):
         file_names = match.group(1).split(",")
         file_names = [file_name.strip() for file_name in file_names]
-        args = retrieve_arguments_in_round_brackets(line)
-        edit_content = args[0] if args else False
+        edit_content = False
+        if args := retrieve_arguments_in_round_brackets(line, 1):
+            edit_content = args[0]
+            check_type(edit_content, bool, "for paste files")
         return file_names, edit_content
     return None
 
