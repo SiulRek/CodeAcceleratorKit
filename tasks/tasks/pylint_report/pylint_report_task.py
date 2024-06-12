@@ -9,10 +9,10 @@ input through command line arguments and handles dynamic discovery of files
 within directories.
 
 Usage example:
-PylintReportTask(root_directory, reference_dir, directory_for_report).main() 
-# If no directory is specified,
-# reference_dir is used as the directory_for_report. 
-# directory_for_report can be defined with 'sloppy' string (see 
+    - PylintReportTask(root_directory, reference_dir,
+        directory_for_report).main() # If no directory is specified, #
+        reference_dir is used as the directory_for_report. #
+        directory_for_report can be defined with 'sloppy' string (see
 
 Highlights:
     - Dynamically finds Python files in a given directory.
@@ -20,12 +20,13 @@ Highlights:
     - Writes the pylint report to a file, organizing entries by score (worst
         to best).
 """
+
+from datetime import datetime
 import os
 
 from tasks.tasks.core.task_base import TaskBase
 from tasks.utils.shared.execute_pylint import execute_pylint
 from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
-from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 
 
 class PylintReportTask(TaskBase):
@@ -51,16 +52,24 @@ class PylintReportTask(TaskBase):
         return python_files
 
     def _process_pylint_output(self, file, output):
-        """ Gets the pylint score from the output. """
+        """ Processes the pylint output and prettifies it. """
         file = os.path.abspath(file)
         file = os.path.normpath(file)
-        first_line = output.split("\n")[0]
-        output = output.replace(first_line, "*" * 14 + f" Module: {file} " + "*" * 14)
+        header = "*" * 50 + f"\n Module: {file}\n"
+
+        lines = output.split("\n")
+        prettified_output = [header]
+        for line in lines[1:]:
+            if line.strip():  # Ignore empty lines
+                prettified_output.append("    " + line.strip())
+        prettified_output.append("*" * 50)
+        prettified_output = "\n".join(prettified_output) + "\n\n"
+
         try:
             score = output.split("Your code has been rated at ")[1].split("/10")[0]
         except IndexError:
             score = "0.0"
-        return output, score
+        return prettified_output, score
 
     def _execute_pylint(self, file):
         """ Runs pylint on the specified file. """
@@ -74,11 +83,29 @@ class PylintReportTask(TaskBase):
     def _write_report(self, logs):
         """ Writes the pylint report to a file. """
         reports_dir = self.profile.reports_dir
+        root_dir = self.profile.root
         report_name = os.path.basename(self.dir_for_report).split(".")[0]
         report_path = os.path.join(reports_dir, f"{report_name}_pylint_report.txt")
+
         with open(report_path, "w", encoding="utf-8") as report_file:
+            report_file.write(f"Pylint Report for {self.dir_for_report}\n")
+            report_file.write(
+                f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+            )
+            report_file.write("\nSummary:\n")
+            report_file.write(f"{'Module':<50} {'Score':>5}\n")
+            report_file.write(f"{'-'*46}\n")
+            for file, score in [(log[0], log[2]) for log in logs]:
+                file = os.path.relpath(file, root_dir)
+                if len(file) > 50:
+                    file = file[-50:]
+                report_file.write(f"{file:<50} {score:>5}\n")
+            report_file.write("\nDetailed Report:\n")
+            report_file.write(f"{'='*50}\n")
+
             for log in logs:
-                report_file.write(log)
+                report_file.write(log[1])
+
         print(f"Report written to {report_path}")
 
     def execute(self):
@@ -96,16 +123,15 @@ class PylintReportTask(TaskBase):
             python_files = self._get_python_files(self.dir_for_report)
             for file in python_files:
                 output, score = self._execute_pylint(file)
-                logs.append((output, float(score)))
+                logs.append((file, output, float(score)))
 
         else:
             self.dir_for_report = self.current_file
             output, score = self._execute_pylint(self.dir_for_report)
-            logs.append((output, score))
+            logs.append((file, output, score))
 
         # Sort from worst score to best score
-        logs = sorted(logs, key=lambda x: x[1], reverse=False)
-        logs = [log[0] for log in logs]
+        logs = sorted(logs, key=lambda x: x[2], reverse=False)
         self._write_report(logs)
 
 
