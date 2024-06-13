@@ -18,7 +18,6 @@ Available strategies:
 | Abbreviation | Description                        | Comments                           |
 |--------------|------------------------------------|------------------------------------|
 | RL           | Remove line comments               | Needs to be forced                 |
-| RC           | Remove comments                    | Needs to be forced                 |
 | RT           | Remove trailing parts              |                                    |
 | AE           | Add encoding to open               |                                    |
 | RUE          | Remove unnecessary else            |                                    |
@@ -29,6 +28,7 @@ Available strategies:
 | RU           | Remove unused imports              |                                    |
 | BF           | Run Black formatting               |                                    |
 | FD           | Format docstrings                  |                                    |
+| EN           | Ensure newline at end              | Needs to be forced                 |
 | PL           | Execute Pylint                     |                                    |
 
 Usage example:
