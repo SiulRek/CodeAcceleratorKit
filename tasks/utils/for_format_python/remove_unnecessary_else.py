@@ -49,7 +49,7 @@ def remove_unnecessary_else(code):
                     indentation_recorded is not None
                     and elif_indentation == indentation_recorded - INTEND_LEN
                 ):
-                    line = line.replace("eli", "if")
+                    line = line.replace("elif", "if")
                     updated_lines.append(line)
                     i += 1
                     indentation_recorded = None
@@ -57,6 +57,8 @@ def remove_unnecessary_else(code):
 
         if lstripped_line.startswith("raise") or lstripped_line.startswith("return"):
             indentation_recorded = current_indentation
+        else:
+            indentation_recorded = None
 
         updated_lines.append(line)
         i += 1
