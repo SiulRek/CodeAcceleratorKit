@@ -26,3 +26,5 @@
 - move line up -> alt + shift + ue
 - move line down -> alt + ue
 - toggle tab move focus -> alt + m (changed from ctrl+m)
+- fix problems with move cursor right.
+- Collapse all folders -> ctrl + shift + 7
