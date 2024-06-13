@@ -254,4 +254,4 @@ class AttributesInitializer:
     @classmethod
     def _initialize_replace_mapping(cls, _):
         """ Initializes the replace mapping file. """
-        return {}
+        return {"REPLACE_ME": "I_HAVE_BEEN_REPLACED"}
