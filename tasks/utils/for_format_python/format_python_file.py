@@ -18,10 +18,12 @@ from tasks.utils.for_format_python.remove_unnecessary_else import (
 from tasks.utils.for_format_python.remove_unused_imports import remove_unused_imports
 from tasks.utils.for_format_python.run_black_formatting import format_with_black
 from tasks.utils.shared.execute_pylint import execute_pylint
+from tasks.utils.for_format_python.ensure_newline_at_end import ensure_newline_at_end
 
 STRATEGIES = {
     # Abbreviation: (function, description, format_with_subprocess, forcing_required)
     "RL": (remove_line_comments, "Remove line comments", False, True),
+    "EN": (ensure_newline_at_end, "Ensure newline at end", False, True),
     "RT": (remove_trailing_parts, "Remove trailing parts", False, False),
     "AE": (add_encoding_to_open, "Add encoding to open", False, False),
     "RUE": (remove_unnecessary_else, "Remove unnecessary else", False, False),

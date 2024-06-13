@@ -18,6 +18,7 @@ Available strategies:
 | Abbreviation | Description                        | Comments                           |
 |--------------|------------------------------------|------------------------------------|
 | RL           | Remove line comments               | Needs to be forced                 |
+| RC           | Remove comments                    | Needs to be forced                 |
 | RT           | Remove trailing parts              |                                    |
 | AE           | Add encoding to open               |                                    |
 | RUE          | Remove unnecessary else            |                                    |
