@@ -23,7 +23,7 @@ def remove_f_from_empty_fstrings(code):
         else:
             updated_lines.append(line)
 
-    return "\n".join(updated_lines) + "\n"
+    return "\n".join(updated_lines)
 
 
 def remove_f_from_empty_fstrings_from_file(file_path):
