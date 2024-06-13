@@ -20,7 +20,7 @@ Available strategies:
 | RL           | Remove line comments               | Needs to be forced                 |
 | RT           | Remove trailing parts              |                                    |
 | AE           | Add encoding to open               |                                    |
-| RU           | Remove unnecessary else            |                                    |
+| RUE          | Remove unnecessary else            |                                    |
 | RF           | Remove f from empty fstrings       |                                    |
 | RE           | Refactor exception                 |                                    |
 | RW           | Refactor warnings                  |                                    |
