@@ -12,6 +12,9 @@ from tasks.utils.for_format_python.remove_f_from_empty_fstrings import (
 )
 from tasks.utils.for_format_python.remove_line_comments import remove_line_comments
 from tasks.utils.for_format_python.remove_trailing_parts import remove_trailing_parts
+from tasks.utils.for_format_python.remove_unnecessary_else import (
+    remove_unnecessary_else,
+)
 from tasks.utils.for_format_python.remove_unused_imports import remove_unused_imports
 from tasks.utils.for_format_python.run_black_formatting import format_with_black
 from tasks.utils.shared.execute_pylint import execute_pylint
@@ -21,6 +24,7 @@ STRATEGIES = {
     "RL": (remove_line_comments, "Remove line comments", False, True),
     "RT": (remove_trailing_parts, "Remove trailing parts", False, False),
     "AE": (add_encoding_to_open, "Add encoding to open", False, False),
+    "RU": (remove_unnecessary_else, "Remove unnecessary else", False, False),
     "RF": (remove_f_from_empty_fstrings, "Remove f from empty fstrings", False, False),
     "RE": (refactor_exception, "Refactor exception", False, False),
     "RW": (refactor_warnings, "Refactor warnings", False, False),

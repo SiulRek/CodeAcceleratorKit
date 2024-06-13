@@ -18,9 +18,10 @@ Available strategies:
 | Abbreviation | Description                        | Comments                           |
 |--------------|------------------------------------|------------------------------------|
 | RL           | Remove line comments               | Needs to be forced                 |
-| AE           | Add encoding to open               |                                    |
-| RF           | Remove f from empty fstrings       |                                    |
 | RT           | Remove trailing parts              |                                    |
+| AE           | Add encoding to open               |                                    |
+| RU           | Remove unnecessary else            |                                    |
+| RF           | Remove f from empty fstrings       |                                    |
 | RE           | Refactor exception                 |                                    |
 | RW           | Refactor warnings                  |                                    |
 | RI           | Rearrang imports                   |                                    |

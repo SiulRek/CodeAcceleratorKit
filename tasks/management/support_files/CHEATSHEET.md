@@ -27,9 +27,10 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 | Abbreviation  | Description               | Comments           |
 |---------------|---------------------------|--------------------|
 | RL            | Remove line comments      | Needs to be forced |
-| AE            | Add encoding to open      |                    |
-| RF            | Remove f from empty fstrings |                 |
 | RT            | Remove trailing parts     |                    |
+| AE            | Add encoding to open      |                    |
+| RU            | Remove unused imports     |                    |
+| RF            | Remove f from empty fstrings |                 |
 | RE            | Refactor exceptions       |                    |
 | RE            | Refactor warnings         |                    |
 | RI            | Rearrange imports         |                    |
@@ -53,10 +54,10 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 | Name                    | Description                           | Pattern                                          | Optional Arguments                   |
 |-------------------------|---------------------------------------|--------------------------------------------------|--------------------------------------|
 | paste_files             | Paste file/s                          | # `<file_path>` or `<file_path_1, file_path_2>`  | <edit_content>                       |
-| fill_text               | Add a fill text   | #*`<file_name_without_ext>`  | -                                    |
-| meta_macros             | Interprete predefined meta macros  | #`<file_name_without_ext>`_meta | -                                    |
-| meta_macros_with_args   | Meta macros with args  | #`<file_name_without_ext>`_meta+ | `<arg_1, arg_2, ...>`                |
-| costum_function         | Paste the output of custom function   | #`<file_name_without_ext>`_func+                 | `<arg_1, arg_2, ...>`                |
+| fill_text               | Add a fill text  ([see more](./costumizations/fill_texts/fill_text_template/template_4.txt)) | #*`<file_name_without_ext>`  | -                                    |
+| meta_macros             | Interprete predefined meta macros ([see more](./costumizations/meta_macros/template_1.py)) | #`<file_name_without_ext>`_meta | -                                    |
+| meta_macros_with_args   | Meta macros with args  ([see more](./costumizations/meta_macros_with_args/template_2.py)) | #`<file_name_without_ext>`_meta+ | `<arg_1, arg_2, ...>`                |
+| costum_function         | Paste the output of custom function  ([see more](./costumizations/functions/costum_function_template/template_3.py))   | #`<file_name_without_ext>`_func+                 | `<arg_1, arg_2, ...>`                |
 | run_python_script       | Run a Python script                   | #run `<script_path>`                             | -                                    |
 | run_pylint              | Run pylint on a file                  | #pylint `<file_path>`                            | -                                    |
 | run_unittest            | Run unittest on a file                | #unittest `<file_path>`                          | `<verbosity>`                        |
