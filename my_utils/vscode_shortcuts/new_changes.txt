@@ -25,6 +25,23 @@
 - Go to last edit cursor position -> ctrl + shift + z
 - move line up -> alt + shift + ue
 - move line down -> alt + ue
-- toggle tab move focus -> alt + m (changed from ctrl+m)
+- toggle tab move focus -> alt + m (changed from ctrl+m) 
+- select left (added) -> ctrl + alt + left
+- select right (added) -> ctrl + alt + right
+- select left word (added) -> ctrl + alt + shift + left
+- select right word (added) -> ctrl + alt + shift + right
+- Add to second new tab -> alt + right
+- duplicate line up -> shift + up
+- duplicate line down -> shift + down
+- select up -> ctrl + alt + up
+- select down -> ctrl + alt + down
+- multiple cursor up -> ctrl + alt + shift + up
+- multiple cursor down -> ctrl + alt + shift + down
+- fold -> ctrl + shift + ß
+- unfold -> ctrl + shift + ´
+
+Commit Message: Add collapse all folder and fixed keybindings issues 13.06.2024
 - fix problems with move cursor right.
 - Collapse all folders -> ctrl + shift + 7
+
+
