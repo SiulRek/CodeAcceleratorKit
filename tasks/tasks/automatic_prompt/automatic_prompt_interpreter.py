@@ -37,6 +37,7 @@ from tasks.utils.for_automatic_prompt.get_error_text import get_error_text
 from tasks.utils.for_automatic_prompt.get_temporary_script_path import (
     get_temporary_script_path,
 )
+from tasks.utils.for_automatic_prompt.render_to_markdown import render_to_markdown
 from tasks.utils.for_automatic_prompt.summarize_python_script import (
     summarize_python_file,
 )
@@ -95,6 +96,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 current_content = edit_text(
                     current_content, self.profile.replace_mapping
                 )
+            current_content = render_to_markdown(
+                current_content, extension=self.current_file.split(".")[-1]
+            )
             relative_path = os.path.relpath(self.current_file, self.profile.root)
             default_title = f"File at {relative_path}"
             return (MACROS.PASTE_CURRENT_FILE, default_title, current_content)
@@ -111,7 +115,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 file_content = self._read_file(file_path, "paste files reference")
                 if edit_content:
                     file_content = edit_text(file_content, self.profile.replace_mapping)
-
+                file_content = render_to_markdown(
+                    file_content, extension=file_path.split(".")[-1]
+                )
                 relative_path = os.path.relpath(file_path, self.profile.root)
                 default_title = f"File at {relative_path}"
                 referenced_file = (MACROS.PASTE_FILE, default_title, file_content)
