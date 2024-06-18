@@ -3,24 +3,32 @@ import os
 from tasks.configs.constants import CURRENT_FILE_TAG
 
 
+import os
+
 def find_nearest_file(file_name, root_dir, reference_file):
+    def compute_distance(path1_parts, path2_parts):
+        matching_parts = 0
+        for part1, part2 in zip(path1_parts, path2_parts):
+            if part1 == part2:
+                matching_parts += 1
+            else:
+                break
+        return matching_parts
+
     closest_file = None
-    min_distance = float("inf")
+    max_matching_parts = -1
+    reference_relative_path = os.path.relpath(reference_file, root_dir).split(os.sep)
+
     for dirpath, _, filenames in os.walk(root_dir):
+        filenames = sorted(filenames)
         if file_name in filenames:
             current_file = os.path.join(dirpath, file_name)
-            current_relative_path = os.path.relpath(current_file, root_dir)
-            reference_relative_path = os.path.relpath(reference_file, root_dir)
+            current_relative_path = os.path.relpath(current_file, root_dir).split(os.sep)
 
-            current_path_parts = current_relative_path.split(os.sep)
-            reference_path_parts = reference_relative_path.split(os.sep)
+            matching_parts = compute_distance(current_relative_path, reference_relative_path)
 
-            distance = len(
-                set(current_path_parts).symmetric_difference(set(reference_path_parts))
-            )
-
-            if distance < min_distance:
-                min_distance = distance
+            if matching_parts > max_matching_parts:
+                max_matching_parts = matching_parts
                 closest_file = current_file
 
     if not closest_file:

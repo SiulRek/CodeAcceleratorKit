@@ -4,29 +4,36 @@ from tasks.configs.constants import CURRENT_DIRECTORY_TAG
 
 
 def find_nearest_dir(dir_name, root_dir, reference_dir):
+    def compute_distance(path1_parts, path2_parts):
+        matching_parts = 0
+        for part1, part2 in zip(path1_parts, path2_parts):
+            if part1 == part2:
+                matching_parts += 1
+            else:
+                break
+        return matching_parts
+
     root_dir = os.path.abspath(root_dir)
     reference_dir = os.path.abspath(reference_dir)
     closest_dir = None
-    min_distance = float("inf")
+    max_matching_parts = -1
 
     if dir_name == ".":
         return root_dir
+
+    reference_relative_path = os.path.relpath(reference_dir, root_dir).split(os.sep)
+
     for dirpath, dirnames, _ in os.walk(root_dir):
         if dir_name in dirnames:
             current_dir = os.path.join(dirpath, dir_name)
-            current_relative_path = os.path.relpath(current_dir, root_dir)
-            reference_relative_path = os.path.relpath(reference_dir, root_dir)
+            current_relative_path = os.path.relpath(current_dir, root_dir).split(os.sep)
 
-            current_path_parts = current_relative_path.split(os.sep)
-            reference_path_parts = reference_relative_path.split(os.sep)
-
-            # Calculate the 'distance' between current_dir and reference_dir
-            distance = len(
-                set(current_path_parts).symmetric_difference(set(reference_path_parts))
+            matching_parts = compute_distance(
+                current_relative_path, reference_relative_path
             )
 
-            if distance < min_distance:
-                min_distance = distance
+            if matching_parts > max_matching_parts:
+                max_matching_parts = matching_parts
                 closest_dir = current_dir
 
     if not closest_dir:
