@@ -1296,5 +1296,58 @@
     {
         "key": "ctrl+shift+7",
         "command": "workbench.files.action.collapseExplorerFolders"
+    },
+    {
+        "key": "ctrl+f5",
+        "command": "workbench.action.debug.continue",
+        "when": "debugState == 'stopped'"
+    },
+    {
+        "key": "f5",
+        "command": "-workbench.action.debug.continue",
+        "when": "debugState == 'stopped'"
+    },
+    {
+        "key": "ctrl+alt+w",
+        "command": "editor.debug.action.selectionToWatch"
+    },
+    {
+        "key": "ctrl+alt+r",
+        "command": "workbench.debug.viewlet.action.removeAllBreakpoints"
+    },
+    {
+        "key": "ctrl+oem_6",
+        "command": "-restructuredtext.editor.listEditing.onIndentLines",
+        "when": "editorTextFocus && !suggestWidgetVisible && editorLangId == 'restructuredtext'"
+    },
+    {
+        "key": "ctrl+oem_6",
+        "command": "workbench.action.terminal.scrollToNextCommand",
+        "when": "terminalFocus && terminalHasBeenCreated && !accessibilityModeEnabled || terminalFocus && terminalProcessSupported && !accessibilityModeEnabled"
+    },
+    {
+        "key": "ctrl+oem_6",
+        "command": "list.scrollDown",
+        "when": "listFocus && !inputFocus && !treestickyScrollFocused && listScrollAtBoundary != 'both' && listScrollAtBoundary != 'bottom'"
+    },
+    {
+        "key": "ctrl+oem_6",
+        "command": "scrollLineDown",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+oem_4",
+        "command": "workbench.action.terminal.scrollToPreviousCommand",
+        "when": "terminalFocus && terminalHasBeenCreated && !accessibilityModeEnabled || terminalFocus && terminalProcessSupported && !accessibilityModeEnabled"
+    },
+    {
+        "key": "ctrl+oem_4",
+        "command": "list.scrollUp",
+        "when": "listFocus && !inputFocus && !treestickyScrollFocused && listScrollAtBoundary != 'both' && listScrollAtBoundary != 'top'"
+    },
+    {
+        "key": "ctrl+oem_4",
+        "command": "scrollLineUp",
+        "when": "textInputFocus"
     }
 ]

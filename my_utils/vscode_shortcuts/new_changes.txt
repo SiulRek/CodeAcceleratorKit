@@ -44,4 +44,9 @@ Commit Message: Add collapse all folder and fixed keybindings issues 13.06.2024
 - fix problems with move cursor right.
 - Collapse all folders -> ctrl + shift + 7
 
+Commit Message: Added scroll up and scroll down keybindings. 19.06.2024
+- Removed reStructuredtext.editor.listEditing.onIntendLines = ctrl + ´
+- scroll down -> ctrl + ´
+- scroll up -> ctrl + ß
+
 
