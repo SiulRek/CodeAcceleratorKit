@@ -27,9 +27,7 @@ def send_prompt(prompt_message, max_response_tokens=3000, model="gpt-4o"):
     )
 
 
-    completion = (
-        response.parse()
-    )  
+    completion = response.parse()
     response_message = completion.choices[0].message.content
     return response_message
 
