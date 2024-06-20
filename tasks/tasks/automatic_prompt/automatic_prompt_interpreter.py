@@ -30,6 +30,9 @@ import tasks.utils.for_automatic_prompt.execute_unittests_from_file as execute_u
 from tasks.utils.for_automatic_prompt.find_file_in_1st_level_subdir import (
     find_file_in_1st_level_subdir,
 )
+from tasks.utils.for_automatic_prompt.format_identifiers_as_code import (
+    format_identifiers_as_code,
+)
 from tasks.utils.for_automatic_prompt.generate_directory_tree import (
     generate_directory_tree,
 )
@@ -62,11 +65,13 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):
+            result = format_identifiers_as_code(result)
             return (MACROS.BEGIN_TEXT, result, None)
         return None
 
     def validate_end_text_macro(self, line):
         if result := line_validation_for_end_text(line):
+            result = format_identifiers_as_code(result)
             return (MACROS.END_TEXT, result, None)
         return None
 
@@ -78,6 +83,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_normal_text_macro(self, line):
         if result := line_validation_for_normal_text(line):
             default_title = "Normal Text"
+            result = format_identifiers_as_code(result)
             return (MACROS.NORMAL_TEXT, default_title, result)
         return None
 
