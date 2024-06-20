@@ -19,29 +19,52 @@ def allocate_vscode_tasks_json(runner_root):
     """
     if not os.path.exists(MAIN_VSCODE_TASKS_JSON):
         msg = f"The VSCODE tasks file '{MAIN_VSCODE_TASKS_JSON}' does not"
-        msg += f"exist."
+        msg += "exist."
         raise FileNotFoundError(msg)
+
     with open(MAIN_VSCODE_TASKS_JSON, "r", encoding="utf-8") as f:
         main_vscode_tasks = json.load(f)
 
     runner_vscode_tasks_json = os.path.join(runner_root, ".vscode", "tasks.json")
     os.makedirs(os.path.dirname(runner_vscode_tasks_json), exist_ok=True)
+
     if os.path.exists(runner_vscode_tasks_json):
         with open(runner_vscode_tasks_json, "r", encoding="utf-8") as f:
             runner_vscode_tasks = json.load(f)
-        runner_labels = [task["label"] for task in runner_vscode_tasks["tasks"]]
+        runner_tasks_label = [
+            task["label"] for task in runner_vscode_tasks.get("tasks", [])
+        ]
+        runner_inputs_id = [
+            input["id"] for input in runner_vscode_tasks.get("inputs", [])
+        ]
+
         for task in main_vscode_tasks["tasks"]:
             task_label = task["label"]
-            if task_label in runner_labels:
-                warnings.warn(
-                    f"Task '{task_label}' already present in '{runner_vscode_tasks_json}, will be replaced.'"
-                )
+            if task_label in runner_tasks_label:
+                msg = f"Task '{task_label}' already present in"
+                msg += f"'{runner_vscode_tasks_json}', will be replaced."
+                warnings.warn(msg)
                 runner_vscode_tasks["tasks"] = [
                     t if t["label"] != task_label else task
                     for t in runner_vscode_tasks["tasks"]
                 ]
             else:
+                runner_vscode_tasks["tasks"] = runner_vscode_tasks.get("tasks", [])
                 runner_vscode_tasks["tasks"].append(task)
+
+        for input in main_vscode_tasks["inputs"]:
+            input_id = input["id"]
+            if input_id in runner_inputs_id:
+                msg = f"Input '{input_id}' already present in"
+                msg += f"'{runner_vscode_tasks_json}', will be replaced."
+                warnings.warn(msg)
+                runner_vscode_tasks["inputs"] = [
+                    t if t["id"] != input_id else input
+                    for t in runner_vscode_tasks["inputs"]
+                ]
+            else:
+                runner_vscode_tasks["inputs"] = runner_vscode_tasks.get("inputs", [])
+                runner_vscode_tasks["inputs"].append(input)
     else:
         runner_vscode_tasks = main_vscode_tasks
 
