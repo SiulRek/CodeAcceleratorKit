@@ -1,6 +1,6 @@
 import unittest
 
-from tasks.utils.for_automatic_prompt.format_identifiers_as_code import (
+from tasks.utils.shared.format_identifiers_as_code import (
     format_identifiers_as_code,
     is_maybe_identifier,
     is_camel_case,
