@@ -30,16 +30,10 @@ import tasks.utils.for_automatic_prompt.execute_unittests_from_file as execute_u
 from tasks.utils.for_automatic_prompt.find_file_in_1st_level_subdir import (
     find_file_in_1st_level_subdir,
 )
-from tasks.utils.for_automatic_prompt.format_identifiers_as_code import (
-    format_identifiers_as_code,
-)
 from tasks.utils.for_automatic_prompt.generate_directory_tree import (
     generate_directory_tree,
 )
 from tasks.utils.for_automatic_prompt.get_error_text import get_error_text
-from tasks.utils.for_automatic_prompt.get_temporary_script_path import (
-    get_temporary_script_path,
-)
 from tasks.utils.for_automatic_prompt.render_to_markdown import render_to_markdown
 from tasks.utils.for_automatic_prompt.summarize_python_script import (
     summarize_python_file,
@@ -48,6 +42,7 @@ from tasks.utils.shared.execute_pylint import execute_pylint
 from tasks.utils.shared.execute_python_module import execute_python_module
 from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
 from tasks.utils.shared.find_file_sloppy import find_file_sloppy
+from tasks.utils.shared.format_identifiers_as_code import format_identifiers_as_code
 
 
 class AutomaticPromptInterpreter(MacroInterpreter):
@@ -209,6 +204,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 environment_path,
                 cwd=self.profile.cwd,
             )
+            script_output = render_to_markdown(script_output, format="shell")
             default_title = "Python Script Output"
             return (MACROS.RUN_PYTHON_SCRIPT, default_title, script_output)
         return None
@@ -218,6 +214,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             script_path = find_file_sloppy(result, self.profile.root, self.current_file)
             environment_path = self.profile.runner_python_env
             pylint_output = execute_pylint(script_path, environment_path)
+            pylint_output = render_to_markdown(pylint_output, format="shell")
             default_title = "Pylint Output"
             return (MACROS.RUN_PYLINT, default_title, pylint_output)
         return None
@@ -226,16 +223,15 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
             script_path = find_file_sloppy(name, self.profile.root, self.current_file)
-            temp_script_path = get_temporary_script_path(self.profile.runners_cache)
             python_env = self.profile.runner_python_env
             cwd = self.profile.cwd
             unittest_output = execute_python_module(
                 module=execute_unittests_from_file,
                 args=[script_path, cwd, str(verbosity)],
                 env_python_path=python_env,
-                cwd=cwd,
-                temp_script_path=temp_script_path,
+                cwd=cwd
             )
+            unittest_output = render_to_markdown(unittest_output, format="shell")
             default_title = "Unittest Output"
             return (MACROS.RUN_UNITTEST, default_title, unittest_output)
         return None
