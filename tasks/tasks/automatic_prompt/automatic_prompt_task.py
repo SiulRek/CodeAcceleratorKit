@@ -106,7 +106,10 @@ def format_text_from_macros(macros_data, updated_content):
             title_manager.set(default_title)
         elif macro_type in MACROS:
             if text:
-                prompt += f"\n\n--- {title} ---\n{text}"
+                if title.startswith("#"):
+                    prompt += f"\n\n{title.strip()}\n{text}"
+                else:
+                    prompt += f"\n\n## {title.strip()}\n{text}"
         else:
             msg = f"Unknown macro type: {macro_type}"
             raise ValueError(msg)
