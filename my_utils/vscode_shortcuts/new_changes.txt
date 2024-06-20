@@ -49,4 +49,6 @@ Commit Message: Added scroll up and scroll down keybindings. 19.06.2024
 - scroll down -> ctrl + ´
 - scroll up -> ctrl + ß
 
+Commit Message: Fixed issue with list select up. 20.06.2024
+
 

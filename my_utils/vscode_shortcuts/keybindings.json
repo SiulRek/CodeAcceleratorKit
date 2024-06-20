@@ -1349,5 +1349,10 @@
         "key": "ctrl+oem_4",
         "command": "scrollLineUp",
         "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+oem_1",
+        "command": "list.expandSelectionUp",
+        "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
     }
 ]
