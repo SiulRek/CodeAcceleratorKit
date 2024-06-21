@@ -38,12 +38,13 @@ def refactor_exception(code):
     updated_lines = []
     for i, line in enumerate(lines):
         match = re.search(
-            r"(\s*)raise (\w+(Exception|Error|Warning))\((f?'.*'|f?\".*\")\)", line
+            r"(\s*)raise (\w+(Exception|Error|Warning))\((f?'.*'|f?\".*\")\)( from \w+)?", line
         )
         if match:
             indent = match.group(1)
             exception_type = match.group(2)
             msg_with_q = match.group(4)
+            from_clause = match.group(5) or ""
             q = msg_with_q[-1]
             if msg_with_q.startswith("f"):
                 msg = msg_with_q[2:-1]
@@ -64,7 +65,7 @@ def refactor_exception(code):
                     updated_line = f"{indent}msg += {add_quotes(msg_line, q)}"
                     updated_lines.append(updated_line)
 
-            updated_line = f"{indent}raise {exception_type}(msg)"
+            updated_line = f"{indent}raise {exception_type}(msg){from_clause}"
             updated_lines.append(updated_line)
         else:
             updated_lines.append(line)
