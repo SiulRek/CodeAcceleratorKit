@@ -98,7 +98,7 @@ class Finalizer:
         Args:
             - prompt (str): Prompt to be written.
         """
-        prompt_name = self.file_name + "_prompt.txt"
+        prompt_name = self.file_name + "_prompt.md"
         prompt_path = os.path.join(self.chats_dir, prompt_name)
         write_to_file(prompt_path, prompt)
         print(f"Prompt saved to {prompt_path}")
@@ -129,7 +129,7 @@ class Finalizer:
         """
         python_code = extract_python_code(response)
 
-        response_name = self.file_name + "_response.txt"
+        response_name = self.file_name + "_response.md"
         response_path = os.path.join(self.chats_dir, response_name)
         write_to_file(response_path, response)
         print(f"Response saved to {response_path}")
