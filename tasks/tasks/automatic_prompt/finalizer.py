@@ -19,10 +19,11 @@ def write_to_file(file_path, content):
 
 
 class Finalizer:
-    """Processes final stages of Automatic Prompt task. Includes validation, checksum verification, sending prompt, and processing response."""
+    """ Processes final stages of Automatic Prompt task. Includes validation,
+    checksum verification, sending prompt, and processing response. """
 
     def __init__(self):
-        """Initializes Finalizer with predefined paths and content states."""
+        """ Initializes Finalizer with predefined paths and content states. """
         self.file_path = None
         self.prompt_path = None
         self.response_path = None
@@ -41,10 +42,16 @@ class Finalizer:
             - chats_dir (str): Base directory to save the prompt and
                 response.
         """
-        self.file_path = file_path
+        self.file_path = os.path.normpath(file_path)
         self.file_name = os.path.basename(self.file_path).split(".")[0]
         self.file_ext = os.path.splitext(self.file_path)[1]
         self.chats_dir = chats_dir
+
+        # Special case that allows to have macro_text.txt, 
+        # generated_prompt.md and generated_response.md in the same directory
+        if self.file_path.endswith("automatic_prompt" + os.sep + "macros_text.txt"):
+            self.file_name = "generated"
+            self.chats_dir = os.path.dirname(self.file_path)
 
     def set_backup_handler(self, backup_handler):
         """
@@ -57,8 +64,8 @@ class Finalizer:
         self.backup_handler = backup_handler
 
     def _validate_lines(self):
-        """Verifies each line of the updated contents for validation checksums.
-        Extra lines are added to the content map for final lines."""
+        """ Verifies each line of the updated contents for validation checksums.
+        Extra lines are added to the content map for final lines. """
         for line in self.updated_contents.splitlines():
             if result := line_validation_for_checksum(line.strip()):
                 self.checksum = result
@@ -115,7 +122,9 @@ class Finalizer:
         """
         self._store_prompt(prompt)
         print("Sending prompt...")
-        response = send_prompt(prompt, max_tokens) if max_tokens else send_prompt(prompt)
+        response = (
+            send_prompt(prompt, max_tokens) if max_tokens else send_prompt(prompt)
+        )
         return response
 
     def _process_response(self, response, modify_inplace):
@@ -140,7 +149,8 @@ class Finalizer:
             print(f"Python code saved to {code_path}")
         if modify_inplace:
             if not python_code:
-                warnings.warn("No Python code found in response.")
+                msg = "No Python code found in response."
+                warnings.warn(msg)
             else:
                 self.backup_handler.store_backup(
                     self.file_path, "Before modification from automatic prompt task."
