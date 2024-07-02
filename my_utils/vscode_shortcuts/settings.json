@@ -1,0 +1,54 @@
+{
+    "python.defaultInterpreterPath": "path\\to\\python\\interpreter",
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "remote.SSH.remotePlatform": {
+        "192.168.7.42": "linux",
+        "endlessWS01.fh-joanneum.at": "linux"
+    },
+    "python.envFile": "path\\to\\env\\file",
+    "python.experiments.enabled": false,
+    "python.analysis.diagnosticSeverityOverrides": {},
+    "python.createEnvironment.contentButton": "show",
+    "python.analysis.autoFormatStrings": true,
+    "pylint.importStrategy": "fromEnvironment",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "git.autofetch": true,
+    "github.copilot.advanced": {
+
+    },
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "notebook.output.textLineLimit": 100,
+    "git.confirmSync": false,
+    "editor.inlineSuggest.showToolbar": "always",
+    "esbonio.server.pythonPath": "path\\to\\python\\interpreter",
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": true,
+        "markdown": true,
+        "scminput": false,
+        "python": true,
+        "latex": true
+    },
+    "window.zoomLevel": -1,
+    "editor.autoClosingQuotes": "never",
+    "editor.autoSurround": "never",
+    "isort.showNotifications": "always",
+    "notebook.lineNumbers": "on",
+    "git.showPushSuccessNotification": true,
+    "line-length-checker.lineLength": 100,
+    "terminal.integrated.mouseWheelScrollSensitivity": 0.5,
+    "github.copilot.editor.enableAutoCompletions": true,
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingComments": "never",
+    "editor.autoClosingDelete": "never",
+    "editor.autoClosingOvertype": "never",
+    "editor.wordWrap": "on",
+    "editor.minimap.enabled": false,
+    "csv-preview.separator": ";",
+    "accessibility.voice.speechLanguage": "en-US",
+    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_"
+}
