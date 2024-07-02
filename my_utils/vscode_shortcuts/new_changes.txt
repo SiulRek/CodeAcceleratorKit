@@ -57,3 +57,7 @@ Commit Message: Added shortcuts for git workflow. 02.07.2024
 - git undo commit -> alt + shift + z
 
 
+Commit Message: Refactored shortcuts for git workflow. 02.07.2024
+- git undo commit -> alt + z
+- git view changes -> alt + t
+- Additional replacements.
