@@ -51,4 +51,9 @@ Commit Message: Added scroll up and scroll down keybindings. 19.06.2024
 
 Commit Message: Fixed issue with list select up. 20.06.2024
 
+Commit Message: Added shortcuts for git workflow. 02.07.2024
+- git add -> alt + s
+- git undo add -> alt + shift + s
+- git undo commit -> alt + shift + z
+
 

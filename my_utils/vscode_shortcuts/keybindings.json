@@ -1354,5 +1354,17 @@
         "key": "ctrl+shift+alt+oem_1",
         "command": "list.expandSelectionUp",
         "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
+    },
+    {
+        "key": "alt+s",
+        "command": "git.stage"
+    },
+    {
+        "key": "shift+alt+s",
+        "command": "git.unstage"
+    },
+    {
+        "key": "shift+alt+z",
+        "command": "git.undoCommit"
     }
 ]
