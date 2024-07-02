@@ -931,7 +931,7 @@
         "command": "-workbench.action.showCommands"
     },
     {
-        "key": "alt+t",
+        "key": "shift+alt+t",
         "command": "workbench.action.tasks.openWorkspaceFileTasks"
     },
     {
@@ -1364,7 +1364,29 @@
         "command": "git.unstage"
     },
     {
-        "key": "shift+alt+z",
+        "key": "alt+z",
         "command": "git.undoCommit"
+    },
+    {
+        "key": "alt+t",
+        "command": "git.viewChanges"
+    },
+    {
+        "key": "shift+alt+z",
+        "command": "workbench.action.terminal.sizeToContentWidth",
+        "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen || terminalFocus && terminalIsOpen && terminalProcessSupported"
+    },
+    {
+        "key": "alt+z",
+        "command": "-workbench.action.terminal.sizeToContentWidth",
+        "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen || terminalFocus && terminalIsOpen && terminalProcessSupported"
+    },
+    {
+        "key": "shift+alt+z",
+        "command": "editor.action.toggleWordWrap"
+    },
+    {
+        "key": "alt+z",
+        "command": "-editor.action.toggleWordWrap"
     }
 ]
