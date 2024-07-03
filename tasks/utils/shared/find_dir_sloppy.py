@@ -47,7 +47,7 @@ def find_dir_from_path_fragment(path_fragment, root_dir):
     root_dir = os.path.abspath(root_dir)
     path_fragment = path_fragment.replace("\\", os.sep).replace("/", os.sep)
     for dirpath, _, _ in os.walk(root_dir):
-        if path_fragment in dirpath.lower():
+        if dirpath.endswith(path_fragment):
             return dirpath
 
     msg = f"Directory from fragment '{path_fragment}' not found in '{root_dir}'"

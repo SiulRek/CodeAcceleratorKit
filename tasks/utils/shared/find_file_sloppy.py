@@ -42,8 +42,8 @@ def find_file_from_path_fragment(path_fragment, root_dir):
 
     for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
-            full_path = os.path.join(dirpath, filename).lower()
-            if path_fragment in full_path:
+            full_path = os.path.join(dirpath, filename)
+            if full_path.endswith(path_fragment):
                 return os.path.join(dirpath, filename)
     raise FileNotFoundError(
         f"File from Fragment '{path_fragment}' not found in '{root_dir}'"
