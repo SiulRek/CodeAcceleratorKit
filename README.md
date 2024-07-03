@@ -43,6 +43,7 @@ In CodeAcceleratorKit, various key definitions are used:
 1. [Pylint Report Task](#3-pylint-report-task)
 1. [Directory Runner Task](#5-directory-runner-task)
 1. [Undo Directory Runner Task](#6-uno-directory-runner-task)
+1. [Git Staging Task](#7-git-staging-task)
 
 Refer to the above links for detailed information about each Task.
 
@@ -164,3 +165,12 @@ To utilize the CodeAcceleratorKit within VSCode, you need to create a `tasks.jso
 
 **Note:**
 Use the `${workspaceFolder}` and `${file}` placeholders to refer to your project folder and currently opened file, respectively. When you run a task, `workspaceFolder` will correspond to `root` and `file` to `current_file` in the related task class.
+
+### 7. Git Staging Task
+
+**Description:**  
+The `GitStagingTask` is designed to add specified files or directories to the Git staging area. It uses `find_file_sloppy` and `find_dir_sloppy` to locate the files or directories, ensuring they exist before adding them to the staging area.
+
+**Usage from command line**:  
+```sh
+python path/to/git_staging_task.py <root_directory> <reference_file> <paths_to_add>

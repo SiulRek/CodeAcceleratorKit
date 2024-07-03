@@ -122,6 +122,27 @@
                 "clear": false
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Git Staging",
+            "command": "bash",
+            "args": [
+                "-c",
+                "source /path/to/venv/bin/activate && python /path/to/repository/tasks/tasks/git_staging/git_staging_task.py ${workspaceFolder} ${file} ${input:gitStagingPaths}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
         }
     ],
     "inputs": [
@@ -130,6 +151,12 @@
             "type": "promptString",
             "description": "Enter the directory to create a pylint report of (leave blank to use current opened file's path)",
             "default": ""
+        },
+        {
+            "id": "gitStagingPaths",
+            "type": "promptString",
+            "description": "Enter the paths to be added to the Git staging area, separated by commas",
+            "default": "path/to/file1,path/to/file2,path/to/dir1"
         }
     ]
 }
