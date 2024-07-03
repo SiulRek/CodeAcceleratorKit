@@ -61,3 +61,7 @@ Commit Message: Refactored shortcuts for git workflow. 02.07.2024
 - git undo commit -> alt + z
 - git view changes -> alt + t
 - Additional replacements.
+
+Commit Message: Replace function for git staging shortcut. 03.07.2024
+- previous: git add current file -> alt + s
+- new: run git staging task -> alt + s

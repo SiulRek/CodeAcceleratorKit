@@ -16,6 +16,11 @@
     "args": "Git Commit"
     },
     {
+    "key": "alt+s", 
+    "command": "workbench.action.tasks.runTask",
+    "args": "Git Staging"
+    },
+    {
         "key": "ctrl+r",
         "command": "editor.action.startFindReplaceAction",
         "when": "editorFocus || editorIsOpen"
@@ -1359,10 +1364,6 @@
         "key": "ctrl+shift+alt+oem_1",
         "command": "list.expandSelectionUp",
         "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
-    },
-    {
-        "key": "alt+s",
-        "command": "git.stage"
     },
     {
         "key": "shift+alt+s",
