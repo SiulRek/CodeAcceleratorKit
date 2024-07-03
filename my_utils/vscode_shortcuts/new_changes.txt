@@ -65,3 +65,6 @@ Commit Message: Refactored shortcuts for git workflow. 02.07.2024
 Commit Message: Replace function for git staging shortcut. 03.07.2024
 - previous: git add current file -> alt + s
 - new: run git staging task -> alt + s
+
+Commit Message: Added shortcuts for git push. 03.07.2024
+- git push -> alt + shift + p

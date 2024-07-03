@@ -1394,5 +1394,9 @@
     {
         "key": "alt+z",
         "command": "-editor.action.toggleWordWrap"
+    },
+    {
+        "key": "shift+alt+p",
+        "command": "git.push"
     }
 ]
