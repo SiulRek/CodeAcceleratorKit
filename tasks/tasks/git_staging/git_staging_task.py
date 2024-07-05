@@ -28,19 +28,15 @@ class GitStagingTask(TaskBase):
         additional arguments. """
         super().setup()
         self.current_file = self.additional_args[0]
-        self.paths_to_add = self.additional_args[1].split(",")
+        paths_to_add = self.additional_args[1].split(",")
+        self.paths_to_add = self._process_paths_to_add(paths_to_add)
 
-    def execute(self):
-        """
-        Executes the add to staging task, adding the specified files or
-        directories to the Git staging area.
+    def _process_paths_to_add(self, paths_to_add):
+        if paths_to_add == [""]:
+            return []
 
-        Raises:
-            - FileNotFoundError: If a specified file or directory cannot be
-                found.
-        """
         paths = []
-        for path in self.paths_to_add:
+        for path in paths_to_add:
             path = path.strip()
             try:
                 file_path = find_file_sloppy(path, self.profile.root, self.current_file)
@@ -54,10 +50,20 @@ class GitStagingTask(TaskBase):
                 except FileNotFoundError as e:
                     msg = f"Failed to find {path}."
                     raise ValueError(msg) from e
+        return paths
 
+    def execute(self):
+        """
+        Executes the add to staging task, adding the specified files or
+        directories to the Git staging area.
+
+        Raises:
+            - FileNotFoundError: If a specified file or directory cannot be
+                found.
+        """
         subprocess.run(["git", "reset"], check=True, cwd=self.profile.root)
         print()
-        for path in paths:
+        for path in self.paths_to_add:
             subprocess.run(["git", "add", path], check=True, cwd=self.profile.root)
             print(f"Added {path} to staging area.")
 
