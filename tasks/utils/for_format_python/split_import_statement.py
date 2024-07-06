@@ -1,3 +1,5 @@
+from tasks.utils.for_format_python.remove_line_comments import remove_line_comments
+
 SEPARATOR = "import"
 
 
@@ -29,6 +31,7 @@ def process_name_specifications(name_specifications):
     original_names = []
     alias_names = []
 
+    name_specifications = remove_line_comments(name_specifications)
     name_specifications = name_specifications.replace("(", "").replace(")", "")
     parts = name_specifications.split(",")
     for part in parts:
@@ -70,7 +73,7 @@ def split_import_statement(import_statement):
     """
     words = import_statement.strip().split()
     if "import" not in words:
-        msg = f"Import Statement does not contain 'import' keyword:"
+        msg = "Import Statement does not contain 'import' keyword:"
         msg += f"{import_statement}"
         raise ValueError(msg)
 
