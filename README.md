@@ -169,8 +169,8 @@ Use the `${workspaceFolder}` and `${file}` placeholders to refer to your project
 ### 7. Git Staging Task
 
 **Description:**  
-The `GitStagingTask` is designed to add specified files or directories to the Git staging area. It uses `find_file_sloppy` and `find_dir_sloppy` to locate the files or directories, ensuring they exist before adding them to the staging area.
+The `GitStagingTask` is designed to manage the Git staging area by adding or removing specified files or directories. It uses `find_file_sloppy` and `find_dir_sloppy` to locate the files or directories, ensuring they exist before performing the specified action. Files or directories prefixed with a - are removed from the staging area, while others are added.
 
 **Usage from command line**:  
 ```sh
-python path/to/git_staging_task.py <root_directory> <reference_file> <paths_to_add>
+python path/to/git_staging_task.py <root_directory> <reference_file> <paths_to_manage>
