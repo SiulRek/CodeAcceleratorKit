@@ -8,6 +8,7 @@ This kit contains a set of tasks designed to automate various operations on Pyth
 1. [Directory Runner Task](#5-directory-runner-task)
 1. [Undo Directory Runner Task](#6-uno-directory-runner-task)
 1. [Git Staging Task](#7-git-staging-task)
+1. [Git Discard Task](#8-git-discard-task)
 
 
 
@@ -137,3 +138,14 @@ The `GitStagingTask` is designed to manage the Git staging area by adding or rem
 **Usage from command line**:  
 ```sh
 python path/to/git_staging_task.py <root_directory> <reference_file> <paths_to_manage>
+```
+
+### 8. Git Discard Task
+
+**Description:**  
+The `GitDiscardTask` is designed to discard specified files or directories from a Git repository after backing them up. It ensures that the specified files or files in directories are not ignored and are modified before proceeding with the discard operation. The task makes use of Git commands to restore the files from the repository and utilizes a backup handler to save the original state of the files.
+
+**Usage from command line**:  
+```sh
+python path/to/git_discard_task.py <root_directory> <reference_file> <paths_to_discard>
+```

@@ -143,6 +143,27 @@
                 "clear": false
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Git Discard",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "/path/to/venv/Scripts/activate && python /path/to/repository/tasks/tasks/git_discard/git_discard_task.py ${workspaceFolder} ${file} ${input:gitDiscardPaths}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
         }
     ],
     "inputs": [
@@ -156,6 +177,12 @@
             "id": "gitStagingPaths",
             "type": "promptString",
             "description": "Enter the paths to be added to the Git staging area, separated by commas",
+            "default": "path/to/file1,path/to/file2,path/to/dir1"
+        },
+        {
+            "id": "gitDiscardPaths",
+            "type": "promptString",
+            "description": "Enter the paths to be discarded from the Git staging area, separated by commas",
             "default": "path/to/file1,path/to/file2,path/to/dir1"
         }
     ]
