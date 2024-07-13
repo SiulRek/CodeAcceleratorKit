@@ -72,4 +72,8 @@ Commit Message: Added shortcuts for git push. 03.07.2024
 Commit Message: Add shortcuts for Git Discard Task, Close Editors in Other Groups, Chat Sidebar. 13.07.2024
 - git discard -> alt + delete
 - close editors in other groups -> ctrl+shift+alt+f4
-- chat sidebar -> alt + I
+- chat sidebar -> alt + i
+
+Commit Message: Added shortcuts for RemoveAllBreakpointsAndWatchExpressions, for AddWatchExpression. 13.07.2024
+- RemoveAllBreakpointsAndWatchExpressions -> ctrl + alt + r
+- AddWatchExpression -> ctrl + alt + w

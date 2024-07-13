@@ -1,6 +1,17 @@
 // Place your key bindings in this file to override the defaultsauto[]
 [   
     {
+        "key": "ctrl+alt+r",
+        "command": "extension.multiCommand.execute",
+        "args": { "command": "multiCommand.removeWatchExpressionsAndBreakpoints" },
+        "when": "debuggersAvailable"
+    },
+    {
+    "key": "alt+oem_plus", 
+    "command": "workbench.debug.viewlet.action.addWatchExpression",
+    "when": "debuggersAvailable"
+    },
+    {
     "key": "alt+delete", 
     "command": "workbench.action.tasks.runTask",
     "args": "Git Discard"
@@ -1325,10 +1336,6 @@
     {
         "key": "ctrl+alt+w",
         "command": "editor.debug.action.selectionToWatch"
-    },
-    {
-        "key": "ctrl+alt+r",
-        "command": "workbench.debug.viewlet.action.removeAllBreakpoints"
     },
     {
         "key": "ctrl+oem_6",
