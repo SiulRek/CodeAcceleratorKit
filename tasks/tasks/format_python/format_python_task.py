@@ -49,7 +49,6 @@ from tasks.tasks.core.task_base import TaskBase
 from tasks.utils.for_format_python.format_python_file import format_python_file
 from tasks.utils.shared.is_library_installed import is_library_installed
 
-
 requirements = ["black", "pylint"]
 
 

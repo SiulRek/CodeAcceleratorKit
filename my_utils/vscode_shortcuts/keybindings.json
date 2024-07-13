@@ -1,6 +1,11 @@
 // Place your key bindings in this file to override the defaultsauto[]
 [   
     {
+    "key": "alt+delete", 
+    "command": "workbench.action.tasks.runTask",
+    "args": "Git Discard"
+    },
+    {
     "key": "f1", 
     "command": "workbench.action.tasks.runTask",
     "args": "Format Python"
@@ -1398,5 +1403,13 @@
     {
         "key": "shift+alt+p",
         "command": "git.push"
+    },
+    {
+        "key": "alt+i",
+        "command": "workbench.panel.chatSidebar"
+    },
+    {
+        "key": "ctrl+shift+alt+f4",
+        "command": "workbench.action.closeEditorsInOtherGroups"
     }
 ]

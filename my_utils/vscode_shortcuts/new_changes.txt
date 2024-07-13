@@ -68,3 +68,8 @@ Commit Message: Replace function for git staging shortcut. 03.07.2024
 
 Commit Message: Added shortcuts for git push. 03.07.2024
 - git push -> alt + shift + p
+
+Commit Message: Add shortcuts for Git Discard Task, Close Editors in Other Groups, Chat Sidebar. 13.07.2024
+- git discard -> alt + delete
+- close editors in other groups -> ctrl+shift+alt+f4
+- chat sidebar -> alt + I
