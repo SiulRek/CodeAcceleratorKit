@@ -12,7 +12,7 @@
     "when": "debuggersAvailable"
     },
     {
-    "key": "alt+delete", 
+    "key": "alt+z", 
     "command": "workbench.action.tasks.runTask",
     "args": "Git Discard"
     },
@@ -1382,7 +1382,7 @@
         "command": "git.unstage"
     },
     {
-        "key": "alt+z",
+        "key": "shift+alt+g",
         "command": "git.undoCommit"
     },
     {
@@ -1418,5 +1418,25 @@
     {
         "key": "ctrl+shift+alt+f4",
         "command": "workbench.action.closeEditorsInOtherGroups"
+    },
+    {
+        "key": "ctrl+alt+pageup",
+        "command": "workbench.action.decreaseViewHeight",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+alt+home",
+        "command": "workbench.action.decreaseViewWidth",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+alt+pagedown",
+        "command": "workbench.action.increaseViewHeight",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+alt+end",
+        "command": "workbench.action.increaseViewWidth",
+        "when": "editorFocus"
     }
 ]

@@ -77,3 +77,7 @@ Commit Message: Add shortcuts for Git Discard Task, Close Editors in Other Group
 Commit Message: Added shortcuts for RemoveAllBreakpointsAndWatchExpressions, for AddWatchExpression. 13.07.2024
 - RemoveAllBreakpointsAndWatchExpressions -> ctrl + alt + r
 - AddWatchExpression -> ctrl + alt + w
+
+Commit Message: Changed Git Discard and Undo Commit shortcuts. 16.07.2024
+- git discard -> alt + z
+- git undo commit -> alt + shift + g
