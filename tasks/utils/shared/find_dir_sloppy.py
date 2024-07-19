@@ -1,6 +1,9 @@
 import os
 
-from tasks.configs.constants import CURRENT_DIRECTORY_TAG
+from tasks.utils.shared.sloppy_paths_utils import (
+    _replace_current_directory_tag,
+    sanitize_sloppy_path_string,
+)
 
 
 def find_nearest_dir(dir_name, root_dir, reference_dir):
@@ -43,9 +46,7 @@ def find_nearest_dir(dir_name, root_dir, reference_dir):
     return closest_dir
 
 
-def find_dir_from_path_fragment(path_fragment, root_dir):
-    root_dir = os.path.abspath(root_dir)
-    path_fragment = path_fragment.replace("\\", os.sep).replace("/", os.sep)
+def find_dir_from_path_fragment(path_fragment, root_dir, reference_dir):
     for dirpath, _, _ in os.walk(root_dir):
         if dirpath.endswith(path_fragment):
             return dirpath
@@ -73,17 +74,23 @@ def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
     Returns:
         - dir_path (str): The path to the directory.
     """
-    sloppy_string = sloppy_string.strip()
     root_dir = os.path.abspath(root_dir)
     reference_dir = os.path.abspath(reference_dir)
     root_dir = os.path.normpath(root_dir)
     reference_dir = os.path.normpath(reference_dir)
 
-    if sloppy_string == CURRENT_DIRECTORY_TAG:
-        return reference_dir
+    # Reference_dir to be file should not be allowed, but
+    # as it is often more convenient to use the file path
+    # as reference, it is allowed here.
+    if os.path.isfile(reference_dir):
+        reference_dir = os.path.dirname(reference_dir)
+
+    sloppy_string = sanitize_sloppy_path_string(sloppy_string, reference_dir)
+    if os.path.isdir(sloppy_string):
+        return sloppy_string
 
     if "\\" in sloppy_string or "/" in sloppy_string:
-        dir = find_dir_from_path_fragment(sloppy_string, root_dir)
+        dir_ = find_dir_from_path_fragment(sloppy_string, root_dir, reference_dir)
     else:
-        dir = find_nearest_dir(sloppy_string, root_dir, reference_dir)
-    return os.path.normpath(dir)
+        dir_ = find_nearest_dir(sloppy_string, root_dir, reference_dir)
+    return os.path.normpath(dir_)

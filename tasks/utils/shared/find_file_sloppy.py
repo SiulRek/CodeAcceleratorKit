@@ -1,6 +1,7 @@
 import os
 
 from tasks.configs.constants import CURRENT_FILE_TAG
+from tasks.utils.shared.sloppy_paths_utils import sanitize_sloppy_path_string
 
 
 def find_nearest_file(file_name, root_dir, reference_file):
@@ -71,14 +72,16 @@ def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     Returns:
         - file_path (str): The path to the file.
     """
-    sloppy_string = sloppy_string.strip()
     root_dir = os.path.abspath(root_dir)
     root_dir = os.path.normpath(root_dir)
     reference_file_path = os.path.abspath(reference_file_path)
     reference_file_path = os.path.normpath(reference_file_path)
 
+    sloppy_string = sanitize_sloppy_path_string(sloppy_string, reference_file_path)
+
     if sloppy_string == CURRENT_FILE_TAG:
         return reference_file_path
+
     if "\\" in sloppy_string or "/" in sloppy_string:
         file = find_file_from_path_fragment(sloppy_string, root_dir)
     else:
