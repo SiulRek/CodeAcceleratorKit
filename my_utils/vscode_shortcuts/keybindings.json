@@ -1,6 +1,11 @@
 // Place your key bindings in this file to override the defaultsauto[]
 [   
     {
+        "key": "ctrl+alt+f5",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Run Python"
+    },
+    {
         "key": "ctrl+alt+r",
         "command": "extension.multiCommand.execute",
         "args": { "command": "multiCommand.removeWatchExpressionsAndBreakpoints" },
@@ -1438,5 +1443,13 @@
         "key": "ctrl+alt+end",
         "command": "workbench.action.increaseViewWidth",
         "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+alt+f4",
+        "command": "workbench.action.closeAllGroups"
+    },
+    {
+        "key": "ctrl+oem_1 l",
+        "command": "-testing.reRunLastRun"
     }
 ]

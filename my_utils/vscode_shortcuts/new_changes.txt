@@ -81,3 +81,6 @@ Commit Message: Added shortcuts for RemoveAllBreakpointsAndWatchExpressions, for
 Commit Message: Changed Git Discard and Undo Commit shortcuts. 16.07.2024
 - git discard -> alt + z
 - git undo commit -> alt + shift + g
+
+Commit Message: Added shortcuts to execute Run Python Task. 19.07.2024
+- Run Python Task -> alt + ctrl + F5
