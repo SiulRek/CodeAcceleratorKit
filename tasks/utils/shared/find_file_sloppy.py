@@ -3,8 +3,6 @@ import os
 from tasks.configs.constants import CURRENT_FILE_TAG
 
 
-import os
-
 def find_nearest_file(file_name, root_dir, reference_file):
     def compute_distance(path1_parts, path2_parts):
         matching_parts = 0
@@ -23,9 +21,13 @@ def find_nearest_file(file_name, root_dir, reference_file):
         filenames = sorted(filenames)
         if file_name in filenames:
             current_file = os.path.join(dirpath, file_name)
-            current_relative_path = os.path.relpath(current_file, root_dir).split(os.sep)
+            current_relative_path = os.path.relpath(current_file, root_dir).split(
+                os.sep
+            )
 
-            matching_parts = compute_distance(current_relative_path, reference_relative_path)
+            matching_parts = compute_distance(
+                current_relative_path, reference_relative_path
+            )
 
             if matching_parts > max_matching_parts:
                 max_matching_parts = matching_parts
@@ -52,11 +54,11 @@ def find_file_from_path_fragment(path_fragment, root_dir):
 
 def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     """
-    Function to find the file from a "sloppy" (partial or incomplete path) written string: The function
-    expects the file to be found in the root directory. If the string contains a
-    path fragment, the function will search for the file from the path fragment.
-    If the string contains only the file name, the function will search for the
-    nearest file to the reference file.
+    Function to find the file from a "sloppy" (partial or incomplete path)
+    written string: The function expects the file to be found in the root
+    directory. If the string contains a path fragment, the function will search
+    for the file from the path fragment. If the string contains only the file
+    name, the function will search for the nearest file to the reference file.
 
     Args:
         - file_name_fragment (str): The name or a fragment of the file name
@@ -74,7 +76,7 @@ def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     root_dir = os.path.normpath(root_dir)
     reference_file_path = os.path.abspath(reference_file_path)
     reference_file_path = os.path.normpath(reference_file_path)
-    
+
     if sloppy_string == CURRENT_FILE_TAG:
         return reference_file_path
     if "\\" in sloppy_string or "/" in sloppy_string:
