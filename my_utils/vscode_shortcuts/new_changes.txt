@@ -86,3 +86,7 @@ Commit Message: Added shortcuts to execute Run Python Task. 19.07.2024
 - Run Python Task -> alt + ctrl + F5
 
 Commit Message: Cloned alt+up to alt+shift+up. 20.07.2024
+
+Commit Message: Replaced Git Discard shortcut, add Restore File shortcut. 20.07.2024
+- git discard -> alt + delete
+- restore file -> alt + z

@@ -1,6 +1,11 @@
 // Place your key bindings in this file to override the defaultsauto[]
 [   
     {
+        "key": "alt+z",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Restore File"
+    },
+    {
         "key": "ctrl+alt+f5",
         "command": "workbench.action.tasks.runTask",
         "args": "Run Python"
@@ -17,7 +22,7 @@
     "when": "debuggersAvailable"
     },
     {
-    "key": "alt+z", 
+    "key": "alt+delete", 
     "command": "workbench.action.tasks.runTask",
     "args": "Git Discard"
     },
@@ -1505,6 +1510,11 @@
     {
         "key": "shift+alt+up",
         "command": "showPrevParameterHint",
+        "when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+    },
+    {
+        "key": "alt+up",
+        "command": "-showPrevParameterHint",
         "when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
     }
 ]
