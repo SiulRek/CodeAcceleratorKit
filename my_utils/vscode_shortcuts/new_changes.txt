@@ -84,3 +84,5 @@ Commit Message: Changed Git Discard and Undo Commit shortcuts. 16.07.2024
 
 Commit Message: Added shortcuts to execute Run Python Task. 19.07.2024
 - Run Python Task -> alt + ctrl + F5
+
+Commit Message: Cloned alt+up to alt+shift+up. 20.07.2024

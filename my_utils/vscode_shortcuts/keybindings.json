@@ -1451,5 +1451,60 @@
     {
         "key": "ctrl+oem_1 l",
         "command": "-testing.reRunLastRun"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "notebook.cell.moveUp",
+        "when": "notebookEditorFocused && !inputFocus"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "editor.action.pageUpHover",
+        "when": "editorHoverFocused"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "workbench.action.terminal.accessibleBufferGoToPreviousCommand",
+        "when": "accessibleViewIsShown && terminalHasBeenCreated && accessibleViewCurrentProviderId == 'terminal' || accessibleViewIsShown && terminalProcessSupported && accessibleViewCurrentProviderId == 'terminal'"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "workbench.action.terminal.focusPreviousPane",
+        "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "history.showPrevious",
+        "when": "historyNavigationBackwardsEnabled && historyNavigationWidgetFocus && !isComposing && !suggestWidgetVisible"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "list.focusAnyUp",
+        "when": "listFocus && !inputFocus && !treestickyScrollFocused"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "quickInput.previousSeparatorWithQuickAccessFallback",
+        "when": "inQuickInput && quickInputType == 'quickPick'"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "restructuredtext.editor.listEditing.onMoveLineUp",
+        "when": "editorTextFocus && !editorReadonly && !suggestWidgetVisible && editorLangId == 'restructuredtext'"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "scm.forceViewPreviousCommit",
+        "when": "scmRepository"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "showPrevParameterHint",
+        "when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
     }
 ]
