@@ -18,17 +18,18 @@ def _replace_current_directory_tag(path_fragment, reference_path):
 def sanitize_sloppy_path_string(sloppy_string, reference_path):
     """
     Sanitizes a sloppy string by removing leading/trailing whitespaces,
-    replacing backslashes and forward slashes with the appropriate operating
-    system separator, and replacing the current directory tag with the reference
-    directory.
+    replacing backslashes and forward slashes with the appropriate
+    operating system separator, and replacing the current directory tag
+    with the reference path.
 
     Args:
-        - sloppy_string (str): The sloppy string to be sanitized.
-        - reference_path (str): The reference path used to replace the
+        sloppy_string (str): The sloppy string to be sanitized.
+        reference_path (str): The reference path used to replace the
             current directory tag.
 
     Returns:
-        - str: The sanitized string.
+        str: The sanitized string.
+
     """
     sloppy_string = sloppy_string.strip()
     sloppy_string = sloppy_string.replace("\\", os.sep).replace("/", os.sep)
