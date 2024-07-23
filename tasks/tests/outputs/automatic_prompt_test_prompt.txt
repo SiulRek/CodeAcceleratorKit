@@ -5,18 +5,18 @@ Merge begin text in multiple lines
 
 
 
---- Title of the chapter ---
+## Title of the chapter
 The Normal text
 Merge normal texts in multiple lines
 
---- File at tasks/tests/data/reference_1.py ---
+## File at tasks/tests/data/reference_1.py
 ```python
 # This is the reference 1 file.
 # Here is the reference 1 file finished.
 # In Post-editing: REPLACE_ME == I_HAVE_BEEN_REPLACED
 ```
 
---- File at tasks/tests/data/reference_2.py ---
+## File at tasks/tests/data/reference_2.py
 ```python
 # This is the reference 2 file.
 #cut_up
@@ -25,7 +25,7 @@ Merge normal texts in multiple lines
 # Here is the reference 2 file finished.
 ```
 
---- File at tasks/tests/data/reference_1.py ---
+## File at tasks/tests/data/reference_1.py
 ```python
 # This is the reference 1 file.
 # Here is the reference 1 file finished.
@@ -33,13 +33,13 @@ Merge normal texts in multiple lines
 
 ```
 
---- File at tasks/tests/data/reference_2.py ---
+## File at tasks/tests/data/reference_2.py
 ```python
 # This line the only line that appears in post-editing
 
 ```
 
---- File at tasks/tests/for_tasks/automatic_prompt_test.py ---
+## File at tasks/tests/for_tasks/automatic_prompt_test.py
 ```python
 """
 TODO:
@@ -117,7 +117,7 @@ class ExampleClassCar:
 # ------------ MACROS TEXT END ------------------------------------
 ```
 
---- File at tasks/tests/for_tasks/automatic_prompt_test.py ---
+## File at tasks/tests/for_tasks/automatic_prompt_test.py
 ```python
 #I_HAVE_BEEN_REPLACED
 class ExampleClassCar:
@@ -136,7 +136,7 @@ class ExampleClassCar:
 
 ```
 
---- Occured Errors ---
+## Occured Errors
 
 2024-05-11 18:10:41,841 - INFO - -------------- This is a Title -------------------------------
 2024-05-11 18:10:41,841 - ERROR - Test raised exc: test_example_error
@@ -152,7 +152,7 @@ Message: Traceback (most recent call last):
 AssertionError: 1 != 2
 
 
---- Fill Text Template ---
+## Fill Text Template
 Write some text here.
 Generally, you can call the fill text:
 #*<file_name_without_ext>
@@ -161,7 +161,7 @@ For instance this module is called with:
 Note the file must be in a subdir of fill_text_dir, the subdir name is going to 
 be the macro title of the text here.
 
---- How to make Meta Macros ---
+## How to make Meta Macros
 List every macro you want here
 Generally you can call this meta macro with:
 #<name_of_file_without_ext>_macros
@@ -170,11 +170,14 @@ Specifically call this template with:
 And all the macros you defined here are going to be processed
 Lets try it out, I hope you have an example_script.py somewhere
 
---- Python Script Output ---
+## Python Script Output
+```shell
 Prime numbers up to 100: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
 
+```
 
---- Pylint Output ---
+## Pylint Output
+```shell
 ************* Module example_script
 tasks/tests/data/example_script.py:12:0: C0304: Final newline missing (missing-final-newline)
 tasks/tests/data/example_script.py:1:0: C0114: Missing module docstring (missing-module-docstring)
@@ -185,18 +188,19 @@ tasks/tests/data/example_script.py:7:12: C0103: Constant name "isPrime" doesn't 
 Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
 
 
+```
 
---- Normal Text ---
+## Normal Text
 Now call me
 
---- This is the Start of the macros_with_args template ---
+## This is the Start of the macros_with_args template
 text
 
---- Chapter dedicated to argument_1 ---
-argument_1 was set to True
+## Chapter dedicated to argument_1
+`argument_1` was set to True
 
---- Chapter dedicated to argument_2 ---
-argument_2 was set to 5
+## Chapter dedicated to argument_2
+`argument_2` was set to 5
 Iterations Start:
 Iteration 1
 Iteration 2
@@ -204,7 +208,7 @@ Iteration 3
 Iteration 4
 Iteration 5
 
---- Costum Function Template ---
+## Costum Function Template
 This is the Start of the costum_function output text
 text
 This is argument_1: True
@@ -213,11 +217,14 @@ The End of the costum_function output text
 
 
 
---- Python Script Output ---
+## Python Script Output
+```shell
 Prime numbers up to 100: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
 
+```
 
---- Pylint Output ---
+## Pylint Output
+```shell
 ************* Module example_script
 tasks/tests/data/example_script.py:12:0: C0304: Final newline missing (missing-final-newline)
 tasks/tests/data/example_script.py:1:0: C0114: Missing module docstring (missing-module-docstring)
@@ -228,8 +235,10 @@ tasks/tests/data/example_script.py:7:12: C0103: Constant name "isPrime" doesn't 
 Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
 
 
+```
 
---- Unittest Output ---
+## Unittest Output
+```shell
 
 ----------------------------------------------------------------------
 Ran 0 tests in 0.000s
@@ -237,9 +246,10 @@ Ran 0 tests in 0.000s
 OK
 
 
+```
 
---- Directory Tree ---
-CodeAcceleratorKit/
+## Directory Tree
+/
 ├── __pycache__/
 ├── local/
 │   ├── demonstration/
@@ -264,7 +274,7 @@ CodeAcceleratorKit/
     ├── lib/
     ├── lib64/
 
---- Summarized Python Script example_script_2.py ---
+## Summarized Python Script example_script_2.py
 class FileManager:
     """
     Class to handle file management operations.
@@ -298,7 +308,7 @@ def main():
     Main function to execute some operations.
     """
 
---- Summarized Python Script example_script_2.py ---
+## Summarized Python Script example_script_2.py
 class FileManager:
     """
     Class to handle file management operations.
@@ -332,11 +342,11 @@ def main():
     Main function to execute some operations.
     """
 
---- Summarized Python Script example_script_3.py ---
+## Summarized Python Script example_script_3.py
 def function():
 
 
---- Summarized Python Script example_script_5.py ---
+## Summarized Python Script example_script_5.py
 def parse_url(url):
 
 def calculate_square_root(number):
@@ -344,7 +354,7 @@ def calculate_square_root(number):
 def generate_random_number():
 
 
---- Summarized Python Script example_script_4.py ---
+## Summarized Python Script example_script_4.py
 def check_age_raising_exception(age):
 
 def check_age_sending_warnings(age):
