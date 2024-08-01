@@ -82,6 +82,22 @@ def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     if sloppy_string == CURRENT_FILE_TAG:
         return reference_file_path
 
+    # Add support for test/source files:
+    # Expected format for test names is "<source_file_name>_test".
+    # If a tag is found, rebuild sloppy_string considering the name
+    # of the reference file and converting to test/source format.
+    for type, tag in [
+        ("test", CURRENT_FILE_TAG + "T"),
+        ("source", CURRENT_FILE_TAG + "S"),
+    ]:
+        if sloppy_string == tag:
+            ref_file_name = os.path.basename(reference_file_path)
+            base, ext = os.path.splitext(ref_file_name)
+            if type == "source":
+                sloppy_string = base.replace("_test", "") + ext
+            else:
+                sloppy_string = base + "_test" + ext
+
     if "\\" in sloppy_string or "/" in sloppy_string:
         file = find_file_from_path_fragment(sloppy_string, root_dir)
     else:
