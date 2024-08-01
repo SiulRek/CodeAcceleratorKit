@@ -38,7 +38,8 @@ def refactor_exception(code):
     updated_lines = []
     for i, line in enumerate(lines):
         match = re.search(
-            r"(\s*)raise (\w+(Exception|Error|Warning))\((f?'.*'|f?\".*\")\)( from \w+)?", line
+            r"(\s*)raise (\w+(Exception|Error|Warning))\((f?'.*'|f?\".*\")\)( from \w+)?",
+            line,
         )
         if match:
             indent = match.group(1)
@@ -52,18 +53,20 @@ def refactor_exception(code):
                 msg = msg_with_q[1:-1]
 
             msg = wrap_text(
-                msg, LINE_WIDTH - len(indent) - 9
-            )  # 9 is the max length of "msg = " and quotes
+                msg, LINE_WIDTH - len(indent) - 10
+            )  # 10 is the max length of "msg = " + quotes + space
 
             start = True
             for msg_line in msg.splitlines():
+                msg_line = msg_line + " "
+                mgs_with_q = add_quotes(msg_line, q)
+                sign = ""
                 if start:
                     start = False
-                    updated_line = f"{indent}msg = {add_quotes(msg_line, q)}"
-                    updated_lines.append(updated_line)
-                else:
-                    updated_line = f"{indent}msg += {add_quotes(msg_line, q)}"
-                    updated_lines.append(updated_line)
+                    sign = "+"
+                updated_line = f"{indent}msg {sign}= {mgs_with_q}"
+                updated_line = updated_line.replace(f". {q}", f".{q}")
+                updated_lines.append(updated_line)
 
             updated_line = f"{indent}raise {exception_type}(msg){from_clause}"
             updated_lines.append(updated_line)
