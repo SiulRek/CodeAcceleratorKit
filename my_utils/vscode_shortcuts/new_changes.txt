@@ -90,3 +90,10 @@ Commit Message: Cloned alt+up to alt+shift+up. 20.07.2024
 Commit Message: Replaced Git Discard shortcut, add Restore File shortcut. 20.07.2024
 - git discard -> alt + delete
 - restore file -> alt + z
+
+Commit Message: Updated Close Window, add go to ... fold shortcuts.
+- close active editor -> F4 
+- Close other editors in group -> ctrl + F4 
+- Close all editors -> ctrl + shift + F4
+- go to previous fold -> F7
+- got to next fold -> F8

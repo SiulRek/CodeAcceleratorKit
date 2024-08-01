@@ -946,7 +946,7 @@
         "command": "explorer.newFolder"
     },
     {
-        "key": "ctrl+shift+f4",
+        "key": "ctrl+f4",
         "command": "workbench.action.closeOtherEditors"
     },
     {
@@ -1450,10 +1450,6 @@
         "when": "editorFocus"
     },
     {
-        "key": "ctrl+alt+f4",
-        "command": "workbench.action.closeAllGroups"
-    },
-    {
         "key": "ctrl+oem_1 l",
         "command": "-testing.reRunLastRun"
     },
@@ -1516,5 +1512,35 @@
         "key": "alt+up",
         "command": "-showPrevParameterHint",
         "when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+    },
+    {
+        "key": "ctrl+shift+f4",
+        "command": "workbench.action.closeAllGroups"
+    },
+    {
+        "key": "f4",
+        "command": "-references-view.next",
+        "when": "reference-list.hasResult && references-view.canNavigate"
+    },
+    {
+        "key": "f8",
+        "command": "editor.gotoNextFold"
+    },
+    {
+        "key": "f7",
+        "command": "-editor.action.wordHighlight.next",
+        "when": "editorTextFocus && hasWordHighlights"
+    },
+    {
+        "key": "f7",
+        "command": "editor.gotoPreviousFold"
+    },
+    {
+        "key": "f4",
+        "command": "workbench.action.closeActiveEditor"
+    },
+    {
+        "key": "ctrl+f4",
+        "command": "-workbench.action.closeActiveEditor"
     }
 ]
