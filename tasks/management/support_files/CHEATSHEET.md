@@ -39,6 +39,7 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 | RU            | Remove unused imports     |                    |
 | BF            | Run Black formatting      |                    |
 | FD            | Format docstrings         |                    |
+| FC            | Format comments           |                    |
 | EN            | Ensure new line at EOF    | Needs to be forced |
 | PL            | Execute Pylint            |                    |
 

@@ -4,6 +4,7 @@ import warnings
 from tasks.management.task_runner_profile import TaskRunnerProfile
 from tasks.utils.for_format_python.add_encoding_to_open import add_encoding_to_open
 from tasks.utils.for_format_python.ensure_newline_at_end import ensure_newline_at_end
+from tasks.utils.for_format_python.format_comments import format_comments
 from tasks.utils.for_format_python.format_docstrings import format_docstrings
 from tasks.utils.for_format_python.rearrange_imports import rearrange_imports
 from tasks.utils.for_format_python.refactor_exception import refactor_exception
@@ -21,7 +22,8 @@ from tasks.utils.for_format_python.run_black_formatting import format_with_black
 from tasks.utils.shared.execute_pylint import execute_pylint
 
 STRATEGIES = {
-    # Abbreviation: (function, description, format_with_subprocess, forcing_required)
+    # Abbreviation: (function, description, format_with_subprocess,
+    # forcing_required)
     "RL": (remove_line_comments, "Remove line comments", False, True),
     "RT": (remove_trailing_parts, "Remove trailing parts", False, False),
     "AE": (add_encoding_to_open, "Add encoding to open", False, False),
@@ -33,6 +35,7 @@ STRATEGIES = {
     "RU": (remove_unused_imports, "Remove unused imports", False, False),
     "BF": (format_with_black, "Run Black formatting", True, False),
     "FD": (format_docstrings, "Format docstrings", False, False),
+    "FC": (format_comments, "Format comments", False, False),
     "EN": (ensure_newline_at_end, "Ensure newline at end", False, True),
     "PL": (execute_pylint, "Execute Pylint", True, False),
 }
