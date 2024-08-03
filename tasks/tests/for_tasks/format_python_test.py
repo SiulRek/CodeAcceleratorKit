@@ -1,11 +1,12 @@
-#checkpointing
-import os
 import csv
-import time, datetime
-
-import re, json
+import os
 import shutil
+import time
+# This is a cool comment here that might be wrapped later on or not. Who knows?
+# I am just a comment.
 
+# This is a cool comment here that might be wrapped later on or not. Who knows?
+# I am just a comment.
 class BackupHandler:
     """
     A class for handling file backups in a specified directory.
@@ -21,6 +22,8 @@ class BackupHandler:
         recover_backup(backup_file_name): Recover a specific backup file to its original location.
         cleanup_storage(): Clean up excess backup files based on the `max_backups` limit.
         get_backup_context(file_extension=None): Retrieve information about stored backup files.
+        >>> unchanged = "This is a cool comment here that might be wrapped later on or not. Who knows? I am just a comment."
+
 
     Usage:
         # Example Usage:
@@ -57,11 +60,11 @@ class BackupHandler:
         """
         self.context_data = []
         if os.path.exists(self.context_file):
-            with open(self.context_file, 'r', newline='') as csvfile:
+            with open(self.context_file, 'r', newline='', encoding="utf-8") as csvfile:
                 reader = csv.DictReader(csvfile)
                 for row in reader:
                     self.context_data.append(row)
-        
+
         return self.context_data
 
     def save_context(self):
@@ -69,7 +72,7 @@ class BackupHandler:
         Save the backup context to a CSV file.
         """
 
-        with open(self.context_file, 'w', newline='') as csvfile:
+        with open(self.context_file, 'w', newline='', encoding="utf-8") as csvfile:
             fieldnames = ['previous_file_path', 'backup_file_name', 'comment']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
@@ -92,7 +95,7 @@ class BackupHandler:
         while os.path.exists(f"{dest_file}"):
             dest_file = os.path.join(self.backup_dir, f"{timestamp}_{count}{file_extension}")
             count += 1
-                
+
         shutil.copy2(file_path, dest_file)
 
         context_entry = {
@@ -129,11 +132,11 @@ class BackupHandler:
                     shutil.move(source_file, dest_file)
                     self.cleanup_storage()
                     return True
-                
+
                 self.cleanup_storage()
 
         return False
-    
+
     def recover_last_backup(self):
         """
         Recover the last backupt file to its original location.
@@ -152,12 +155,12 @@ class BackupHandler:
                 shutil.move(source_file, dest_file)
                 self.cleanup_storage()
                 return True
-                
+
             self.cleanup_storage()
 
         return False
-    
-    
+
+
 
     def cleanup_storage(self):
         """
@@ -174,7 +177,7 @@ class BackupHandler:
         if not os.path.exists(self.context_file):
             self.clear_storage()
             return False
-        
+
         self.load_context()
         stored_files = set(os.listdir(self.backup_dir))
         mentioned_files = set(entry['backup_file_name'] for entry in self.context_data)
@@ -194,7 +197,7 @@ class BackupHandler:
         self.save_context()
 
         return True
-    
+
     def clear_storage(self):
         """
         Removes the content of the backup directory.
@@ -202,7 +205,7 @@ class BackupHandler:
         if os.path.exists(self.backup_dir):
             shutil.rmtree(self.backup_dir)
             os.mkdir(self.backup_dir)
-    
+
     def get_backup_context(self, file_extension=None):
         """
         Retrieve information about stored backup files.
