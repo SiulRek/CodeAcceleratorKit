@@ -2,11 +2,13 @@ import csv
 import os
 import shutil
 import time
-# This is a cool comment here that might be wrapped later on or not. Who knows?
-# I am just a comment.
 
-# This is a cool comment here that might be wrapped later on or not. Who knows?
-# I am just a comment.
+# This is a cool comment that is going to be wrapper later on. I hope it is clear for everyone.
+
+
+# This is a cool comment that is not going to be wrapped as enumaration is part of the comment.
+# 1. Uno
+# 2. Dos
 class BackupHandler:
     """
     A class for handling file backups in a specified directory.
@@ -18,14 +20,14 @@ class BackupHandler:
     Methods:
         load_context(): Load the backup context from a CSV file.
         save_context(): Save the backup context to a CSV file.
-        store_backup(file_path, comment=None): Store a backup of a file in the backup directory.
+        FrozenItem: This will not be wrapped.
+        >>> frozen = "This is a cool comment here that is not going to be wrapped. I hope it is clear for everyone."
         recover_backup(backup_file_name): Recover a specific backup file to its original location.
         cleanup_storage(): Clean up excess backup files based on the `max_backups` limit.
         get_backup_context(file_extension=None): Retrieve information about stored backup files.
-        >>> unchanged = "This is a cool comment here that might be wrapped later on or not. Who knows? I am just a comment."
-
 
     Usage:
+        ```python
         # Example Usage:
         backup_dir = 'path/to/backup/directory'
         max_backups = 10
@@ -33,7 +35,7 @@ class BackupHandler:
         backup_handler.store_backup('file_path.txt', 'Backup comment')
     """
 
-    CONTEXT_FILE_NAME = 'backup_context.csv'
+    CONTEXT_FILE_NAME = "backup_context.csv"
 
     def __init__(self, backup_dir, max_backups=None):
         """
@@ -60,7 +62,7 @@ class BackupHandler:
         """
         self.context_data = []
         if os.path.exists(self.context_file):
-            with open(self.context_file, 'r', newline='', encoding="utf-8") as csvfile:
+            with open(self.context_file, "r", newline="", encoding="utf-8") as csvfile:
                 reader = csv.DictReader(csvfile)
                 for row in reader:
                     self.context_data.append(row)
@@ -72,8 +74,8 @@ class BackupHandler:
         Save the backup context to a CSV file.
         """
 
-        with open(self.context_file, 'w', newline='', encoding="utf-8") as csvfile:
-            fieldnames = ['previous_file_path', 'backup_file_name', 'comment']
+        with open(self.context_file, "w", newline="", encoding="utf-8") as csvfile:
+            fieldnames = ["previous_file_path", "backup_file_name", "comment"]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(self.context_data)
@@ -90,25 +92,31 @@ class BackupHandler:
         timestamp = str(int(time.time()))
         count = 1
         _, file_extension = os.path.splitext(os.path.basename(file_path))
-        dest_file = os.path.join(self.backup_dir, f"{timestamp}_{count}{file_extension}")
+        dest_file = os.path.join(
+            self.backup_dir, f"{timestamp}_{count}{file_extension}"
+        )
 
         while os.path.exists(f"{dest_file}"):
-            dest_file = os.path.join(self.backup_dir, f"{timestamp}_{count}{file_extension}")
+            dest_file = os.path.join(
+                self.backup_dir, f"{timestamp}_{count}{file_extension}"
+            )
             count += 1
 
         shutil.copy2(file_path, dest_file)
 
         context_entry = {
-            'previous_file_path': file_path,
-            'backup_file_name': os.path.basename(dest_file),
-            'comment': comment,
+            "previous_file_path": file_path,
+            "backup_file_name": os.path.basename(dest_file),
+            "comment": comment,
         }
         self.load_context()
         self.context_data.append(context_entry)
 
         if self.max_backups is not None and len(self.context_data) > self.max_backups:
             oldest_backup = self.context_data.pop(0)
-            oldest_backup_file = os.path.join(self.backup_dir, oldest_backup['backup_file_name'])
+            oldest_backup_file = os.path.join(
+                self.backup_dir, oldest_backup["backup_file_name"]
+            )
             os.remove(oldest_backup_file)
 
         self.save_context()
@@ -125,9 +133,9 @@ class BackupHandler:
         """
 
         for entry in self.context_data:
-            if entry['backup_file_name'] == backup_file_name:
-                source_file = os.path.join(self.backup_dir, entry['backup_file_name'])
-                dest_file = entry['previous_file_path']
+            if entry["backup_file_name"] == backup_file_name:
+                source_file = os.path.join(self.backup_dir, entry["backup_file_name"])
+                dest_file = entry["previous_file_path"]
                 if os.path.exists(source_file):
                     shutil.move(source_file, dest_file)
                     self.cleanup_storage()
@@ -149,8 +157,10 @@ class BackupHandler:
 
         if not self.context_data == []:
             backup_file_context = self.context_data[-1]
-            source_file = os.path.join(self.backup_dir, backup_file_context['backup_file_name'])
-            dest_file = backup_file_context['previous_file_path']
+            source_file = os.path.join(
+                self.backup_dir, backup_file_context["backup_file_name"]
+            )
+            dest_file = backup_file_context["previous_file_path"]
             if os.path.exists(source_file):
                 shutil.move(source_file, dest_file)
                 self.cleanup_storage()
@@ -159,8 +169,6 @@ class BackupHandler:
             self.cleanup_storage()
 
         return False
-
-
 
     def cleanup_storage(self):
         """
@@ -180,18 +188,26 @@ class BackupHandler:
 
         self.load_context()
         stored_files = set(os.listdir(self.backup_dir))
-        mentioned_files = set(entry['backup_file_name'] for entry in self.context_data)
-        files_to_remove = stored_files - mentioned_files - set([BackupHandler.CONTEXT_FILE_NAME])
+        mentioned_files = set(entry["backup_file_name"] for entry in self.context_data)
+        files_to_remove = (
+            stored_files - mentioned_files - set([BackupHandler.CONTEXT_FILE_NAME])
+        )
 
         for file_to_remove in files_to_remove:
             file_path = os.path.join(self.backup_dir, file_to_remove)
             os.remove(file_path)
 
-        self.context_data = [entry for entry in self.context_data if entry['backup_file_name'] in stored_files]
+        self.context_data = [
+            entry
+            for entry in self.context_data
+            if entry["backup_file_name"] in stored_files
+        ]
 
         while len(self.context_data) > self.max_backups:
             oldest_backup = self.context_data.pop(0)
-            oldest_backup_file = os.path.join(self.backup_dir, oldest_backup['backup_file_name'])
+            oldest_backup_file = os.path.join(
+                self.backup_dir, oldest_backup["backup_file_name"]
+            )
             os.remove(oldest_backup_file)
 
         self.save_context()
@@ -215,19 +231,27 @@ class BackupHandler:
 
         Returns:
             list: A list of tuples containing (previous_file_path, backup_file_name, comment).
-        """
+         """
 
         if file_extension:
-            filtered_context = [entry for entry in self.context_data if entry['previous_file_path'].endswith(file_extension)]
+            filtered_context = [
+                entry
+                for entry in self.context_data
+                if entry["previous_file_path"].endswith(file_extension)
+            ]
         else:
             self.load_context()
             filtered_context = self.context_data
-        return [(entry['previous_file_path'], entry['backup_file_name'], entry['comment']) for entry in filtered_context]
+        return [
+            (entry["previous_file_path"], entry["backup_file_name"], entry["comment"])
+            for entry in filtered_context
+        ]
+
 
 # Example Usage:
 if __name__ == "__main__":
-    backup_dir = 'path/to/backup/directory'
+    backup_dir = "path/to/backup/directory"
     max_backups = 10
     backup_handler = BackupHandler(backup_dir, max_backups)
-    backup_handler.store_backup('file_path.txt', 'Backup comment')
+    backup_handler.store_backup("file_path.txt", "Backup comment")
     # Perform other backup operations as needed.
