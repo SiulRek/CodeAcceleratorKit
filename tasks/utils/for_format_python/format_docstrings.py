@@ -16,7 +16,7 @@ def get_docstrings(code):
 
     Args:
         - code (str): The code from which the docstrings are to be
-            extracted.
+        extracted.
 
     Returns:
         - list: A list of docstrings extracted from the code.
@@ -98,20 +98,21 @@ def clean_docstrings(docstrings):
 
 
 def check_new_item(line):
-    line = line.strip()
     pattern = r": [a-zA-Z]"
     match = re.search(pattern, line)
     return match is not None or line.startswith("- ")
 
 
-def has_numbered_symbol_start(line):
-    potential_number = line.strip().split(".")[0]
-    return potential_number.isdigit()
+def startswith_enumaration_symbol(line):
+    line = line.strip()
+    numbered = line.split(".")[0].isdigit()
+    dashed = line.startswith("- ") or line.startswith("* ")
+    return numbered or dashed
 
 
 def check_freezing_required(text):
     for line in text.splitlines():
-        if has_numbered_symbol_start(line):
+        if startswith_enumaration_symbol(line):
             # If the line has a numbered symbol, we assume it is undefined
             # content to avoid modifying it.
             return True
@@ -131,7 +132,7 @@ def wrap_metadata_text(text, leading_spaces):
     Args:
         - text (str): The text to be wrapped.
         - leading_spaces (str): The leading spaces to be added to the
-            wrapped text.
+        wrapped text.
 
     Returns:
         - str: The wrapped text.
@@ -162,7 +163,7 @@ def wrap_metadata_text(text, leading_spaces):
             frozen = "\n".join(frozen)
             updated_items.append(frozen)
             continue
-        prefix = "- " if not item.strip().startswith("-") else ""
+        prefix = "- " if not item.startswith("-") else ""
         item = prefix + item
         max_intend_length = len(items_intendation) + len(
             INTEND
@@ -184,7 +185,7 @@ def wrap_docstring(docstring, leading_spaces):
     Args:
         - docstring (str): The docstring to be wrapped.
         - leading_spaces (str): The leading spaces to be added to the
-            wrapped docstring.
+        wrapped docstring.
 
     Returns:
         - str: The wrapped docstring.
@@ -195,24 +196,26 @@ def wrap_docstring(docstring, leading_spaces):
     last_line = leading_spaces + last_line
     docstring = "\n".join(docstring.splitlines()[1:-1])
     sections = docstring.split("\n\n")
+
     wrapped_sections = []
+    def append_to_wrapped_sections(section):
+        section = [leading_spaces + line for line in section.splitlines()]
+        section = "\n".join(section)
+        wrapped_sections.append(section)
+    
     for section in sections:
         start = section.split("\n")[0]
         if start.strip().endswith(":"):
             wrapped_section = wrap_metadata_text(section, leading_spaces)
-            wrapped_section = [
-                leading_spaces + line for line in wrapped_section.splitlines()
-            ]
-            wrapped_section = "\n".join(wrapped_section)
-            wrapped_sections.append(wrapped_section)
+            append_to_wrapped_sections(wrapped_section)
+        elif check_freezing_required(section):
+            # No modification required.
+            append_to_wrapped_sections(section)
         else:
             wrapped_section = wrap_text(section, width=LINE_WIDTH - len(leading_spaces))
-            wrapped_section = [
-                leading_spaces + line for line in wrapped_section.splitlines()
-            ]
-            wrapped_section = "\n".join(wrapped_section)
-            wrapped_sections.append(wrapped_section)
+            append_to_wrapped_sections(wrapped_section)
     wrapped_sections = "\n\n".join(wrapped_sections)
+
     if len(wrapped_sections.splitlines()) > 2:
         sep = "\n"
     else:
@@ -278,6 +281,6 @@ def format_docstrings_from_file(file_path):
 
 
 if __name__ == "__main__":
-    path = r"CodeAcceleratorKit/tasks/tests/for_tasks/format_python_test.py"
+    path = r"tasks/tests/for_tasks/format_python_test.py"
     format_docstrings_from_file(path)
     print(f"Docstrings formatted of {path}")
