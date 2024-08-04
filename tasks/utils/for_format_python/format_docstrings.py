@@ -1,3 +1,4 @@
+import re
 from textwrap import wrap as wrap_text
 
 from tasks.configs.constants import DOC_QUOTE, LINE_WIDTH, INTEND
@@ -97,7 +98,10 @@ def clean_docstrings(docstrings):
 
 
 def check_new_item(line):
-    return ": " in line.strip() or line.strip().startswith("-")
+    line = line.strip()
+    pattern = r": [a-zA-Z]"
+    match = re.search(pattern, line)
+    return match is not None or line.startswith("- ")
 
 
 def has_numbered_symbol_start(line):
@@ -142,8 +146,8 @@ def wrap_metadata_text(text, leading_spaces):
         if check_new_item(line):
             items.append(line)
         elif contains_undefined_content(line):
-            # If the line contains undefined content, we stop the loop
-            # and leave the rest of the metadata unchanged.
+            # If the line contains undefined content, we stop the loop and leave
+            # the rest of the metadata unchanged.
             ind = body.index(line)
             reminder = INTEND + f"\n{INTEND}".join(body[ind:])
             break
@@ -155,8 +159,7 @@ def wrap_metadata_text(text, leading_spaces):
     if len(items) == 0:
         return first_line
 
-    # if len(items) == 1:
-    #     return first_line + "\n" + items[0]
+    # if len(items) == 1: return first_line + "\n" + items[0]
 
     updated_items = []
     for item in items:
