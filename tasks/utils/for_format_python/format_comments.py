@@ -62,6 +62,14 @@ def wrap_comment(comment, leading_spaces):
     wrapped_comment = "\n".join(f"{leading_spaces}# {line}" for line in wrapped_lines)
     return wrapped_comment
 
+def enumaration_symbol_detected(text):
+    for line in text.splitlines():
+        line = line.strip().removeprefix("#").strip()
+        numbered = line.split(".")[0].isdigit()
+        dashed = line.startswith("- ") or line.startswith("* ")
+        if numbered or dashed:
+            return True
+    return False
 
 def refactor_comments(comments):
     """
@@ -77,8 +85,9 @@ def refactor_comments(comments):
     for comment in comments:
         first_line = comment.splitlines()[0]
         leading_spaces = " " * count_leading_spaces(first_line)
-        wrapped_comment = wrap_comment(comment, leading_spaces)
-        refactored_comments.append(wrapped_comment)
+        if not enumaration_symbol_detected(comment):
+            comment = wrap_comment(comment, leading_spaces)
+        refactored_comments.append(comment)
     return refactored_comments
 
 
