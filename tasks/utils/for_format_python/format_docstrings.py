@@ -109,18 +109,19 @@ def has_numbered_symbol_start(line):
     return potential_number.isdigit()
 
 
-def contains_undefined_content(line):
-    if has_numbered_symbol_start(line):
-        # If the line has a numbered symbol, we assume it is undefined content
-        # to avoid wrapping it.
-        return True
+def check_freezing_required(text):
+    for line in text.splitlines():
+        if has_numbered_symbol_start(line):
+            # If the line has a numbered symbol, we assume it is undefined
+            # content to avoid modifying it.
+            return True
     undefined_symbols = [
         "<<<",
         ">>>",
         "```",
         "´´´´",
     ]
-    return any([symbol in line for symbol in undefined_symbols])
+    return any([symbol in text for symbol in undefined_symbols])
 
 
 def wrap_metadata_text(text, leading_spaces):
@@ -139,22 +140,15 @@ def wrap_metadata_text(text, leading_spaces):
     first_line = wrap_text(first_line, width=LINE_WIDTH - len(leading_spaces))
 
     body = text.splitlines()[1:]
-    reminder = None
     items_intendation = leading_spaces + INTEND
-    items = [""]
+    items = []
     for line in body:
         if check_new_item(line):
             items.append(line)
-        elif contains_undefined_content(line):
-            # If the line contains undefined content, we stop the loop and leave
-            # the rest of the metadata unchanged.
-            ind = body.index(line)
-            reminder = INTEND + f"\n{INTEND}".join(body[ind:])
-            break
-        else:
+        elif items != []:
             items[-1] += "\n" + line
-    if items[0] == "":
-        items.pop(0)
+        else:
+            items.append(line)
 
     if len(items) == 0:
         return first_line
@@ -163,6 +157,11 @@ def wrap_metadata_text(text, leading_spaces):
 
     updated_items = []
     for item in items:
+        if check_freezing_required(item):
+            frozen = [INTEND + line for line in item.splitlines()]
+            frozen = "\n".join(frozen)
+            updated_items.append(frozen)
+            continue
         prefix = "- " if not item.strip().startswith("-") else ""
         item = prefix + item
         max_intend_length = len(items_intendation) + len(
@@ -175,7 +174,6 @@ def wrap_metadata_text(text, leading_spaces):
         updated_items.append(item)
 
     wrapped_text = first_line + "\n" + "\n".join(updated_items)
-    wrapped_text += ("\n" + reminder) if reminder else ""
     return wrapped_text
 
 
