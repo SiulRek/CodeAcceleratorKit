@@ -97,3 +97,7 @@ Commit Message: Updated Close Window, add go to ... fold shortcuts.
 - Close all editors -> ctrl + shift + F4
 - go to previous fold -> F7
 - got to next fold -> F8
+
+Commit Message: Replaced shortcuts for folding with copy line.
+- copy line up (From fold) -> ctrl + shift + ß
+- copy line down (From unfold) -> ctrl + shift + ´ 

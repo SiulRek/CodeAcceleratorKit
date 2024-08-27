@@ -1542,5 +1542,60 @@
     {
         "key": "ctrl+f4",
         "command": "-workbench.action.closeActiveEditor"
+    },
+    {
+        "key": "ctrl+shift+oem_4",
+        "command": "-editor.fold",
+        "when": "editorTextFocus && foldingEnabled"
+    },
+    {
+        "key": "ctrl+shift+oem_4",
+        "command": "-notebook.fold",
+        "when": "notebookEditorFocused && !inputFocus && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+        "key": "ctrl+shift+oem_6",
+        "command": "-notebook.unfold",
+        "when": "notebookEditorFocused && !inputFocus && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+        "key": "ctrl+shift+oem_6",
+        "command": "-editor.unfold",
+        "when": "editorTextFocus && foldingEnabled"
+    },
+    {
+        "key": "ctrl+shift+oem_6",
+        "command": "editor.action.copyLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+oem_6",
+        "command": "cursorColumnSelectDown",
+        "when": "editorColumnSelection && textInputFocus"
+    },
+    {
+        "key": "ctrl+shift+oem_6",
+        "command": "list.expandSelectionDown",
+        "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
+    },
+    {
+        "key": "ctrl+shift+oem_6",
+        "command": "list.expandSelectionDown",
+        "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
+    },
+    {
+        "key": "ctrl+shift+oem_4",
+        "command": "editor.action.copyLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+oem_4",
+        "command": "cursorColumnSelectUp",
+        "when": "editorColumnSelection && textInputFocus"
+    },
+    {
+        "key": "ctrl+shift+oem_4",
+        "command": "list.expandSelectionUp",
+        "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
     }
 ]
