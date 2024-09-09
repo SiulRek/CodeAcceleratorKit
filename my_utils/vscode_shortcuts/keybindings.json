@@ -1225,6 +1225,11 @@
         "when": "textInputFocus"
     },
     {
+        "key": "ctrl+shift+oem_4",
+        "command": "editor.action.copyLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
         "key": "shift+down",
         "command": "editor.action.copyLinesDownAction",
         "when": "editorTextFocus && !editorReadonly"
@@ -1240,6 +1245,11 @@
         "when": "editorTextFocus && !editorReadonly"
     },
     {
+        "key": "ctrl+shift+oem_6",
+        "command": "editor.action.copyLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
         "key": "shift+alt+up",
         "command": "-editor.action.copyLinesUpAction",
         "when": "editorTextFocus && !editorReadonly"
@@ -1248,6 +1258,11 @@
         "key": "shift+up",
         "command": "-cursorUpSelect",
         "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+shift+oem_6",
+        "command": "cursorColumnSelectUp",
+        "when": "editorColumnSelection && textInputFocus"
     },
     {
         "key": "ctrl+alt+up",
@@ -1260,7 +1275,7 @@
         "when": "editorColumnSelection && textInputFocus"
     },
     {
-        "key": "ctrl+alt+down",
+        "key": "ctrl+shift+oem_4",
         "command": "cursorColumnSelectDown",
         "when": "editorColumnSelection && textInputFocus"
     },
@@ -1273,6 +1288,11 @@
         "key": "shift+down",
         "command": "-cursorDownSelect",
         "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+shift+oem_4",
+        "command": "list.expandSelectionDown",
+        "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
     },
     {
         "key": "ctrl+alt+down",
@@ -1383,7 +1403,7 @@
         "when": "textInputFocus"
     },
     {
-        "key": "ctrl+shift+alt+oem_1",
+        "key": "ctrl+shift+oem_6",
         "command": "list.expandSelectionUp",
         "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
     },
@@ -1597,10 +1617,5 @@
         "key": "ctrl+shift+oem_4",
         "command": "list.expandSelectionUp",
         "when": "listFocus && listSupportsMultiselect && !inputFocus && !treestickyScrollFocused"
-    },
-    {
-        "key": "ctrl+oem_3",
-        "command": "-workbench.action.terminal.toggleTerminal",
-        "when": "terminal.active"
     }
 ]
