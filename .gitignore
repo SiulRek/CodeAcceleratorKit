@@ -12,6 +12,10 @@ __pycache__/
 **/temp/*
 **/temp.*
 **/test.*
+
+# Additional Directories and Files to Ignore
 tasks/tests/outputs/test_results_simple.log
 tasks/tests/outputs/test_results.log
 tasks/configs/registered_runners.json
+_*
+CodeAcceleratorKit.code-workspace
