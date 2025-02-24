@@ -57,16 +57,16 @@ def refactor_exception(code):
             )  # 10 is the max length of "msg = " + quotes + space
 
             start = True
+            sign = ""
             for msg_line in msg.splitlines():
                 msg_line = msg_line + " "
                 mgs_with_q = add_quotes(msg_line, q)
-                sign = ""
-                if start:
-                    start = False
-                    sign = "+"
                 updated_line = f"{indent}msg {sign}= {mgs_with_q}"
                 updated_line = updated_line.replace(f". {q}", f".{q}")
                 updated_lines.append(updated_line)
+                if start:
+                    start = False
+                    sign = "+"
 
             updated_line = f"{indent}raise {exception_type}(msg){from_clause}"
             updated_lines.append(updated_line)
