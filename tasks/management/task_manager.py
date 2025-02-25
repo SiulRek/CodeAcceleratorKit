@@ -8,9 +8,7 @@ import tasks.configs.profile_attributes as Attributes
 from tasks.management.normalize_path import normalize_path
 from tasks.management.task_runner_profile import TaskRunnerProfile
 
-SUPPORT_FILES_DIR = os.path.join(
-    TASKS_ROOT, "tasks", "management", "support_files"
-)
+SUPPORT_FILES_DIR = os.path.join(TASKS_ROOT, "tasks", "management", "support_files")
 
 
 class TaskManager(Attributes.AttributesInitializer):
@@ -113,7 +111,8 @@ class TaskManager(Attributes.AttributesInitializer):
                 unknown_dirs.append(dir_in_storage)
 
         for unknown_dir in unknown_dirs:
-            warnings.warn(f"Unknown directory {unknown_dir} from tasks storage.")
+            msg = f"Unknown directory {unknown_dir} from tasks storage."
+            warnings.warn(msg)
 
     @classmethod
     def register_runner(
@@ -230,7 +229,7 @@ class TaskManager(Attributes.AttributesInitializer):
         profile = TaskRunnerProfile(runner_root)
         modules_info_file = os.path.join(profile.profile_dir, "modules_info.json")
         if os.path.exists(modules_info_file):
-            os.remove(modules_info_file) # Is going to be regenereted in the next step
+            os.remove(modules_info_file)  # Is going to be regenereted in the next step
         reinit_attrs = cls._init_runner_attributes(
             runner_root,
             profile.storage_dir,
@@ -301,6 +300,8 @@ class TaskManager(Attributes.AttributesInitializer):
         dest_costumizations_dir = dest_profile.costumizations_dir
 
         for root, _, files in os.walk(source_costumizations_dir):
+            if "__pycache__" in root:
+                continue
             for file in files:
                 file_abs_path = os.path.join(root, file)
                 file_rel_path = os.path.relpath(
@@ -310,10 +311,20 @@ class TaskManager(Attributes.AttributesInitializer):
                 os.makedirs(os.path.dirname(dest_file), exist_ok=True)
                 if os.path.exists(dest_file):
                     if not overwrite:
-                        warnings.warn(f"File {dest_file} already exists, skipping.")
+                        msg = f"File {dest_file} already exists, skipping."
+                        warnings.warn(msg)
                         continue
-                    warnings.warn(f"Overwriting file {dest_file}.")
+                    msg = f"Overwriting file {dest_file}."
+                    warnings.warn(msg)
                 shutil.copy2(file_abs_path, dest_file)
+                with open(dest_file, "r+", encoding="utf-8") as f:
+                    content = f.read()
+                    source_runner_dir = normalize_path(source_runner_dir)
+                    dest_runner_dir = normalize_path(dest_runner_dir)
+                    content = content.replace(source_runner_dir, dest_runner_dir)
+                    f.seek(0)
+                    f.write(content)
+                    f.truncate()
 
     @classmethod
     def load_support_files_to(cls, runner_root):
@@ -333,7 +344,9 @@ class TaskManager(Attributes.AttributesInitializer):
         costum_function_example = os.path.join(
             SUPPORT_FILES_DIR, "costum_function_template", "costum_function_example.py"
         )
-        template_4 = os.path.join(SUPPORT_FILES_DIR, "fill_text_template", "template_4.txt")
+        template_4 = os.path.join(
+            SUPPORT_FILES_DIR, "fill_text_template", "template_4.txt"
+        )
 
         load_mapping = [
             # (source_file, dest_dir, subdir_to_create)
