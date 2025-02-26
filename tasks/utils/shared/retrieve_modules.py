@@ -23,7 +23,8 @@ def retrieve_modules(cwd):
     'standard_library' and 'third_party' keys.
 
     Args:
-        - cwd (str): The current working directory. Used to find local modules.
+        - cwd (str): The current working directory. Used to find local
+            modules.
     """
 
     standard_libs = stdlib_list.stdlib_list()
@@ -63,5 +64,5 @@ if __name__ == "__main__":
 
     if json_path:
         print(f"Writing modules info to {json_path}")
-        with open(json_path, "w", encoding="utf-8") as f: 
-            json.dump(modules_info, f)
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(modules_info, f, indent=4)
