@@ -22,3 +22,5 @@ class DIRECTORY_TREE_DEFAULTS(Enum):
         "source/preprocessing/notebooks/related/pipeline.json",
         "references/private",
     ]
+
+COPY_PROMPT_DEFAULT = False  # Does not copy the prompt by default.

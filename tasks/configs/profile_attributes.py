@@ -8,6 +8,7 @@ from tasks.configs.constants import (
     TASKS_CACHE,
     MAX_BACKUPS,
 )
+from tasks.configs.defaults import COPY_PROMPT_DEFAULT
 from tasks.management.normalize_path import normalize_path
 from tasks.utils.shared.execute_python_module import execute_python_module
 import tasks.utils.shared.retrieve_modules as retrieve_modules
@@ -40,9 +41,10 @@ class ProfileAttrNames(Enum):
     reports_dir = (17, "configs.json")
     tasks_python_env = (18, "configs.json")
     max_backups = (19, "configs.json")
-    modules_info = (20, "modules_info.json")
-    directory_runner_config = (21, "directory_runner_template.json")
-    replace_mapping = (22, "replace_mapping.json")
+    copy_prompt = (20, "configs.json")
+    modules_info = (21, "modules_info.json")
+    directory_runner_config = (22, "directory_runner_template.json")
+    replace_mapping = (23, "replace_mapping.json")
 
 
 UPDATE_MAPPING = {
@@ -67,6 +69,7 @@ UPDATE_MAPPING = {
     "reports_dir": "reports_dir",
     "tasks_python_env": "tasks_python_env",
     "max_backups": "max_backups",
+    "copy_prompt": "copy_prompt",
     "modules_info": None,  # Forces update of modules_info
     "directory_runner_config": "directory_runner_config",
     "replace_mapping": "replace_mapping",
@@ -255,3 +258,8 @@ class AttributesInitializer:
     def _initialize_replace_mapping(cls, _):
         """ Initializes the replace mapping file. """
         return {"REPLACE_ME": "I_HAVE_BEEN_REPLACED"}
+    
+    @classmethod
+    def _initialize_copy_prompt(cls, _):
+        """ Initializes the save prompt to clipboard flag. """
+        return COPY_PROMPT_DEFAULT
