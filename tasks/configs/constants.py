@@ -39,7 +39,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     TITLE = "#T "
     NORMAL_TEXT = "#N "
     PASTE_CURRENT_FILE = f"# {CURRENT_FILE_TAG}"
-    PASTE_FILES = "# "
+    PASTE_FILES = "#P "
     ERROR = "#L"
     META_MACROS_START = "#"
     META_MACROS_END = "_meta"
@@ -66,7 +66,7 @@ class EDIT_TEXT_FLAGS(Enum):
 TEST_RESULT_PATTERN = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (ERROR|INFO) - .*)")
 
 # ----------------- For Format Python -----------------
-LINE_WIDTH = 80
+LINE_WIDTH = 79
 INTEND = " " * 4
 DOC_QUOTE = '"""'
 
