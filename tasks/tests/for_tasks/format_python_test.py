@@ -41,9 +41,12 @@ class BackupHandler:
         """
         Initialize the BackupHandler instance.
 
-        Args:
-            backup_dir (str): The directory where backup files will be stored.
-            max_backups (int, optional): The maximum number of backup files to keep. Default is None.
+        Parameters
+        ----------
+        backup_dir (str)
+            The directory where backup files will be stored.
+        max_backups (int, optional)
+            The maximum number of backup files to keep. Default is None.
         """
 
         self.backup_dir = backup_dir
@@ -57,8 +60,10 @@ class BackupHandler:
         """
         Load the backup context from a CSV file.
 
-        Returns:
-            list: context_data
+        Returns
+        -------
+        list
+            context_data
         """
         self.context_data = []
         if os.path.exists(self.context_file):
@@ -84,9 +89,12 @@ class BackupHandler:
         """
         Store a backup of a file in the backup directory. Raises FileNotFoundError if the file does not exist.
 
-        Args:
-            file_path (str): The path to the file to be backed up.
-            comment (str, optional): An optional comment to associate with the backup.
+        Parameters
+        ----------
+        file_path (str)
+            The path to the file to be backed up.
+        comment (str, optional)
+            An optional comment to associate with the backup.
         """
 
         timestamp = str(int(time.time()))
@@ -125,11 +133,15 @@ class BackupHandler:
         """
         Recover a specific backup file to its original location.
 
-        Args:
-            backup_file_name (str): The name of the backup file to recover.
+        Parameters
+        ----------
+        backup_file_name (str)
+            The name of the backup file to recover.
 
-        Returns:
-            bool: True if the recovery was successful, False if the specified backup file does not exist.
+        Returns
+        -------
+        bool
+            True if the recovery was successful, False if the specified backup file does not exist.
         """
 
         for entry in self.context_data:
@@ -149,8 +161,10 @@ class BackupHandler:
         """
         Recover the last backupt file to its original location.
 
-        Returns:
-            bool: True if the recovery was successful, False if the no File is backed up.
+        Returns
+        -------
+        bool
+            True if the recovery was successful, False if the no File is backed up.
         """
 
         self.cleanup_storage()
@@ -178,8 +192,10 @@ class BackupHandler:
         Additionally, if the number of backup files exceeds the maximum allowed, it removes the oldest backups
         to maintain the specified limit.
 
-        Returns:
-            bool: True if the cleanup was successful, False if the cleanup was not possible or no action was taken.
+        Returns
+        -------
+        bool
+            True if the cleanup was successful, False if the cleanup was not possible or no action was taken.
         """
 
         if not os.path.exists(self.context_file):
@@ -226,12 +242,16 @@ class BackupHandler:
         """
         Retrieve information about stored backup files.
 
-        Args:
-            file_extension (str, optional): Filter backups by file extension. Default is None.
+        Parameters
+        ----------
+        file_extension : str, optional
+            Filter backups by file extension. Default is None. If provided, only backups with the specified file extension will be returned.
 
-        Returns:
-            list: A list of tuples containing (previous_file_path, backup_file_name, comment).
-         """
+        Returns
+        -------
+        list of tuple
+            A list of tuples containing (previous_file_path, backup_file_name, comment).
+        """
 
         if file_extension:
             filtered_context = [
