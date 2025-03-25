@@ -45,6 +45,9 @@ def remove_trailing_parts(text):
     """
     text = remove_trailing_spaces(text)
     updated_text = remove_trailing_lines(text)
+    # if text ends not with new line, add it
+    if not updated_text.endswith("\n"):
+        updated_text += "\n"
     return updated_text
 
 
@@ -63,4 +66,4 @@ def remove_trailing_parts_from_file(file_path):
 
 
 if __name__ == "__main__":
-    remove_trailing_parts_from_file(r"/path/to/your/file")
+    remove_trailing_parts_from_file(r"tasks/utils/for_format_python/remove_unnecessary_else.py")
