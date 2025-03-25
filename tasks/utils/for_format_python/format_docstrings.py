@@ -4,8 +4,9 @@ from textwrap import wrap as wrap_text
 from tasks.configs.constants import DOC_QUOTE, LINE_WIDTH, INTEND
 from tasks.utils.for_format_python.wrap_text import wrap_text
 
-
 # TODO: Handle the case of string with """ that is not a docstring
+
+
 def count_leading_spaces(line):
     return len(line) - len(line.lstrip())
 
@@ -103,135 +104,146 @@ def check_new_item(line):
     return match is not None
 
 
-def startswith_enumaration_symbol(line, include_dashed=True):
-    line = line.strip()
-    numbered = line.split(".")[0].isdigit()
-    bulleted = line.startswith("° ") or line.startswith("* ")
-    if include_dashed:
-        bulleted = bulleted or line.startswith("- ")
-    return numbered or bulleted
-
-
-def check_freezing_required(text):
-    lines = text.splitlines()
-    for i, line in enumerate(lines):
-        if startswith_enumaration_symbol(line, include_dashed=i > 0):
-            # If the line has a enumaration symbol, we assume modification is
-            # not wanted, so we freeze the text.
+def has_enumeration_symbol(text):
+    for line in text.splitlines():
+        line = line.strip()
+        numbered = line.split(".")[0].isdigit()
+        bulleted = line.startswith(("° ", "* ", "- "))
+        if numbered or bulleted:
             return True
+    return False
+
+
+def has_docstring_keyword(line):
+    keys = [
+        "Args:",
+        "Arguments:",
+        "Parameters:",
+        "Returns:",
+        "Raises:",
+        "Attributes:",
+        "Methods:",
+    ]
+    return any([key in line for key in keys])
+
+
+def has_undefined_symbols(text):
     undefined_symbols = [
         "<<<",
         ">>>",
         "```",
         "´´´´",
     ]
-    return any([symbol in text for symbol in undefined_symbols])
+    if any([symbol in text for symbol in undefined_symbols]):
+        return True
 
 
-def intend_text(text, intend_number):
+def is_freezing_needed(text):
+    return (
+        has_undefined_symbols(text)
+        or has_docstring_keyword(text)
+        or has_enumeration_symbol(text)
+    )
+
+
+def indent_text(text, intend_number):
     lines = text.splitlines()
     lines = [INTEND * intend_number + line for line in lines]
     return "\n".join(lines)
 
 
-def wrap_metadata_text(text, leading_spaces):
+def unindent_text(text, unindent_number):
+    lines = text.splitlines()
+    lines = [line[unindent_number:] for line in lines]
+    return "\n".join(lines)
+
+
+def wrap_text_with_indent(text, indent_length):
+    text = unindent_text(text, indent_length)
+    wrapped_text = wrap_text(text, width=LINE_WIDTH - indent_length * len(INTEND))
+    wrapped_text = indent_text(wrapped_text, indent_length)
+    return wrapped_text
+
+
+def wrap_metadata_text(text):
     """
-    Wraps metadata text that contains colons or dashes.
+    Wraps metadata text that contains.
 
     Args:
         - text (str): The text to be wrapped.
-        - leading_spaces (str): The leading spaces to be added to the
-            wrapped text.
 
     Returns:
         - str: The wrapped text.
     """
-    first_line = text.splitlines()[0].strip()
-    first_line = wrap_text(first_line, width=LINE_WIDTH - len(leading_spaces))
 
-    body = text.splitlines()[1:]
-    items_intendation = leading_spaces + INTEND
-    items = []
-    for line in body:
-        line = line.strip()
-        if check_new_item(line):
-            items.append(line)
-        elif items != []:
-            items[-1] += "\n" + line
-        else:
-            items.append(line)
-
-    if len(items) == 0:
-        return first_line
-
-    # if len(items) == 1: return first_line + "\n" + items[0]
-
-    updated_items = []
-    for item in items:
-        if check_freezing_required(item):
-            frozen = intend_text(item, 1)
-            updated_items.append(frozen)
+    last_indent_length = count_leading_spaces(text) // len(INTEND)
+    wrapped_text = ""
+    text_buffer = ""
+    end_tag = "ENDTAG"
+    for line in (text + "\n" + end_tag).splitlines():
+        if line == end_tag:
+            if not is_freezing_needed(text_buffer):
+                text_buffer = wrap_text_with_indent(text_buffer, last_indent_length)
+            wrapped_text += "\n" + text_buffer if wrapped_text else text_buffer
+            break
+        cur_indent_length = count_leading_spaces(line) // len(INTEND)
+        if cur_indent_length == last_indent_length:
+            text_buffer = "\n" + line if text_buffer else line
             continue
-        prefix = "- " if not item.startswith("-") else ""
-        item = prefix + item
-        max_intend_length = len(items_intendation) + len(
-            INTEND
-        )  ## Following line of item intend more than first
-        item = wrap_text(item, width=LINE_WIDTH - max_intend_length)
-        item = intend_text(item, 2)
-        item = item.removeprefix(INTEND)
-        updated_items.append(item)
+        if text_buffer:
+            if not is_freezing_needed(text_buffer):
+                text_buffer = wrap_text_with_indent(text_buffer, last_indent_length)
+            wrapped_text += "\n" + text_buffer if wrapped_text else text_buffer
 
-    wrapped_text = first_line + "\n" + "\n".join(updated_items)
+        text_buffer = line
+        last_indent_length = cur_indent_length
+
     return wrapped_text
 
 
-def wrap_docstring(docstring, leading_spaces):
+def wrap_docstring(docstring):
     """
     Wraps the docstring to the specified width.
 
     Args:
         - docstring (str): The docstring to be wrapped.
-        - leading_spaces (str): The leading spaces to be added to the
             wrapped docstring.
 
     Returns:
         - str: The wrapped docstring.
     """
-    first_line = docstring.splitlines()[0]
-    first_line = leading_spaces + first_line
-    last_line = docstring.splitlines()[-1]
-    last_line = leading_spaces + last_line
+    leading_spaces = " " * count_leading_spaces(docstring)
+    start_quote = leading_spaces + docstring.splitlines()[0].strip()
+    end_quote = leading_spaces + docstring.splitlines()[-1].strip()
     docstring = "\n".join(docstring.splitlines()[1:-1])
     sections = docstring.split("\n\n")
 
     wrapped_sections = []
-
-    def append_to_wrapped_sections(section):
-        intend_number = len(leading_spaces) // len(INTEND)
-        section = intend_text(section, intend_number)
-        wrapped_sections.append(section)
-
     for section in sections:
-        start = section.split("\n")[0]
-        if start.strip().endswith(":"):
-            wrapped_section = wrap_metadata_text(section, leading_spaces)
-            append_to_wrapped_sections(wrapped_section)
-        elif check_freezing_required(section):
-            # No modification required.
-            append_to_wrapped_sections(section)
+        section_lines = section.splitlines()
+        if len(section_lines) >= 2:
+            first_line = section_lines[0].strip()
+            second_line = section_lines[1].strip()
+            is_metadata = first_line in ["Parameters", "Returns", "Raises"]
+            is_metadata = all([l == "-" for l in second_line]) and is_metadata
         else:
-            wrapped_section = wrap_text(section, width=LINE_WIDTH - len(leading_spaces))
-            append_to_wrapped_sections(wrapped_section)
-    wrapped_sections = "\n\n".join(wrapped_sections)
+            is_metadata = False
+        if is_metadata:
+            # The section is identified as metadata.
+            header = "\n".join(section_lines[:2])
+            body = "\n".join(section_lines[2:])
+            wrapped_body = wrap_metadata_text(body)
+            wrapped_section = header + "\n" + wrapped_body
+        elif is_freezing_needed(section):
+            # No modification required.
+            wrapped_section = section
+        else:
+            indent_length = len(leading_spaces) // len(INTEND)
+            wrapped_section = wrap_text_with_indent(section, indent_length)
 
-    if len(wrapped_sections.splitlines()) > 2:
-        sep = "\n"
-    else:
-        wrapped_sections = wrapped_sections[len(leading_spaces) :]
-        last_line = last_line.replace(leading_spaces, "")
-        sep = " "
-    wrapped_docstring = first_line + sep + wrapped_sections + sep + last_line
+        wrapped_sections.append(wrapped_section)
+    wrapped_sections = "\n\n".join(wrapped_sections)
+    wrapped_docstring = start_quote + "\n" + wrapped_sections + "\n" + end_quote
     return wrapped_docstring
 
 
@@ -247,10 +259,7 @@ def wrap_docstrings(docstrings):
     """
     wrapped_docstrings = []
     for docstring in docstrings:
-        first_line = docstring.splitlines()[0]
-        leading_spaces = " " * count_leading_spaces(first_line)
-        docstring = docstring.replace(leading_spaces, "")
-        wrapped_docstring = wrap_docstring(docstring, leading_spaces)
+        wrapped_docstring = wrap_docstring(docstring)
         wrapped_docstrings.append(wrapped_docstring)
     return wrapped_docstrings
 
@@ -290,6 +299,6 @@ def format_docstrings_from_file(file_path):
 
 
 if __name__ == "__main__":
-    path = r"tasks/tests/for_tasks/format_python_test.py"
+    path = r"/home/siulrek/MY_ROOM/github/CodeAcceleratorKit/test.py"
     format_docstrings_from_file(path)
     print(f"Docstrings formatted of {path}")
