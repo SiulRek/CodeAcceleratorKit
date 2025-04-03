@@ -22,7 +22,6 @@ Available strategies:
 | AE           | Add encoding to open               |                                    |
 | RUE          | Remove unnecessary else            |                                    |
 | RF           | Remove f from empty fstrings       |                                    |
-| RW           | Refactor warnings                  |                                    |
 | RI           | Rearrang imports                   |                                    |
 | RU           | Remove unused imports              |                                    |
 | BF           | Run Black formatting               |                                    |
