@@ -1,6 +1,6 @@
-from tasks.configs.constants import INTEND
+from tasks.configs.constants import INDENT_SPACES
 
-INTEND_LEN = len(INTEND)
+INTEND_LEN = len(INDENT_SPACES)
 
 
 def remove_unnecessary_else(code):

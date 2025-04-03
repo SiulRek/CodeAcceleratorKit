@@ -67,7 +67,7 @@ TEST_RESULT_PATTERN = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - 
 
 # ----------------- For Format Python -----------------
 LINE_WIDTH = 79
-INTEND = " " * 4
+INDENT_SPACES = " " * 4
 DOC_QUOTE = '"""'
 
 class FORMAT_PYTHON_MACROS(Enum):

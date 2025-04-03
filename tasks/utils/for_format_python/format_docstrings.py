@@ -1,7 +1,7 @@
 import re
 from textwrap import wrap as wrap_text
 
-from tasks.configs.constants import DOC_QUOTE, LINE_WIDTH, INTEND
+from tasks.configs.constants import DOC_QUOTE, LINE_WIDTH, INDENT_SPACES
 from tasks.utils.for_format_python.wrap_text import wrap_text
 
 # TODO: Handle the case of string with """ that is not a docstring
@@ -148,7 +148,7 @@ def is_freezing_needed(text):
 
 def indent_text(text, intend_number):
     lines = text.splitlines()
-    lines = [INTEND * intend_number + line for line in lines]
+    lines = [INDENT_SPACES * intend_number + line for line in lines]
     return "\n".join(lines)
 
 
@@ -160,7 +160,7 @@ def unindent_text(text, unindent_number):
 
 def wrap_text_with_indent(text, indent_length):
     text = unindent_text(text, indent_length)
-    wrapped_text = wrap_text(text, width=LINE_WIDTH - indent_length * len(INTEND))
+    wrapped_text = wrap_text(text, width=LINE_WIDTH - indent_length * len(INDENT_SPACES))
     wrapped_text = indent_text(wrapped_text, indent_length)
     return wrapped_text
 
@@ -176,7 +176,7 @@ def wrap_metadata_text(text):
         - str: The wrapped text.
     """
 
-    last_indent_length = count_leading_spaces(text) // len(INTEND)
+    last_indent_length = count_leading_spaces(text) // len(INDENT_SPACES)
     wrapped_text = ""
     text_buffer = ""
     end_tag = "ENDTAG"
@@ -186,7 +186,7 @@ def wrap_metadata_text(text):
                 text_buffer = wrap_text_with_indent(text_buffer, last_indent_length)
             wrapped_text += "\n" + text_buffer if wrapped_text else text_buffer
             break
-        cur_indent_length = count_leading_spaces(line) // len(INTEND)
+        cur_indent_length = count_leading_spaces(line) // len(INDENT_SPACES)
         if cur_indent_length == last_indent_length:
             text_buffer = "\n" + line if text_buffer else line
             continue
@@ -238,7 +238,7 @@ def wrap_docstring(docstring):
             # No modification required.
             wrapped_section = section
         else:
-            indent_length = len(leading_spaces) // len(INTEND)
+            indent_length = len(leading_spaces) // len(INDENT_SPACES)
             wrapped_section = wrap_text_with_indent(section, indent_length)
 
         wrapped_sections.append(wrapped_section)

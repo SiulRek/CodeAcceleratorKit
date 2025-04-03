@@ -1,6 +1,6 @@
 import re
 
-from tasks.configs.constants import LINE_WIDTH, INTEND
+from tasks.configs.constants import LINE_WIDTH, INDENT_SPACES
 from tasks.utils.for_format_python.wrap_text import wrap_text
 
 
@@ -117,7 +117,7 @@ def _construct_formatted_exception_code(exception_info):
 
     formatted_msg = []
     for msg_line in msg.splitlines():
-        buffer = indent + INTEND + prefix + _ensure_space_and_quote(msg_line, q)
+        buffer = indent + INDENT_SPACES + prefix + _ensure_space_and_quote(msg_line, q)
         formatted_msg.append(buffer)
     if formatted_msg[-1].endswith(" \""):
         formatted_msg[-1] = formatted_msg[-1][:-2] + "\""
