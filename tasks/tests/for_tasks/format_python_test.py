@@ -153,7 +153,6 @@ class BackupHandler:
                 break
         else:
             raise ValueError("Backup file not found in context data. This line is so too long.")
-        return False
 
     def recover_last_backup(self):
         """
