@@ -42,7 +42,7 @@ def get_docstrings(code):
                         docstring += line + "\n"
                         stripped_line = line.strip()
                 except StopIteration:
-                    msg += "Invalid docstring format "
+                    msg = "Invalid docstring format "
                     raise ValueError(msg)
                 docstrings.append(docstring[:-1])
 
