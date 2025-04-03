@@ -2,7 +2,6 @@ import csv
 import os
 import shutil
 import time
-
 # This is a cool comment that is going to be wrapper later on. I hope it is clear for everyone.
 
 
@@ -103,7 +102,6 @@ class BackupHandler:
         dest_file = os.path.join(
             self.backup_dir, f"{timestamp}_{count}{file_extension}"
         )
-
         while os.path.exists(f"{dest_file}"):
             dest_file = os.path.join(
                 self.backup_dir, f"{timestamp}_{count}{file_extension}"
@@ -151,10 +149,10 @@ class BackupHandler:
                 if os.path.exists(source_file):
                     shutil.move(source_file, dest_file)
                     self.cleanup_storage()
-                    return True
-
                 self.cleanup_storage()
-
+                break
+        else:
+            raise ValueError("Backup file not found in context data. This line is so too long.")
         return False
 
     def recover_last_backup(self):

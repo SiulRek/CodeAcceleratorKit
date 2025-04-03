@@ -134,7 +134,7 @@ def _construct_formatted_exception_code(exception_info):
     return formatted_exception
 
 
-def refactor_exceptions(code):
+def format_exceptions(code):
     """
     Refactors the exception code in the provided code.
 
@@ -160,7 +160,7 @@ def refactor_exception_from_file(file_path):
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()
-    updated_code = refactor_exceptions(code)
+    updated_code = format_exceptions(code)
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(updated_code)
 

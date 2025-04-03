@@ -33,11 +33,11 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 | AE            | Add encoding to open      |                    |
 | RUE           | Remove unused imports     |                    |
 | RF            | Remove f from empty fstrings |                 |
-| RE            | Refactor exceptions       |                    |
 | RE            | Refactor warnings         |                    |
 | RI            | Rearrange imports         |                    |
 | RU            | Remove unused imports     |                    |
 | BF            | Run Black formatting      |                    |
+| FE            | Format exceptions         |                    |
 | FD            | Format docstrings         |                    |
 | FC            | Format comments           |                    |
 | EN            | Ensure new line at EOF    | Needs to be forced |

@@ -7,7 +7,7 @@ from tasks.utils.for_format_python.ensure_newline_at_end import ensure_newline_a
 from tasks.utils.for_format_python.format_comments import format_comments
 from tasks.utils.for_format_python.format_docstrings import format_docstrings
 from tasks.utils.for_format_python.rearrange_imports import rearrange_imports
-from tasks.utils.for_format_python.refactor_exception import refactor_exception
+from tasks.utils.for_format_python.format_exceptions import format_exceptions
 from tasks.utils.for_format_python.refactor_warnings import refactor_warnings
 from tasks.utils.for_format_python.remove_f_from_empty_fstrings import (
     remove_f_from_empty_fstrings,
@@ -29,11 +29,11 @@ STRATEGIES = {
     "AE": (add_encoding_to_open, "Add encoding to open", False, False),
     "RUE": (remove_unnecessary_else, "Remove unnecessary else", False, False),
     "RF": (remove_f_from_empty_fstrings, "Remove f from empty fstrings", False, False),
-    "RE": (refactor_exception, "Refactor exception", False, False),
     "RW": (refactor_warnings, "Refactor warnings", False, False),
     "RI": (rearrange_imports, "Rearrange imports", False, False),
     "RU": (remove_unused_imports, "Remove unused imports", False, False),
     "BF": (format_with_black, "Run Black formatting", True, False),
+    "FE": (format_exceptions, "Format exceptions", False, False),
     "FD": (format_docstrings, "Format docstrings", False, False),
     "FC": (format_comments, "Format comments", False, False),
     "EN": (ensure_newline_at_end, "Ensure newline at end", False, True),

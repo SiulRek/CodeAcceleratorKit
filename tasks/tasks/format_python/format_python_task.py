@@ -22,11 +22,11 @@ Available strategies:
 | AE           | Add encoding to open               |                                    |
 | RUE          | Remove unnecessary else            |                                    |
 | RF           | Remove f from empty fstrings       |                                    |
-| RE           | Refactor exception                 |                                    |
 | RW           | Refactor warnings                  |                                    |
 | RI           | Rearrang imports                   |                                    |
 | RU           | Remove unused imports              |                                    |
 | BF           | Run Black formatting               |                                    |
+| FE           | Refactor exception                 |                                    |
 | FD           | Format docstrings                  |                                    |
 | EN           | Ensure newline at end              | Needs to be forced                 |
 | PL           | Execute Pylint                     |                                    |
