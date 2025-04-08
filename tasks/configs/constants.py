@@ -38,7 +38,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     END = "#E "
     TITLE = "#T "
     NORMAL_TEXT = "#N "
-    PASTE_CURRENT_FILE = f"# {CURRENT_FILE_TAG}"
+    PASTE_CURRENT_FILE = f"#P {CURRENT_FILE_TAG}"
     PASTE_FILES = "#P "
     ERROR = "#L"
     META_MACROS_START = "#"

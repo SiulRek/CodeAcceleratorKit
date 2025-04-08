@@ -56,7 +56,7 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 **Available Reference Types**:
 | Name                    | Description                           | Pattern                                          | Optional Arguments                   |
 |-------------------------|---------------------------------------|--------------------------------------------------|--------------------------------------|
-| paste_files             | Paste file/s                          | # `<file_path>` or `<file_path_1, file_path_2>`  | <edit_content>                       |
+| paste_files             | Paste file/s                          | #P `<file_path>` or `<file_path_1, file_path_2>`  | <edit_content>                       |
 | fill_text               | Add a fill text  ([see more](./costumizations/fill_texts/fill_text_template/template_4.txt)) | #*`<file_name_without_ext>`  | -                                    |
 | meta_macros             | Interprete predefined meta macros ([see more](./costumizations/meta_macros/template_1.py)) | #`<file_name_without_ext>`_meta | -                                    |
 | meta_macros_with_args   | Meta macros with args  ([see more](./costumizations/meta_macros_with_args/template_2.py)) | #`<file_name_without_ext>`_meta+ | `<arg_1, arg_2, ...>`                |
@@ -67,7 +67,6 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 | directory_tree          | Get directory tree                    | #tree `<directory_path>`                         | `<max_depth, include_files, ignore_list >` |
 | summarize_python_script | Summarize a Python script             | #summarize `<script_path>`                       | `<include_definitions_with_docstrings>` |
 | summarize_folder        | Summarize Python scripts in a folder  | #summarize_folder `<folder_path>`                | `<include_definitions_with_docstrings, excluded_dirs, excluded_files>` |
-| checksum                | Check if provided checksum corresponds| #checksum `<number_of_references>`               | -                                    |
 
 
 **Usage from command line**:  
