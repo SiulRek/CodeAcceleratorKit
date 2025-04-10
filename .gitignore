@@ -19,3 +19,4 @@ tasks/tests/outputs/test_results.log
 tasks/configs/registered_runners.json
 _*
 CodeAcceleratorKit.code-workspace
+tasks/utils/for_automatic_prompt/description.md
