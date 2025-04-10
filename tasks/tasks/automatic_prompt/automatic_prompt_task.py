@@ -1,8 +1,9 @@
 """
 This module generates an automatic prompt based on macro statements that are
-retrieved from either a file or a string passed as an argument. The prompt,
+retrieved from the macro field or a string passed as an argument. The prompt,
 typically a query, is then finalized and saved in a file.
 
+Available reference types:
 | Name                     | Description                             | Pattern                                              | Arguments                                                      |
 |--------------------------|-----------------------------------------|------------------------------------------------------|-----------------------------------------------------------------|
 | begin_text               | Place start text                        | #B <begin_text>                                      | -                                                               |
@@ -46,7 +47,7 @@ from tasks.tasks.automatic_prompt.automatic_prompt_interpreter import (
 from tasks.tasks.automatic_prompt.chat_manager import ChatManager
 from tasks.tasks.core.task_base import TaskBase
 from tasks.utils.for_automatic_prompt.add_text_tags import add_text_tags
-from tasks.utils.shared.ask_user_for_macros import ask_user_for_macros
+from tasks.utils.for_automatic_prompt.ask_user_for_macros import ask_user_for_macros
 from tasks.utils.shared.backup_handler import BackupHandler
 
 
@@ -145,10 +146,12 @@ class AutomaticPromptTask(TaskBase):
         """
         super().setup()
         self.current_file = self.additional_args[0]
-        self.macros_text = self._get_user_specified_macros()
-        self.macros_text = "\n".join(
-            line for line in self.macros_text.split("\n") if line.strip()
-        )
+        if len(self.additional_args) > 1:
+            self.macros_text = self.additional_args[1]
+        else:
+            self.macros_text = self._get_user_specified_macros()
+        lines = self.macros_text.split("\n")
+        self.macros_text = "\n".join(line for line in lines if line.strip())
 
     def _get_user_specified_macros(self):
         macros_text = ask_user_for_macros()
@@ -159,7 +162,8 @@ class AutomaticPromptTask(TaskBase):
 
     def execute(self):
         """
-        Executes the AutomaticPrompt task to format the prompt and interact with AI.
+        Executes the AutomaticPrompt task to format the prompt and interact
+        with AI.
         """
         interpreter = AutomaticPromptInterpreter(self.profile)
         backup_handler = BackupHandler(
@@ -190,9 +194,8 @@ class AutomaticPromptTask(TaskBase):
         )
         cm.store_prompt(prompt, self.profile.copy_prompt)
         if send_prompt_kwargs:
-            cm.send_prompt(
-                send_prompt_kwargs)
-        
+            cm.send_prompt(send_prompt_kwargs)
+
 
 if __name__ == "__main__":
     """
