@@ -1,6 +1,7 @@
 # CHEATSHEET
 
 This kit contains a set of tasks designed to automate various operations on Python files. This Tasks are available:
+
 1. [Format Python Task](#1-format-python-task)
 1. [Automatic Prompt Task](#2-automatic-prompt-task)
 1. [Restore File Task](#4-restore-file-task)

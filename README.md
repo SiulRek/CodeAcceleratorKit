@@ -42,10 +42,9 @@ In CodeAcceleratorKit, various key definitions are used:
 1. [Restore File Task](#4-restore-file-task)
 1. [Pylint Report Task](#3-pylint-report-task)
 1. [Directory Runner Task](#5-directory-runner-task)
-1. [Undo Directory Runner Task](#6-uno-directory-runner-task)
+1. [Undo Directory Runner Task](#6-undo-directory-runner-task)
 1. [Git Staging Task](#7-git-staging-task)
 1. [Git Discard Task](#8-git-discard-task)
-Refer to the above links for detailed information about each Task.
 
 
 ### 1. Format Python Task
