@@ -6,7 +6,7 @@
             "command": "cmd",
             "args": [
                 "/c",
-                "/path/to/venv/Scripts/activate && python /path/to/repository/tasks/tasks/format_python/format_python_task.py ${workspaceFolder} ${file}"
+                "/path/to/venv/Scripts/activate && python /path/to/repository/tasks/tasks/format_python/format_python_task.py ${workspaceFolder} ${file} \"${input:formatPythonMacros}\""
             ],
             "group": {
                 "kind": "test",
@@ -167,6 +167,12 @@
         }
     ],
     "inputs": [
+        {
+            "id": "formatPythonMacros",
+            "type": "promptString",
+            "description": "Enter format python macros separated by ';' (e.g. 'macro1; macro2')",
+            "default": ""
+        },
         {
             "id": "pylintReportDirectory",
             "type": "promptString",
