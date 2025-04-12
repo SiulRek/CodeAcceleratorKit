@@ -274,15 +274,3 @@ def line_validation_for_send_prompt(line):
                 check_type(max_tokens, int, "for send prompt max tokens")
         return modify_inplace, max_tokens
     return None
-
-
-def line_validation_for_checksum(line):
-    """ Validate the line to check if it is a valid line to add checksum. """
-    if result := CHECKSUM_PATTERN.match(line):
-        try:
-            checksum = int(result.group(1).strip())
-            return checksum
-        except ValueError as e:
-            msg = "Invalid checksum line. Must be in the format: #checksum <int>"
-            raise ValueError(msg) from e
-    return None
