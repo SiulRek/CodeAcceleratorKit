@@ -104,7 +104,7 @@ The `FormatPythonTask` is designed to format Python files by removing or refacto
 
 **Usage from command line**:
 ```sh
-python path/to/format_python_task.py <root_directory> <macro_file_path>
+python path/to/format_python_task.py <root_directory> [<macro_file_path> | --help | -h | --cancel | -c]
 ```
 
 
