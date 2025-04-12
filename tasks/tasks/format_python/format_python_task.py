@@ -9,9 +9,9 @@ The specific macros and their interpretation are defined in the FormatPythonInte
 Available macros:
 | Name                     | Description                                            | Macro                  | Arguments                          |
 |--------------------------|--------------------------------------------------------|------------------------|------------------------------------|
-| select_only              | Selects only the specified sections                    | #only                  | <List of strategies abbreviations> |
-| select_not               | Excludes the specified sections                        | #not                   | <List of strategies abbreviations> |
-| force_select_of          | Forces selection of the specified sections             | #force                 | <List of strategies abbreviations> |
+| select_only              | Selects only the specified strategies                  | #only                  | <List of strategies abbreviations> |
+| select_not               | Excludes the specified strategies                      | #not                   | <List of strategies abbreviations> |
+| force_select_of          | Forces selection of the specified strategies           | #force                 | <List of strategies abbreviations> |
 | checkpoints              | Marks the points in the code for checkpoints           | #checkpointing         | -                                  |
 
 Available strategies:
@@ -42,13 +42,52 @@ TODO when adding new macros:
 
 import os
 
-from tasks.tasks.format_python.format_python_interpreter import FormatPythonInterpreter
-from tasks.utils.shared.backup_handler import BackupHandler
+from rich.console import Console
+from rich.table import Table
 from tasks.tasks.core.task_base import TaskBase
+from tasks.tasks.format_python.format_python_interpreter import FormatPythonInterpreter
 from tasks.utils.for_format_python.format_python_file import format_python_file
-from tasks.utils.shared.is_library_installed import is_library_installed
+from tasks.utils.shared.backup_handler import BackupHandler
 
 requirements = ["black", "pylint"]
+
+
+def print_help():
+    console = Console()
+
+    # Macros Table
+    macros_table = Table(title="Macros")
+    macros_table.add_column("Macro", style="cyan", justify="center")
+    macros_table.add_column("Purpose", style="green")
+    macros_table.add_column("Args", style="magenta")
+    macros_table.add_row("#only", "Include only strategies", "<List of abbreviations>")
+    macros_table.add_row("#not", "Exclude strategies", "<List of abbreviations>")
+    macros_table.add_row(
+        "#force", "Force include strategies", "<List of abbreviations>"
+    )
+    macros_table.add_row("#checkpointing", "Insert checkpoints", "-")
+
+    # Strategies Table
+    strategies_table = Table(title="Strategies")
+    strategies_table.add_column("Abbr", style="cyan", justify="center")
+    strategies_table.add_column("Description", style="green")
+    strategies_table.add_column("Notes", style="magenta")
+    strategies_table.add_row("RL", "Remove line comments", "Must be forced")
+    strategies_table.add_row("RT", "Remove trailing parts", "")
+    strategies_table.add_row("AE", "Add encoding to open", "")
+    strategies_table.add_row("RUE", "Remove unnecessary else", "")
+    strategies_table.add_row("RF", "Remove 'f' from empty fstrings", "")
+    strategies_table.add_row("RI", "Rearrange imports", "")
+    strategies_table.add_row("RU", "Remove unused imports", "")
+    strategies_table.add_row("BF", "Apply Black formatting", "")
+    strategies_table.add_row("FE", "Refactor exception blocks", "")
+    strategies_table.add_row("FD", "Format docstrings", "")
+    strategies_table.add_row("EN", "Ensure newline at EOF", "Must be forced")
+    strategies_table.add_row("PL", "Run Pylint", "")
+
+    # Print tables
+    console.print(macros_table)
+    console.print(strategies_table)
 
 
 class FormatPythonTask(TaskBase):
@@ -57,6 +96,15 @@ class FormatPythonTask(TaskBase):
 
     NAME = "Format Python"
 
+    def _handle_options_if_present(self, text):
+        stripped = text.strip()
+        if stripped == "--help" or stripped == "-h":
+            print_help()
+            exit(0)
+        if stripped == "--cancel" or stripped == "-c":
+            print("Cancelled by user.")
+            exit(0)
+
     def setup(self):
         """Sets up the FormatPythonTask by initializing the file path from additional
         arguments."""
@@ -64,7 +112,10 @@ class FormatPythonTask(TaskBase):
         self.current_file = self.additional_args[0]
         self.macros_text = None
         if len(self.additional_args) > 1:
-            self.macros_text = self.additional_args[1]
+            text = self.additional_args[1]
+            # Both --help and --cancel options terminate the program
+            self._handle_options_if_present(text)
+            self.macros_text = text
 
     def execute(self):
         """
@@ -86,11 +137,20 @@ class FormatPythonTask(TaskBase):
         interpreter = FormatPythonInterpreter(self.profile)
 
         if self.macros_text:
-            macros_data, _ = interpreter.extract_macros_from_text(self.macros_text, post_process=True)
-            with open(current_file, "r") as file:
+            macros_data, updated_text = interpreter.extract_macros_from_text(
+                self.macros_text, post_process=True
+            )
+            if updated_text:
+                raise ValueError(
+                    "Not able to process the following macros:\n" + updated_text
+                )
+
+            with open(current_file, "r", encoding="utf-8") as file:
                 updated_content = file.read()
         else:
-            macros_data, updated_content = interpreter.extract_macros_from_file(current_file)
+            macros_data, updated_content = interpreter.extract_macros_from_file(
+                current_file
+            )
         select_only, select_not, force_select_of, checkpointing = macros_data
 
         if select_only is not None and select_not is not None:
@@ -98,9 +158,11 @@ class FormatPythonTask(TaskBase):
             raise ValueError(msg)
         if not checkpointing:
             checkpoint_dir = None
-            
-        backup_handler.store_backup(current_file, "Before modification from format python task.")
-        with open(current_file, "w") as file:
+
+        backup_handler.store_backup(
+            current_file, "Before modification from format python task."
+        )
+        with open(current_file, "w", encoding="utf-8") as file:
             file.write(updated_content)
 
         format_python_file(
@@ -115,7 +177,9 @@ class FormatPythonTask(TaskBase):
 
 
 if __name__ == "__main__":
-    default_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")
+    default_root = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."
+    )
     default_file_path = os.path.join(
         default_root,
         "tasks",
