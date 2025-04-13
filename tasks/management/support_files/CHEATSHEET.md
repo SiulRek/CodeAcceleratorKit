@@ -62,6 +62,7 @@ The `AutomaticPromptTask` generates an automatic prompt based on macro statement
 | meta_macros_with_args   | Meta macros with args  ([see more](./costumizations/meta_macros_with_args/template_2.py)) | #`<file_name_without_ext>`_meta+ | `<arg_1, arg_2, ...>`                |
 | costum_function         | Paste the output of custom function  ([see more](./costumizations/functions/costum_function_template/template_3.py))   | #`<file_name_without_ext>`_func+                 | `<arg_1, arg_2, ...>`                |
 | run_python_script       | Run a Python script                   | #run `<script_path>`                             | -                                    |
+| run_shell_command       | Run a shell command                   | #$ `<command>`                                   | <subprocess_kwargs>                  |
 | run_pylint              | Run pylint on a file                  | #pylint `<file_path>`                            | -                                    |
 | run_unittest            | Run unittest on a file                | #unittest `<file_path>`                          | `<verbosity>`                        |
 | directory_tree          | Get directory tree                    | #tree `<directory_path>`                         | `<max_depth, include_files, ignore_list >` |

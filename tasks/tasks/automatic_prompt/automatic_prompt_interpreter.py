@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from tasks.configs.constants import AUTOMATIC_PROMPT_MACROS as MACROS
 from tasks.tasks.automatic_prompt.line_validation import (
@@ -13,6 +14,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_meta_macros_with_args,
     line_validation_for_costum_function,
     line_validation_for_run_python_script,
+    line_validation_for_run_shell_command,
     line_validation_for_run_pylint,
     line_validation_for_run_unittest,
     line_validation_for_paste_current_file,
@@ -46,7 +48,9 @@ from tasks.utils.shared.format_identifiers_as_code import format_identifiers_as_
 
 
 class AutomaticPromptInterpreter(MacroInterpreter):
-    """ Interpreter for creating a prompt from macros within text lines. """
+    """
+    Interpreter for creating a prompt from macros within text lines.
+    """
 
     def _check_exists(self, file_path, usage_description):
         if not os.path.exists(file_path):
@@ -83,8 +87,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         return None
 
     def validate_paste_current_file_macro(self, line):
-        # Special File paste case as the interest is in the file content
-        # without macros in case there are any
+        # Special File paste case as the interest is in the file content without
+        # macros in case there are any
         if result := line_validation_for_paste_current_file(line):
             current_content = self._read_file(
                 self.current_file, "paste current file reference"
@@ -209,6 +213,18 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.RUN_PYTHON_SCRIPT, default_title, script_output)
         return None
 
+    def validate_run_shell_command_macro(self, line):
+        if result := line_validation_for_run_shell_command(line):
+            command, kwargs = result
+            kwargs.setdefault("shell", True)
+            # Force 'capture_output' and 'text' kwargs to True
+            kwargs["capture_output"] = True
+            kwargs["text"] = True
+            result = subprocess.run(command, **kwargs)
+            output = result.stderr if result.returncode != 0 else result.stdout
+            return (MACROS.RUN_SHELL_COMMAND, "$ " + command, output)
+        return None
+    
     def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
             script_path = find_file_sloppy(result, self.profile.root, self.current_file)
@@ -229,7 +245,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 module=execute_unittests_from_file,
                 args=[script_path, cwd, str(verbosity)],
                 env_python_path=python_env,
-                cwd=cwd
+                cwd=cwd,
             )
             unittest_output = render_to_markdown(unittest_output, format="shell")
             default_title = "Unittest Output"
@@ -364,10 +380,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         send_prompt_kwargs = {}
         for macro_data in updated_macros_data_1:
             if macro_data[0] == MACROS.SEND_PROMPT:
-                # if len(send_prompt) > 0:
-                #     msg = "Multiple send_prompt macros found in the prompt."
-                #     raise ValueError(msg)
-                # Last send_prompt macro will be used
+                # if len(send_prompt) > 0: msg = "Multiple send_prompt macros
+                # found in the prompt." raise ValueError(msg) Last send_prompt
+                # macro will be used
                 modify_inplace, max_tokens = macro_data[1]
                 send_prompt_kwargs["modify_inplace"] = modify_inplace
                 send_prompt_kwargs["max_tokens"] = max_tokens

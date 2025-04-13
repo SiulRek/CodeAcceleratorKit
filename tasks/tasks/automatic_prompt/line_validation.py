@@ -47,6 +47,12 @@ run_script_tag = TAGS.RUN_SCRIPT.value
 run_script_pattern = rf"{run_script_tag}\s(\S+\.py|{CURRENT_FILE_TAG})"
 RUN_SCRIPT_PATTERN = re.compile(run_script_pattern)
 
+# RUN_SHELL_COMMAND_PATTERN
+run_shell_command_tag = TAGS.RUN_SHELL_COMMAND.value
+run_shell_command_pattern = rf"{run_shell_command_tag}\s*([^\n\(\["
+run_shell_command_pattern += r"\{]+)"
+RUN_SHELL_COMMAND_PATTERN = re.compile(run_shell_command_pattern)
+
 # RUN_PYLINT_PATTERN
 run_pylint_tag = TAGS.RUN_PYLINT.value
 run_pylint_pattern = rf"{run_pylint_tag}\s(\S+\.py|{CURRENT_FILE_TAG})"
@@ -89,35 +95,35 @@ SEND_PROMPT_TAG = TAGS.SEND_PROMPT.value
 
 
 def line_validation_for_begin_text(line):
-    """ Validate if the line is a start tag. """
+    """Validate if the line is a start tag."""
     if BEGIN_TAG in line:
         return line.split(BEGIN_TAG, 1)[1].strip()
     return None
 
 
 def line_validation_for_end_text(line):
-    """ Validate if the line is an end tag. """
+    """Validate if the line is an end tag."""
     if END_TAG in line:
         return line.split(END_TAG, 1)[1].strip()
     return None
 
 
 def line_validation_for_title(line):
-    """ Validate if the line is a title. """
+    """Validate if the line is a title."""
     if TITLE_TAG in line:
         return line.replace(TITLE_TAG, "").strip()
     return None
 
 
 def line_validation_for_normal_text(line):
-    """ Validate if the line is a normal text. """
+    """Validate if the line is a normal text."""
     if NORMAL_TEXT_TAG in line:
         return line.replace(NORMAL_TEXT_TAG, "").strip()
     return None
 
 
 def line_validation_for_paste_current_file(line):
-    """ Validate if the line is a current file reference. """
+    """Validate if the line is a current file reference."""
     if PASTE_CURRENT_FILE_TAG in line:
         edit_content = False
         if args := retrieve_arguments_in_round_brackets(line, 1):
@@ -128,7 +134,7 @@ def line_validation_for_paste_current_file(line):
 
 
 def line_validation_for_paste_files(line):
-    """ Validate if the line contains references to files. """
+    """Validate if the line contains references to files."""
     if match := re.search(PASTE_FILES_PATTERN, line):
         file_names = match.group(1).split(",")
         file_names = [file_name.strip() for file_name in file_names]
@@ -141,14 +147,14 @@ def line_validation_for_paste_files(line):
 
 
 def line_validation_for_error(line):
-    """ Validate if the line is an error. """
+    """Validate if the line is an error."""
     if ERROR_TAG in line:
         return True
     return None
 
 
 def line_validation_for_fill_text(line):
-    """ Validate if the line is a fill text. """
+    """Validate if the line is a fill text."""
     if match := FILL_TEXT_PATTERN.match(line):
         placeholder = match.group(1)
         return placeholder
@@ -156,14 +162,14 @@ def line_validation_for_fill_text(line):
 
 
 def line_validation_for_meta_macros(line):
-    """ Validate if the line is a meta macros. """
+    """Validate if the line is a meta macros."""
     if result := META_MACROS_PATTERN.match(line):
         return result.group(1)
     return None
 
 
 def line_validation_for_meta_macros_with_args(line):
-    """ Validate if the line is a meta macros with arguments. """
+    """Validate if the line is a meta macros with arguments."""
     if match := META_MACROS_WITH_ARGS_PATTERN.match(line):
         name = match.group(1)
         arguments = retrieve_arguments_in_round_brackets(line)
@@ -172,7 +178,7 @@ def line_validation_for_meta_macros_with_args(line):
 
 
 def line_validation_for_costum_function(line):
-    """ Validate if the line is a costum function. """
+    """Validate if the line is a costum function."""
     if match := COSTUM_FUNCTION_PATTERN.match(line):
         name = match.group(1)
         arguments = retrieve_arguments_in_round_brackets(line)
@@ -181,21 +187,33 @@ def line_validation_for_costum_function(line):
 
 
 def line_validation_for_run_python_script(line):
-    """ Validate if the line is a run python script. """
+    """Validate if the line is a run python script."""
     if match := RUN_SCRIPT_PATTERN.match(line):
         return match.group(1)
     return None
 
 
+def line_validation_for_run_shell_command(line):
+    """Validate if the line is a run shell command."""
+    if match := RUN_SHELL_COMMAND_PATTERN.match(line):
+        kwargs = {}
+        if arguments := retrieve_arguments_in_round_brackets(line, 1):
+            kwargs = arguments[0]
+            check_type(kwargs, dict, "for run shell command")
+        command = match.group(1)
+        return command, kwargs
+    return None
+
+
 def line_validation_for_run_pylint(line):
-    """ Validate if the line is a run pylint. """
+    """Validate if the line is a run pylint."""
     if match := RUN_PYLINT_PATTERN.match(line):
         return match.group(1)
     return None
 
 
 def line_validation_for_run_unittest(line):
-    """ Validate if the line is a run unittest. """
+    """Validate if the line is a run unittest."""
     if match := re.search(UNITTEST_PATTERN, line):
         verbosity = 1
         if arguments := retrieve_arguments_in_round_brackets(line, 1):
@@ -206,7 +224,7 @@ def line_validation_for_run_unittest(line):
 
 
 def line_validation_for_directory_tree(line):
-    """ Validate if the line is a directory tree. """
+    """Validate if the line is a directory tree."""
     if match := DIRECTORY_TREE_PATTERN.match(line):
         dir = match.group(1)
         max_depth = DIRECTORY_TREE_DEFAULTS.MAX_DEPTH.value
@@ -227,7 +245,7 @@ def line_validation_for_directory_tree(line):
 
 
 def line_validation_for_summarize_python_script(line):
-    """ Validate if the line is a summarize python script. """
+    """Validate if the line is a summarize python script."""
     if match := SUMMARIZE_PYTHON_SCRIPT_PATTERN.match(line):
         include_definitions_without_docstrings = False
         if arguments := retrieve_arguments_in_round_brackets(line, 1):
@@ -239,7 +257,7 @@ def line_validation_for_summarize_python_script(line):
 
 
 def line_validation_for_summarize_folder(line):
-    """ Validate if the line is a summarize folder. """
+    """Validate if the line is a summarize folder."""
     if match := SUMMARIZE_FOLDER_PATTERN.match(line):
         dir = match.group(1)
         include_definitions_without_docstrings = False
@@ -262,7 +280,7 @@ def line_validation_for_summarize_folder(line):
 
 
 def line_validation_for_send_prompt(line):
-    """ Validate the line to check if it is a valid line to make a prompt. """
+    """Validate the line to check if it is a valid line to make a prompt."""
     if SEND_PROMPT_TAG in line:
         modify_inplace = False
         max_tokens = None
