@@ -113,6 +113,8 @@ python path/to/format_python_task.py <root_directory> [<macro_file_path> | --hel
 **Description:**            
 The `AutomaticPromptTask` generates an automatic prompt based on macro statements retrieved from the macro field or a string passed as an argument. The prompt is typically a query that is saved in a file, optionally copied to the clipboard, and optionally sent to ChatGPT.
 
+Optional arguments should be provided as Python literals enclosed in round brackets, separated by commas (e.g., `(True, "string", 1, [1, 2, 3])`).
+
 **Available Reference Types**:
 | Name                    | Description                           | Pattern                                          | Optional Arguments                   |
 |-------------------------|---------------------------------------|--------------------------------------------------|--------------------------------------|
