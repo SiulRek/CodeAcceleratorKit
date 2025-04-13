@@ -26,7 +26,6 @@ from tasks.tasks.automatic_prompt.process_tagged_arguments import (
     process_tagged_arguments,
 )
 from tasks.tasks.core.macro_interpreter import MacroInterpreter
-from tasks.utils.for_automatic_prompt.edit_text import edit_text
 import tasks.utils.for_automatic_prompt.execute_unittests_from_file as execute_unittests_from_file
 from tasks.utils.for_automatic_prompt.find_file_in_1st_level_subdir import (
     find_file_in_1st_level_subdir,
@@ -87,15 +86,13 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_paste_files_macro(self, line):
         if result := line_validation_for_paste_files(line):
-            file_names, edit_content = result
+            file_names = result
             referenced_files = []
             for file_name in file_names:
                 file_path = find_file_sloppy(
                     file_name, self.profile.root, self.current_file
                 )
                 file_content = self._read_file(file_path, "paste files reference")
-                if edit_content:
-                    file_content = edit_text(file_content, self.profile.replace_mapping)
                 file_content = render_to_markdown(
                     file_content, extension=file_path.split(".")[-1]
                 )

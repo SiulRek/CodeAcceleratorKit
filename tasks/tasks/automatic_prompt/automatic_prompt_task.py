@@ -4,13 +4,13 @@ retrieved from the macro field or a string passed as an argument. The prompt,
 typically a query, is then finalized and saved in a file.
 
 Available reference types:
-| Name                     | Description                             | Pattern                                              | Arguments                                                      |
+| Name                     | Description                             | Pattern                                              | Arguments                                                       |
 |--------------------------|-----------------------------------------|------------------------------------------------------|-----------------------------------------------------------------|
 | begin_text               | Place start text                        | #B <begin_text>                                      | -                                                               |
 | end_text                 | Place end text                          | #E <end_text>                                        | -                                                               |
 | title                    | Title of the reference                  | #T <title>                                           | -                                                               |
 | normal_text              | Normal text                             | #N <normal_text>                                     | -                                                               |
-| paste_files              | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>          | <edit_content>                                                  |
+| paste_files              | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>         | -                                                               |
 | error                    | Get logged errors                       | #L                                                   | -                                                               |
 | fill_text                | Add a fill text                         | #<file_name_without_ext>                             | -                                                               |
 | meta_macros              | Interpret predefined meta macros        | #<file_name_without_ext>_meta                        | -                                                               |

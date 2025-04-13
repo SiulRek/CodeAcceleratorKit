@@ -44,7 +44,6 @@ class ProfileAttrNames(Enum):
     copy_prompt = (20, "configs.json")
     modules_info = (21, "modules_info.json")
     directory_runner_config = (22, "directory_runner_template.json")
-    replace_mapping = (23, "replace_mapping.json")
 
 
 UPDATE_MAPPING = {
@@ -72,7 +71,6 @@ UPDATE_MAPPING = {
     "copy_prompt": "copy_prompt",
     "modules_info": None,  # Forces update of modules_info
     "directory_runner_config": "directory_runner_config",
-    "replace_mapping": "replace_mapping",
 }
 
 
@@ -253,11 +251,6 @@ class AttributesInitializer:
             "clear_backup_storage": True,
         }
         return config
-    
-    @classmethod
-    def _initialize_replace_mapping(cls, _):
-        """ Initializes the replace mapping file. """
-        return {"REPLACE_ME": "I_HAVE_BEEN_REPLACED"}
     
     @classmethod
     def _initialize_copy_prompt(cls, _):
