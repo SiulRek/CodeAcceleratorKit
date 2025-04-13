@@ -17,7 +17,6 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_run_shell_command,
     line_validation_for_run_pylint,
     line_validation_for_run_unittest,
-    line_validation_for_paste_current_file,
     line_validation_for_directory_tree,
     line_validation_for_summarize_python_script,
     line_validation_for_summarize_folder,
@@ -84,29 +83,6 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             default_title = "Normal Text"
             result = format_identifiers_as_code(result)
             return (MACROS.NORMAL_TEXT, default_title, result)
-        return None
-
-    def validate_paste_current_file_macro(self, line):
-        # Special File paste case as the interest is in the file content without
-        # macros in case there are any
-        if result := line_validation_for_paste_current_file(line):
-            current_content = self._read_file(
-                self.current_file, "paste current file reference"
-            )
-            # Remove current line to avoid infinite loop in next step
-            current_content = current_content.replace(line, "")
-            # Remove any macros from the content
-            _, current_content = self.extract_macros_from_text(current_content)
-            if result[1]:  # Argument for editing the content
-                current_content = edit_text(
-                    current_content, self.profile.replace_mapping
-                )
-            current_content = render_to_markdown(
-                current_content, extension=self.current_file.split(".")[-1]
-            )
-            relative_path = os.path.relpath(self.current_file, self.profile.root)
-            default_title = f"File at {relative_path}"
-            return (MACROS.PASTE_CURRENT_FILE, default_title, current_content)
         return None
 
     def validate_paste_files_macro(self, line):

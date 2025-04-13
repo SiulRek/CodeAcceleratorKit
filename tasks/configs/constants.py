@@ -19,7 +19,6 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     END_TEXT = "end_text",
     TITLE = "title"
     NORMAL_TEXT = "normal_text"
-    PASTE_CURRENT_FILE = "paste_current_file"
     PASTE_FILE = "paste_file"
     LOGGED_ERROR = "error"
     FILL_TEXT = "fill_text"
@@ -39,7 +38,6 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     END = "#E "
     TITLE = "#T "
     NORMAL_TEXT = "#N "
-    PASTE_CURRENT_FILE = f"#P {CURRENT_FILE_TAG}"
     PASTE_FILES = "#P "
     ERROR = "#L"
     META_MACROS_START = "#"

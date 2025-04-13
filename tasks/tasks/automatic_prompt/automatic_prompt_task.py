@@ -11,7 +11,6 @@ Available reference types:
 | title                    | Title of the reference                  | #T <title>                                           | -                                                               |
 | normal_text              | Normal text                             | #N <normal_text>                                     | -                                                               |
 | paste_files              | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>          | <edit_content>                                                  |
-| paste_current_file       | Paste current file                      | #P File                                               | <edit_content>                                                  |
 | error                    | Get logged errors                       | #L                                                   | -                                                               |
 | fill_text                | Add a fill text                         | #<file_name_without_ext>                             | -                                                               |
 | meta_macros              | Interpret predefined meta macros        | #<file_name_without_ext>_meta                        | -                                                               |

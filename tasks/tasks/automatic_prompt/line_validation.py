@@ -89,7 +89,6 @@ BEGIN_TAG = TAGS.BEGIN.value
 END_TAG = TAGS.END.value
 TITLE_TAG = TAGS.TITLE.value
 NORMAL_TEXT_TAG = TAGS.NORMAL_TEXT.value
-PASTE_CURRENT_FILE_TAG = TAGS.PASTE_CURRENT_FILE.value
 ERROR_TAG = TAGS.ERROR.value
 SEND_PROMPT_TAG = TAGS.SEND_PROMPT.value
 
@@ -119,17 +118,6 @@ def line_validation_for_normal_text(line):
     """Validate if the line is a normal text."""
     if NORMAL_TEXT_TAG in line:
         return line.replace(NORMAL_TEXT_TAG, "").strip()
-    return None
-
-
-def line_validation_for_paste_current_file(line):
-    """Validate if the line is a current file reference."""
-    if PASTE_CURRENT_FILE_TAG in line:
-        edit_content = False
-        if args := retrieve_arguments_in_round_brackets(line, 1):
-            edit_content = args[0]
-            check_type(edit_content, bool, "for paste current file")
-        return True, edit_content
     return None
 
 
