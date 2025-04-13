@@ -49,7 +49,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     FILL_TEXT = r"#\*"
     RUN_SCRIPT = "#run"
     RUN_PYLINT = "#pylint"
-    RUN_SHELL_COMMAND = r"#\$"
+    RUN_SUBROCESS = r"#\$"
     UNITTEST = "#unittest"
     DIRECTORY_TREE = "#tree"
     SUMMARIZE_PYTHON_SCRIPT = "#summarize"

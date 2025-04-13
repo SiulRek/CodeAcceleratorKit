@@ -14,7 +14,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_meta_macros_with_args,
     line_validation_for_costum_function,
     line_validation_for_run_python_script,
-    line_validation_for_run_shell_command,
+    line_validation_for_run_subprocess,
     line_validation_for_run_pylint,
     line_validation_for_run_unittest,
     line_validation_for_directory_tree,
@@ -186,8 +186,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.RUN_PYTHON_SCRIPT, default_title, script_output)
         return None
 
-    def validate_run_shell_command_macro(self, line):
-        if result := line_validation_for_run_shell_command(line):
+    def validate_run_subprocess_macro(self, line):
+        if result := line_validation_for_run_subprocess(line):
             command, kwargs = result
             kwargs.setdefault("shell", True)
             # Force 'capture_output' and 'text' kwargs to True
