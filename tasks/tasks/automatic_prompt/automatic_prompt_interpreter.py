@@ -7,7 +7,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_end_text,
     line_validation_for_title,
     line_validation_for_normal_text,
-    line_validation_for_paste_files,
+    paste_file,
     line_validation_for_error,
     line_validation_for_fill_text,
     line_validation_for_meta_macros,
@@ -84,8 +84,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return (MACROS.NORMAL_TEXT, default_title, result)
         return None
 
-    def validate_paste_files_macro(self, line):
-        if result := line_validation_for_paste_files(line):
+    def validate_paste_file_macro(self, line):
+        if result := paste_file(line):
             file_names = result
             referenced_files = []
             for file_name in file_names:

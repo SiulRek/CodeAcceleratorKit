@@ -6,16 +6,16 @@ from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
 from tasks.tasks.core.line_validation_utils import retrieve_arguments_in_round_brackets
 from tasks.tasks.core.line_validation_utils import check_type
 
-# PASTE_FILES_PATTERN
-paste_files_tag = TAGS.PASTE_FILES.value
+# PASTE_FILE_PATTERN
+paste_file_tag = TAGS.PASTE_FILE.value
 file_extensions = r"(?:py|txt|log|md|csv|json)"
 file_pattern = rf"\S+\.{file_extensions}"
 files_list_pattern = rf"(?:{file_pattern}\s*(?:,\s*{file_pattern}\s*)*)"
 current_file_pattern = rf"{CURRENT_FILE_TAG}"
-paste_files_pattern = (
-    rf"{paste_files_tag}\s*({files_list_pattern}|{current_file_pattern})"
+paste_file_pattern = (
+    rf"{paste_file_tag}\s*({files_list_pattern}|{current_file_pattern})"
 )
-PASTE_FILES_PATTERN = re.compile(paste_files_pattern)
+PASTE_FILE_PATTERN = re.compile(paste_file_pattern)
 
 # FILL_TEXT_PATTERN
 fill_text_tag = TAGS.FILL_TEXT.value
@@ -121,9 +121,9 @@ def line_validation_for_normal_text(line):
     return None
 
 
-def line_validation_for_paste_files(line):
-    """Validate if the line contains references to files macro."""
-    if match := re.search(PASTE_FILES_PATTERN, line):
+def paste_file(line):
+    """Validate if the line contains references to paste file macro."""
+    if match := re.search(PASTE_FILE_PATTERN, line):
         file_names = match.group(1).split(",")
         file_names = [file_name.strip() for file_name in file_names]
         return file_names

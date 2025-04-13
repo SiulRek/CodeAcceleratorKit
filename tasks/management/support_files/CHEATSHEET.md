@@ -58,7 +58,7 @@ Optional arguments should be provided as Python literals enclosed in round brack
 **Available Reference Types**:
 | Name                    | Description                           | Pattern                                          | Optional Arguments                   |
 |-------------------------|---------------------------------------|--------------------------------------------------|--------------------------------------|
-| paste_files             | Paste file/s                          | #P `<file_path>` or `<file_path_1, file_path_2>` | -                                    |
+| paste_file              | Paste file/s                          | #P `<file_path>` or `<file_path_1, file_path_2>` | -                                    |
 | fill_text               | Add a fill text  ([see more](./costumizations/fill_texts/fill_text_template/template_4.txt)) | #*`<file_name_without_ext>`  | -                                    |
 | meta_macros             | Interprete predefined meta macros ([see more](./costumizations/meta_macros/template_1.py)) | #`<file_name_without_ext>`_meta | -                                    |
 | meta_macros_with_args   | Meta macros with args  ([see more](./costumizations/meta_macros_with_args/template_2.py)) | #`<file_name_without_ext>`_meta+ | `<arg_1, arg_2, ...>`                |
