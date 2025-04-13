@@ -65,56 +65,49 @@ class ExampleClassCar:
 
 # ------------ MACROS TEXT START ------------------------------------
 
-# Begin Text Macro
+#B Start of Prompt
+#B Merge begin text in multiple lines
 
-# End Text Macro
+#E End of prompt
+#E Merge end text in multiple lines
 
-# Chapter title macro
+#T Title of the chapter
 
-# Normal text macro
+#N The Normal text
+#N Merge normal texts in multiple lines
 
-# Paste files macro
+#P reference_1.py, data\reference_2.py
+#P reference_1.py, data\reference_2.py (True)
 
-# Paste files macro with post editing
+#P File
+#P File (True)
 
-# Paste current file
+#L
 
+#*template_4
 
-# Paste current file with post editing
- (True)
+#template_1_meta
 
-# Logged error macro
+#template_2_meta+ (True, 5)
 
-# Fill text macro
+#template_3_func (True, 5)
 
-# Meta macro
+#run data/example_script.py
 
-# Meta macro with arguments
+#pylint data/example_script.py
 
-# Costum unction macro
+#unittest File (2)
 
-# Run script macro
+#tree . (2, False, ['temp', 'log'])
 
-# Run pylint macro
+#summarize data/example_script_2.py (True)
 
-# Run unittest macro
+#summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
 
-# Create directory tree macro
-
-# Summarize python script macro
-
-# Summarize folder macro
-
-# Send Prompt Macro (remove space in '# send')
 # send (False, 100)
 
-# Checksum Macro
-#checksum 23
-
-# Not a macro
-#copy_output_fun
-
 # ------------ MACROS TEXT END ------------------------------------
+
 ```
 
 ## File at tasks/tests/for_tasks/automatic_prompt_test.py
@@ -250,13 +243,14 @@ OK
 
 ## Directory Tree
 /
-├── __pycache__/
-├── local/
-│   ├── demonstration/
+├── _local/
 │   ├── management/
 │   ├── private/
 │   ├── tasks_storage/
 │   └── waste/
+├── local/
+│   ├── private/
+│   └── tasks_storage/
 ├── my_utils/
 │   ├── create_repo_cheatsheet/
 │   └── vscode_shortcuts/
@@ -308,6 +302,24 @@ def main():
     Main function to execute some operations.
     """
 
+## Summarized Python Script example_script_4.py
+def check_age_raising_exception(age):
+
+def check_age_sending_warnings(age):
+
+
+## Summarized Python Script example_script_5.py
+def parse_url(url):
+
+def calculate_square_root(number):
+
+def generate_random_number():
+
+
+## Summarized Python Script example_script_3.py
+def function():
+
+
 ## Summarized Python Script example_script_2.py
 class FileManager:
     """
@@ -341,24 +353,6 @@ def main():
     """
     Main function to execute some operations.
     """
-
-## Summarized Python Script example_script_3.py
-def function():
-
-
-## Summarized Python Script example_script_5.py
-def parse_url(url):
-
-def calculate_square_root(number):
-
-def generate_random_number():
-
-
-## Summarized Python Script example_script_4.py
-def check_age_raising_exception(age):
-
-def check_age_sending_warnings(age):
-
 
 **********
 
