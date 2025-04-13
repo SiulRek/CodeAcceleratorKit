@@ -8,7 +8,7 @@ from tasks.tasks.core.line_validation_utils import check_type
 
 # PASTE_FILES_PATTERN
 paste_files_tag = TAGS.PASTE_FILES.value
-file_extensions = r"(?:py|txt|log|md|csv)"
+file_extensions = r"(?:py|txt|log|md|csv|json)"
 file_pattern = rf"\S+\.{file_extensions}"
 files_list_pattern = rf"(?:{file_pattern}\s*(?:,\s*{file_pattern}\s*)*)"
 current_file_pattern = rf"{CURRENT_FILE_TAG}"
