@@ -6,6 +6,12 @@ from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
 from tasks.tasks.core.line_validation_utils import retrieve_arguments_in_round_brackets
 from tasks.tasks.core.line_validation_utils import check_type
 
+# TITLE_PATTERN
+title_tag = TAGS.TITLE.value
+title_pattern = rf"^{title_tag}\s*([^\n\(\["
+title_pattern += r"\{]+)"
+TITLE_PATTERN = re.compile(title_pattern)
+
 # PASTE_FILE_PATTERN
 paste_file_tag = TAGS.PASTE_FILE.value
 file_extensions = r"(?:py|txt|log|md|csv|json)"
@@ -109,8 +115,13 @@ def line_validation_for_end_text(line):
 
 def line_validation_for_title(line):
     """Validate if the line is a title macro."""
-    if TITLE_TAG in line:
-        return line.replace(TITLE_TAG, "").strip()
+    if match := TITLE_PATTERN.match(line):
+        title = match.group(1).strip()
+        level = 1
+        if arguments := retrieve_arguments_in_round_brackets(line, 2):
+            level = arguments[0]
+            check_type(level, int, "for title level")
+        return title, level
     return None
 
 

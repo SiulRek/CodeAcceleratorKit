@@ -74,7 +74,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_title_macro(self, line):
         if result := line_validation_for_title(line):
-            return (MACROS.TITLE, result, None)
+            title, level= result
+            title = "#" * level + " " + title
+            return (MACROS.TITLE, title, None)
         return None
 
     def validate_normal_text_macro(self, line):

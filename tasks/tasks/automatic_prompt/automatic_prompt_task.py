@@ -8,7 +8,7 @@ Available reference types:
 |--------------------------|-----------------------------------------|------------------------------------------------------|-----------------------------------------------------------------|
 | begin_text               | Place start text                        | #B <begin_text>                                      | -                                                               |
 | end_text                 | Place end text                          | #E <end_text>                                        | -                                                               |
-| title                    | Title of the reference                  | #T <title>                                           | -                                                               |
+| title                    | Title of the reference                  | #T <title>                                           | <level>                                                         |
 | normal_text              | Normal text                             | #N <normal_text>                                     | -                                                               |
 | paste_file               | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>         | -                                                               |
 | error                    | Get logged errors                       | #L                                                   | -                                                               |
@@ -84,7 +84,7 @@ class ChapterTitleManager:
         Args:
             - title (str): The title to be set.
         """
-        self.title = title
+        self.title = title.strip()
 
     def get(self):
         """
@@ -119,10 +119,11 @@ def format_text_from_macros(macros_data):
             title_manager.set(default_title)
         elif macro_type in MACROS:
             if text:
-                if title.startswith("#"):
-                    prompt += f"\n\n{title.strip()}\n{text}"
+                title = "# " + title if not title.startswith("#") else title
+                if prompt:
+                    prompt += f"\n-----\n{title}\n{text}"
                 else:
-                    prompt += f"\n\n## {title.strip()}\n{text}"
+                    prompt = f"{title}\n{text}"
         else:
             msg = f"Unknown macro type: {macro_type}"
             raise ValueError(msg)
