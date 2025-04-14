@@ -132,8 +132,8 @@ Optional arguments should be provided as Python literals enclosed in round brack
 | `run_pylint`            | Run pylint on a file                                                                         | `#pylint <file_path>`                                     | –                                                              |
 | `run_unittest`          | Run unittests on a file                                                                      | `#unittest <file_path>`                                   | `<verbosity>`                                                  |
 | `directory_tree`        | Get directory tree layout                                                                    | `#tree <directory_path>`                                  | `<max_depth, include_files, ignore_list>`                      |
-| `summarize_python_script` | Summarize a Python script                                                                  | `#summarize <script_path>`                                | `<include_definitions_with_docstrings>`                        |
-| `summarize_folder`      | Summarize all Python scripts in a folder                                                     | `#summarize_folder <folder_path>`                         | `<include_definitions_with_docstrings, excluded_dirs, excluded_files>` |
+| `summarize_python_script` | Summarize a Python script                                                                  | `#summarize <script_path>`                                | `<include_definitions_without_docstrings>`                        |
+| `summarize_folder`      | Summarize all Python scripts in a folder                                                     | `#summarize_folder <folder_path>`                         | `<include_definitions_without_docstrings, excluded_dirs, excluded_files>` |
 
 
 **Usage from command line**:  
