@@ -46,7 +46,7 @@ from tasks.tasks.automatic_prompt.automatic_prompt_interpreter import (
 )
 from tasks.tasks.automatic_prompt.chat_manager import ChatManager
 from tasks.tasks.core.task_base import TaskBase
-from tasks.utils.for_automatic_prompt.ask_user_for_macros import ask_user_for_macros
+from tasks.tasks.automatic_prompt.ask_user_for_macros import ask_user_for_macros
 from tasks.utils.shared.backup_handler import BackupHandler
 
 
