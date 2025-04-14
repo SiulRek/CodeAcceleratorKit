@@ -3,20 +3,24 @@ Merge begin text in multiple lines
 
 **********
 
+# Test: Title of the chapter
+----------
 
+## Test: Normal Text
+----------
 
-## Title of the chapter
 The Normal text
 Merge normal texts in multiple lines
 
-## File at tasks/tests/data/reference_1.py
+## Test: Paste File
+----------
+
 ```python
 # This is the reference 1 file.
 # Here is the reference 1 file finished.
 # In Post-editing: REPLACE_ME == I_HAVE_BEEN_REPLACED
 ```
 
-## File at tasks/tests/data/reference_2.py
 ```python
 # This is the reference 2 file.
 #cut_up
@@ -25,21 +29,9 @@ Merge normal texts in multiple lines
 # Here is the reference 2 file finished.
 ```
 
-## File at tasks/tests/data/reference_1.py
-```python
-# This is the reference 1 file.
-# Here is the reference 1 file finished.
-# In Post-editing: I_HAVE_BEEN_REPLACED == I_HAVE_BEEN_REPLACED
+## Test: Paste Current File
+----------
 
-```
-
-## File at tasks/tests/data/reference_2.py
-```python
-# This line the only line that appears in post-editing
-
-```
-
-## File at tasks/tests/for_tasks/automatic_prompt_test.py
 ```python
 """
 TODO:
@@ -71,37 +63,49 @@ class ExampleClassCar:
 #E End of prompt
 #E Merge end text in multiple lines
 
-#T Title of the chapter
+#T Test: Title of the chapter
 
+#T Test: Normal Text (2)
 #N The Normal text
 #N Merge normal texts in multiple lines
 
+#T Test: Paste File (2)
 #P reference_1.py, data\reference_2.py
-#P reference_1.py, data\reference_2.py (True)
 
+#T Test: Paste Current File (2)
 #P File
-#P File (True)
 
+#T Test: Paste Test Errors Log
 #L
 
+#T Test: Fill Text (2)
 #*template_4
 
+#T Test: Meta Macros (2)
 #template_1_meta
 
+#T Test: Meta Macros with Args (2)
 #template_2_meta+ (True, 5)
 
+#T Test: Custom Function (2)
 #template_3_func (True, 5)
 
+#T Test: Run Python Script (2)
 #run data/example_script.py
 
+#T Test: Run Pylint (2)
 #pylint data/example_script.py
 
+#T Test: Run Unittest (2)
 #unittest File (2)
 
+#T Test: Directory Tree (2)
 #tree . (2, False, ['temp', 'log'])
 
+#T Test: Summarize Python Script (2)
 #summarize data/example_script_2.py (True)
 
+#T Test: Summarize Folder (2)
 #summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
 
 # send (False, 100)
@@ -110,26 +114,9 @@ class ExampleClassCar:
 
 ```
 
-## File at tasks/tests/for_tasks/automatic_prompt_test.py
-```python
-#I_HAVE_BEEN_REPLACED
-class ExampleClassCar:
-    def __init__(self, brand, model):
-        self.brand = brand
-        self.model = model
+# Test: Paste Test Errors Log
+----------
 
-    def __eq__(self, other):
-        return self.brand == other.brand and self.model == other.model
-
-    def __str__(self):
-        return f"{self.brand} {self.model}"
-
-    def get_car(self):
-        return self.brand, self.model
-
-```
-
-## Occured Errors
 
 2024-05-11 18:10:41,841 - INFO - -------------- This is a Title -------------------------------
 2024-05-11 18:10:41,841 - ERROR - Test raised exc: test_example_error
@@ -145,7 +132,9 @@ Message: Traceback (most recent call last):
 AssertionError: 1 != 2
 
 
-## Fill Text Template
+## Test: Fill Text
+----------
+
 Write some text here.
 Generally, you can call the fill text:
 #*<file_name_without_ext>
@@ -154,22 +143,20 @@ For instance this module is called with:
 Note the file must be in a subdir of fill_text_dir, the subdir name is going to 
 be the macro title of the text here.
 
-## How to make Meta Macros
+## Test: Meta Macros
+----------
+
+# How to make Meta Macros
+----------
+
 List every macro you want here
-Generally you can call this meta macro with:
-#<name_of_file_without_ext>_macros
-Specifically call this template with:
-#template_1_macros
-And all the macros you defined here are going to be processed
 Lets try it out, I hope you have an example_script.py somewhere
 
-## Python Script Output
 ```shell
 Prime numbers up to 100: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
 
 ```
 
-## Pylint Output
 ```shell
 ************* Module example_script
 tasks/tests/data/example_script.py:12:0: C0304: Final newline missing (missing-final-newline)
@@ -183,25 +170,33 @@ Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
 
 ```
 
-## Normal Text
-Now call me
+List every macro you want here
+Lets try it out, I hope you have an example_script.py somewhere
 
-## This is the Start of the macros_with_args template
-text
+## Test: Meta Macros with Args
+----------
 
-## Chapter dedicated to argument_1
-`argument_1` was set to True
+# This is the Start of the macros_with_args template
+----------
 
-## Chapter dedicated to argument_2
+List every macro you want here
+Lets try it out, I hope you have an example_script.py somewhere
+
+# Chapter dedicated to argument_1
+----------
+
+List every macro you want here
+Lets try it out, I hope you have an example_script.py somewhere
+
+# Chapter dedicated to argument_2
+----------
+
 `argument_2` was set to 5
-Iterations Start:
-Iteration 1
-Iteration 2
-Iteration 3
-Iteration 4
 Iteration 5
 
-## Costum Function Template
+## Test: Custom Function
+----------
+
 This is the Start of the costum_function output text
 text
 This is argument_1: True
@@ -210,13 +205,17 @@ The End of the costum_function output text
 
 
 
-## Python Script Output
+## Test: Run Python Script
+----------
+
 ```shell
 Prime numbers up to 100: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
 
 ```
 
-## Pylint Output
+## Test: Run Pylint
+----------
+
 ```shell
 ************* Module example_script
 tasks/tests/data/example_script.py:12:0: C0304: Final newline missing (missing-final-newline)
@@ -230,7 +229,9 @@ Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
 
 ```
 
-## Unittest Output
+## Test: Run Unittest
+----------
+
 ```shell
 
 ----------------------------------------------------------------------
@@ -241,7 +242,9 @@ OK
 
 ```
 
-## Directory Tree
+## Test: Directory Tree
+----------
+
 /
 ├── _local/
 │   ├── management/
@@ -268,7 +271,9 @@ OK
     ├── lib/
     ├── lib64/
 
-## Summarized Python Script example_script_2.py
+## Test: Summarize Python Script
+----------
+
 class FileManager:
     """
     Class to handle file management operations.
@@ -302,13 +307,14 @@ def main():
     Main function to execute some operations.
     """
 
-## Summarized Python Script example_script_4.py
+## Test: Summarize Folder
+----------
+
 def check_age_raising_exception(age):
 
 def check_age_sending_warnings(age):
 
 
-## Summarized Python Script example_script_5.py
 def parse_url(url):
 
 def calculate_square_root(number):
@@ -316,11 +322,9 @@ def calculate_square_root(number):
 def generate_random_number():
 
 
-## Summarized Python Script example_script_3.py
 def function():
 
 
-## Summarized Python Script example_script_2.py
 class FileManager:
     """
     Class to handle file management operations.
@@ -353,6 +357,7 @@ def main():
     """
     Main function to execute some operations.
     """
+
 
 **********
 
