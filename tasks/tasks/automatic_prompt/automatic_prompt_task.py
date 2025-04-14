@@ -75,11 +75,15 @@ def format_text_from_macros(macros_data):
     """
     prompt = ""
     for macros_data in macros_data:
-        macro_type, _, text = macros_data
+        macro_type = macros_data["type"]
+        text = macros_data["text"] if "text" in macros_data else None
 
         if macro_type in MACROS:
             if text:
                 prompt += f"\n{text}\n" if prompt else f"{text}\n"
+            elif not macro_type in [MACROS.SEND_PROMPT]:
+                msg = f"Macro {macro_type} is missing text."
+                raise ValueError(msg)
         else:
             msg = f"Unknown macro type: {macro_type}"
             raise ValueError(msg)

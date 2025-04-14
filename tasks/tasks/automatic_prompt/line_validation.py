@@ -118,7 +118,7 @@ def line_validation_for_title(line):
     if match := TITLE_PATTERN.match(line):
         title = match.group(1).strip()
         level = 1
-        if arguments := retrieve_arguments_in_round_brackets(line, 2):
+        if arguments := retrieve_arguments_in_round_brackets(line, 1):
             level = arguments[0]
             check_type(level, int, "for title level")
         return title, level

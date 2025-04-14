@@ -11,7 +11,7 @@ def find_file_in_1st_level_subdir(file_name, directory, prettify=False):
         - prettify (bool): If True, prettify the subdirectory name to use as a title.
 
     Returns:
-        - tuple: A tuple containing the file path and the subdirectory name.
+        - str: The full path of the found file.
     """
     if not os.path.exists(directory):
         msg = f"Directory {directory} does not exist."
@@ -24,12 +24,8 @@ def find_file_in_1st_level_subdir(file_name, directory, prettify=False):
         files = [os.path.splitext(file) for file in files]
         for file in files:
             if file[0] == file_name:
-                subdir_name = os.path.basename(root)
-                if prettify:
-                    title_parts = subdir_name.split("_")
-                    subdir_name = " ".join([word.capitalize() for word in title_parts])
                 file_path = os.path.join(root, f"{file[0]}{file[1]}")
-                return file_path, subdir_name
+                return file_path
     
     msg = f"File with name {file_name} not found."
     raise FileNotFoundError(msg)
