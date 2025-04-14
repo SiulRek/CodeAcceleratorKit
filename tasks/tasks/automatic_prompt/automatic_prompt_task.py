@@ -46,49 +46,10 @@ from tasks.tasks.automatic_prompt.automatic_prompt_interpreter import (
 )
 from tasks.tasks.automatic_prompt.chat_manager import ChatManager
 from tasks.tasks.core.task_base import TaskBase
-from tasks.utils.for_automatic_prompt.add_text_tags import add_text_tags
 from tasks.utils.for_automatic_prompt.ask_user_for_macros import ask_user_for_macros
 from tasks.utils.shared.backup_handler import BackupHandler
 
 
-def write_to_file(file_path, content):
-    """
-    Writes specified content to the provided file.
-
-    Args:
-        - file_path (str): The path to the file to write to.
-        - content (str): The content to be written in the file.
-    """
-    with open(file_path, "w", encoding="utf-8") as file:
-        file.write(content)
-
-
-def format_text_from_macros(macros_data):
-    """
-    Formats a prompt string from macros_data and updated content.
-
-    Args:
-        - macros_data (list): A list of tuples detailing macros (type, title, data).
-
-    Returns:
-        - str: Formatted prompt based on file macros.
-    """
-    prompt = ""
-    for macros_data in macros_data:
-        macro_type = macros_data["type"]
-        text = macros_data["text"] if "text" in macros_data else None
-
-        if macro_type in MACROS:
-            if text:
-                prompt += f"\n{text}\n" if prompt else f"{text}\n"
-            elif not macro_type in [MACROS.SEND_PROMPT]:
-                msg = f"Macro {macro_type} is missing text."
-                raise ValueError(msg)
-        else:
-            msg = f"Unknown macro type: {macro_type}"
-            raise ValueError(msg)
-
-    return prompt
 
 
 class AutomaticPromptTask(TaskBase):
@@ -121,6 +82,49 @@ class AutomaticPromptTask(TaskBase):
         )
         return macros_text
 
+    def _format_text_from_macros(self, macros_data):
+        """
+        Formats a prompt string from macros_data and updated content.
+
+        Args:
+            - macros_data (list): A list of tuples detailing macros (type, title, data).
+
+        Returns:
+            - str: Formatted prompt based on file macros.
+        """
+        prompt = ""
+        for macros_data in macros_data:
+            macro_type = macros_data["type"]
+            text = macros_data["text"] if "text" in macros_data else None
+
+            if macro_type in MACROS:
+                if text:
+                    prompt += f"\n{text}\n" if prompt else f"{text}\n"
+                elif not macro_type in [MACROS.SEND_PROMPT]:
+                    msg = f"Macro {macro_type} is missing text."
+                    raise ValueError(msg)
+            else:
+                msg = f"Unknown macro type: {macro_type}"
+                raise ValueError(msg)
+
+        return prompt
+
+    def _extract_send_prompt_parameters(self, macros_data):
+        macro_types = [
+            macro["type"] for macro in macros_data]
+        send_prompt_count = macro_types.count(MACROS.SEND_PROMPT)
+        send_prompt_kwargs = None
+        if send_prompt_count > 1:
+            raise ValueError(
+                "Only one SEND_PROMPT macro is allowed in the macros text."
+            )
+        elif send_prompt_count == 1:
+            send_prompt_macro = macros_data.pop(macro_types.index(MACROS.SEND_PROMPT))
+            send_prompt_kwargs = send_prompt_macro["kwargs"]
+            
+        reminder_prompt = self._format_text_from_macros(macros_data)
+        return send_prompt_kwargs, reminder_prompt
+    
     def execute(self):
         """
         Executes the AutomaticPrompt task to format the prompt and interact
@@ -134,19 +138,15 @@ class AutomaticPromptTask(TaskBase):
         interpreter.current_file = (
             self.current_file
         )  # Allows for paste current file macro
-        macros_data, updated_text = interpreter.extract_macros_from_text(
+        macros_data, reminder_text = interpreter.extract_macros_from_text(
             self.macros_text, post_process=True
         )
-        if updated_text != "":
+        if reminder_text != "":
             raise ValueError(
-                "Not able to process the following macros:\n" + updated_text
+                "Not able to process the following macros:\n" + reminder_text
             )
 
-        reminder_macros_data, begin_text, end_text, send_prompt_kwargs = macros_data
-
-        prompt = format_text_from_macros(reminder_macros_data)
-
-        prompt = add_text_tags(begin_text, end_text, prompt)
+        send_prompt_kwargs, prompt = self._extract_send_prompt_parameters(macros_data)
 
         cm = ChatManager(
             self.current_file,

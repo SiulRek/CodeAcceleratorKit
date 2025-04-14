@@ -1,6 +1,5 @@
 Start of Prompt
 Merge begin text in multiple lines
-
 **********
 
 # Test: Title of the chapter
@@ -310,27 +309,10 @@ def main():
 ## Test: Summarize Folder
 ----------
 
-def check_age_raising_exception(age):
-
-def check_age_sending_warnings(age):
-
-
-def parse_url(url):
-
-def calculate_square_root(number):
-
-def generate_random_number():
-
-
-def function():
-
-
 class FileManager:
     """
     Class to handle file management operations.
     """
-    def __init__(self, directory):
-
     def create_file(self, filename, content):
         """
         Create a file with the given name and content in the directory.
@@ -343,8 +325,6 @@ class Calculator:
     """
     Simple calculator class to perform basic arithmetic operations.
     """
-    def __init__(self):
-
     def add(a, b):
         """
         Return the sum of two numbers.
@@ -358,8 +338,6 @@ def main():
     Main function to execute some operations.
     """
 
-
 **********
-
 End of prompt
 Merge end text in multiple lines

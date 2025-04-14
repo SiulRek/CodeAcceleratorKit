@@ -339,9 +339,13 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_send_prompt_macro(self, line):
         if results := line_validation_for_send_prompt(line):
+            kwargs = {
+                "modify_inplace": results[0],
+                "max_tokens": results[1]
+            }
             macro_data = {
                 "type": MACROS.SEND_PROMPT,
-                "args": results
+                "kwargs": kwargs
             }
             return macro_data
         return None
@@ -380,31 +384,34 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 macros_data[start] = macro_data
 
         # Merge begin_text and end_text in the referenced contents
-        begin_text = []
-        end_text = []
-        updated_macros_data_1 = []
+        begin_text_list = []
+        end_text_list = []
+        updated_macros_data = []
         for macro_data in macros_data:
             if macro_data["type"] == MACROS.BEGIN_TEXT:
-                begin_text.append(macro_data["text"])
+                begin_text_list.append(macro_data["text"])
             elif macro_data["type"] == MACROS.END_TEXT:
-                end_text.append(macro_data["text"])
+                end_text_list.append(macro_data["text"])
             else:
-                updated_macros_data_1.append(macro_data)
-        begin_text = "\n".join(begin_text) if begin_text else ""
-        end_text = "\n".join(end_text) if end_text else ""
+                updated_macros_data.append(macro_data)
 
-        # Manage the send prompt macro
-        updated_macros_data_2 = []
-        send_prompt_kwargs = {}
-        for macro_data in updated_macros_data_1:
-            if macro_data["type"] == MACROS.SEND_PROMPT:
-                # if len(send_prompt) > 0: msg = "Multiple send_prompt macros
-                # found in the prompt." raise ValueError(msg) Last send_prompt
-                # macro will be used
-                modify_inplace, max_tokens = macro_data["args"]
-                send_prompt_kwargs["modify_inplace"] = modify_inplace
-                send_prompt_kwargs["max_tokens"] = max_tokens
-            else:
-                updated_macros_data_2.append(macro_data)
-        send_prompt_kwargs = send_prompt_kwargs or None
-        return (updated_macros_data_2, begin_text, end_text, send_prompt_kwargs)
+        sep = "*" * 10
+        begin_text = ""
+        if begin_text_list:
+            begin_text = "\n".join(begin_text_list)
+            begin_text += "\n" + sep
+            macro_data = {
+                "type": MACROS.BEGIN_TEXT,
+                "text": begin_text
+            }
+            updated_macros_data.insert(0, macro_data)
+        end_text = ""
+        if end_text_list:
+            end_text = sep + "\n" + "\n".join(end_text_list)
+            macro_data = {
+                "type": MACROS.END_TEXT,
+                "text": end_text
+            }
+            updated_macros_data.append(macro_data)
+            
+        return updated_macros_data
