@@ -63,40 +63,6 @@ def write_to_file(file_path, content):
         file.write(content)
 
 
-class ChapterTitleManager:
-    """
-    Manages the title of the chapter for prompt formatting.
-
-    Attributes:
-        - title (str): The current title of the chapter.
-    """
-
-    def __init__(self):
-        """
-        Initializes ChapterTitleManager with no title.
-        """
-        self.title = None
-
-    def set(self, title):
-        """
-        Sets the chapter title.
-
-        Args:
-            - title (str): The title to be set.
-        """
-        self.title = title.strip()
-
-    def get(self):
-        """
-        Gets the current chapter title and resets it to None.
-
-        Returns:
-            - str: The current title.
-        """
-        title, self.title = self.title, None
-        return title
-
-
 def format_text_from_macros(macros_data):
     """
     Formats a prompt string from macros_data and updated content.
@@ -108,22 +74,12 @@ def format_text_from_macros(macros_data):
         - str: Formatted prompt based on file macros.
     """
     prompt = ""
-    title_manager = ChapterTitleManager()
     for macros_data in macros_data:
-        active_title = title_manager.get()
-        macro_type, default_title, text = macros_data
-        title = active_title if active_title else default_title
+        macro_type, _, text = macros_data
 
-        if macro_type == MACROS.TITLE:
-            # Preserves user-specified default_title for subsequent macros.
-            title_manager.set(default_title)
-        elif macro_type in MACROS:
+        if macro_type in MACROS:
             if text:
-                title = "# " + title if not title.startswith("#") else title
-                if prompt:
-                    prompt += f"\n-----\n{title}\n{text}"
-                else:
-                    prompt = f"{title}\n{text}"
+                prompt += f"\n{text}\n" if prompt else f"{text}\n"
         else:
             msg = f"Unknown macro type: {macro_type}"
             raise ValueError(msg)
