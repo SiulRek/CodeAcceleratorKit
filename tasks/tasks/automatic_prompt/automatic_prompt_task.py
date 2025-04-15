@@ -4,27 +4,26 @@ retrieved from the macro field or a string passed as an argument. The prompt,
 typically a query, is then finalized and saved in a file.
 
 Available reference types:
-| Name                     | Description                             | Pattern                                              | Arguments                                                       |
-|--------------------------|-----------------------------------------|------------------------------------------------------|-----------------------------------------------------------------|
-| begin_text               | Place start text                        | #B <begin_text>                                      | -                                                               |
-| end_text                 | Place end text                          | #E <end_text>                                        | -                                                               |
-| title                    | Title of the reference                  | #T <title>                                           | <level: int>                                                    |
-| normal_text              | Normal text                             | #N <normal_text>                                     | -                                                               |
-| paste_file               | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>         | <line_ranges>                                                   |
-| error                    | Get logged errors                       | #L                                                   | -                                                               |
-| fill_text                | Add a fill text                         | #<file_name_without_ext>                             | -                                                               |
-| meta_macros              | Interpret predefined meta macros        | #<file_name_without_ext>_meta                        | -                                                               |
-| meta_macros_with_args    | Meta macros with args                   | #<file_name_without_ext>_meta+                       | <arg_1, arg_2, ...>                                             |
-| costum_function          | Paste the output of custom function     | #<file_name_without_ext>_func+                       | <arg_1, arg_2, ...>                                             |
-| run_python_script        | Run a Python script                     | #run <script_path>                                   | -                                                               |
-| run_command              | Run Command                             | #$ <command>                                         | <subprocess kwargs>                                             |
-| run_pylint               | Run pylint on a file                    | #run_pylint <file_path>                              | -                                                               |
-| run_unittest             | Run unittest on a file                  | #run_unittest <file_path>                            | <verbosity>                                                     |
-| directory_tree           | Get directory tree                      | #tree <directory_path>                               | <max_depth, include_files, ignore_list>                         |
-| summarize_python_script  | Summarize a Python script               | #summarize <script_path>                             | <include_definitions_with_docstrings>                           |
-| summarize_folder         | Summarize Python scripts in a folder    | #summarize_folder <folder_path>                      | <include_definitions_with_docstrings, excluded_dirs, excluded_files> |
-| send_prompt              | Send a prompt from a temporary file     | #send                                                | <create_python_script, max_tokens>                              |
-
+| Name                     | Description                             | Pattern                                              | Optional Arguments                                                                            |
+|--------------------------|-----------------------------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| begin_text               | Place start text                        | #B <begin_text>                                      | –                                                                                             |
+| end_text                 | Place end text                          | #E <end_text>                                        | –                                                                                             |
+| title                    | Title of the reference                  | #T <title>                                           | <level: int>                                                                                  |
+| normal_text              | Normal text                             | #N <normal_text>                                     | –                                                                                             |
+| paste_file               | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>         | <line_ranges: List[List[int, int]]>                                                           |
+| error                    | Get logged errors                       | #L                                                   | –                                                                                             |
+| fill_text                | Add a fill text                         | #<file_name_without_ext>                             | –                                                                                             |
+| meta_macros              | Interpret predefined meta macros        | #<file_name_without_ext>_meta                        | –                                                                                             |
+| meta_macros_with_args    | Meta macros with args                   | #<file_name_without_ext>_meta+                       | <arg_1, arg_2, ...>                                                                           |
+| costum_function          | Paste the output of custom function     | #<file_name_without_ext>_func+                       | <arg_1, arg_2, ...>                                                                           |
+| run_python_script        | Run a Python script                     | #run <script_path>                                   | –                                                                                             |
+| run_command              | Run Command                             | #$ <command>                                         | <subprocess kwargs: Dict>                                                                     |
+| run_pylint               | Run pylint on a file                    | #run_pylint <file_path>                              | –                                                                                             |
+| run_unittest             | Run unittest on a file                  | #run_unittest <file_path>                            | <verbosity: int>                                                                              |
+| directory_tree           | Get directory tree                      | #tree <directory_path>                               | <max_depth: int, include_files: List[str], ignore_list: List[str]>                            |
+| summarize_python_script  | Summarize a Python script               | #summarize <script_path>                             | <include_definitions_with_docstring: bool>                                                    |
+| summarize_folder         | Summarize Python scripts in a folder    | #summarize_folder <folder_path>                      | <include_definitions_with_docstrings: bool, excluded_dirs: List[str], excluded_files: List[str]> |
+| send_prompt              | Send a prompt from a temporary file     | #send                                                | <create_python_script: bool, max_tokens: int>                                                 |
 
 Usage Example: macros_text = ( "#T This is the Start of the prompt\n", "#C Some
 text\n", "#T New Chapter\n", "#run example_script.py\n", "#E Now that we paste
