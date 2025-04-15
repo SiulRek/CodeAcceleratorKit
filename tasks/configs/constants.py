@@ -23,7 +23,7 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     FILL_TEXT = "fill_text"
     COSTUM_FUNCTION = "costum_function"
     RUN_PYTHON_SCRIPT = "run_python_script"
-    RUN_SHELL_COMMAND = "run_shell_command"
+    RUN_SUBPROCESS = "run_subprocess"
     RUN_PYLINT = "run_pylint"
     RUN_UNITTEST = "run_unittest"
     DIRECTORY_TREE = "directory_tree"

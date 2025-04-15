@@ -91,9 +91,12 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def _extract_line_ranges(self, text, line_ranges):
         text_chunks = []
         lines = text.splitlines(True)
+        length = len(lines)
         for start, stop in line_ranges:
-            start += 1
-            stop += 1
+            start -= 1
+            stop -= 1
+            assert start >= 0, "Line number must be greater than 0"
+            assert stop < length, "Line number must be less than the number of lines"
             if start == stop:
                 text_chunks.append(lines[start])
             else:

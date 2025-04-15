@@ -127,7 +127,9 @@ def line_validation_for_title(line):
 def line_validation_for_normal_text(line):
     """Validate if the line is a normal text macro."""
     if NORMAL_TEXT_TAG in line:
-        return line.replace(NORMAL_TEXT_TAG, "").strip()
+        return line.replace(NORMAL_TEXT_TAG, "").lstrip()
+    # elif not line.startswith("#"):
+    #     return line
     return None
 
 
