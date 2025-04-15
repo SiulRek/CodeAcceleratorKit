@@ -95,7 +95,6 @@ BEGIN_TAG = TAGS.BEGIN.value
 END_TAG = TAGS.END.value
 TITLE_TAG = TAGS.TITLE.value
 NORMAL_TEXT_TAG = TAGS.NORMAL_TEXT.value
-ERROR_TAG = TAGS.ERROR.value
 SEND_PROMPT_TAG = TAGS.SEND_PROMPT.value
 
 
@@ -149,13 +148,6 @@ def line_validation_for_paste_file(line):
                 ), f"for paste file line ranges, expected a list of two elements, but got {elem}"
                 updated_line_ranges.append(tuple(elem))
         return file_names, updated_line_ranges
-    return None
-
-
-def line_validation_for_error(line):
-    """Validate if the line is an error macro."""
-    if ERROR_TAG in line:
-        return True
     return None
 
 
