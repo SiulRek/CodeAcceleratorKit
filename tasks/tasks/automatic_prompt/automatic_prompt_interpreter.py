@@ -7,7 +7,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_end_text,
     line_validation_for_title,
     line_validation_for_normal_text,
-    paste_file,
+    line_validation_for_paste_file,
     line_validation_for_error,
     line_validation_for_fill_text,
     line_validation_for_meta_macros,
@@ -63,61 +63,61 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):
             result = format_identifiers_as_code(result)
-            macro_data = {
-                "type": MACROS.BEGIN_TEXT,
-                "text": result
-            }
+            macro_data = {"type": MACROS.BEGIN_TEXT, "text": result}
             return macro_data
         return None
 
     def validate_end_text_macro(self, line):
         if result := line_validation_for_end_text(line):
             result = format_identifiers_as_code(result)
-            macro_data = {
-                "type": MACROS.END_TEXT,
-                "text": result
-            }
+            macro_data = {"type": MACROS.END_TEXT, "text": result}
             return macro_data
         return None
 
     def validate_title_macro(self, line):
         if result := line_validation_for_title(line):
-            title, level= result
+            title, level = result
             title = "#" * level + " " + title
-            title += "\n" + "-"*10
-            macro_data = {
-                "type": MACROS.TITLE,
-                "text": title
-            }
+            title += "\n" + "-" * 10
+            macro_data = {"type": MACROS.TITLE, "text": title}
             return macro_data
         return None
 
     def validate_normal_text_macro(self, line):
         if result := line_validation_for_normal_text(line):
             result = format_identifiers_as_code(result)
-            macro_data = {
-                "type": MACROS.NORMAL_TEXT,
-                "text": result
-            }
+            macro_data = {"type": MACROS.NORMAL_TEXT, "text": result}
             return macro_data
         return None
 
+    def _extract_line_ranges(self, text, line_ranges):
+        text_chunks = []
+        lines = text.splitlines(True)
+        for start, stop in line_ranges:
+            start += 1
+            stop += 1
+            if start == stop:
+                text_chunks.append(lines[start])
+            else:
+                text_chunks.append("".join(lines[start:stop]))
+
+        return "\n".join(text_chunks).strip()
+
     def validate_paste_file_macro(self, line):
-        if result := paste_file(line):
-            file_names = result
+        if result := line_validation_for_paste_file(line):
+            file_names, line_ranges = result
             macro_data_list = []
             for file_name in file_names:
                 file_path = find_file_sloppy(
                     file_name, self.profile.root, self.current_file
                 )
                 file_content = self._read_file(file_path, "paste files reference")
+                if line_ranges:
+                    file_content = self._extract_line_ranges(file_content, line_ranges)
                 file_content = render_to_markdown(
                     file_content, extension=file_path.split(".")[-1]
                 )
-                macro_data = {
-                    "type": MACROS.PASTE_FILE,
-                    "text": file_content
-                }
+                macro_data = {"type": MACROS.PASTE_FILE, "text": file_content}
                 macro_data_list.append(macro_data)
             return macro_data_list
         return None
@@ -126,10 +126,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         # Tailored for specific test_results.log files
         if line_validation_for_error(line):
             error_text = get_error_text(self.profile.root, self.current_file)
-            macro_data = {
-                "type": MACROS.LOGGED_ERROR,
-                "text": error_text
-            }
+            macro_data = {"type": MACROS.LOGGED_ERROR, "text": error_text}
             return macro_data
         return None
 
@@ -139,10 +136,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 result, self.profile.fill_text_dir, prettify=True
             )
             fill_text = self._read_file(file_path, "fill text reference")
-            macro_data = {
-                "type": MACROS.FILL_TEXT,
-                "text": fill_text
-            }
+            macro_data = {"type": MACROS.FILL_TEXT, "text": fill_text}
             return macro_data
         return None
 
@@ -195,10 +189,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 env_python_path=self.profile.runner_python_env,
                 cwd=self.profile.cwd,
             )
-            macro_data = {
-                "type": MACROS.COSTUM_FUNCTION,
-                "text": output
-            }
+            macro_data = {"type": MACROS.COSTUM_FUNCTION, "text": output}
             return macro_data
         return None
 
@@ -212,10 +203,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 cwd=self.profile.cwd,
             )
             script_output = render_to_markdown(script_output, format="shell")
-            macro_data = {
-                "type": MACROS.RUN_PYTHON_SCRIPT,
-                "text": script_output
-            }
+            macro_data = {"type": MACROS.RUN_PYTHON_SCRIPT, "text": script_output}
             return macro_data
         return None
 
@@ -229,23 +217,17 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             result = subprocess.run(command, **kwargs)
             output = result.stderr if result.returncode != 0 else result.stdout
             text = "$ " + command + "\n" + output
-            macro_data = {
-                "type": MACROS.RUN_SUBPROCESS,
-                "text": text
-            }
+            macro_data = {"type": MACROS.RUN_SUBPROCESS, "text": text}
             return macro_data
         return None
-    
+
     def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
             script_path = find_file_sloppy(result, self.profile.root, self.current_file)
             environment_path = self.profile.runner_python_env
             pylint_output = execute_pylint(script_path, environment_path)
             pylint_output = render_to_markdown(pylint_output, format="shell")
-            macro_data = {
-                "type": MACROS.RUN_PYLINT,
-                "text": pylint_output
-            }
+            macro_data = {"type": MACROS.RUN_PYLINT, "text": pylint_output}
             return macro_data
         return None
 
@@ -262,10 +244,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 cwd=cwd,
             )
             unittest_output = render_to_markdown(unittest_output, format="shell")
-            macro_data = {
-                "type": MACROS.RUN_UNITTEST,
-                "text": unittest_output
-            }
+            macro_data = {"type": MACROS.RUN_UNITTEST, "text": unittest_output}
             return macro_data
         return None
 
@@ -276,10 +255,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             directory_tree = generate_directory_tree(
                 dir_, max_depth, include_files, ignore_list
             )
-            macro_data = {
-                "type": MACROS.DIRECTORY_TREE,
-                "text": directory_tree
-            }
+            macro_data = {"type": MACROS.DIRECTORY_TREE, "text": directory_tree}
             return macro_data
         return None
 
@@ -292,7 +268,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             )
             macro_data = {
                 "type": MACROS.SUMMARIZE_PYTHON_SCRIPT,
-                "text": script_summary
+                "text": script_summary,
             }
             return macro_data
         return None
@@ -339,14 +315,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_send_prompt_macro(self, line):
         if results := line_validation_for_send_prompt(line):
-            kwargs = {
-                "modify_inplace": results[0],
-                "max_tokens": results[1]
-            }
-            macro_data = {
-                "type": MACROS.SEND_PROMPT,
-                "kwargs": kwargs
-            }
+            kwargs = {"modify_inplace": results[0], "max_tokens": results[1]}
+            macro_data = {"type": MACROS.SEND_PROMPT, "kwargs": kwargs}
             return macro_data
         return None
 
@@ -371,9 +341,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 index = start + 1
                 if index >= len(macros_data):
                     break
-                while (
-                    macros_data[index]["type"] == MACROS.NORMAL_TEXT
-                ):
+                while macros_data[index]["type"] == MACROS.NORMAL_TEXT:
                     merged_text = f"{macro_data['text'].strip()}\n"
                     merged_text += f"{macros_data[index]['text'].strip()}"
                     macros_data.pop(index)
@@ -400,18 +368,12 @@ class AutomaticPromptInterpreter(MacroInterpreter):
         if begin_text_list:
             begin_text = "\n".join(begin_text_list)
             begin_text += "\n" + sep
-            macro_data = {
-                "type": MACROS.BEGIN_TEXT,
-                "text": begin_text
-            }
+            macro_data = {"type": MACROS.BEGIN_TEXT, "text": begin_text}
             updated_macros_data.insert(0, macro_data)
         end_text = ""
         if end_text_list:
             end_text = sep + "\n" + "\n".join(end_text_list)
-            macro_data = {
-                "type": MACROS.END_TEXT,
-                "text": end_text
-            }
+            macro_data = {"type": MACROS.END_TEXT, "text": end_text}
             updated_macros_data.append(macro_data)
-            
+
         return updated_macros_data

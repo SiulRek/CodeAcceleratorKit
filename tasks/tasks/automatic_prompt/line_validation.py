@@ -132,12 +132,23 @@ def line_validation_for_normal_text(line):
     return None
 
 
-def paste_file(line):
+def line_validation_for_paste_file(line):
     """Validate if the line contains references to paste file macro."""
     if match := re.search(PASTE_FILE_PATTERN, line):
         file_names = match.group(1).split(",")
         file_names = [file_name.strip() for file_name in file_names]
-        return file_names
+        line_ranges = []
+        updated_line_ranges = []
+        if arguments := retrieve_arguments_in_round_brackets(line, 1):
+            line_ranges = arguments[0]
+            check_type(line_ranges, list, "for paste file line ranges")
+            for elem in line_ranges:
+                check_type(elem, list, "for paste file line ranges")
+                assert (
+                    len(elem) == 2
+                ), f"for paste file line ranges, expected a list of two elements, but got {elem}"
+                updated_line_ranges.append(tuple(elem))
+        return file_names, updated_line_ranges
     return None
 
 

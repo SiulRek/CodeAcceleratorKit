@@ -8,9 +8,9 @@ Available reference types:
 |--------------------------|-----------------------------------------|------------------------------------------------------|-----------------------------------------------------------------|
 | begin_text               | Place start text                        | #B <begin_text>                                      | -                                                               |
 | end_text                 | Place end text                          | #E <end_text>                                        | -                                                               |
-| title                    | Title of the reference                  | #T <title>                                           | <level>                                                         |
+| title                    | Title of the reference                  | #T <title>                                           | <level: int>                                                    |
 | normal_text              | Normal text                             | #N <normal_text>                                     | -                                                               |
-| paste_file               | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>         | -                                                               |
+| paste_file               | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>         | <line_ranges>                                                   |
 | error                    | Get logged errors                       | #L                                                   | -                                                               |
 | fill_text                | Add a fill text                         | #<file_name_without_ext>                             | -                                                               |
 | meta_macros              | Interpret predefined meta macros        | #<file_name_without_ext>_meta                        | -                                                               |
@@ -41,15 +41,13 @@ TODO when adding new macros:
 import os
 
 from tasks.configs.constants import AUTOMATIC_PROMPT_MACROS as MACROS
+from tasks.tasks.automatic_prompt.ask_user_for_macros import ask_user_for_macros
 from tasks.tasks.automatic_prompt.automatic_prompt_interpreter import (
     AutomaticPromptInterpreter,
 )
 from tasks.tasks.automatic_prompt.chat_manager import ChatManager
 from tasks.tasks.core.task_base import TaskBase
-from tasks.tasks.automatic_prompt.ask_user_for_macros import ask_user_for_macros
 from tasks.utils.shared.backup_handler import BackupHandler
-
-
 
 
 class AutomaticPromptTask(TaskBase):
@@ -110,8 +108,7 @@ class AutomaticPromptTask(TaskBase):
         return prompt
 
     def _extract_send_prompt_parameters(self, macros_data):
-        macro_types = [
-            macro["type"] for macro in macros_data]
+        macro_types = [macro["type"] for macro in macros_data]
         send_prompt_count = macro_types.count(MACROS.SEND_PROMPT)
         send_prompt_kwargs = None
         if send_prompt_count > 1:
@@ -121,10 +118,10 @@ class AutomaticPromptTask(TaskBase):
         elif send_prompt_count == 1:
             send_prompt_macro = macros_data.pop(macro_types.index(MACROS.SEND_PROMPT))
             send_prompt_kwargs = send_prompt_macro["kwargs"]
-            
+
         reminder_prompt = self._format_text_from_macros(macros_data)
         return send_prompt_kwargs, reminder_prompt
-    
+
     def execute(self):
         """
         Executes the AutomaticPrompt task to format the prompt and interact
@@ -143,7 +140,8 @@ class AutomaticPromptTask(TaskBase):
         )
         if reminder_text != "":
             raise ValueError(
-                "Not able to process the following macros:\n" + reminder_text
+                "Not able to process the following macros:\n"
+                f"{reminder_text}"
             )
 
         send_prompt_kwargs, prompt = self._extract_send_prompt_parameters(macros_data)
