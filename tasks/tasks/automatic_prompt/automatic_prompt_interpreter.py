@@ -8,7 +8,6 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_title,
     line_validation_for_normal_text,
     line_validation_for_paste_file,
-    line_validation_for_error,
     line_validation_for_fill_text,
     line_validation_for_meta_macros,
     line_validation_for_meta_macros_with_args,
@@ -120,14 +119,6 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 macro_data = {"type": MACROS.PASTE_FILE, "text": file_content}
                 macro_data_list.append(macro_data)
             return macro_data_list
-        return None
-
-    def validate_error_macro(self, line):
-        # Tailored for specific test_results.log files
-        if line_validation_for_error(line):
-            error_text = get_error_text(self.profile.root, self.current_file)
-            macro_data = {"type": MACROS.LOGGED_ERROR, "text": error_text}
-            return macro_data
         return None
 
     def validate_fill_text_macro(self, line):

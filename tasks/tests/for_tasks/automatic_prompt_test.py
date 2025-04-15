@@ -43,9 +43,6 @@ class ExampleClassCar:
 #T Test: Paste File's Lines (2)
 #P File ([[[23, 80] 
 
-#T Test: Paste Test Errors Log
-#L
-
 #T Test: Fill Text (2)
 #*template_4
 
