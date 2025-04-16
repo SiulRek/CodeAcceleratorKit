@@ -24,11 +24,23 @@ Available reference types:
 | summarize_folder         | Summarize Python scripts in a folder    | #summarize_folder <folder_path>                      | <include_definitions_with_docstrings: bool, excluded_dirs: List[str], excluded_files: List[str]> |
 | send_prompt              | Send a prompt from a temporary file     | #send                                                | <create_python_script: bool, max_tokens: int>                                                 |
 
-Usage Example: macros_text = ( "#T This is the Start of the prompt\n", "#C Some
-text\n", "#T New Chapter\n", "#run example_script.py\n", "#E Now that we paste
-the output of example_script.py we come to the end of prompt\n", "#send (True)"
-) AutomaticPromptTask(default_root, default_file_path,
-"".join(macros_text)).main()
+Usage Example: 
+macros_text = (
+    "#T This is the Start of the prompt\n",
+    "#C Some text\n",
+    "#T New Chapter\n",
+    "#run example_script.py\n",
+    "#E Now that we paste the output of example_script.py we come to the end of prompt\n",
+    "#send (True)"
+)
+
+# Create and run the automatic prompt task
+AutomaticPromptTask(
+    default_root,
+    default_file_path,
+    "".join(macros_text)
+).main()
+
 
 TODO when adding new macros:
 1. Make line validation function in line_validation.py.
