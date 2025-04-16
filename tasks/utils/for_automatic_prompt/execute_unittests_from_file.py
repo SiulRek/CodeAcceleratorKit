@@ -50,9 +50,9 @@ def execute_unittests_from_file(file_path, cwd, verbosity=1):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 1:
-        path = f"path/to/file"
-        cwd = f"path/to/cwd"
+    if len(sys.argv) < 2:
+        path = f"tasks/tests/for_tasks/automatic_prompt_test.py"
+        cwd = f"."
         verbosity = 1
     else:
         # Assuming the arguments match
@@ -61,3 +61,4 @@ if __name__ == "__main__":
         verbosity = int(sys.argv[3]) if len(sys.argv) > 2 else 1
     test_results = execute_unittests_from_file(path, cwd, verbosity)
     print(test_results)
+

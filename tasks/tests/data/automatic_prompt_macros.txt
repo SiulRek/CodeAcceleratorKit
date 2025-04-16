@@ -38,7 +38,7 @@
 #pylint data/example_script.py
 
 #T Test: Run Unittest (2)
-#unittest File (2)
+#unittest example_script_6.py (2)
 
 #T Test: Directory Tree (2)
 #tree . (2, False, ['temp', 'log'])
