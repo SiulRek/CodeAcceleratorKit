@@ -72,10 +72,13 @@ class AutomaticPromptTask(TaskBase):
         self.macros_text = "\n".join(line for line in lines if line.strip())
 
     def _get_user_specified_macros(self):
-        macros_text = ask_user_for_macros()
+        macros_file = os.path.join(self.profile.log_dir, "last_macros.txt")
+        macros_text = ask_user_for_macros(macros_file)
         macros_text = "\n".join(
             line for line in macros_text.split("\n") if line.strip()
         )
+        if macros_text.strip() == "":
+            exit()
         return macros_text
 
     def _format_text_from_macros(self, macros_data):

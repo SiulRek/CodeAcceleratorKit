@@ -1,8 +1,9 @@
 import os
 
 import pyperclip
-from tasks.utils.for_automatic_prompt.send_prompt import send_prompt
+
 from tasks.utils.for_automatic_prompt.extract_python_code import extract_python_code
+from tasks.utils.for_automatic_prompt.send_prompt import send_prompt
 
 
 class ChatManager:
@@ -70,7 +71,6 @@ class ChatManager:
             pyperclip.copy(self.prompt)
             print("Prompt copied to clipboard.")
 
-
     def send_prompt(self, **kwargs):
         """
         Sends the prompt to the chat manager.
@@ -82,11 +82,11 @@ class ChatManager:
         modify_inplace = kwargs["modify_inplace"]
         max_tokens = kwargs["max_tokens"]
         response = (
-            send_prompt(self.prompt, max_tokens) if max_tokens else send_prompt(self.prompt)
+            send_prompt(self.prompt, max_tokens)
+            if max_tokens
+            else send_prompt(self.prompt)
         )
-        response_path = os.path.join(
-            self.chats_dir, f"{self.file_name}_response.md"
-        )
+        response_path = os.path.join(self.chats_dir, f"{self.file_name}_response.md")
         with open(response_path, "w", encoding="utf-8") as file:
             file.write(response)
         print("Response saved to:", response_path)

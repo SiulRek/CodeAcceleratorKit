@@ -3,6 +3,7 @@ import subprocess
 import sys
 import time
 import tkinter as tk
+import warnings
 
 from PIL import Image, ImageTk
 
@@ -102,8 +103,8 @@ def _show_help_window(main_root):
     return_btn.bind("<Return>", lambda event: close_help())
 
 
-def ask_user_for_macros():
-    user_input = None
+def ask_user_for_macros(submit_file):
+    user_input = ""
 
     def root_destroy():
         root.quit()
@@ -114,6 +115,9 @@ def ask_user_for_macros():
     def submit_text():
         nonlocal user_input
         user_input = text_box.get("1.0", tk.END).strip()
+        with open(submit_file, "w", encoding="utf-8") as file:
+            file.write(user_input)
+
         root_destroy()
 
     def focus_submit(event=None):
@@ -141,8 +145,22 @@ def ask_user_for_macros():
         return "break"
 
     def cancel_process(event=None):
-        user_input = None
+        nonlocal user_input
+        user_input = ""
         root_destroy()
+        return "break"
+
+    def load_last_macros(event=None):
+        if os.path.exists(submit_file):
+            with open(submit_file, "r", encoding="utf-8") as file:
+                last_macros = file.read()
+            text_box.insert(tk.END, last_macros)
+        else:
+            warnings.warn("No previous macros found.")
+        return "break"
+
+    def focus_last_macros(event=None):
+        last_macros_btn.focus()
         return "break"
 
     root = tk.Tk()
@@ -175,10 +193,21 @@ def ask_user_for_macros():
         bg="#D3D3D3",
         activebackground="#696969",
     )
-    submit_btn.bind("<Tab>", focus_cancel)
+    submit_btn.bind("<Tab>", focus_last_macros)
     submit_btn.bind("<Shift-Tab>", focus_text)
     submit_btn.bind("<Return>", lambda event: submit_text())
     submit_btn.grid(row=0, column=0, padx=10)
+
+    last_macros_btn = tk.Button(
+        button_frame,
+        text="Load Last",
+        command=load_last_macros,
+        bg="#D3D3D3",
+    )
+    last_macros_btn.bind("<Tab>", focus_cancel)
+    last_macros_btn.bind("<Shift-Tab>", focus_submit)
+    last_macros_btn.bind("<Return>", lambda event: load_last_macros())
+    last_macros_btn.grid(row=0, column=1, padx=10)
 
     cancel_btn = tk.Button(
         button_frame,
@@ -188,9 +217,9 @@ def ask_user_for_macros():
         activebackground="#B22222",
     )
     cancel_btn.bind("<Tab>", focus_help)
-    cancel_btn.bind("<Shift-Tab>", focus_submit)
+    cancel_btn.bind("<Shift-Tab>", focus_last_macros)
     cancel_btn.bind("<Return>", lambda event: cancel_process())
-    cancel_btn.grid(row=0, column=1, padx=10)
+    cancel_btn.grid(row=0, column=2, padx=10)
 
     help_btn = tk.Button(
         button_frame,
@@ -201,7 +230,7 @@ def ask_user_for_macros():
     help_btn.bind("<Tab>", focus_text)
     help_btn.bind("<Shift-Tab>", focus_cancel)
     help_btn.bind("<Return>", lambda event: _show_help_window(root))
-    help_btn.grid(row=0, column=2, padx=10)
+    help_btn.grid(row=0, column=3, padx=10)
 
     root.mainloop()
 
@@ -209,5 +238,6 @@ def ask_user_for_macros():
 
 
 if __name__ == "__main__":
-    macros = ask_user_for_macros()
+    submit_file = "_macros.txt"
+    macros = ask_user_for_macros(submit_file=submit_file)
     print("User input:", macros)
