@@ -336,11 +336,13 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                     break
                 merged_text = f"{macro_data['text'].strip()}\n"
                 while macros_data[index]["type"] == MACROS.NORMAL_TEXT:
-                    merged_text += f"{macros_data[index]['text'].strip()}"
+                    merged_text += f"{macros_data[index]['text'].strip()}\n"
                     macros_data.pop(index)
+                    if index >= len(macros_data):
+                        break
                 macro_data = {
                     "type": MACROS.NORMAL_TEXT,
-                    "text": merged_text,
+                    "text": merged_text.rstrip(),
                 }
                 macros_data[start] = macro_data
 
