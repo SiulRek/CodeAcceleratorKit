@@ -1,7 +1,9 @@
 from openai import OpenAI
 
-from keys import OPENAI_KEY
-
+try:
+    from keys import OPENAI_KEY
+except ModuleNotFoundError:
+    OPENAI_KEY = None
 
 def send_prompt(prompt_message, max_response_tokens=3000, model="gpt-4o"):
     """
@@ -15,6 +17,9 @@ def send_prompt(prompt_message, max_response_tokens=3000, model="gpt-4o"):
     Returns:
         - str: The response message from the model.
     """
+    if OPENAI_KEY is None:
+        raise ValueError("OPENAI_KEY is not set. Please set it in keys.py.")
+    
     client = OpenAI(api_key=OPENAI_KEY)
 
     response = client.chat.completions.with_raw_response.create(
