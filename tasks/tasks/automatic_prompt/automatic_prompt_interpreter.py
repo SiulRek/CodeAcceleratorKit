@@ -248,6 +248,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             directory_tree = generate_directory_tree(
                 dir_, max_depth, include_files, ignore_list
             )
+            directory_tree = render_to_markdown(directory_tree, format="shell")
             macro_data = {"type": MACROS.DIRECTORY_TREE, "text": directory_tree}
             return macro_data
         return None

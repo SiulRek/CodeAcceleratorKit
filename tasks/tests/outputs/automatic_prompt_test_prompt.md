@@ -188,6 +188,7 @@ OK
 ## Test: Directory Tree
 ----------
 
+```shell
 /
 ├── __pycache__/
 ├── _local/
@@ -215,6 +216,7 @@ OK
     ├── include/
     ├── lib/
     ├── lib64/
+```
 
 ## Test: Summarize Python Script
 ----------
