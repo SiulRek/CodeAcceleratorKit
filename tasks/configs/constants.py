@@ -12,6 +12,7 @@ PROFILE_SUBFOLDER = "profile"
 TASKS_PYTHON_ENV = os.path.join(TASKS_ROOT, "venv")
 TASKS_CACHE = os.path.join(TASKS_ROOT, "tasks", "__taskscache__")
 MAX_BACKUPS = 70
+MACRO_TAG = "#"
 
 # ----------------- For Automatic Prompt -----------------
 class AUTOMATIC_PROMPT_MACROS(Enum):
@@ -33,35 +34,27 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
 
 
 class AUTOMATIC_PROMPT_TAGS(Enum):
-    BEGIN = "#B "
-    END = "#E "
-    TITLE = "#T "
-    NORMAL_TEXT = "#N "
-    PASTE_FILE = "#P "
-    META_MACROS_START = "#"
+    BEGIN = MACRO_TAG + "B "
+    END = MACRO_TAG + "E "
+    TITLE = MACRO_TAG + "T "
+    NORMAL_TEXT = MACRO_TAG + "N "
+    PASTE_FILE = MACRO_TAG + "P "
+    META_MACROS_START = MACRO_TAG
     META_MACROS_END = "_meta"
-    META_MACROS_WITH_ARGS_START = "#"
+    META_MACROS_WITH_ARGS_START = MACRO_TAG
     META_MACROS_WITH_ARGS_END = r"_meta\+"
-    COSTUM_FUNCTION_START = "#"
+    COSTUM_FUNCTION_START = MACRO_TAG
     COSTUM_FUNCTION_END = "_func"
-    FILL_TEXT = r"#\*"
-    RUN_SCRIPT = "#run"
-    RUN_PYLINT = "#pylint"
-    RUN_SUBROCESS = r"#\$"
-    UNITTEST = "#unittest"
-    DIRECTORY_TREE = "#tree"
-    SUMMARIZE_PYTHON_SCRIPT = "#summarize"
-    SUMMARIZE_FOLDER = "#summarize_folder"
-    SEND_PROMPT = "#send"
-    CHECKSUM = "#checksum" # Not a macro as used in Finalizer not in Interpreter
+    FILL_TEXT = MACRO_TAG + r"\*"
+    RUN_SCRIPT = MACRO_TAG + "run"
+    RUN_PYLINT = MACRO_TAG + "pylint"
+    RUN_SUBROCESS = MACRO_TAG + r"\$"
+    UNITTEST = MACRO_TAG + "unittest"
+    DIRECTORY_TREE = MACRO_TAG + "tree"
+    SUMMARIZE_PYTHON_SCRIPT = MACRO_TAG + "summarize"
+    SUMMARIZE_FOLDER = MACRO_TAG + "summarize_folder"
+    SEND_PROMPT = MACRO_TAG + "send"
 
-class EDIT_TEXT_FLAGS(Enum):
-    CUT_UP = "#cut_up"
-    CUT_DOWN = "#cut_down"
-    END_OF_TEXT = None
-    
-
-TEST_RESULT_PATTERN = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (ERROR|INFO) - .*)")
 
 # ----------------- For Format Python -----------------
 LINE_WIDTH = 79

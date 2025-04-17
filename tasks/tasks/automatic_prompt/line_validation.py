@@ -1,10 +1,12 @@
 import re
 
 from tasks.configs.constants import AUTOMATIC_PROMPT_TAGS as TAGS
-from tasks.configs.constants import CURRENT_FILE_TAG
-from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
+from tasks.configs.constants import CURRENT_FILE_TAG, MACRO_TAG
 from tasks.tasks.core.line_validation_utils import retrieve_arguments_in_round_brackets
+from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
 from tasks.tasks.core.line_validation_utils import check_type
+
+MACRO_PATTERN = rf"^{MACRO_TAG}\*?[\w_+]+"
 
 # TITLE_PATTERN
 title_tag = TAGS.TITLE.value
@@ -86,11 +88,6 @@ summarize_folder_tag = TAGS.SUMMARIZE_FOLDER.value
 summarize_folder_pattern = rf"{summarize_folder_tag}\s(\S+)"
 SUMMARIZE_FOLDER_PATTERN = re.compile(summarize_folder_pattern)
 
-# CHECKSUM_PATTERN
-checksum_tag = TAGS.CHECKSUM.value
-checksum_pattern = rf"{checksum_tag}\s(\d+)"
-CHECKSUM_PATTERN = re.compile(checksum_pattern)
-
 BEGIN_TAG = TAGS.BEGIN.value
 END_TAG = TAGS.END.value
 TITLE_TAG = TAGS.TITLE.value
@@ -128,7 +125,7 @@ def line_validation_for_normal_text(line):
     """Validate if the line is a normal text macro."""
     if NORMAL_TEXT_TAG in line:
         return line.replace(NORMAL_TEXT_TAG, "").lstrip()
-    elif not line.startswith("#"):
+    elif not re.match(MACRO_PATTERN, line): # Check if it is not a macro
         return line
     return None
 
