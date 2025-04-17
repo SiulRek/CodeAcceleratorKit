@@ -154,6 +154,7 @@ def ask_user_for_macros(submit_file):
         if os.path.exists(submit_file):
             with open(submit_file, "r", encoding="utf-8") as file:
                 last_macros = file.read()
+            text_box.delete("1.0", tk.END)
             text_box.insert(tk.END, last_macros)
         else:
             warnings.warn("No previous macros found.")
