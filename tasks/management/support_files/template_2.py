@@ -20,16 +20,16 @@ if len(sys.argv) > 2:
 
 # 4. Write the macros text based on the arguments
 macros_text = (
-    "#T This is the Start of the macros_with_args template\n"
+    "#T This is the Start of the macros_with_args template (3)\n"
     "#N text\n"
-    "#T Chapter dedicated to argument_1\n"
+    "#T Chapter dedicated to argument_1 (3)\n"
 )
 
 if argument_1:
     macros_text += f"#N argument_1 was set to {argument_1}\n"
 
 macros_text += (
-    "#T Chapter dedicated to argument_2\n"
+    "#T Chapter dedicated to argument_2 (3)\n"
     f"#N argument_2 was set to {argument_2}\n"
     "#N \n"
     "#N Iterations Start:\n"

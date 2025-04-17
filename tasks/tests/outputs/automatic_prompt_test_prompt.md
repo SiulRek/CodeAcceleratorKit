@@ -79,10 +79,15 @@ be the macro title of the text here.
 ## Test: Meta Macros
 ----------
 
-# How to make Meta Macros
+### How to make Meta Macros
 ----------
 
 List every macro you want here
+Generally you can call this meta macro with:
+#<name_of_file_without_ext>_macros
+Specifically call this template with:
+#template_1_macros
+And all the macros you defined here are going to be processed
 Lets try it out, I hope you have an example_script.py somewhere
 
 ```shell
@@ -103,28 +108,30 @@ Your code has been rated at 6.00/10 (previous run: 6.00/10, +0.00)
 
 ```
 
-List every macro you want here
-Lets try it out, I hope you have an example_script.py somewhere
+Now call me
 
 ## Test: Meta Macros with Args
 ----------
 
-# This is the Start of the macros_with_args template
+### This is the Start of the macros_with_args template
 ----------
 
-List every macro you want here
-Lets try it out, I hope you have an example_script.py somewhere
+text
 
-# Chapter dedicated to argument_1
+### Chapter dedicated to argument_1
 ----------
 
-List every macro you want here
-Lets try it out, I hope you have an example_script.py somewhere
+`argument_1` was set to True
 
-# Chapter dedicated to argument_2
+### Chapter dedicated to argument_2
 ----------
 
 `argument_2` was set to 5
+Iterations Start:
+Iteration 1
+Iteration 2
+Iteration 3
+Iteration 4
 Iteration 5
 
 ## Test: Custom Function
