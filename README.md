@@ -33,8 +33,7 @@ First to be able to run the tasks, the CodeAcceleratorKit can be cloned with
 ```sh
 $ git clone git@github.com:SiulRek/CodeAcceleratorKit.git
 ```
-
-Then, you can navigate to the `CodeAcceleratorKit` directory and run the following command to install the required libraries:
+Next, navigate to the `CodeAcceleratorKit` directory and create a dedicated virtual environment to isolate the dependencies. Once the virtual environment is activated, run the following command to install the required libraries:
 
 ```sh
 $ pip install -r requirements.txt
