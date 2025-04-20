@@ -8,6 +8,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_title,
     line_validation_for_normal_text,
     line_validation_for_paste_file,
+    line_validation_for_paste_declaration_block,
     line_validation_for_fill_text,
     line_validation_for_meta_macros,
     line_validation_for_meta_macros_with_args,
@@ -32,6 +33,7 @@ from tasks.utils.for_automatic_prompt.find_file_in_1st_level_subdir import (
 from tasks.utils.for_automatic_prompt.generate_directory_tree import (
     generate_directory_tree,
 )
+from tasks.utils.for_automatic_prompt.get_declaration_block import get_declaration_block
 from tasks.utils.for_automatic_prompt.render_to_markdown import render_to_markdown
 from tasks.utils.for_automatic_prompt.summarize_python_script import (
     summarize_python_file,
@@ -121,6 +123,25 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 macro_data = {"type": MACROS.PASTE_FILE, "text": file_content}
                 macro_data_list.append(macro_data)
             return macro_data_list
+        return None
+
+    def validate_paste_declaration_block_macro(self, line):
+        if result := line_validation_for_paste_declaration_block(line):
+            file_name, declaration_name, only_declaration_and_docstring = result
+            file_path = find_file_sloppy(
+                file_name, self.profile.root, self.current_file
+            )
+
+            declaration_block = get_declaration_block(
+                name=declaration_name,
+                script=file_path,
+                only_declaration_and_docstring=only_declaration_and_docstring,
+            )
+            macro_data = {
+                "type": MACROS.PASTE_DECLARATION_BLOCK,
+                "text": declaration_block,
+            }
+            return macro_data
         return None
 
     def validate_fill_text_macro(self, line):

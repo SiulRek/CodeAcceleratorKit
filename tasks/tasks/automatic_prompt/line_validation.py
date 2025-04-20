@@ -2,8 +2,8 @@ import re
 
 from tasks.configs.constants import AUTOMATIC_PROMPT_TAGS as TAGS
 from tasks.configs.constants import CURRENT_FILE_TAG, MACRO_TAG
-from tasks.tasks.core.line_validation_utils import retrieve_arguments_in_round_brackets
 from tasks.configs.defaults import DIRECTORY_TREE_DEFAULTS
+from tasks.tasks.core.line_validation_utils import retrieve_arguments_in_round_brackets
 from tasks.tasks.core.line_validation_utils import check_type
 
 MACRO_PATTERN = rf"^{MACRO_TAG}\*?[\w_+]+"
@@ -19,11 +19,17 @@ paste_file_tag = TAGS.PASTE_FILE.value
 file_extensions = r"(?:py|txt|log|md|csv|json)"
 file_pattern = rf"\S+\.{file_extensions}"
 files_list_pattern = rf"(?:{file_pattern}\s*(?:,\s*{file_pattern}\s*)*)"
-current_file_pattern = rf"{CURRENT_FILE_TAG}"
-paste_file_pattern = (
-    rf"{paste_file_tag}\s*({files_list_pattern}|{current_file_pattern})"
-)
+paste_file_pattern = rf"{paste_file_tag}\s*({files_list_pattern}|{CURRENT_FILE_TAG})"
 PASTE_FILE_PATTERN = re.compile(paste_file_pattern)
+
+# PASTE_DECLARATION_BLOCK_PATTERN
+paste_declaration_block_tag = TAGS.PASTE_DECLARATION_BLOCK.value
+file_pattern = rf"\S+\.py|{CURRENT_FILE_TAG}"
+declaration_pattern = r"([a-zA-Z_][a-zA-Z0-9_]*)"
+paste_declaration_block_pattern = (
+    rf"{paste_declaration_block_tag}\s+({file_pattern})\s+({declaration_pattern})"
+)
+
 
 # FILL_TEXT_PATTERN
 fill_text_tag = TAGS.FILL_TEXT.value
@@ -125,7 +131,7 @@ def line_validation_for_normal_text(line):
     """Validate if the line is a normal text macro."""
     if NORMAL_TEXT_TAG in line:
         return line.replace(NORMAL_TEXT_TAG, "").lstrip()
-    elif not re.match(MACRO_PATTERN, line): # Check if it is not a macro
+    if not re.match(MACRO_PATTERN, line):  # Check if it is not a macro
         return line
     return None
 
@@ -147,6 +153,22 @@ def line_validation_for_paste_file(line):
                 ), f"for paste file line ranges, expected a list of two elements, but got {elem}"
                 updated_line_ranges.append(tuple(elem))
         return file_names, updated_line_ranges
+    return None
+
+
+def line_validation_for_paste_declaration_block(line):
+    if match := re.search(paste_declaration_block_pattern, line):
+        file_name = match.group(1)
+        declaration_name = match.group(2)
+        only_declaration_and_docstring = False
+        if arguments := retrieve_arguments_in_round_brackets(line, 1):
+            only_declaration_and_docstring = arguments[0]
+            check_type(
+                only_declaration_and_docstring,
+                bool,
+                "for paste declaration block only declaration and docstring",
+            )
+        return file_name, declaration_name, only_declaration_and_docstring
     return None
 
 

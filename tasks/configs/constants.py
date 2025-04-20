@@ -1,26 +1,29 @@
 from enum import Enum
 import os
-import re
 
 # ----------------- General Constants -----------------
 TASKS_ROOT = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
 TEST_RESULTS_FILE = "test_results.log"
 CURRENT_FILE_TAG = "File"
 CURRENT_DIRECTORY_TAG = "Dir"
-REGISTERED_RUNNERS_JSON = os.path.join(TASKS_ROOT, "tasks", "configs", "registered_runners.json")
+REGISTERED_RUNNERS_JSON = os.path.join(
+    TASKS_ROOT, "tasks", "configs", "registered_runners.json"
+)
 PROFILE_SUBFOLDER = "profile"
 TASKS_PYTHON_ENV = os.path.join(TASKS_ROOT, "venv")
 TASKS_CACHE = os.path.join(TASKS_ROOT, "tasks", "__taskscache__")
 MAX_BACKUPS = 70
 MACRO_TAG = "#"
 
+
 # ----------------- For Automatic Prompt -----------------
 class AUTOMATIC_PROMPT_MACROS(Enum):
-    BEGIN_TEXT = "begin_text",
-    END_TEXT = "end_text",
+    BEGIN_TEXT = ("begin_text",)
+    END_TEXT = ("end_text",)
     TITLE = "title"
     NORMAL_TEXT = "normal_text"
     PASTE_FILE = "paste_file"
+    PASTE_DECLARATION_BLOCK = "paste_declaration_block"
     FILL_TEXT = "fill_text"
     COSTUM_FUNCTION = "costum_function"
     RUN_PYTHON_SCRIPT = "run_python_script"
@@ -29,7 +32,7 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     RUN_UNITTEST = "run_unittest"
     DIRECTORY_TREE = "directory_tree"
     SUMMARIZE_PYTHON_SCRIPT = "summarize_python_script"
-    SUMMARIZE_FOLDER = "summarize_folder" # Summarize all Python scripts in a folder
+    SUMMARIZE_FOLDER = "summarize_folder"  # Summarize all Python scripts in a folder
     SEND_PROMPT = "send_prompt"
 
 
@@ -39,6 +42,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     TITLE = MACRO_TAG + "T "
     NORMAL_TEXT = MACRO_TAG + "N "
     PASTE_FILE = MACRO_TAG + "P "
+    PASTE_DECLARATION_BLOCK = MACRO_TAG + "PDB"
     META_MACROS_START = MACRO_TAG
     META_MACROS_END = "_meta"
     META_MACROS_WITH_ARGS_START = MACRO_TAG
@@ -61,11 +65,13 @@ LINE_WIDTH = 79
 INDENT_SPACES = " " * 4
 DOC_QUOTE = '"""'
 
+
 class FORMAT_PYTHON_MACROS(Enum):
     SELECT_ONLY = "select_only"
     SELECT_NOT = "select_not"
     FORCE_SELECT_OF = "force_select_of"
     CHECKPOINTING = "checkpointing"
+
 
 class FORMAT_PYTHON_TAGS(Enum):
     SELECT_ONLY = "#only"

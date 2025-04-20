@@ -65,6 +65,15 @@ TODO:
     5. Compare the output with automatic_prompt_test_prompt.txt
 ```
 
+## Test: Paste Declaration Block
+----------
+
+    def delete_file(self, filename):
+        """Delete a file with the given name from the directory."""
+        import os
+        os.remove(f"{self.directory}/{filename}")
+        print("File deleted successfully.")
+
 ## Test: Fill Text
 ----------
 
