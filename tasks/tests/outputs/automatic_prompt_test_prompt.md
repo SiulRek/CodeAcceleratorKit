@@ -68,11 +68,17 @@ TODO:
 ## Test: Paste Declaration Block
 ----------
 
+```python
+class FileManager:
+    """Class to handle file management operations."""
+
+
     def delete_file(self, filename):
         """Delete a file with the given name from the directory."""
         import os
         os.remove(f"{self.directory}/{filename}")
         print("File deleted successfully.")
+```
 
 ## Test: Fill Text
 ----------

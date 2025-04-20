@@ -20,6 +20,7 @@
 #P File ([[1, 8]])
 
 #T Test: Paste Declaration Block (2)
+#PDB example_script_2.py FileManager (True)
 #PDB example_script_2.py delete_file
 
 #T Test: Fill Text (2)

@@ -349,7 +349,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 beginning text, aggregated ending text, and a dictionary of
                 keyword arguments for the MAKE_QUERY macro.
         """
-        # Merge comments in sequence to one comment
+        # Merge normal text or definition blocks in sequence to one text
         for macro_data in macros_data:
             if macro_data["type"] == MACROS.NORMAL_TEXT:
                 start = macros_data.index(macro_data)
@@ -365,6 +365,24 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 macro_data = {
                     "type": MACROS.NORMAL_TEXT,
                     "text": merged_text.rstrip(),
+                }
+                macros_data[start] = macro_data
+
+            elif macro_data["type"] == MACROS.PASTE_DECLARATION_BLOCK:
+                start = macros_data.index(macro_data)
+                index = start + 1
+                if index >= len(macros_data):
+                    break
+                text_list = [macro_data["text"]]
+                while macros_data[index]["type"] == MACROS.PASTE_DECLARATION_BLOCK:
+                    text_list.append(macros_data[index]["text"])
+                    macros_data.pop(index)
+                    if index >= len(macros_data):
+                        break
+                code = render_to_markdown("\n\n\n".join(text_list), format="python")
+                macro_data = {
+                    "type": MACROS.PASTE_DECLARATION_BLOCK,
+                    "text": code,
                 }
                 macros_data[start] = macro_data
 
