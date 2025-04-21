@@ -337,78 +337,81 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def post_process_macros(self, macros_data):
         """
-        Post-processes the extracted macros to merge comments, begin_text, and
-        end_text.
-
-        Args:
-            - macros_data (list): A list of tuples containing macro data,
-                where each tuple is in the format (macro_type, title, content).
-
-        Returns:
-            - tuple: A tuple containing processed macro data, aggregated
-                beginning text, aggregated ending text, and a dictionary of
-                keyword arguments for the MAKE_QUERY macro.
+        Post-processes the extracted macros to merge normal text, begin_text,
+        end_text and declaration blocks.
         """
-        # Merge normal text or definition blocks in sequence to one text
-        for macro_data in macros_data:
-            if macro_data["type"] == MACROS.NORMAL_TEXT:
-                start = macros_data.index(macro_data)
-                index = start + 1
-                if index >= len(macros_data):
-                    break
-                merged_text = f"{macro_data['text'].strip()}\n"
-                while macros_data[index]["type"] == MACROS.NORMAL_TEXT:
-                    merged_text += f"{macros_data[index]['text'].strip()}\n"
-                    macros_data.pop(index)
-                    if index >= len(macros_data):
-                        break
-                macro_data = {
-                    "type": MACROS.NORMAL_TEXT,
-                    "text": merged_text.rstrip(),
-                }
-                macros_data[start] = macro_data
-
-            elif macro_data["type"] == MACROS.PASTE_DECLARATION_BLOCK:
-                start = macros_data.index(macro_data)
-                index = start + 1
-                if index >= len(macros_data):
-                    break
-                text_list = [macro_data["text"]]
-                while macros_data[index]["type"] == MACROS.PASTE_DECLARATION_BLOCK:
-                    text_list.append(macros_data[index]["text"])
-                    macros_data.pop(index)
-                    if index >= len(macros_data):
-                        break
-                code = render_to_markdown("\n\n\n".join(text_list), format="python")
-                macro_data = {
-                    "type": MACROS.PASTE_DECLARATION_BLOCK,
-                    "text": code,
-                }
-                macros_data[start] = macro_data
-
-        # Merge begin_text and end_text in the referenced contents
+        merged_data = []
         begin_text_list = []
         end_text_list = []
-        updated_macros_data = []
-        for macro_data in macros_data:
-            if macro_data["type"] == MACROS.BEGIN_TEXT:
-                begin_text_list.append(macro_data["text"])
-            elif macro_data["type"] == MACROS.END_TEXT:
-                end_text_list.append(macro_data["text"])
+
+        i = 0
+        while i < len(macros_data):
+            macro = macros_data[i]
+            m_type = macro["type"]
+
+            # Merge consecutive NORMAL_TEXT blocks
+            if m_type == MACROS.NORMAL_TEXT:
+                text_blocks = [macro["text"].strip()]
+                i += 1
+                while (
+                    i < len(macros_data)
+                    and macros_data[i]["type"] == MACROS.NORMAL_TEXT
+                ):
+                    text_blocks.append(macros_data[i]["text"].strip())
+                    i += 1
+                merged_data.append(
+                    {"type": MACROS.NORMAL_TEXT, "text": "\n".join(text_blocks)}
+                )
+
+            # Merge consecutive PASTE_DECLARATION_BLOCK blocks
+            elif m_type == MACROS.PASTE_DECLARATION_BLOCK:
+                code_blocks = [macro["text"]]
+                i += 1
+                while (
+                    i < len(macros_data)
+                    and macros_data[i]["type"] == MACROS.PASTE_DECLARATION_BLOCK
+                ):
+                    code_blocks.append(macros_data[i]["text"])
+                    i += 1
+                merged_code = render_to_markdown(
+                    "\n\n\n".join(code_blocks), format="python"
+                )
+                merged_data.append(
+                    {"type": MACROS.PASTE_DECLARATION_BLOCK, "text": merged_code}
+                )
+
+            # Collect BEGIN_TEXT
+            elif m_type == MACROS.BEGIN_TEXT:
+                begin_text_list.append(macro["text"])
+                i += 1
+
+            # Collect END_TEXT
+            elif m_type == MACROS.END_TEXT:
+                end_text_list.append(macro["text"])
+                i += 1
+
+            # Other types stay as is
             else:
-                updated_macros_data.append(macro_data)
+                merged_data.append(macro)
+                i += 1
 
-        sep = "*" * 10
-        begin_text = ""
+        # Prepend BEGIN_TEXT if any
         if begin_text_list:
-            begin_text = "\n".join(begin_text_list)
-            begin_text += "\n" + sep
-            macro_data = {"type": MACROS.BEGIN_TEXT, "text": begin_text}
-            updated_macros_data.insert(0, macro_data)
-        end_text = ""
-        if end_text_list:
-            end_text = sep + "\n" + "\n".join(end_text_list)
-            macro_data = {"type": MACROS.END_TEXT, "text": end_text}
-            updated_macros_data.append(macro_data)
+            merged_data.insert(
+                0,
+                {
+                    "type": MACROS.BEGIN_TEXT,
+                    "text": "\n".join(begin_text_list) + "\n" + ("*" * 10),
+                },
+            )
 
-        return updated_macros_data
+        # Append END_TEXT if any
+        if end_text_list:
+            merged_data.append(
+                {
+                    "type": MACROS.END_TEXT,
+                    "text": ("*" * 10) + "\n" + "\n".join(end_text_list),
+                }
+            )
+
+        return merged_data
