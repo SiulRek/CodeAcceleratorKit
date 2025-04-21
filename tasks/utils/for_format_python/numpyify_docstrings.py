@@ -1,3 +1,6 @@
+# As format docstring previously supported another format, this script was
+# created to convert the docstrings to the now supported Numpy format.
+
 import re
 import warnings
 
@@ -143,11 +146,9 @@ def _numpyify_metadata_text(text):
     udpated_items = []
     for item in items:
         if _check_freezing_required(item):
-            # raise ValueError(
-            #     "The metadata item contains an enumeration symbol or "
-            #     "undefined symbols, indicating that it should not be "
-            #     f"modified for numpyifyting. \nOffending Item:\n{item}"
-            # )
+            # raise ValueError( "The metadata item contains an enumeration
+            # symbol or " "undefined symbols, indicating that it should not be "
+            # f"modified for numpyifyting. \nOffending Item:\n{item}" )
             warnings.warn(
                 "The metadata item contains an enumeration symbol or "
                 "undefined symbols, indicating that it should not be "
@@ -224,8 +225,10 @@ def numpyify_docstrings_from_file(file_path):
     """
     Reformats the docstrings in a Python file to Numpy style.
 
-    Args:
-        - file_path (str): The path to the file to be numpyifyted.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file to be numpyifyted.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()
