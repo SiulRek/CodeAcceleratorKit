@@ -23,7 +23,7 @@ Available reference types:
 | directory_tree           | Get directory tree                      | #tree <directory_path>                               | <max_depth: int, include_files: List[str], ignore_list: List[str]>                            |
 | summarize_python_script  | Summarize a Python script               | #summarize <script_path>                             | <include_definitions_with_docstring: bool>                                                    |
 | summarize_folder         | Summarize Python scripts in a folder    | #summarize_folder <folder_path>                      | <include_definitions_with_docstrings: bool, excluded_dirs: List[str], excluded_files: List[str]> |
-| send_prompt              | Send a prompt from a temporary file     | #send                                                | <create_python_script: bool, max_tokens: int>                                                 |
+| send_prompt              | Send a prompt from a temporary file     | #send                                                | <modify_inplace: bool = False, max_tokens: int = None>                                        |
 
 Usage Example: 
 macros_text = (

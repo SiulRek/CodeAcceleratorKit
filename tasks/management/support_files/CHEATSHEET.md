@@ -51,7 +51,7 @@ python path/to/format_python_task.py <root_directory> [<macro_file_path> | --hel
 ### 2. Automatic Prompt Task
 
 **Description:**            
-The `AutomaticPromptTask` is designed to generate automatic prompts based on macro statements retrieved from the macro field or a string passed as an argument. These prompts are typically queries that can be saved to a file, optionally copied to the clipboard, or sent to ChatGPT for further processing. 
+The `AutomaticPromptTask` is designed to create dynamic prompts based on macro statements provided either through the macro field or as a string argument. These prompts can serve various purposes, such as generating queries, automating tasks, or facilitating further processing. The generated prompts can be saved to a file, optionally copied to the clipboard (as configured in [configs.json](./profile/configs.json)), or sent directly to ChatGPT via macro.
 
 Optional arguments should be provided as Python literals enclosed in parentheses, separated by commas (e.g., `(True, "string", 1, [1, 2, 3])`). If no arguments are specified, the task will use default values. Default values are either explicitly defined or empty for data types such as lists, tuples, or dictionaries.
 
@@ -75,6 +75,7 @@ Optional arguments should be provided as Python literals enclosed in parentheses
 | `directory_tree`         | Get directory tree layout                                                                         | `#tree <directory_path>`                                 | `<max_depth: int = float("inf"), include_files: bool = False, ignore_list: List[str]>`                |
 | `summarize_python_script`| Summarize a Python script                                                                         | `#summarize <script_path>`                               | `<include_definitions_without_docstrings: bool = False>`                                              |
 | `summarize_folder`       | Summarize all Python scripts in a folder                                                          | `#summarize_folder <folder_path>`                        | `<include_definitions_without_docstrings: bool = False, excluded_dirs: List[str], excluded_files: List[str]>` |
+| `send_prompt`            | Send a prompt from a temporary file                                                             | `#send`                                                | `<modify_inplace: bool = False, max_tokens: int = None>`                                              |
 
 **Usage from command line**:  
 ```sh
