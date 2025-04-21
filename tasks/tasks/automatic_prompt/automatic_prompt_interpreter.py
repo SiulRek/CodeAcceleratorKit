@@ -115,12 +115,17 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                     file_name, self.profile.root, self.current_file
                 )
                 file_content = self._read_file(file_path, "paste files reference")
-                if line_ranges:
+                if line_ranges and file_path.lower().endswith(".py"):
                     file_content = self._extract_line_ranges(file_content, line_ranges)
-                file_content = render_to_markdown(
-                    file_content, extension=file_path.split(".")[-1]
-                )
-                macro_data = {"type": MACROS.PASTE_FILE, "text": file_content}
+                    # Enables merging of consecutive line ranges and declaration
+                    # blocks into a single code snippet
+                    macro_type = MACROS.PASTE_DECLARATION_BLOCK
+                else:
+                    macro_type = MACROS.PASTE_FILE
+                    file_content = render_to_markdown(
+                        file_content, extension=file_path.split(".")[-1]
+                    )
+                macro_data = {"type": macro_type, "text": file_content}
                 macro_data_list.append(macro_data)
             return macro_data_list
         return None
