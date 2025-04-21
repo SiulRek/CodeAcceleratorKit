@@ -160,7 +160,9 @@ def unindent_text(text, unindent_number):
 
 def wrap_text_with_indent(text, indent_length):
     text = unindent_text(text, indent_length)
-    wrapped_text = wrap_text(text, width=LINE_WIDTH - indent_length * len(INDENT_SPACES))
+    wrapped_text = wrap_text(
+        text, width=LINE_WIDTH - indent_length * len(INDENT_SPACES)
+    )
     wrapped_text = indent_text(wrapped_text, indent_length)
     return wrapped_text
 
@@ -176,26 +178,39 @@ def wrap_metadata_text(text):
         - str: The wrapped text.
     """
 
-    last_indent_length = count_leading_spaces(text) // len(INDENT_SPACES)
+    root_indent_length = last_indent_length = count_leading_spaces(text) // len(
+        INDENT_SPACES
+    )
     wrapped_text = ""
     text_buffer = ""
-    end_tag = "ENDTAG"
-    for line in (text + "\n" + end_tag).splitlines():
+    end_tag = "$$ENDTAG$$"
+    lines = (text + "\n" + end_tag).splitlines()
+    for i, line in enumerate(lines):
         if line == end_tag:
             if not is_freezing_needed(text_buffer):
                 text_buffer = wrap_text_with_indent(text_buffer, last_indent_length)
             wrapped_text += "\n" + text_buffer if wrapped_text else text_buffer
             break
         cur_indent_length = count_leading_spaces(line) // len(INDENT_SPACES)
-        if cur_indent_length == last_indent_length:
-            text_buffer = "\n" + line if text_buffer else line
-            continue
-        if text_buffer:
-            if not is_freezing_needed(text_buffer):
-                text_buffer = wrap_text_with_indent(text_buffer, last_indent_length)
-            wrapped_text += "\n" + text_buffer if wrapped_text else text_buffer
-
-        text_buffer = line
+        if cur_indent_length == root_indent_length:
+            if text_buffer:
+                if not is_freezing_needed(text_buffer):
+                    text_buffer = wrap_text_with_indent(text_buffer, last_indent_length)
+                wrapped_text += "\n" + text_buffer if wrapped_text else text_buffer
+                # Line with same indent length as root does not need to be
+                # wrapped
+                wrapped_text += "\n" + line if text_buffer else line
+                text_buffer = ""
+            else:
+                wrapped_text += "\n" + line if wrapped_text else line
+        elif cur_indent_length != last_indent_length and last_indent_length != root_indent_length:
+            raise ValueError(
+                "Inconsistent indentation detected in metadata. "
+                "Lines with non-root indentation must maintain the same level as the previous line. "
+                f"Mismatch found between lines:\n {lines[i-1]} and \n{lines[i]}."
+            )
+        else:
+            text_buffer += "\n" + line if text_buffer else line
         last_indent_length = cur_indent_length
 
     return wrapped_text
@@ -299,6 +314,6 @@ def format_docstrings_from_file(file_path):
 
 
 if __name__ == "__main__":
-    path = r"/home/siulrek/MY_ROOM/github/CodeAcceleratorKit/test.py"
+    path = r"/home/siulrek/MY_ROOM/github/CodeAcceleratorKit/tasks/controllers/magic_scripts/magic_register_runner.py"
     format_docstrings_from_file(path)
     print(f"Docstrings formatted of {path}")
