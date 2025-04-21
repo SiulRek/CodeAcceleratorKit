@@ -27,6 +27,7 @@ Available strategies:
 | BF           | Run Black formatting               |                                    |
 | FE           | Refactor exception                 |                                    |
 | FD           | Format docstrings                  |                                    |
+| FC           | Format comments                    |                                    |
 | EN           | Ensure newline at end              | Needs to be forced                 |
 | PL           | Execute Pylint                     |                                    |
 
@@ -82,6 +83,7 @@ def print_help():
     strategies_table.add_row("BF", "Apply Black formatting", "")
     strategies_table.add_row("FE", "Refactor exception blocks", "")
     strategies_table.add_row("FD", "Format docstrings", "")
+    strategies_table.add_row("FC", "Format comments", "")
     strategies_table.add_row("EN", "Ensure newline at EOF", "Must be forced")
     strategies_table.add_row("PL", "Run Pylint", "")
 
