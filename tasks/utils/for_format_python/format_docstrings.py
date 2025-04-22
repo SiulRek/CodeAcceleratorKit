@@ -7,24 +7,11 @@ from tasks.utils.for_format_python.wrap_text import wrap_text
 # TODO: Handle the case of string with """ that is not a docstring
 
 
-def count_leading_spaces(line):
+def _count_leading_spaces(line):
     return len(line) - len(line.lstrip())
 
 
-def get_docstrings(code):
-    """
-    Extracts docstrings from the code and returns them as a list.
-
-    Parameters
-    ----------
-    code (str)
-        The code from which the docstrings are to be extracted.
-
-    Returns
-    -------
-    list
-        A list of docstrings extracted from the code.
-    """
+def _get_docstrings(code):
     code_lines = code.split("\n")
     lines_iter = iter(code_lines)
     docstrings = []
@@ -60,20 +47,10 @@ def get_docstrings(code):
     return docstrings
 
 
-def clean_docstrings(docstrings):
+def _clean_docstrings(docstrings):
     """
     Cleans the docstrings by ensuring that the triple quotes are on their own
     lines.
-
-    Parameters
-    ----------
-    docstrings (list)
-        A list of docstrings to be cleaned.
-
-    Returns
-    -------
-    list
-        A list of cleaned docstrings.
     """
     cleaned_docstrings = []
     for docstring in docstrings:
@@ -81,7 +58,7 @@ def clean_docstrings(docstrings):
         docstring_lines = docstring.splitlines()
 
         if len(docstring_lines) == 1:
-            leading_spaces = " " * count_leading_spaces(docstring_lines[0])
+            leading_spaces = " " * _count_leading_spaces(docstring_lines[0])
             text = docstring_lines[0].replace(DOC_QUOTE, "").strip()
             cleaned_docstring += leading_spaces + DOC_QUOTE + "\n"
             cleaned_docstring += leading_spaces + text + "\n"
@@ -95,14 +72,14 @@ def clean_docstrings(docstrings):
                 DOC_QUOTE
             ):
                 parts = line.split(DOC_QUOTE)
-                leading_spaces = " " * count_leading_spaces(parts[0])
+                leading_spaces = " " * _count_leading_spaces(parts[0])
                 cleaned_docstring += leading_spaces + DOC_QUOTE + "\n"
                 cleaned_docstring += leading_spaces + parts[1] + "\n"
             elif stripped_line.endswith(DOC_QUOTE) and not stripped_line.startswith(
                 DOC_QUOTE
             ):
                 parts = line.split(DOC_QUOTE)
-                leading_spaces = " " * count_leading_spaces(parts[0])
+                leading_spaces = " " * _count_leading_spaces(parts[0])
                 cleaned_docstring += parts[0] + "\n"
                 cleaned_docstring += leading_spaces + DOC_QUOTE
             else:
@@ -189,29 +166,19 @@ def wrap_text_with_indent(text, indent_length):
     return wrapped_text
 
 
-def wrap_metadata_text(text):
+def _wrap_metadata_text(text):
     """
     Wraps metadata text that contains.
-
-    Parameters
-    ----------
-    text (str)
-        The text to be wrapped.
-
-    Returns
-    -------
-    str
-        The wrapped text.
     """
 
-    root_indent_length = last_indent_length = count_leading_spaces(text) // len(
+    root_indent_length = last_indent_length = _count_leading_spaces(text) // len(
         INDENT_SPACES
     )
     wrapped_text = ""
     text_buffer = ""
     lines = text.splitlines()
     for i, line in enumerate(lines):
-        cur_indent_length = count_leading_spaces(line) // len(INDENT_SPACES)
+        cur_indent_length = _count_leading_spaces(line) // len(INDENT_SPACES)
         if cur_indent_length == root_indent_length:
             if text_buffer:
                 if not is_freezing_needed(text_buffer):
@@ -244,21 +211,8 @@ def wrap_metadata_text(text):
     return wrapped_text
 
 
-def wrap_docstring(docstring):
-    """
-    Wraps the docstring to the specified width.
-
-    Parameters
-    ----------
-    docstring (str)
-        The docstring to be wrapped. wrapped docstring.
-
-    Returns
-    -------
-    str
-        The wrapped docstring.
-    """
-    leading_spaces = " " * count_leading_spaces(docstring)
+def _wrap_docstring(docstring):
+    leading_spaces = " " * _count_leading_spaces(docstring)
     start_quote = leading_spaces + docstring.splitlines()[0].strip()
     end_quote = leading_spaces + docstring.splitlines()[-1].strip()
     docstring = "\n".join(docstring.splitlines()[1:-1])
@@ -284,7 +238,7 @@ def wrap_docstring(docstring):
             # The section is identified as metadata.
             header = "\n".join(section_lines[:2])
             body = "\n".join(section_lines[2:])
-            wrapped_body = wrap_metadata_text(body)
+            wrapped_body = _wrap_metadata_text(body)
             wrapped_section = header + "\n" + wrapped_body
         elif is_freezing_needed(section):
             # No modification required.
@@ -299,23 +253,13 @@ def wrap_docstring(docstring):
     return wrapped_docstring
 
 
-def wrap_docstrings(docstrings):
+def _wrap_docstrings(docstrings):
     """
     Wraps the docstrings to the specified width.
-
-    Parameters
-    ----------
-    docstrings (list)
-        A list of docstrings to be wrapped.
-
-    Returns
-    -------
-    list
-        A list of wrapped docstrings.
     """
     wrapped_docstrings = []
     for docstring in docstrings:
-        wrapped_docstring = wrap_docstring(docstring)
+        wrapped_docstring = _wrap_docstring(docstring)
         wrapped_docstrings.append(wrapped_docstring)
     return wrapped_docstrings
 
@@ -334,10 +278,10 @@ def format_docstrings(code):
     str
         The code with the formatted docstrings.
     """
-    docstrings = get_docstrings(code)
-    cleaned_docstrings = clean_docstrings(docstrings)
+    docstrings = _get_docstrings(code)
+    cleaned_docstrings = _clean_docstrings(docstrings)
     updated_code = code
-    wrapped_docstrings = wrap_docstrings(cleaned_docstrings)
+    wrapped_docstrings = _wrap_docstrings(cleaned_docstrings)
     for original, updated in zip(docstrings, wrapped_docstrings):
         updated_code = updated_code.replace(original, updated)
 
