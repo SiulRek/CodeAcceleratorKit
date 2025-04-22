@@ -71,6 +71,7 @@ def process_import_statements(import_statements, modules_info):
     import_statements = zip(import_statements, module_paths, package_names)
 
     import_statements = sorted(import_statements, key=lambda item: item[1])
+    import_statements = list(dict.fromkeys(import_statements))
 
     standard_library_imports = []
     third_party_imports = []
