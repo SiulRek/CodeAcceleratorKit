@@ -17,18 +17,24 @@ def magic_register_runner(
 ):
     """
     A Magic runners registration function for lazy people like me. Not only
-    registers the runner but also copies the templates files from the main tasks
-    root to the target runner root and allocates the '.vscode/tasks.json'.
+    registers the runner but also copies the templates files from the main
+    tasks root to the target runner root and allocates the
+    '.vscode/tasks.json'.
 
-    Args:
-        - runner_root (str): The root directory of the runner.
-        - python_env (str): The path to the python environment directory.
-        - storage_dir (str): The path to the storage directory.
-        - overwrite (bool): Whether to overwrite the existing runner
-            registration.
-        - create_dirs (bool): Whether to create the directories if they do
-            not exist.
-        - cwd (str): The current working directory for the runner.
+    Parameters
+    ----------
+    runner_root (str)
+        The root directory of the runner.
+    python_env (str)
+        The path to the python environment directory.
+    storage_dir (str)
+        The path to the storage directory.
+    overwrite (bool)
+        Whether to overwrite the existing runner registration.
+    create_dirs (bool)
+        Whether to create the directories if they do not exist.
+    cwd (str)
+        The current working directory for the runner.
     """
     try:
         TaskManager.login_runner(TASKS_ROOT)

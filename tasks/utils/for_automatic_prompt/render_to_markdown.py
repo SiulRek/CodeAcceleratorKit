@@ -21,18 +21,22 @@ EXTENSION_TO_FORMAT = {
 
 def render_to_markdown(text, format=None, extension=None):
     """
-    Renders the given text to a markdown code block with the specified format or
-    extension of the file from which the text was extracted.
+    Renders the given text to a markdown code block with the specified format
+    or extension of the file from which the text was extracted.
 
-    Args:
-        - text (str): The text to be rendered.
-        - format (str, Optional): The format of the code block (e.g.,
-            'python', 'json').
-        - extension (str, Optional): The extension of the file from which
-            the text
+    Parameters
+    ----------
+    text (str)
+        The text to be rendered.
+    format (str, Optional)
+        The format of the code block (e.g., 'python', 'json').
+    extension (str, Optional)
+        The extension of the file from which the text
 
-    Returns:
-        - str: The markdown formatted code block.
+    Returns
+    -------
+    str
+        The markdown formatted code block.
     """
     if format and extension:
         msg = "Only one of 'format' or 'extension' can be specified."

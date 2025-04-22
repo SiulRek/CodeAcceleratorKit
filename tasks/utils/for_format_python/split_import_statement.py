@@ -16,17 +16,20 @@ def process_name_specifications(name_specifications):
     Processes the name specifications of an import statement. The name
     specifications are a list of strings containing the original name and alias
     name of the imported module. The alias name is the name after the 'as'
-    keyword. If the alias name is not provided, the original name is used as the
-    alias name.
+    keyword. If the alias name is not provided, the original name is used as
+    the alias name.
 
-    Args:
-        - name_specifications (str): A string containing the name
-            specifications of an import statement.
+    Parameters
+    ----------
+    name_specifications (str)
+        A string containing the name specifications of an import statement.
 
-    Returns:
-        - tuple: A tuple containing two lists. The first list contains the
-            original names of the importedmodules. The second list contains the
-            alias names of the imported modules.
+    Returns
+    -------
+    tuple
+        A tuple containing two lists. The first list contains the original
+        names of the importedmodules. The second list contains the alias names
+        of the imported modules.
     """
     original_names = []
     alias_names = []
@@ -64,12 +67,16 @@ def split_import_statement(import_statement):
     the names of the modules being imported. The alias names are the names used
     to refer to the imported modules in the code.
 
-    Args:
-        - import_statement (str): The import statement to split.
+    Parameters
+    ----------
+    import_statement (str)
+        The import statement to split.
 
-    Returns:
-        - tuple: A tuple containing the base, original names, and alias
-            names of the import statement.
+    Returns
+    -------
+    tuple
+        A tuple containing the base, original names, and alias names of the
+        import statement.
     """
     words = import_statement.strip().split()
     if "import" not in words:

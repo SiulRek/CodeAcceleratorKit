@@ -5,24 +5,33 @@ import subprocess
 
 def execute_python_module(module, env_python_path, cwd=None, temp_script_path=None, args=None):
     """
-    Executes a specified Python module using a designated Python interpreter from a virtual environment,
-    potentially in a different working directory or a temporary location. This function supports passing 
-    additional arguments to the script. It captures and returns the script's standard output. If an error 
-    occurs during the script's execution, it captures and returns the error output.
+    Executes a specified Python module using a designated Python interpreter
+    from a virtual environment, potentially in a different working directory or
+    a temporary location. This function supports passing additional arguments
+    to the script. It captures and returns the script's standard output. If an
+    error occurs during the script's execution, it captures and returns the
+    error output.
 
-    Args:
-        - script (str): The path to or the module of the Python script to run.
-        - env_python_path (str): The path to the Python interpreter in the
-            virtual environment.
-        - cwd (str): The current working directory for the script execution.
-            Default is None.
-        - temp_script_path (str): The path to copy the script to before. Useful
-            when the script is located in a different workspace. Default is None.
-        - args (list): The list of arguments to pass to the script. Default is None.
+    Parameters
+    ----------
+    script (str)
+        The path to or the module of the Python script to run.
+    env_python_path (str)
+        The path to the Python interpreter in the virtual environment.
+    cwd (str)
+        The current working directory for the script execution. Default is
+        None.
+    temp_script_path (str)
+        The path to copy the script to before. Useful when the script is
+        located in a different workspace. Default is None.
+    args (list)
+        The list of arguments to pass to the script. Default is None.
 
-    Returns:
-        - str: The output from the script execution or an error message if
-            execution fails.
+    Returns
+    -------
+    str
+        The output from the script execution or an error message if execution
+        fails.
     """
     if hasattr(module, "__file__"):
         module = module.__file__

@@ -9,7 +9,9 @@ from tasks.tasks.core.macro_interpreter import MacroInterpreter
 
 
 class FormatPythonInterpreter(MacroInterpreter):
-    """ A class for interpreting format python macros from text. """
+    """
+    A class for interpreting format python macros from text.
+    """
 
     def validate_select_only_macro(self, line):
         if result := line_validation_for_select_only(line):

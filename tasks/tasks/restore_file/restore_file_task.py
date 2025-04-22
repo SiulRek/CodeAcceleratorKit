@@ -1,10 +1,15 @@
 """
-This module defines the RestoreFileTask, a task for restoring a backup file to its original location.
+This module defines the RestoreFileTask, a task for restoring a backup file to
+its original location.
 
-The RestoreFileTask class sets up the environment, initializes the file path from additional arguments, and uses the BackupHandler to recover the specified backup file.
+The RestoreFileTask class sets up the environment, initializes the file path
+from additional arguments, and uses the BackupHandler to recover the specified
+backup file.
 
 Usage example:
+```
 RestoreFileTask(root_directory, backup_file_path).main()
+```
 """
 
 import os
@@ -14,24 +19,29 @@ from tasks.utils.shared.backup_handler import BackupHandler
 
 
 class RestoreFileTask(TaskBase):
-    """A task for restoring a backup file to its original location."""
+    """
+    A task for restoring a backup file to its original location.
+    """
 
     NAME = "Restore Backup"
 
     def setup(self):
-        """Sets up the RestoreFileTask by initializing the file path from
-        additional arguments."""
+        """
+        Sets up the RestoreFileTask by initializing the file path from
+        additional arguments.
+        """
         super().setup()
         self.current_file = self.additional_args[0]
 
     def execute(self):
         """
-        Executes the restore backup task, restoring the specified backup file to
-        its original location.
+        Executes the restore backup task, restoring the specified backup file
+        to its original location.
 
-        Raises:
-            - FileNotFoundError: If the specified backup file does not
-                exist.
+        Raises
+        -----
+        FileNotFoundError
+            If the specified backup file does not exist.
         """
         file_path = self.current_file
 

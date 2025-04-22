@@ -64,15 +64,21 @@ def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
     directory name, the function will search for the nearest directory to the
     reference directory.
 
-    Args:
-        - string (str): The string to be searched, which could be a path
-            fragment or directory name.
-        - root_dir (str): The root directory of the project.
-        - reference_dir (str): The path to the reference directory, used
-            when finding the nearest directory.
+    Parameters
+    ----------
+    string (str)
+        The string to be searched, which could be a path fragment or directory
+        name.
+    root_dir (str)
+        The root directory of the project.
+    reference_dir (str)
+        The path to the reference directory, used when finding the nearest
+        directory.
 
-    Returns:
-        - dir_path (str): The path to the directory.
+    Returns
+    -------
+    dir_path (str)
+        The path to the directory.
     """
     root_dir = os.path.abspath(root_dir)
     reference_dir = os.path.abspath(reference_dir)

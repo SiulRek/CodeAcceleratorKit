@@ -26,12 +26,13 @@ class BackupHandler:
         get_backup_context(file_extension=None): Retrieve information about stored backup files.
 
     Usage:
-        ```python
-        # Example Usage:
-        backup_dir = 'path/to/backup/directory'
-        max_backups = 10
-        backup_handler = BackupHandler(backup_dir, max_backups)
-        backup_handler.store_backup('file_path.txt', 'Backup comment')
+    ```python
+    # Example Usage:
+    backup_dir = 'path/to/backup/directory'
+    max_backups = 10
+    backup_handler = BackupHandler(backup_dir, max_backups)
+    backup_handler.store_backup('file_path.txt', 'Backup comment')
+    ```
     """
 
     CONTEXT_FILE_NAME = "backup_context.csv"

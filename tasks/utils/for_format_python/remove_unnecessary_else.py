@@ -8,11 +8,15 @@ def remove_unnecessary_else(code):
     Removes unnecessary 'else' statements that follow 'raise' or 'return'
     statements.
 
-    Args:
-        - code (str): The code to be checked and updated.
+    Parameters
+    ----------
+    code (str)
+        The code to be checked and updated.
 
-    Returns:
-        - str: The updated code with unnecessary 'else' statements removed.
+    Returns
+    -------
+    str
+        The updated code with unnecessary 'else' statements removed.
     """
     lines = code.splitlines()
     updated_lines = []
@@ -71,8 +75,10 @@ def remove_unnecessary_else_from_file(file_path):
     Removes unnecessary 'else' statements from the file if they follow 'raise'
     or 'return' statements.
 
-    Args:
-        - file_path (str): The path to the file to be checked and updated.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file to be checked and updated.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()

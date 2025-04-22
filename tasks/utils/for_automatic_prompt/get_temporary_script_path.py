@@ -3,11 +3,15 @@ def get_temporary_script_path(temporary_dir):
     """
     Get unique temporary script path.
 
-    Args:
-        - temporary_dir (str): The directory to save the temporary script.
-    
-    Returns:
-        - str: The path to the temporary script.
+    Parameters
+    ----------
+    temporary_dir (str)
+        The directory to save the temporary script.
+
+    Returns
+    -------
+    str
+        The path to the temporary script.
     """
     if not os.path.exists(temporary_dir):
         raise NotADirectoryError(f"Temporary directory {temporary_dir} does not exist.")

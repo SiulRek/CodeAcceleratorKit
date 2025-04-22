@@ -61,16 +61,20 @@ def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     for the file from the path fragment. If the string contains only the file
     name, the function will search for the nearest file to the reference file.
 
-    Args:
-        - file_name_fragment (str): The name or a fragment of the file name
-            to search for.
-        - root_dir (str): The root directory to start the search from.
-        - reference_file_path (str, optional): The reference file path to
-            assist in finding the nearest file if not found directly under
-            root_dir. Default is None.
+    Parameters
+    ----------
+    file_name_fragment (str)
+        The name or a fragment of the file name to search for.
+    root_dir (str)
+        The root directory to start the search from.
+    reference_file_path (str, optional)
+        The reference file path to assist in finding the nearest file if not
+        found directly under root_dir. Default is None.
 
-    Returns:
-        - file_path (str): The path to the file.
+    Returns
+    -------
+    file_path (str)
+        The path to the file.
     """
     root_dir = os.path.abspath(root_dir)
     root_dir = os.path.normpath(root_dir)

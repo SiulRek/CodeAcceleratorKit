@@ -9,16 +9,22 @@ input through command line arguments and handles dynamic discovery of files
 within directories.
 
 Usage example:
-    - PylintReportTask(root_directory, reference_dir,
-        directory_for_report).main() # If no directory is specified, #
-        reference_dir is used as the directory_for_report. #
-        directory_for_report can be defined with 'sloppy' string (see
+```python
+PylintReportTask(root_directory, reference_dir,
+directory_for_report).main()
+```
+
+Note
+----
+If no directory is specified, reference_dir is used as the
+directory_for_report. directory_for_report can be defined with 'sloppy' string
+(see
 
 Highlights:
-    - Dynamically finds Python files in a given directory.
-    - Executes pylint on each file and extracts scoring information.
-    - Writes the pylint report to a file, organizing entries by score (worst
-        to best).
+- Dynamically finds Python files in a given directory.
+- Executes pylint on each file and extracts scoring information.
+- Writes the pylint report to a file, organizing entries by score (worst
+to best).
 """
 
 from datetime import datetime
@@ -30,20 +36,26 @@ from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
 
 
 class PylintReportTask(TaskBase):
-    """ A task for generating a pylint report. """
+    """
+    A task for generating a pylint report.
+    """
 
     NAME = "Pylint Report"
 
     def setup(self):
-        """ Sets up the PylintReportTask by initializing the file path from
-        additional arguments. """
+        """
+        Sets up the PylintReportTask by initializing the file path from
+        additional arguments.
+        """
         super().setup()
         self.current_file = self.additional_args[0]
         if len(self.additional_args) > 1 and self.additional_args[1]:
             self.dir_for_report = self.additional_args[1]
 
     def _get_python_files(self, directory):
-        """ Gets all python files in the specified directory. """
+        """
+        Gets all python files in the specified directory.
+        """
         python_files = []
         for root, _, files in os.walk(directory):
             for file in files:
@@ -52,7 +64,9 @@ class PylintReportTask(TaskBase):
         return python_files
 
     def _process_pylint_output(self, file, output):
-        """ Processes the pylint output and prettifies it. """
+        """
+        Processes the pylint output and prettifies it.
+        """
         file = os.path.abspath(file)
         file = os.path.normpath(file)
         header = "*" * 50 + f"\n Module: {file}\n"
@@ -72,7 +86,9 @@ class PylintReportTask(TaskBase):
         return prettified_output, score
 
     def _execute_pylint(self, file):
-        """ Runs pylint on the specified file. """
+        """
+        Runs pylint on the specified file.
+        """
         python_env = self.profile.runner_python_env
         print(f"Running pylint on {file}")
         output = execute_pylint(file, python_env)
@@ -81,7 +97,9 @@ class PylintReportTask(TaskBase):
         return self._process_pylint_output(file, output)
 
     def _write_report(self, logs):
-        """ Writes the pylint report to a file. """
+        """
+        Writes the pylint report to a file.
+        """
         reports_dir = self.profile.reports_dir
         root_dir = self.profile.root
         report_name = os.path.basename(self.dir_for_report).split(".")[0]
@@ -109,8 +127,10 @@ class PylintReportTask(TaskBase):
         print(f"Report written to {report_path}")
 
     def execute(self):
-        """ Executes the pylint report task, generating a pylint report for the
-        specified file. """
+        """
+        Executes the pylint report task, generating a pylint report for the
+        specified file.
+        """
         logs = []
 
         if hasattr(self, "dir_for_report"):

@@ -22,9 +22,10 @@ def retrieve_modules(cwd):
     current Python environment. Stores them in a JSON file under
     'standard_library' and 'third_party' keys.
 
-    Args:
-        - cwd (str): The current working directory. Used to find local
-            modules.
+    Parameters
+    ----------
+    cwd (str)
+        The current working directory. Used to find local modules.
     """
 
     standard_libs = stdlib_list.stdlib_list()

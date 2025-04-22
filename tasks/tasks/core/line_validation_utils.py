@@ -4,7 +4,9 @@ import re
 ROUND_BRACKET_PATTERN = re.compile(r"\((.*?)\)")
 
 def check_type(value, expected_type, additional_error_message=""):
-    """Check if the value is of the expected type."""
+    """
+    Check if the value is of the expected type.
+    """
     if not isinstance(value, expected_type):
         msg = f"Expected {expected_type}, but got {type(value)}"
         msg += f"{additional_error_message}"
@@ -14,13 +16,18 @@ def retrieve_arguments_in_round_brackets(string, max_args=float("inf")):
     """
     Retrieve the arguments in round brackets.
 
-    Args:
-        - string (str): The string to retrieve the arguments from.
-        - max_args (int): The maximum number of arguments expected.
-            Otherwise, an error is raised.
+    Parameters
+    ----------
+    string (str)
+        The string to retrieve the arguments from.
+    max_args (int)
+        The maximum number of arguments expected. Otherwise, an error is
+        raised.
 
-    Returns:
-        - tuple: The arguments in the round brackets or None if there are no arguments.
+    Returns
+    -------
+    tuple
+        The arguments in the round brackets or None if there are no arguments.
     """
     match = re.search(ROUND_BRACKET_PATTERN, string)
     if match:

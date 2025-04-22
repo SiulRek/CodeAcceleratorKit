@@ -8,12 +8,15 @@ def extract_module_path(import_statement):
     returns the full name of the module or package as specified in the import
     statement.
 
-    Args:
-        - import_statement (str): A string containing a single line of a
-            Python import statement.
+    Parameters
+    ----------
+    import_statement (str)
+        A string containing a single line of a Python import statement.
 
-    Returns:
-        - str: The name of the module or package imported.
+    Returns
+    -------
+    str
+        The name of the module or package imported.
     """
     stripped_line = import_statement.strip()
 

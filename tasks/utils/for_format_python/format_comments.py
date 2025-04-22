@@ -12,11 +12,15 @@ def extract_comments(code):
     """
     Extracts comments from the code and returns them as a list.
 
-    Args:
-        - code (str): The code from which the comments are to be extracted.
+    Parameters
+    ----------
+    code (str)
+        The code from which the comments are to be extracted.
 
-    Returns:
-        - list: A list of comments extracted from the code.
+    Returns
+    -------
+    list
+        A list of comments extracted from the code.
     """
     code_lines = code.split("\n")
     lines_iter = iter(code_lines)
@@ -46,13 +50,17 @@ def wrap_comment(comment, leading_spaces):
     """
     Wraps the comment to the specified width.
 
-    Args:
-        - comment (str): The comment to be wrapped.
-        - leading_spaces (str): The leading spaces to be added to the
-            wrapped comment.
+    Parameters
+    ----------
+    comment (str)
+        The comment to be wrapped.
+    leading_spaces (str)
+        The leading spaces to be added to the wrapped comment.
 
-    Returns:
-        - str: The wrapped comment.
+    Returns
+    -------
+    str
+        The wrapped comment.
     """
     comment_lines = comment.splitlines()
     concatenated_comment = " ".join(line.strip("# ").strip() for line in comment_lines)
@@ -75,11 +83,15 @@ def refactor_comments(comments):
     """
     Refactors the comments by wrapping them to the specified width.
 
-    Args:
-        - comments (list): A list of comments to be refactored.
+    Parameters
+    ----------
+    comments (list)
+        A list of comments to be refactored.
 
-    Returns:
-        - list: A list of refactored comments.
+    Returns
+    -------
+    list
+        A list of refactored comments.
     """
     refactored_comments = []
     for comment in comments:
@@ -95,11 +107,15 @@ def format_comments(code):
     """
     Formats the comments in the code.
 
-    Args:
-        - code (str): The code to be formatted.
+    Parameters
+    ----------
+    code (str)
+        The code to be formatted.
 
-    Returns:
-        - str: The code with the formatted comments.
+    Returns
+    -------
+    str
+        The code with the formatted comments.
     """
     comments = extract_comments(code)
     refactored_comments = refactor_comments(comments)
@@ -112,8 +128,10 @@ def format_comments_from_file(file_path):
     """
     Formats the comments in the file.
 
-    Args:
-        - file_path (str): The path to the file to be formatted.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file to be formatted.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()

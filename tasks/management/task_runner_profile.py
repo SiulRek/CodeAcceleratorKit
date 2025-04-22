@@ -14,10 +14,12 @@ class TaskRunnerProfile:
     """
     Stores the TaskRunnerProfile, including loading and saving attributes.
 
-    Args:
-        - runner_root (str): The root directory of the runner.
-        - load_attributes_from_storage (bool): Whether to load attributes
-            from the storage directory.
+    Parameters
+    ----------
+    runner_root (str)
+        The root directory of the runner.
+    load_attributes_from_storage (bool)
+        Whether to load attributes from the storage directory.
     """
 
     def __init__(self, runner_root, load_attributes_from_storage=True):
@@ -33,8 +35,10 @@ class TaskRunnerProfile:
         """
         Returns the normalized runner root path.
 
-        Returns:
-            - str: The runner root path.
+        Returns
+        -------
+        str
+            The runner root path.
         """
         return self._root
 
@@ -43,8 +47,10 @@ class TaskRunnerProfile:
         """
         Returns the storage directory path.
 
-        Returns:
-            - str: The storage directory path.
+        Returns
+        -------
+        str
+            The storage directory path.
         """
         return self._storage_dir
 
@@ -54,8 +60,10 @@ class TaskRunnerProfile:
         Returns the directory path for storing configuration files inside the
         runner storage directory.
 
-        Returns:
-            - str: The configuration directory path.
+        Returns
+        -------
+        str
+            The configuration directory path.
         """
         return self._profile_dir
     
@@ -64,8 +72,10 @@ class TaskRunnerProfile:
         """
         Returns the attributes dictionary.
 
-        Returns:
-            - dict: The attributes dictionary.
+        Returns
+        -------
+        dict
+            The attributes dictionary.
         """
         return self._all_attributes
 
@@ -74,11 +84,15 @@ class TaskRunnerProfile:
         Determines the storage directory based on the registration data of
         runner root.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
 
-        Returns:
-            - str: The storage directory path.
+        Returns
+        -------
+        str
+            The storage directory path.
         """
         with open(configs.REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_variables = json.load(f)
@@ -91,9 +105,12 @@ class TaskRunnerProfile:
         """
         Sets an attribute.
 
-        Args:
-            - attribute_name (str): The name of the attribute.
-            - attribute_value (Any): The value of the attribute.
+        Parameters
+        ----------
+        attribute_name (str)
+            The name of the attribute.
+        attribute_value (Any)
+            The value of the attribute.
         """
         if attribute_name not in Attributes.ProfileAttrNames.__members__.keys():
             warnings.warn(f"Attribute {attribute_name} is not defined in the ProfileAttrNames.")
@@ -104,11 +121,15 @@ class TaskRunnerProfile:
         """
         Returns a deep copy of the attribute.
 
-        Args:
-            - attribute_name (str): The name of the attribute.
+        Parameters
+        ----------
+        attribute_name (str)
+            The name of the attribute.
 
-        Returns:
-            - Any: A deep copy of the attribute.
+        Returns
+        -------
+        Any
+            A deep copy of the attribute.
         """
         if attribute_name not in self._all_attributes:
             msg = f"Attribute {attribute_name} is not present in the attributes."
@@ -116,7 +137,9 @@ class TaskRunnerProfile:
         return deepcopy(self._all_attributes[attribute_name])
     
     def clear_attributes(self):
-        """Clears all attributes."""
+        """
+        Clears all attributes.
+        """
         for attr in self._all_attributes:
             delattr(self, attr)
         self._all_attributes = {}
@@ -125,15 +148,18 @@ class TaskRunnerProfile:
         """
         Loads attributes from a dictionary.
 
-        Args:
-            - attributes_dict (dict): A dictionary containing the attributes
-                to load.
+        Parameters
+        ----------
+        attributes_dict (dict)
+            A dictionary containing the attributes to load.
         """
         for name, value in attributes_dict.items():
             self.set_attribute(name, value)
 
     def load_attributes_from_storage(self):
-        """Loads attributes from the storage/configs directory."""
+        """
+        Loads attributes from the storage/configs directory.
+        """
         if not os.path.isdir(self.profile_dir):
             msg = f"Directory {self.profile_dir} does not exist. Please register the runner properly."
             raise NotADirectoryError(msg)
@@ -152,10 +178,14 @@ class TaskRunnerProfile:
                 
     def update_attributes(self, reinitialized_attrs):
         """
-        Updates the attributes with the reinitialized attributes. The update depends on the UPDATE_MAPPING parameter.
+        Updates the attributes with the reinitialized attributes. The update
+        depends on the UPDATE_MAPPING parameter.
 
-        Args:
-            - reinitialized_attrs (dict): A dictionary containing the reinitialized attributes. It is expected that the keys corresponds to ProfileAttrNames.
+        Parameters
+        ----------
+        reinitialized_attrs (dict)
+            A dictionary containing the reinitialized attributes. It is
+            expected that the keys corresponds to ProfileAttrNames.
         """
         updated_attrs = {}
         for reinit_name in reinitialized_attrs:
@@ -174,8 +204,10 @@ class TaskRunnerProfile:
         """
         Checks if all attributes defined in ContextAttrNames are present in the
 
-        Returns:
-            - bool: True if all attributes are present, False otherwise.
+        Returns
+        -------
+        bool
+            True if all attributes are present, False otherwise.
         """
         for attr in Attributes.ProfileAttrNames.__members__.keys():
             if not hasattr(self, attr):
@@ -186,8 +218,10 @@ class TaskRunnerProfile:
         """
         Saves attributes to a JSON or pickle file.
 
-        Raises:
-            - AttributeError: If a required attribute is missing.
+        Raises
+        -----
+        AttributeError
+            If a required attribute is missing.
         """
         if not self.are_attributes_complete():
             msg = "Missing context attribute(s) to save."

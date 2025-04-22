@@ -5,11 +5,15 @@ def remove_trailing_lines(text):
     """
     Removes trailing lines from the given text.
 
-    Args:
-        - text (str): The text content.
+    Parameters
+    ----------
+    text (str)
+        The text content.
 
-    Returns:
-        - str: The cleaned content of the text.
+    Returns
+    -------
+    str
+        The cleaned content of the text.
     """
     lines = text.splitlines()
     while lines and lines[-1].strip() == "":
@@ -22,11 +26,15 @@ def remove_trailing_spaces(text):
     """
     Removes trailing spaces from the given text.
 
-    Args:
-        - text (str): The text content.
+    Parameters
+    ----------
+    text (str)
+        The text content.
 
-    Returns:
-        - str: The cleaned text with trailing spaces removed from each line.
+    Returns
+    -------
+    str
+        The cleaned text with trailing spaces removed from each line.
     """
     lines = text.splitlines()
     cleaned_lines = [re.sub(r"[ \t]+$", "", line) for line in lines]
@@ -37,11 +45,15 @@ def remove_trailing_parts(text):
     """
     Removes trailing spaces and lines from the given text.
 
-    Args:
-        - text (str): The text content.
+    Parameters
+    ----------
+    text (str)
+        The text content.
 
-    Returns:
-        - str: The cleaned content of the text.
+    Returns
+    -------
+    str
+        The cleaned content of the text.
     """
     text = remove_trailing_spaces(text)
     updated_text = remove_trailing_lines(text)
@@ -55,8 +67,10 @@ def remove_trailing_parts_from_file(file_path):
     """
     Removes trailing spaces and lines from the given file.
 
-    Args:
-        - file_path (str): The path to the file.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         text = file.read()

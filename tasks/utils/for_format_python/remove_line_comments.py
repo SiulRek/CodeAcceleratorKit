@@ -6,11 +6,15 @@ def remove_line_comments(text):
     Removes all line comments from a given text. Line comments start with '#'.
     This function handles both full line comments and inline comments.
 
-    Args:
-        - text (str): The content of the text from which to remove comments.
+    Parameters
+    ----------
+    text (str)
+        The content of the text from which to remove comments.
 
-    Returns:
-        - str: The cleaned content of the text.
+    Returns
+    -------
+    str
+        The cleaned content of the text.
     """
     lines = text.splitlines()
     new_lines = []
@@ -27,9 +31,10 @@ def remove_line_comments_from_file(file_path):
     """
     Removes all line comments from a file. Line comments start with '#'.
 
-    Args:
-        - file_path (str): The path to the file from which to remove
-            comments.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file from which to remove comments.
     """
     if not os.path.exists(file_path):
         msg = f"The file {file_path} does not exist."

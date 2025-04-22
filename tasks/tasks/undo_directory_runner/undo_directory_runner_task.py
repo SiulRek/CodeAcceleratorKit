@@ -3,14 +3,16 @@ This module defines the UndoDirectoryRunnerTask, a task for undoing the effects
 of a previously executed directory runner task.
 
 The UndoDirectoryRunnerTask class initializes the environment, reads
-configurations from a specified JSON file, and utilizes the FileExecutionTracker
-and BackupHandler to revert changes made by the directory runner task. Note that
-the task restores the most recent backup of each file, which may not accurately
-reverse the changes if the file was backed up again after the original directory
-runner task was executed.
+configurations from a specified JSON file, and utilizes the
+FileExecutionTracker and BackupHandler to revert changes made by the directory
+runner task. Note that the task restores the most recent backup of each file,
+which may not accurately reverse the changes if the file was backed up again
+after the original directory runner task was executed.
 
-Usage example: 
+Usage example:
+```python
 UndoDirectoryRunnerTask(root_directory, config_json).main()
+```
 """
 
 import os
@@ -21,7 +23,9 @@ from tasks.utils.shared.backup_handler import BackupHandler
 
 
 class UndoDirectoryRunnerTask(TaskBase):
-    """ A task for undoing the effects of a directory runner task. """
+    """
+    A task for undoing the effects of a directory runner task.
+    """
 
     NAME = "Undo Directory Runner"
 
@@ -34,8 +38,10 @@ class UndoDirectoryRunnerTask(TaskBase):
             raise ValueError(msg)
 
     def execute(self):
-        """ Executes the directory runner task, running the specified task
-        onthefiles in the directory. """
+        """
+        Executes the directory runner task, running the specified task
+        onthefiles in the directory.
+        """
         execution_tracks_dir = self.profile.execution_tracks_dir
         csv_name = (
             os.path.basename(self.current_file).split(".")[0] + "_execution_tracks.csv"

@@ -10,22 +10,28 @@ class ChatManager:
     """
     Manages the chat interactions for the Automatic Prompt task.
 
-    Args:
-        - file_path (str): Path to the file being processed.
-        - chats_dir (str): Directory for chat files.
-        - backup_handler (BackupHandler): Instance of BackupHandler for
-            managing backups.
+    Parameters
+    ----------
+    file_path (str)
+        Path to the file being processed.
+    chats_dir (str)
+        Directory for chat files.
+    backup_handler (BackupHandler)
+        Instance of BackupHandler for managing backups.
     """
 
     def __init__(self, file_path, chats_dir, backup_handler):
         """
         Initializes the ChatManager with file path and chat directory.
 
-        Args:
-            - file_path (str): Path to the file being processed.
-            - chats_dir (str): Directory for chat files.
-            - backup_handler (BackupHandler): Instance of BackupHandler for
-                managing backups.
+        Parameters
+        ----------
+        file_path (str)
+            Path to the file being processed.
+        chats_dir (str)
+            Directory for chat files.
+        backup_handler (BackupHandler)
+            Instance of BackupHandler for managing backups.
         """
         self.file_path = None
         self.file_name = None
@@ -57,9 +63,12 @@ class ChatManager:
         """
         Saves the prompt to a file and optionally copies it to the clipboard.
 
-        Args:
-            - prompt (str): The prompt to be sent.
-            - copy_prompt (bool): Whether to copy the prompt to clipboard.
+        Parameters
+        ----------
+        prompt (str)
+            The prompt to be sent.
+        copy_prompt (bool)
+            Whether to copy the prompt to clipboard.
         """
         self.prompt = prompt
         self.prompt_path = os.path.join(self.chats_dir, f"{self.file_name}_prompt.md")
@@ -75,9 +84,12 @@ class ChatManager:
         """
         Sends the prompt to the chat manager.
 
-        Args:
-            - prompt (str): The prompt to be sent.
-            - copy_prompt (bool): Whether to copy the prompt to clipboard.
+        Parameters
+        ----------
+        prompt (str)
+            The prompt to be sent.
+        copy_prompt (bool)
+            Whether to copy the prompt to clipboard.
         """
         modify_inplace = kwargs["modify_inplace"]
         max_tokens = kwargs["max_tokens"]

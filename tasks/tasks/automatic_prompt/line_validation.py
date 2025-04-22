@@ -102,21 +102,27 @@ SEND_PROMPT_TAG = TAGS.SEND_PROMPT.value
 
 
 def line_validation_for_begin_text(line):
-    """Validate if the line is a start tag macro."""
+    """
+    Validate if the line is a start tag macro.
+    """
     if BEGIN_TAG in line:
         return line.split(BEGIN_TAG, 1)[1].strip()
     return None
 
 
 def line_validation_for_end_text(line):
-    """Validate if the line is an end tag macro."""
+    """
+    Validate if the line is an end tag macro.
+    """
     if END_TAG in line:
         return line.split(END_TAG, 1)[1].strip()
     return None
 
 
 def line_validation_for_title(line):
-    """Validate if the line is a title macro."""
+    """
+    Validate if the line is a title macro.
+    """
     if match := TITLE_PATTERN.match(line):
         title = match.group(1).strip()
         level = 1
@@ -128,7 +134,9 @@ def line_validation_for_title(line):
 
 
 def line_validation_for_normal_text(line):
-    """Validate if the line is a normal text macro."""
+    """
+    Validate if the line is a normal text macro.
+    """
     if NORMAL_TEXT_TAG in line:
         return line.replace(NORMAL_TEXT_TAG, "").lstrip()
     if not re.match(MACRO_PATTERN, line):  # Check if it is not a macro
@@ -137,7 +145,9 @@ def line_validation_for_normal_text(line):
 
 
 def line_validation_for_paste_file(line):
-    """Validate if the line contains references to paste file macro."""
+    """
+    Validate if the line contains references to paste file macro.
+    """
     if match := re.search(PASTE_FILE_PATTERN, line):
         file_names = match.group(1).split(",")
         file_names = [file_name.strip() for file_name in file_names]
@@ -173,7 +183,9 @@ def line_validation_for_paste_declaration_block(line):
 
 
 def line_validation_for_fill_text(line):
-    """Validate if the line is a fill text macro."""
+    """
+    Validate if the line is a fill text macro.
+    """
     if match := FILL_TEXT_PATTERN.match(line):
         placeholder = match.group(1)
         return placeholder
@@ -181,14 +193,18 @@ def line_validation_for_fill_text(line):
 
 
 def line_validation_for_meta_macros(line):
-    """Validate if the line is a meta macros macro."""
+    """
+    Validate if the line is a meta macros macro.
+    """
     if result := META_MACROS_PATTERN.match(line):
         return result.group(1)
     return None
 
 
 def line_validation_for_meta_macros_with_args(line):
-    """Validate if the line is a meta macros with arguments macro."""
+    """
+    Validate if the line is a meta macros with arguments macro.
+    """
     if match := META_MACROS_WITH_ARGS_PATTERN.match(line):
         name = match.group(1)
         arguments = retrieve_arguments_in_round_brackets(line)
@@ -197,7 +213,9 @@ def line_validation_for_meta_macros_with_args(line):
 
 
 def line_validation_for_costum_function(line):
-    """Validate if the line is a costum function macro."""
+    """
+    Validate if the line is a costum function macro.
+    """
     if match := COSTUM_FUNCTION_PATTERN.match(line):
         name = match.group(1)
         arguments = retrieve_arguments_in_round_brackets(line)
@@ -206,14 +224,18 @@ def line_validation_for_costum_function(line):
 
 
 def line_validation_for_run_python_script(line):
-    """Validate if the line is a run python script macro."""
+    """
+    Validate if the line is a run python script macro.
+    """
     if match := RUN_SCRIPT_PATTERN.match(line):
         return match.group(1)
     return None
 
 
 def line_validation_for_run_subprocess(line):
-    """Validate if the line is a run subprocess macro."""
+    """
+    Validate if the line is a run subprocess macro.
+    """
     if match := RUN_SUBPROCESS_PATTERN.match(line):
         kwargs = {}
         if arguments := retrieve_arguments_in_round_brackets(line, 1):
@@ -225,14 +247,18 @@ def line_validation_for_run_subprocess(line):
 
 
 def line_validation_for_run_pylint(line):
-    """Validate if the line is a run pylint macro."""
+    """
+    Validate if the line is a run pylint macro.
+    """
     if match := RUN_PYLINT_PATTERN.match(line):
         return match.group(1)
     return None
 
 
 def line_validation_for_run_unittest(line):
-    """Validate if the line is a run unittest macro."""
+    """
+    Validate if the line is a run unittest macro.
+    """
     if match := re.search(UNITTEST_PATTERN, line):
         verbosity = 1
         if arguments := retrieve_arguments_in_round_brackets(line, 1):
@@ -243,7 +269,9 @@ def line_validation_for_run_unittest(line):
 
 
 def line_validation_for_directory_tree(line):
-    """Validate if the line is a directory tree macro."""
+    """
+    Validate if the line is a directory tree macro.
+    """
     if match := DIRECTORY_TREE_PATTERN.match(line):
         dir = match.group(1)
         max_depth = DIRECTORY_TREE_DEFAULTS.MAX_DEPTH.value
@@ -264,7 +292,9 @@ def line_validation_for_directory_tree(line):
 
 
 def line_validation_for_summarize_python_script(line):
-    """Validate if the line is a summarize python script macro."""
+    """
+    Validate if the line is a summarize python script macro.
+    """
     if match := SUMMARIZE_PYTHON_SCRIPT_PATTERN.match(line):
         include_definitions_without_docstrings = False
         if arguments := retrieve_arguments_in_round_brackets(line, 1):
@@ -276,7 +306,9 @@ def line_validation_for_summarize_python_script(line):
 
 
 def line_validation_for_summarize_folder(line):
-    """Validate if the line is a summarize folder macro."""
+    """
+    Validate if the line is a summarize folder macro.
+    """
     if match := SUMMARIZE_FOLDER_PATTERN.match(line):
         dir = match.group(1)
         include_definitions_without_docstrings = False
@@ -299,7 +331,9 @@ def line_validation_for_summarize_folder(line):
 
 
 def line_validation_for_send_prompt(line):
-    """Validate the line to check if it is a valid line to make a prompt macro."""
+    """
+    Validate the line to check if it is a valid line to make a prompt macro.
+    """
     if SEND_PROMPT_TAG in line:
         modify_inplace = False
         max_tokens = None

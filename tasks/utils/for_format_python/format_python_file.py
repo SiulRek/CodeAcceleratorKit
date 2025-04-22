@@ -43,11 +43,16 @@ def make_checkpoint(file_path, updated_code, description, checkpoint_dir):
     """
     Create a checkpoint of the file at the current state.
 
-    Args:
-        - file_path (str): Path to the file to create a checkpoint of.
-        - updated_code (str): Updated code to save in the checkpoint.
-        - description (str): Description of the changes made to the code.
-        - checkpoint_dir (str): Directory to save the checkpoint in.
+    Parameters
+    ----------
+    file_path (str)
+        Path to the file to create a checkpoint of.
+    updated_code (str)
+        Updated code to save in the checkpoint.
+    description (str)
+        Description of the changes made to the code.
+    checkpoint_dir (str)
+        Directory to save the checkpoint in.
     """
     if hasattr(make_checkpoint, "counter"):
         make_checkpoint.counter += 1
@@ -87,24 +92,29 @@ def format_python_file(
     Apply formatting strategies to a python file. The strategies are applied in
     the order they are defined in the STRATEGIES dictionary.
 
-    Args:
-        - file_path (str): Path to the file to format.
-        - select_only (list): List of strategy abbreviations to apply. If
-            specified, only the strategies in the list are applied. Default is
-            [].
-        - select_not (list): List of strategy abbreviations to exclude. If
-            specified, all strategies except the ones in the list are applied.
-            Default is [].
-        - force_select_of (list): List of strategy abbreviations to force
-            apply, as some are not applied by default. Default is [].
-        - checkpoint_dir (str): Directory to save the checkpoints in. If
-            specified, checkpointing is enabled.
-        - python_env_path (str): Path to the python environment to use for
-            subprocess formatting. Required for strategies using subprocesses.
-        - modules_info (dict): A dictionary containing information about the
-            loaded modules. Keys are 'standard_library', 'third_party', and
-            'local'. Used for rearranging imports. If None skips rearranging
-            imports.
+    Parameters
+    ----------
+    file_path (str)
+        Path to the file to format.
+    select_only (list)
+        List of strategy abbreviations to apply. If specified, only the
+        strategies in the list are applied. Default is [].
+    select_not (list)
+        List of strategy abbreviations to exclude. If specified, all strategies
+        except the ones in the list are applied. Default is [].
+    force_select_of (list)
+        List of strategy abbreviations to force apply, as some are not applied
+        by default. Default is [].
+    checkpoint_dir (str)
+        Directory to save the checkpoints in. If specified, checkpointing is
+        enabled.
+    python_env_path (str)
+        Path to the python environment to use for subprocess formatting.
+        Required for strategies using subprocesses.
+    modules_info (dict)
+        A dictionary containing information about the loaded modules. Keys are
+        'standard_library', 'third_party', and 'local'. Used for rearranging
+        imports. If None skips rearranging imports.
     """
     selected_to_force = force_select_of
 

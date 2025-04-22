@@ -5,11 +5,15 @@ def normalize_path(path):
     """
     Normalizes a file path to use forward slashes.
 
-    Args:
-        - path (str): The file path to normalize.
+    Parameters
+    ----------
+    path (str)
+        The file path to normalize.
 
-    Returns:
-        - str: The normalized file path.
+    Returns
+    -------
+    str
+        The normalized file path.
     """
     path = os.path.normpath(path)
     path = path.replace(os.sep, "/")

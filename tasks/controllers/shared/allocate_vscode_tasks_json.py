@@ -14,8 +14,10 @@ def allocate_vscode_tasks_json(runner_root):
     the tasks are appended to the existing file. The file is created if it does
     not exist.
 
-    Args:
-        - runner_root (str): The root directory of the runner.
+    Parameters
+    ----------
+    runner_root (str)
+        The root directory of the runner.
     """
     if not os.path.exists(MAIN_VSCODE_TASKS_JSON):
         msg = f"The VSCODE tasks file '{MAIN_VSCODE_TASKS_JSON}' does not"

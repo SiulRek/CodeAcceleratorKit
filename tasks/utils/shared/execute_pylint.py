@@ -7,12 +7,17 @@ def execute_pylint(python_file_path, environment_path):
     """
     Runs pylint on the specified Python file and prints the output.
 
-    Args:
-        - python_file_path (str): The path to the Python file to lint.
-        - environment_path (str): The path to the Python environment to use.
+    Parameters
+    ----------
+    python_file_path (str)
+        The path to the Python file to lint.
+    environment_path (str)
+        The path to the Python environment to use.
 
-    Returns:
-        - str: The output of the pylint run.
+    Returns
+    -------
+    str
+        The output of the pylint run.
     """
     if sys.platform == "win32" or sys.platform == "win64":
         pylint_path = os.path.join(environment_path, "Scripts", "pylint")

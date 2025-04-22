@@ -1,10 +1,13 @@
 """
-This module defines the FormatPythonTask, a task for formatting Python files by removing or refactoring specific parts based on strategies
-that can be configured by macros.
+This module defines the FormatPythonTask, a task for formatting Python files by
+removing or refactoring specific parts based on strategies that can be
+configured by macros.
 
-The FormatPythonTask class sets up the environment, extracts macros from the given Python files, and applies the specified formatting.
+The FormatPythonTask class sets up the environment, extracts macros from the
+given Python files, and applies the specified formatting.
 
-The specific macros and their interpretation are defined in the FormatPythonInterpreter.
+The specific macros and their interpretation are defined in the
+FormatPythonInterpreter.
 
 Available macros:
 | Name                     | Description                                            | Macro                  | Arguments                          |
@@ -32,8 +35,10 @@ Available strategies:
 | PL           | Execute Pylint                     |                                    |
 
 Usage example:
+```python
 macros_text = "#only RL, FD\n#checkpointing"
 FormatPythonTask(root_directory, file_path, macros_text).main()
+```
 
 TODO when adding new macros:
 1. Add the validation function in line_validation.py.
@@ -93,8 +98,10 @@ def print_help():
 
 
 class FormatPythonTask(TaskBase):
-    """A task for formatting python files by removing or refactoring specific parts based on
-    macros."""
+    """
+    A task for formatting python files by removing or refactoring specific
+    parts based on macros.
+    """
 
     NAME = "Format Python"
 
@@ -108,8 +115,10 @@ class FormatPythonTask(TaskBase):
             exit(0)
 
     def setup(self):
-        """Sets up the FormatPythonTask by initializing the file path from additional
-        arguments."""
+        """
+        Sets up the FormatPythonTask by initializing the file path from
+        additional arguments.
+        """
         super().setup()
         self.current_file = self.additional_args[0]
         self.macros_text = None
@@ -124,9 +133,10 @@ class FormatPythonTask(TaskBase):
         Executes the format python task, extracting macros from the file and
         performing the python formatting.
 
-        Raises:
-            - ValueError: If both select_only and select_not options are
-                specified.
+        Raises
+        -----
+        ValueError
+            If both select_only and select_not options are specified.
         """
         current_file = self.current_file
         checkpoint_dir = self.profile.checkpoint_dir

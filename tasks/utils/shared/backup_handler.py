@@ -8,32 +8,42 @@ class BackupHandler:
     """
     A class for handling file backups in a specified directory.
 
-    Attributes:
-        - backup_dir (str): The directory where backup files will be stored.
-        - max_backups (int): The maximum number of backup files to keep in
-            the directory.
+    Attributes
+    ----------
+    backup_dir (str)
+        The directory where backup files will be stored.
+    max_backups (int)
+        The maximum number of backup files to keep in the directory.
 
-    Methods:
-        - load_context(): Load the backup context from a CSV file.
-        - save_context(): Save the backup context to a CSV file.
-        - store_backup(file_path, comment=None): Store a backup of a file in
-            the backup directory.
-        - recover_backup(previous_file_name): Recover a specific backup file
-            to its original location.
-        - cleanup_storage(): Clean up excess backup files based on the
-            `max_backups` limit.
-        - get_backup_context(file_extension=None): Retrieve information
-            about stored backup files.
-        - clear_storage(): Removes the content of the backup directory.
-        - get_backup_path(previous_file_path): Get the backup path of a
-            specific file.
-        - recover_last_backup(): Recover the last backup file to its original
-            location.
+    Methods
+    -------
+    load_context()
+        Load the backup context from a CSV file.
+    save_context()
+        Save the backup context to a CSV file.
+    store_backup(file_path, comment=None)
+        Store a backup of a file in the backup directory.
+    recover_backup(previous_file_name)
+        Recover a specific backup file to its original location.
+    cleanup_storage()
+        Clean up excess backup files based on the `max_backups` limit.
+    get_backup_context(file_extension=None)
+        Retrieve information about stored backup files.
+    clear_storage()
+        Removes the content of the backup directory.
+    get_backup_path(previous_file_path)
+        Get the backup path of a specific file.
+    recover_last_backup()
+        Recover the last backup file to its original location.
 
-    Usage:
-        - backup_dir = 'path/to/backup/directory' max_backups = 10
-            backup_handler = BackupHandler(backup_dir, max_backups)
-            backup_handler.store_backup('file_path.txt', 'Backup comment')
+    Usage
+    -----
+    ```python
+    backup_dir = 'path/to/backup/directory'
+    max_backups = 10
+    backup_handler = BackupHandler(backup_dir, max_backups)
+    backup_handler.store_backup('file_path.txt', 'Backup comment')
+    ```
     """
 
     CONTEXT_FILE_NAME = "backup_context.csv"
@@ -42,11 +52,12 @@ class BackupHandler:
         """
         Initialize the BackupHandler instance.
 
-        Args:
-            - backup_dir (str): The directory where backup files will be
-                stored.
-            - max_backups (int, optional): The maximum number of backup
-                files to keep. Default is None.
+        Parameters
+        ----------
+        backup_dir (str)
+            The directory where backup files will be stored.
+        max_backups (int, optional)
+            The maximum number of backup files to keep. Default is None.
         """
 
         self.backup_dir = backup_dir
@@ -60,8 +71,10 @@ class BackupHandler:
         """
         Load the backup context from a CSV file.
 
-        Returns:
-            - list: context_data
+        Returns
+        -------
+        list
+            context_data
         """
 
         self.context_data = []
@@ -74,7 +87,9 @@ class BackupHandler:
         return self.context_data
 
     def save_context(self):
-        """Save the backup context to a CSV file."""
+        """
+        Save the backup context to a CSV file.
+        """
 
         with open(self.context_file, "w", newline="") as csvfile:
             fieldnames = ["previous_file_path", "backup_file_name", "comment"]
@@ -87,10 +102,12 @@ class BackupHandler:
         Store a backup of a file in the backup directory. Raises
         FileNotFoundError if the file does not exist.
 
-        Args:
-            - file_path (str): The path to the file to be backed up.
-            - comment (str, optional): An optional comment to associate with
-                the backup.
+        Parameters
+        ----------
+        file_path (str)
+            The path to the file to be backed up.
+        comment (str, optional)
+            An optional comment to associate with the backup.
         """
 
         count = 1
@@ -127,12 +144,13 @@ class BackupHandler:
     def recover_backup(self, previous_file_path):
         """
         Recover a specific backup file to its original location. If multiple
-        backups exist for the same file, the most recent backup will be 
+        backups exist for the same file, the most recent backup will be
         recovered.
 
-        Args:
-            - previous_file_path (str): The path to the file that was backed
-                up.
+        Parameters
+        ----------
+        previous_file_path (str)
+            The path to the file that was backed up.
         """
         self.cleanup_storage()
         self.load_context()
@@ -158,9 +176,11 @@ class BackupHandler:
         """
         Recover the last backupt file to its original location.
 
-        Returns:
-            - bool: True if the recovery was successful, False if the no
-                File is backed up.
+        Returns
+        -------
+        bool
+            True if the recovery was successful, False if the no File is backed
+            up.
         """
 
         self.cleanup_storage()
@@ -185,12 +205,15 @@ class BackupHandler:
         """
         Get the backup path of a specific file.
 
-        Args:
-            - previous_file_path (str): The path to the file that was backed
-                up.
+        Parameters
+        ----------
+        previous_file_path (str)
+            The path to the file that was backed up.
 
-        Returns:
-            - str: The path to the backup file.
+        Returns
+        -------
+        str
+            The path to the backup file.
         """
         self.load_context()
         previous_file_path = os.path.normpath(previous_file_path)
@@ -216,9 +239,11 @@ class BackupHandler:
         files exceeds the maximum allowed, it removes the oldest backups to
         maintain the specified limit.
 
-        Returns:
-            - bool: True if the cleanup was successful, False if the cleanup
-                was not possible or no action was taken.
+        Returns
+        -------
+        bool
+            True if the cleanup was successful, False if the cleanup was not
+            possible or no action was taken.
         """
 
         if not os.path.exists(self.context_file):
@@ -254,7 +279,9 @@ class BackupHandler:
         return True
 
     def clear_storage(self):
-        """Removes the content of the backup directory."""
+        """
+        Removes the content of the backup directory.
+        """
         if os.path.exists(self.backup_dir):
             shutil.rmtree(self.backup_dir)
             os.mkdir(self.backup_dir)
@@ -263,13 +290,16 @@ class BackupHandler:
         """
         Retrieve information about stored backup files.
 
-        Args:
-            - file_extension (str, optional): Filter backups by file
-                extension. Default is None.
+        Parameters
+        ----------
+        file_extension (str, optional)
+            Filter backups by file extension. Default is None.
 
-        Returns:
-            - list: A list of tuples containing (previous_file_path,
-                backup_file_name, comment).
+        Returns
+        -------
+        list
+            A list of tuples containing (previous_file_path, backup_file_name,
+            comment).
         """
 
         if file_extension:

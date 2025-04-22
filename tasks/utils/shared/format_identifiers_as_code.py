@@ -37,11 +37,15 @@ def is_maybe_identifier(word):
     """
     Check if the word is a identifier.
 
-    Args:
-        - word (str): The word to check.
+    Parameters
+    ----------
+    word (str)
+        The word to check.
 
-    Returns:
-        - bool: True if the word is a identifier, False otherwise.
+    Returns
+    -------
+    bool
+        True if the word is a identifier, False otherwise.
     """
     for sign in special_characters:
         if sign in word:
@@ -53,11 +57,15 @@ def is_camel_case(word):
     """
     Check if the word is in camel case.
 
-    Args:
-        - word (str): The word to check.
+    Parameters
+    ----------
+    word (str)
+        The word to check.
 
-    Returns:
-        - bool: True if the word is in camel case, False otherwise.
+    Returns
+    -------
+    bool
+        True if the word is in camel case, False otherwise.
     """
     if "_" in word:
         return False
@@ -71,11 +79,15 @@ def is_snake_case(word):
     """
     Check if the word is in snake case.
 
-    Args:
-        - word (str): The word to check.
+    Parameters
+    ----------
+    word (str)
+        The word to check.
 
-    Returns:
-        - bool: True if the word is in snake case, False otherwise.
+    Returns
+    -------
+    bool
+        True if the word is in snake case, False otherwise.
     """
     return "_" in word
 
@@ -84,11 +96,15 @@ def extract_punctuation(word):
     """
     Extracts the punctuation from the word.
 
-    Args:
-        - word (str): The word to remove the punctuation from.
+    Parameters
+    ----------
+    word (str)
+        The word to remove the punctuation from.
 
-    Returns:
-        - tuple: The word without the punctuation and the punctuation.
+    Returns
+    -------
+    tuple
+        The word without the punctuation and the punctuation.
     """
     punctuation_signs = [".", ",", ":", ";", "!", "?"]
     for sign in punctuation_signs:
@@ -103,11 +119,15 @@ def format_identifiers_as_code(text):
     CamelCase are considered identifiers, when they are not surrounded by
     special characters.
 
-    Args:
-        - text (str): The text to format the identifiers in.
+    Parameters
+    ----------
+    text (str)
+        The text to format the identifiers in.
 
-    Returns:
-        - list: The text with the identifiers formatted as code.
+    Returns
+    -------
+    list
+        The text with the identifiers formatted as code.
 
     Examples;
         >>> format_identifiers_as_code("Hello, this is a test_case and a CamelCaseExample.")

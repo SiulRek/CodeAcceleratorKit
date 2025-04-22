@@ -7,12 +7,17 @@ def is_library_installed(req, venv_path):
     Check if the 'black' library is installed in the specified virtual
     environment.
 
-    Parameters:
-        - req (str): The name of the library to check.
-        - venv_path (str): Path to the virtual environment.
+    Parameters
+    ----------
+    req (str)
+        The name of the library to check.
+    venv_path (str)
+        Path to the virtual environment.
 
-    Returns:
-        - bool: True if 'black' is installed, False otherwise.
+    Returns
+    -------
+    bool
+        True if 'black' is installed, False otherwise.
     """
     try:
         python_executable = os.path.join(

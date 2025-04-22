@@ -7,15 +7,20 @@ def process_tagged_arguments(arguments, root_dir, reference_file):
     """
     Process arguments that include special tags for files or directories.
 
-    Args:
-        - arguments (tuple): The tuple of arguments to process.
-        - root_dir (str): The root directory to use for finding files and
-            directories.
-        - reference_file (str): The reference file to use for finding files
+    Parameters
+    ----------
+    arguments (tuple)
+        The tuple of arguments to process.
+    root_dir (str)
+        The root directory to use for finding files and directories.
+    reference_file (str)
+        The reference file to use for finding files
 
-    Returns:
-        - tuple: Processed arguments where special tags have been replaced
-            with actual paths.
+    Returns
+    -------
+    tuple
+        Processed arguments where special tags have been replaced with actual
+        paths.
     """
     updated_arguments = []
     for arg in arguments:

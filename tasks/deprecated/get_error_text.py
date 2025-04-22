@@ -25,16 +25,20 @@ def _extract_error_messages(log_text):
 
 def get_error_text(root_dir, reference_file_path):
     """
-    Function to extract the error text from the log file.
-    Searches for the nearest to the reference file log file 
-    and extracts the error messages.
+    Function to extract the error text from the log file. Searches for the
+    nearest to the reference file log file and extracts the error messages.
 
-    Args:
-        - root_dir (str): The root directory of the project.
-        - reference_file_path (str): The path to the file.
+    Parameters
+    ----------
+    root_dir (str)
+        The root directory of the project.
+    reference_file_path (str)
+        The path to the file.
 
-    Returns:
-        - str: The error text.
+    Returns
+    -------
+    str
+        The error text.
     """
     log_path = find_file_sloppy(TEST_RESULTS_FILE, root_dir, reference_file_path)
     with open(log_path) as f:

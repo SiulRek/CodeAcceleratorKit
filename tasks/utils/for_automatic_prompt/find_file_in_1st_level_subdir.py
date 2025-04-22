@@ -3,15 +3,22 @@ import os
 
 def find_file_in_1st_level_subdir(file_name, directory, prettify=False):
     """
-    Find a file by name in the given directory within its first-level subdirectories.
+    Find a file by name in the given directory within its first-level
+    subdirectories.
 
-    Args:
-        - file_name (str): The name of the file to search for (without extension).
-        - directory (str): The directory to search within.
-        - prettify (bool): If True, prettify the subdirectory name to use as a title.
+    Parameters
+    ----------
+    file_name (str)
+        The name of the file to search for (without extension).
+    directory (str)
+        The directory to search within.
+    prettify (bool)
+        If True, prettify the subdirectory name to use as a title.
 
-    Returns:
-        - str: The full path of the found file.
+    Returns
+    -------
+    str
+        The full path of the found file.
     """
     if not os.path.exists(directory):
         msg = f"Directory {directory} does not exist."

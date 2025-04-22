@@ -8,15 +8,18 @@ from tasks.utils.for_format_python.separate_imports import separate_imports
 
 def extract_module_docstring(code_text):
     """
-    Extracts the module-level docstring from a given string of Python code using
-    regular expressions.
+    Extracts the module-level docstring from a given string of Python code
+    using regular expressions.
 
-    Args:
-        - code_text (str): A string containing Python code.
+    Parameters
+    ----------
+    code_text (str)
+        A string containing Python code.
 
-    Returns:
-        - str or None: The module-level docstring, if present, otherwise
-            None.
+    Returns
+    -------
+    str or None
+        The module-level docstring, if present, otherwise None.
     """
     docstring_lines = []
     if code_text.startswith("'''") or code_text.startswith('"""'):
@@ -44,14 +47,21 @@ def extract_module_docstring(code_text):
 
 def process_import_statements(import_statements, modules_info):
     """
-    Rearranges the import staments in alphabetical order based on the module path. The order is standard library, third-party, and local.
+    Rearranges the import staments in alphabetical order based on the module
+    path. The order is standard library, third-party, and local.
 
-    Args:
-        - import_statements (list): A list of import lines.
-        - modules_info: (dict): A dictionary containing information about the loaded modules. Keys are 'standard_library', 'third_party', and 'local'.
+    Parameters
+    ----------
+    import_statements (list)
+        A list of import lines.
+    modules_info
+        (dict): A dictionary containing information about the loaded modules.
+        Keys are 'standard_library', 'third_party', and 'local'.
 
-    Returns:
-        - list: A list of import lines
+    Returns
+    -------
+    list
+        A list of import lines
     """
     standard_library = modules_info["standard_library"]
     third_party = modules_info["third_party"]
@@ -95,14 +105,21 @@ def process_import_statements(import_statements, modules_info):
 
 def rearrange_imports(code_text, modules_info):
     """
-    Rearranges the import statements in a Python script. The order is standard library, third-party, and local in alphabetical order.
+    Rearranges the import statements in a Python script. The order is standard
+    library, third-party, and local in alphabetical order.
 
-    Args:
-        - code_text (str): A string containing Python code.
-        - modules_info (dict): A dictionary containing information about the loaded modules. Keys are 'standard_library', 'third_party', and 'local'.
+    Parameters
+    ----------
+    code_text (str)
+        A string containing Python code.
+    modules_info (dict)
+        A dictionary containing information about the loaded modules. Keys are
+        'standard_library', 'third_party', and 'local'.
 
-    Returns:
-        - str: The Python code with the import statements rearranged.
+    Returns
+    -------
+    str
+        The Python code with the import statements rearranged.
     """
     import_statements, other_code = separate_imports(code_text)
     updated_import_statements = process_import_statements(import_statements, modules_info)
@@ -116,11 +133,16 @@ def rearrange_imports(code_text, modules_info):
 
 def rearrange_imports_from_file(file_path, modules_info):
     """
-    Rearranges the import statements in a Python script file. The order is standard library, third-party, and local in alphabetical order.
+    Rearranges the import statements in a Python script file. The order is
+    standard library, third-party, and local in alphabetical order.
 
-    Args:
-        - file_path (str): The path to the Python script file.
-        - modules_info (dict): A dictionary containing information about the loaded modules. Keys are 'standard_library', 'third_party', and 'local'.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the Python script file.
+    modules_info (dict)
+        A dictionary containing information about the loaded modules. Keys are
+        'standard_library', 'third_party', and 'local'.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code_text = file.read()

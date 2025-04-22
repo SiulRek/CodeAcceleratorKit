@@ -3,7 +3,9 @@ import os
 
 
 class FileExecutionTracker:
-    """ Class that tracks execution status of files. """
+    """
+    Class that tracks execution status of files.
+    """
 
     def __init__(self, csv_path):
         self.csv_path = csv_path
@@ -16,8 +18,10 @@ class FileExecutionTracker:
         """
         Add files to the CSV file with status set to 'pending'.
 
-        Args:
-            - files (list): A list of file descriptions (strings).
+        Parameters
+        ----------
+        files (list)
+            A list of file descriptions (strings).
         """
         with open(self.csv_path, "a", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
@@ -28,13 +32,17 @@ class FileExecutionTracker:
         """
         Check if file_path has an extension in extensions.
 
-        Args:
-            - file_path (str): The file path to check.
-            - extensions (list): A list of file extensions to check.
+        Parameters
+        ----------
+        file_path (str)
+            The file path to check.
+        extensions (list)
+            A list of file extensions to check.
 
-        Returns:
-            - bool: True if file_path has an extension in extensions, False
-                otherwise.
+        Returns
+        -------
+        bool
+            True if file_path has an extension in extensions, False otherwise.
         """
         if extensions is None:
             return True
@@ -48,12 +56,17 @@ class FileExecutionTracker:
         Add all files from a directory to the CSV file with status set to
         'pending'.
 
-        Args:
-            - directory (str): The directory to write files from.
-            - excluded_dirs (list): A list of directory names to exclude.
-            - excluded_files (list): A list of file names to exclude.
-            - extensions (list): A list of file extensions to restrict the
-                files. None for all files.
+        Parameters
+        ----------
+        directory (str)
+            The directory to write files from.
+        excluded_dirs (list)
+            A list of directory names to exclude.
+        excluded_files (list)
+            A list of file names to exclude.
+        extensions (list)
+            A list of file extensions to restrict the files. None for all
+            files.
         """
         if excluded_dirs is None:
             excluded_dirs = []
@@ -83,8 +96,10 @@ class FileExecutionTracker:
         """
         Removes a file from the CSV file.
 
-        Args:
-            - file_path (str): The file path to remove.
+        Parameters
+        ----------
+        file_path (str)
+            The file path to remove.
         """
         rows = []
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
@@ -126,8 +141,10 @@ class FileExecutionTracker:
         'running' files to 'completed'. Returns the value of the first column
         (file description) of the newly marked 'running' file.
 
-        Returns:
-            - str: The description of the file now marked as 'running'.
+        Returns
+        -------
+        str
+            The description of the file now marked as 'running'.
         """
         rows = []
         next_pending_file = None
@@ -147,7 +164,9 @@ class FileExecutionTracker:
         return next_pending_file
 
     def mark_running_as_completed(self):
-        """ Transforms the 'running' file to 'completed'. """
+        """
+        Transforms the 'running' file to 'completed'.
+        """
         rows = []
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
             reader = csv.reader(file)
@@ -165,9 +184,10 @@ class FileExecutionTracker:
         Transforms the 'running' file to 'failed' and writes the error message
         in the third column.
 
-        Args:
-            - error_message (str): The error message to write in the
-                comments column.
+        Parameters
+        ----------
+        error_message (str)
+            The error message to write in the comments column.
         """
         rows = []
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
@@ -186,9 +206,11 @@ class FileExecutionTracker:
         """
         Returns the number of files with each status.
 
-        Returns:
-            - dict: A dictionary with status as keys and the number of files
-                with that status as values.
+        Returns
+        -------
+        dict
+            A dictionary with status as keys and the number of files with that
+            status as values.
         """
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
             reader = csv.reader(file)
@@ -201,7 +223,9 @@ class FileExecutionTracker:
         return count_status
 
     def clear_tracks(self):
-        """ Clears the CSV file. """
+        """
+        Clears the CSV file.
+        """
         with open(self.csv_path, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow(["File Path", "Status", "Comments"])
@@ -210,8 +234,10 @@ class FileExecutionTracker:
         """
         Returns the list of file paths marked as 'completed'.
 
-        Returns:
-            - list: A list of file paths.
+        Returns
+        -------
+        list
+            A list of file paths.
         """
         completed_files = []
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:
@@ -227,8 +253,10 @@ class FileExecutionTracker:
         """
         Returns the list of file paths marked as 'failed'.
 
-        Returns:
-            - list: A list of file paths.
+        Returns
+        -------
+        list
+            A list of file paths.
         """
         failed_files = []
         with open(self.csv_path, "r", newline="", encoding="utf-8") as file:

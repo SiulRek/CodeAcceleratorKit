@@ -2,13 +2,18 @@ import re
 
 def remove_f_from_empty_fstrings(code):
     """
-    Removes the 'f' from f-strings that do not contain any interpolated variables.
+    Removes the 'f' from f-strings that do not contain any interpolated
+    variables.
 
-    Args:
-        - code (str): The code to be checked and updated.
+    Parameters
+    ----------
+    code (str)
+        The code to be checked and updated.
 
-    Returns:
-        - str: The updated code with 'f' removed from empty f-strings.
+    Returns
+    -------
+    str
+        The updated code with 'f' removed from empty f-strings.
     """
     pattern = re.compile(r'f"([^{}]*)"')
     lines = code.splitlines()
@@ -28,10 +33,13 @@ def remove_f_from_empty_fstrings(code):
 
 def remove_f_from_empty_fstrings_from_file(file_path):
     """
-    Removes the 'f' from f-strings in the file if they do not contain any interpolated variables.
+    Removes the 'f' from f-strings in the file if they do not contain any
+    interpolated variables.
 
-    Args:
-        - file_path (str): The path to the file to be checked and updated.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file to be checked and updated.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()

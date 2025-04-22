@@ -3,14 +3,20 @@ import re
 
 def extract_python_code_strategy_1(text):
     """
-    Extracts Python code from a given text. It extracts code from code blocks that are formatted as ```python ... ```.
-    The code is expected to start with: python, import, from, def, class, if, for, while, 3 times double quotes or '''.
+    Extracts Python code from a given text. It extracts code from code blocks 
+    that are formatted as ```python ... ```. The code is expected to start 
+    with: python, import, from, def, class, if, for, while, 3 times double 
+    quotes or '''.
 
-    Args:
-        text (str): The text to extract Python code from.
+    Parameters
+    ----------
+    text (str)
+        The text to extract Python code from.
 
-    Returns:
-        str: The extracted Python code.
+    Returns
+    -------
+    str
+        The extracted Python code.
     """
     pattern = r"```(.*?)```"
 
@@ -48,10 +54,13 @@ def extract_python_code_strategy_1(text):
 
 def extract_python_code_strategy_2(text):
     """
-    Extracts Python code from a given text. It extracts code following a line starting with "---".
+    Extracts Python code from a given text. It extracts code following a line
+    starting with "---".
 
-    Args:
-        text (str): The text to extract Python code from.
+    Parameters
+    ----------
+    text (str)
+        The text to extract Python code from.
     """
     lines = text.split("\n")
     python_code = ""
@@ -69,10 +78,13 @@ def extract_python_code_strategy_2(text):
 
 def extract_python_code(text):
     """
-    Extracts Python code from a given text. Specifically designed for ChatGPT's response format.
+    Extracts Python code from a given text. Specifically designed for ChatGPT's
+    response format.
 
-    Args:
-        text (str): The text to extract Python code from.
+    Parameters
+    ----------
+    text (str)
+        The text to extract Python code from.
     """
     python_code = extract_python_code_strategy_1(text)
     if not python_code:

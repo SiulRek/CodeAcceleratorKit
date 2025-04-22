@@ -6,9 +6,21 @@ The GitDiscardTask class sets up the environment, initializes the paths to be
 discarded from additional arguments, backs up the specified files or files in
 directories, and uses Git commands to restore them from the repository.
 
-Usage example:
-    - GitDiscardTask(root_directory, reference_file,
-        paths_to_discard).main()
+Usage
+----
+```python
+# Define the root directory of the repository root_directory =
+"/path/to/repository/root"
+
+# Define the reference file (usually the script itself or a related file)
+reference_file = "/path/to/reference/file"
+
+# Define the paths to discard (comma-separated string of files or directories)
+paths_to_discard = "file1.txt, dir1, file2.txt"
+
+# Create and execute the task task = GitDiscardTask(root_directory,
+reference_file, paths_to_discard) task.main()
+```
 """
 
 from contextlib import contextmanager
@@ -23,7 +35,9 @@ from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 
 @contextmanager
 def _suppress_output():
-    """ Context Manager to suppress output. """
+    """
+    Context Manager to suppress output.
+    """
     with open(os.devnull, "w", encoding="utf-8") as devnull:
         old_stdout = os.dup(1)
         os.dup2(devnull.fileno(), 1)
@@ -32,14 +46,18 @@ def _suppress_output():
 
 
 class GitDiscardTask(TaskBase):
-    """ A task for discarding files or directories from a Git repository after
-    backing them up. """
+    """
+    A task for discarding files or directories from a Git repository after
+    backing them up.
+    """
 
     NAME = "Git Discard"
 
     def setup(self):
-        """ Sets up the GitDiscardTask by initializing the paths to be discarded
-        from additional arguments. """
+        """
+        Sets up the GitDiscardTask by initializing the paths to be discarded
+        from additional arguments.
+        """
         super().setup()
         self.current_file = self.additional_args[0]
         paths = self.additional_args[1].split(",")
@@ -106,12 +124,13 @@ class GitDiscardTask(TaskBase):
 
     def execute(self):
         """
-        Executes the task, backing up and then discarding the specified files or
-        directories from the Git repository.
+        Executes the task, backing up and then discarding the specified files
+        or directories from the Git repository.
 
-        Raises:
-            - FileNotFoundError: If a specified file or directory cannot be
-                found.
+        Raises
+        -----
+        FileNotFoundError
+            If a specified file or directory cannot be found.
         """
         backup_handler = BackupHandler(
             self.profile.backup_dir,

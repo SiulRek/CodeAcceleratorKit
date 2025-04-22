@@ -9,11 +9,15 @@ def load_unittests_from_file(file_path):
     """
     Load unittests from a file and return them.
 
-    Args:
-        - file_path (str): Path to the file containing the unittests.
+    Parameters
+    ----------
+    file_path (str)
+        Path to the file containing the unittests.
 
-    Returns:
-        - unittest.TestSuite: The unittests loaded from the file.
+    Returns
+    -------
+    unittest.TestSuite
+        The unittests loaded from the file.
     """
     test_file_path = os.path.abspath(file_path)
 
@@ -30,13 +34,19 @@ def execute_unittests_from_file(file_path, cwd, verbosity=1):
     """
     Execute unittests from a file and return the output.
 
-    Args:
-        - file_path (str): Path to the file containing the unittests.
-        - cwd (str): Path to the current working directory.
-        - verbosity (int): Verbosity level of the unittests. Default is 1.
+    Parameters
+    ----------
+    file_path (str)
+        Path to the file containing the unittests.
+    cwd (str)
+        Path to the current working directory.
+    verbosity (int)
+        Verbosity level of the unittests. Default is 1.
 
-    Returns:
-        - str: The output of the unittests.
+    Returns
+    -------
+    str
+        The output of the unittests.
     """
     sys.path.insert(0, cwd)
     tests = load_unittests_from_file(file_path)

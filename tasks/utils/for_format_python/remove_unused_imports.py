@@ -21,12 +21,15 @@ def remove_unused_imports(code_text):
     """
     Removes unused imports from a Python code string.
 
-    Args:
-        - code_text (str): The Python code string to remove unused imports
-            from.
+    Parameters
+    ----------
+    code_text (str)
+        The Python code string to remove unused imports from.
 
-    Returns:
-        - str: The Python code string with unused imports removed.
+    Returns
+    -------
+    str
+        The Python code string with unused imports removed.
     """
     updated_code = code_text
     import_statements, code_lines = separate_imports(code_text)
@@ -51,9 +54,10 @@ def remove_unused_imports_from_file(file_path):
     """
     Removes unused imports from a Python file.
 
-    Args:
-        - file_path (str): The path to the Python file to remove unused
-            imports from.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the Python file to remove unused imports from.
     """
     if not os.path.exists(file_path):
         msg = f"The file {file_path} does not exist."

@@ -1,4 +1,6 @@
-"""This is a module docstring."""
+"""
+This is a module docstring.
+"""
 import os
 import source
 import random

@@ -9,13 +9,17 @@ def separate_imports(code_text):
     are grouped together in the import list. All other lines, including blank
     lines outside of import statements, are categorized separately.
 
-    Args:
-        - code_text (str): A string containing Python code.
+    Parameters
+    ----------
+    code_text (str)
+        A string containing Python code.
 
-    Returns:
-        - tuple: A tuple containing two lists:
-            - First list contains lines that are import statements.
-            - Second list contains all other lines.
+    Returns
+    -------
+    - tuple: A tuple containing two lists:
+    - First list contains lines that are import statements.
+    - Second list contains all other lines.
+
     """
     import_statements = []
     other_code = ""

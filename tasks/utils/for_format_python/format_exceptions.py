@@ -6,11 +6,10 @@ from tasks.utils.for_format_python.wrap_text import wrap_text
 
 def _extract_prefix_quote_and_msg(raw_msg):
     pattern = r"""(?i)                  # case-insensitive
-                  (r|u|ru|ur)?          # optional prefix
-                  (['"])                # capturing the quote
-                  (.*?)(?<!\\)          # the message, non-greedy, ignoring escaped quotes
-                  \2                    # match same quote type
-               """
+                (r|u|ru|ur)?          # optional prefix
+                (['"])                # capturing the quote
+                (.*?)(?<!\\)          # the message, non-greedy, ignoring escaped quotes
+                \2"""                    # match same quote type
     matches = re.findall(pattern, raw_msg, re.DOTALL | re.VERBOSE)
     if not matches:
         msg = f"Invalid exception message format: {raw_msg}."
@@ -138,11 +137,15 @@ def format_exceptions(code):
     """
     Refactors the exception code in the provided code.
 
-    Args:
-        - code (str): The code to be refactored.
+    Parameters
+    ----------
+    code (str)
+        The code to be refactored.
 
-    Returns:
-        - str: The refactored code.
+    Returns
+    -------
+    str
+        The refactored code.
     """
     exception_infos = _extract_exception_informations(code)
     for exception_info in exception_infos:
@@ -155,8 +158,10 @@ def refactor_exception_from_file(file_path):
     """
     Refactors the exception code in the file.
 
-    Args:
-        - file_path (str): The path to the file to be refactored.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file to be refactored.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()

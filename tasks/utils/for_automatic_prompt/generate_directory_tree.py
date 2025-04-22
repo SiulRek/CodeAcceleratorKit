@@ -9,17 +9,22 @@ def generate_directory_tree(
     """
     Generates a directory structure for the specified path.
 
-    Args:
-        - path (str): The path to the directory.
-        - max_depth (int): The maximum depth of the directory structure to
-            display.Defaults to float('inf').
-        - include_files (bool): Whether to include files in the directory
-            structure.Defaults to True.
-        - additional_ignore_list (list): A list of file or directory names
-            to ignore.Defaults to None.
+    Parameters
+    ----------
+    path (str)
+        The path to the directory.
+    max_depth (int)
+        The maximum depth of the directory structure to display.Defaults to
+        float('inf').
+    include_files (bool)
+        Whether to include files in the directory structure.Defaults to True.
+    additional_ignore_list (list)
+        A list of file or directory names to ignore.Defaults to None.
 
-    Returns:
-        - str: The directory structure.
+    Returns
+    -------
+    str
+        The directory structure.
     """
     ignore_list = []
     ignore_list.extend(additional_ignore_list or [])

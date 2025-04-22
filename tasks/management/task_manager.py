@@ -12,18 +12,23 @@ SUPPORT_FILES_DIR = os.path.join(TASKS_ROOT, "tasks", "management", "support_fil
 
 
 class TaskManager(Attributes.AttributesInitializer):
-    """ Manages the registration and initialization of new task runners. """
+    """
+    Manages the registration and initialization of new task runners.
+    """
 
     @classmethod
     def _register_runner(cls, runner_root, storage_dir, overwrite):
         """
         Registers an runner root and its corresponding storage directory.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
-            - storage_dir (str): The storage directory to register.
-            - overwrite (bool): Whether to overwrite an existing
-                registration.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
+        storage_dir (str)
+            The storage directory to register.
+        overwrite (bool)
+            Whether to overwrite an existing registration.
         """
         if not os.path.exists(REGISTERED_RUNNERS_JSON):
             registered_runners = {}
@@ -45,14 +50,21 @@ class TaskManager(Attributes.AttributesInitializer):
         Initializes attributes for the runner based on its root and storage
         directory.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
-            - storage_dir (str): The storage directory.
-            - python_env (str): The Python environment to use.
-            - cwd (str): The current working directory of the runner.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
+        storage_dir (str)
+            The storage directory.
+        python_env (str)
+            The Python environment to use.
+        cwd (str)
+            The current working directory of the runner.
 
-        Returns:
-            - dict: A dictionary of initialized attributes.
+        Returns
+        -------
+        dict
+            A dictionary of initialized attributes.
         """
         attributes = {}
 
@@ -87,8 +99,10 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         Synchronizes the directories of a runner to the storage directory.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
         """
         profile = TaskRunnerProfile(runner_root)
         created_dirs = []
@@ -127,21 +141,25 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         Registers an runner and initializes its attributes.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
-            - python_env (str): The Python environment to use.
-            - storage_dir (str, optional): The storage directory. Defaults
-                to "local/task_storage".
-            - overwrite (bool, optional): Whether to overwrite an existing
-                registration. Defaults to False.
-            - create_dirs (bool, optional): Whether to create directories
-                for the runner. Defaults to True.
-            - cwd (str, optional): The current working directory of the
-                runner.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
+        python_env (str)
+            The Python environment to use.
+        storage_dir (str, optional)
+            The storage directory. Defaults to "local/task_storage".
+        overwrite (bool, optional)
+            Whether to overwrite an existing registration. Defaults to False.
+        create_dirs (bool, optional)
+            Whether to create directories for the runner. Defaults to True.
+        cwd (str, optional)
+            The current working directory of the runner.
 
-        Returns:
-            - TaskRunnerProfile: The runner profile generated from the
-                registration.
+        Returns
+        -------
+        TaskRunnerProfile
+            The runner profile generated from the registration.
         """
         if not os.path.exists(runner_root):
             msg = f"Runner root {runner_root} does not exist."
@@ -166,8 +184,10 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         Gets the registered runners.
 
-        Returns:
-            - list: A list of registered runner roots.
+        Returns
+        -------
+        list
+            A list of registered runner roots.
         """
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_runners = json.load(f)
@@ -178,12 +198,17 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         Checks if a runner is registered.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
-            - raise_error (bool, optional): Whether to raise an error if the
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
+        raise_error (bool, optional)
+            Whether to raise an error if the
 
-        Returns:
-            - bool: True if the runner is registered, False otherwise.
+        Returns
+        -------
+        bool
+            True if the runner is registered, False otherwise.
         """
         runner_root = normalize_path(runner_root)
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
@@ -200,13 +225,18 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         Logs in to an runner and initializes its profile.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
-            - update_dirs (bool, optional): Whether to update the
-                directories of the runner profile. Defaults to True.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
+        update_dirs (bool, optional)
+            Whether to update the directories of the runner profile. Defaults
+            to True.
 
-        Returns:
-            - TaskRunnerProfile: The runner profile after logging in.
+        Returns
+        -------
+        TaskRunnerProfile
+            The runner profile after logging in.
         """
         runner_root = normalize_path(runner_root)
         cls.is_runner_registered(runner_root, raise_error=True)
@@ -221,8 +251,10 @@ class TaskManager(Attributes.AttributesInitializer):
         Updates the runner profile with the latest attributes. The update
         depends on UPDATE_MAPPING in profile_attributes.py.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
         """
         cls.is_runner_registered(runner_root, raise_error=True)
 
@@ -242,7 +274,9 @@ class TaskManager(Attributes.AttributesInitializer):
 
     @classmethod
     def update_registered_runners(cls):
-        """ Updates the attributes of all registered runners. """
+        """
+        Updates the attributes of all registered runners.
+        """
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_runners = json.load(f)
         for runner_root in registered_runners:
@@ -257,8 +291,10 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         Deletes a runner registration.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
         """
         cls.is_runner_registered(runner_root, raise_error=True)
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
@@ -281,11 +317,14 @@ class TaskManager(Attributes.AttributesInitializer):
         Copies costumizations files from the source runner to the destination
         runner.
 
-        Args:
-            - source_runner_dir (str): The source runner directory.
-            - dest_runner_dir (str): The destination runner directory.
-            - overwrite (bool, optional): Whether to overwrite existing
-                files.
+        Parameters
+        ----------
+        source_runner_dir (str)
+            The source runner directory.
+        dest_runner_dir (str)
+            The destination runner directory.
+        overwrite (bool, optional)
+            Whether to overwrite existing files.
         """
         if not cls.is_runner_registered(source_runner_dir):
             msg = f"Source runner {source_runner_dir} is not registered."
@@ -331,8 +370,10 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         Loads support files to the runner.
 
-        Args:
-            - runner_root (str): The root directory of the runner.
+        Parameters
+        ----------
+        runner_root (str)
+            The root directory of the runner.
         """
         profile = TaskRunnerProfile(runner_root)
         cheatsheet = os.path.join(SUPPORT_FILES_DIR, "CHEATSHEET.md")

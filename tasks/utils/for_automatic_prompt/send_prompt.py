@@ -9,13 +9,17 @@ def send_prompt(prompt_message, max_response_tokens=3000, model="gpt-4o"):
     """
     Sends a prompt to OpenAI's GPT model and returns the response.
 
-    Args:
-        - prompt_message (str): The message to send to the model.
-        - max_response_tokens (int): The maximum number of tokens to
-            generate.
+    Parameters
+    ----------
+    prompt_message (str)
+        The message to send to the model.
+    max_response_tokens (int)
+        The maximum number of tokens to generate.
 
-    Returns:
-        - str: The response message from the model.
+    Returns
+    -------
+    str
+        The response message from the model.
     """
     if OPENAI_KEY is None:
         raise ValueError("OPENAI_KEY is not set. Please set it in keys.py.")

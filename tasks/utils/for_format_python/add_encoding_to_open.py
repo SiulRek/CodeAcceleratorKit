@@ -6,11 +6,15 @@ def add_encoding_to_open(code):
     Checks for 'with open(<arguments>)' patterns in the given code and ensures
     'encoding="utf-8"' is provided. If not, it adds the encoding parameter.
 
-    Args:
-        - code (str): The code to be checked and updated.
+    Parameters
+    ----------
+    code (str)
+        The code to be checked and updated.
 
-    Returns:
-        - str: The updated code with encoding added to 'open' functions.
+    Returns
+    -------
+    str
+        The updated code with encoding added to 'open' functions.
     """
     pattern = re.compile(r"with open\(([^)]*)\)")
     lines = code.splitlines()
@@ -40,8 +44,10 @@ def add_encoding_to_open_from_file(file_path):
     Checks for 'with open(...)' patterns in the file and ensures
     'encoding="utf-8"' is provided. If not, it adds the encoding parameter.
 
-    Args:
-    - file_path (str): The path to the file to be checked and updated.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file to be checked and updated.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()

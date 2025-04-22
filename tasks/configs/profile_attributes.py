@@ -18,8 +18,8 @@ class ProfileAttrNames(Enum):
     """
     Enumerated constants that define attribute names for a profile's
     configuration file. The attribute name is associated with a unique
-    identifier. The associated file is where the value of the attribute might be
-    found.
+    identifier. The associated file is where the value of the attribute might
+    be found.
     """
 
     cwd = (1, "configs.json")
@@ -75,26 +75,34 @@ UPDATE_MAPPING = {
 
 
 class AttributesInitializer:
-    """ Class that initializes various profile attributes. It is used during
-    registration of new task runners wOith the TaskManager class. """
+    """
+    Class that initializes various profile attributes. It is used during
+    registration of new task runners wOith the TaskManager class.
+    """
 
     @classmethod
     def _initialize_tasks_cache(cls, _):
-        """ Initializes the tasks_cache directory path. """
+        """
+        Initializes the tasks_cache directory path.
+        """
         dir_ = normalize_path(TASKS_CACHE)
         return dir_
 
     @classmethod
     def _initialize_runners_cache(cls, primary_attrs):
-        """ Initializes the runners_cache directory path. """
+        """
+        Initializes the runners_cache directory path.
+        """
         dir_ = normalize_path(primary_attrs.get("storage_dir"))
         dir_ = os.path.join(dir_, "__taskscache__")
         return dir_
 
     @classmethod
     def _initialize_data_dir(cls, primary_attrs):
-        """ Initializes the data directory path based on the storage_dir
-        inprimaryattributes. """
+        """
+        Initializes the data directory path based on the storage_dir
+        inprimaryattributes.
+        """
         storage_dir = primary_attrs.get("storage_dir")
         dir_ = os.path.join(storage_dir, "data")
         dir_ = normalize_path(dir_)
@@ -102,8 +110,10 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_execution_tracks_dir(cls, primary_attrs):
-        """ Initializes the execution track directory path based on the storage_dir
-        inprimaryattributes. """
+        """
+        Initializes the execution track directory path based on the storage_dir
+        inprimaryattributes.
+        """
         data_dir = cls._initialize_data_dir(primary_attrs)
         dir_ = os.path.join(data_dir, "execution_tracks")
         dir_ = normalize_path(dir_)
@@ -111,8 +121,10 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_costumizations_dir(cls, primary_attrs):
-        """ Initializes the templates directory path based on the storage_dir
-        inprimaryattributes. """
+        """
+        Initializes the templates directory path based on the storage_dir
+        inprimaryattributes.
+        """
         storage_dir = primary_attrs.get("storage_dir")
         dir_ = os.path.join(storage_dir, "costumizations")
         dir_ = normalize_path(dir_)
@@ -120,8 +132,10 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_fill_text_dir(cls, primary_attrs):
-        """ Initializes the fill text directory path based on the
-        templatesdirectory. """
+        """
+        Initializes the fill text directory path based on the
+        templatesdirectory.
+        """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "fill_texts")
         dir_ = normalize_path(dir_)
@@ -129,8 +143,10 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_meta_macros_dir(cls, primary_attrs):
-        """ Initializes the prompt templates directory path based on the templates
-        directory. """
+        """
+        Initializes the prompt templates directory path based on the templates
+        directory.
+        """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "meta_macros")
         dir_ = normalize_path(dir_)
@@ -138,8 +154,10 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_meta_macros_with_args_dir(cls, primary_attrs):
-        """ Initializes the templates with arguments directory path based on the
-        templates directory. """
+        """
+        Initializes the templates with arguments directory path based on the
+        templates directory.
+        """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "meta_macros_with_args")
         dir_ = normalize_path(dir_)
@@ -147,8 +165,10 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_costum_functions_dir(cls, primary_attrs):
-        """ Initializes the costum functions directory path based on the
-        templatesdirectory. """
+        """
+        Initializes the costum functions directory path based on the
+        templatesdirectory.
+        """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "functions")
         dir_ = normalize_path(dir_)
@@ -156,8 +176,10 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_output_dir(cls, primary_attrs):
-        """ Initializes the output directory path based on the storage_dir
-        inprimaryattributes. """
+        """
+        Initializes the output directory path based on the storage_dir
+        inprimaryattributes.
+        """
         storage_dir = primary_attrs.get("storage_dir")
         dir_ = os.path.join(storage_dir, "outputs")
         dir_ = normalize_path(dir_)
@@ -165,7 +187,9 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_log_dir(cls, primary_attrs):
-        """ Initializes the log directory path based on the output directory. """
+        """
+        Initializes the log directory path based on the output directory.
+        """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "logs")
         dir_ = normalize_path(dir_)
@@ -173,7 +197,9 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_backup_dir(cls, primary_attrs):
-        """ Initializes the backup directory path based on the output directory. """
+        """
+        Initializes the backup directory path based on the output directory.
+        """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "backups")
         dir_ = normalize_path(dir_)
@@ -181,7 +207,10 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_checkpoint_dir(cls, primary_attrs):
-        """ Initializes the checkpoint directory path based on the output directory. """
+        """
+        Initializes the checkpoint directory path based on the output
+        directory.
+        """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "checkpoints")
         dir_ = normalize_path(dir_)
@@ -189,7 +218,9 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_chats_dir(cls, primary_attrs):
-        """ Initializes the chats directory path based on the output directory. """
+        """
+        Initializes the chats directory path based on the output directory.
+        """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "chats")
         dir_ = normalize_path(dir_)
@@ -197,7 +228,9 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_reports_dir(cls, primary_attrs):
-        """ Initializes the reports directory path based on the output directory. """
+        """
+        Initializes the reports directory path based on the output directory.
+        """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "reports")
         dir_ = normalize_path(dir_)
@@ -205,18 +238,24 @@ class AttributesInitializer:
     
     @classmethod
     def _initialize_tasks_python_env(cls, _):
-        """ Initializes the tasks Python environment variable. """
+        """
+        Initializes the tasks Python environment variable.
+        """
         return TASKS_PYTHON_ENV
 
     @classmethod
     def _initialize_max_backups(cls, _):
-        """ Initializes the maximum number of backups to keep. """
+        """
+        Initializes the maximum number of backups to keep.
+        """
         return MAX_BACKUPS
 
     @classmethod
     def _initialize_modules_info(cls, primary_attrs):
-        """ Initializes the modules information by retrieving and loading the
-        modules_info.json file. """
+        """
+        Initializes the modules information by retrieving and loading the
+        modules_info.json file.
+        """
         storage_dir = primary_attrs.get("storage_dir")
         cwd = primary_attrs.get("cwd")
         runner_python_env = primary_attrs.get("runner_python_env")
@@ -240,7 +279,9 @@ class AttributesInitializer:
 
     @classmethod
     def _initialize_directory_runner_config(cls, _):
-        """ Initializes the directory runner configuration file. """
+        """
+        Initializes the directory runner configuration file.
+        """
         config = {
             "task_name": "Task Name",
             "directory_path": "/path/to/directory",
@@ -254,5 +295,7 @@ class AttributesInitializer:
     
     @classmethod
     def _initialize_copy_prompt(cls, _):
-        """ Initializes the save prompt to clipboard flag. """
+        """
+        Initializes the save prompt to clipboard flag.
+        """
         return COPY_PROMPT_DEFAULT

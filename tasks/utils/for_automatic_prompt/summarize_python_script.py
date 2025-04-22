@@ -7,24 +7,32 @@ def summarize_python_file(file_path, include_definitions_without_docstrings=Fals
     respective docstrings, maintaining proper indentation to reflect the
     structure.
 
-    Args:
-        - file_path (str): The path to the Python file to be summarized.
-        - include_definitions_without_docstrings (bool, optional): Whether
-            to include classes andfunctions without docstrings in the summary.
-            Defaults to False.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the Python file to be summarized.
+    include_definitions_without_docstrings (bool, optional)
+        Whether to include classes andfunctions without docstrings in the
+        summary. Defaults to False.
 
-    Returns:
-        - str: A summary of the classes and functions with docstrings.
+    Returns
+    -------
+    str
+        A summary of the classes and functions with docstrings.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         tree = ast.parse(file.read(), filename=file_path)
 
     def get_docstring(node):
-        """Utility function to get the docstring of a node if it exists."""
+        """
+        Utility function to get the docstring of a node if it exists.
+        """
         return ast.get_docstring(node) or ""
 
     def format_docstring(docstring, indent):
-        """Format the docstring to include it in the summary properly indented."""
+        """
+        Format the docstring to include it in the summary properly indented.
+        """
         if docstring:
             indent_space = " " * indent
             formatted = "\n".join(
@@ -36,7 +44,9 @@ def summarize_python_file(file_path, include_definitions_without_docstrings=Fals
         return ""
 
     def summarize_node(node, indent=0):
-        """Recursively summarize a node."""
+        """
+        Recursively summarize a node.
+        """
         summary = []
         if isinstance(node, ast.ClassDef):
             docstring = get_docstring(node)

@@ -2,7 +2,9 @@ from enum import Enum
 
 
 class DIRECTORY_TREE_DEFAULTS(Enum):
-    """Default values for the directory tree tag."""
+    """
+    Default values for the directory tree tag.
+    """
 
     MAX_DEPTH = float("inf")  # Allows infinite depth unless specified otherwise.
     INCLUDE_FILES = False  # Does not include files in the directory tree by default.
