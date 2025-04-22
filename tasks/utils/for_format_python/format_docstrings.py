@@ -15,12 +15,15 @@ def get_docstrings(code):
     """
     Extracts docstrings from the code and returns them as a list.
 
-    Args:
-        - code (str): The code from which the docstrings are to be
-            extracted.
+    Parameters
+    ----------
+    code (str)
+        The code from which the docstrings are to be extracted.
 
-    Returns:
-        - list: A list of docstrings extracted from the code.
+    Returns
+    -------
+    list
+        A list of docstrings extracted from the code.
     """
     code_lines = code.split("\n")
     lines_iter = iter(code_lines)
@@ -56,11 +59,15 @@ def clean_docstrings(docstrings):
     Cleans the docstrings by ensuring that the triple quotes are on their own
     lines.
 
-    Args:
-        - docstrings (list): A list of docstrings to be cleaned.
+    Parameters
+    ----------
+    docstrings (list)
+        A list of docstrings to be cleaned.
 
-    Returns:
-        - list: A list of cleaned docstrings.
+    Returns
+    -------
+    list
+        A list of cleaned docstrings.
     """
     cleaned_docstrings = []
     for docstring in docstrings:
@@ -136,6 +143,14 @@ def has_undefined_symbols(text):
     ]
     if any([symbol in text for symbol in undefined_symbols]):
         return True
+    
+def has_table(text):
+    lines = text.splitlines()
+    for line in lines:
+        stripped_line = line.strip()
+        if "|" in stripped_line and all(char in "-| " for char in stripped_line):
+            return True
+    return False
 
 
 def is_freezing_needed(text):
@@ -143,6 +158,7 @@ def is_freezing_needed(text):
         has_undefined_symbols(text)
         or has_docstring_keyword(text)
         or has_enumeration_symbol(text)
+        or has_table(text)
     )
 
 
@@ -171,11 +187,15 @@ def wrap_metadata_text(text):
     """
     Wraps metadata text that contains.
 
-    Args:
-        - text (str): The text to be wrapped.
+    Parameters
+    ----------
+    text (str)
+        The text to be wrapped.
 
-    Returns:
-        - str: The wrapped text.
+    Returns
+    -------
+    str
+        The wrapped text.
     """
 
     root_indent_length = last_indent_length = count_leading_spaces(text) // len(
@@ -203,11 +223,15 @@ def wrap_metadata_text(text):
                 text_buffer = ""
             else:
                 wrapped_text += "\n" + line if wrapped_text else line
-        elif cur_indent_length != last_indent_length and last_indent_length != root_indent_length:
+        elif (
+            cur_indent_length != last_indent_length
+            and last_indent_length != root_indent_length
+        ):
             raise ValueError(
-                "Inconsistent indentation detected in metadata. "
-                "Lines with non-root indentation must maintain the same level as the previous line. "
-                f"Mismatch found between lines:\n {lines[i-1]} and \n{lines[i]}."
+                "Inconsistent indentation detected in metadata. Lines with "
+                "non-root indentation must maintain the same level as the "
+                "previous line. Mismatch found between lines:\n "
+                f"{lines[i-1]} and \n{lines[i]}."
             )
         else:
             text_buffer += "\n" + line if text_buffer else line
@@ -220,12 +244,15 @@ def wrap_docstring(docstring):
     """
     Wraps the docstring to the specified width.
 
-    Args:
-        - docstring (str): The docstring to be wrapped.
-            wrapped docstring.
+    Parameters
+    ----------
+    docstring (str)
+        The docstring to be wrapped. wrapped docstring.
 
-    Returns:
-        - str: The wrapped docstring.
+    Returns
+    -------
+    str
+        The wrapped docstring.
     """
     leading_spaces = " " * count_leading_spaces(docstring)
     start_quote = leading_spaces + docstring.splitlines()[0].strip()
@@ -236,13 +263,19 @@ def wrap_docstring(docstring):
     wrapped_sections = []
     for section in sections:
         section_lines = section.splitlines()
+        is_metadata = False
         if len(section_lines) >= 2:
             first_line = section_lines[0].strip()
             second_line = section_lines[1].strip()
-            is_metadata = first_line in ["Parameters", "Returns", "Raises"]
+            is_metadata = first_line in [
+                "Parameters",
+                "Returns",
+                "Raises",
+                "Attributes",
+                "Methods",
+                "Warnings",
+            ]
             is_metadata = all([l == "-" for l in second_line]) and is_metadata
-        else:
-            is_metadata = False
         if is_metadata:
             # The section is identified as metadata.
             header = "\n".join(section_lines[:2])
@@ -266,11 +299,15 @@ def wrap_docstrings(docstrings):
     """
     Wraps the docstrings to the specified width.
 
-    Args:
-        - docstrings (list): A list of docstrings to be wrapped.
+    Parameters
+    ----------
+    docstrings (list)
+        A list of docstrings to be wrapped.
 
-    Returns:
-        - list: A list of wrapped docstrings.
+    Returns
+    -------
+    list
+        A list of wrapped docstrings.
     """
     wrapped_docstrings = []
     for docstring in docstrings:
@@ -283,11 +320,15 @@ def format_docstrings(code):
     """
     Formats the docstrings in the code.
 
-    Args:
-        - code (str): The code to be formatted.
+    Parameters
+    ----------
+    code (str)
+        The code to be formatted.
 
-    Returns:
-        - str: The code with the formatted docstrings.
+    Returns
+    -------
+    str
+        The code with the formatted docstrings.
     """
     docstrings = get_docstrings(code)
     cleaned_docstrings = clean_docstrings(docstrings)
@@ -303,8 +344,10 @@ def format_docstrings_from_file(file_path):
     """
     Formats the docstrings in the file.
 
-    Args:
-        - file_path (str): The path to the file to be formatted.
+    Parameters
+    ----------
+    file_path (str)
+        The path to the file to be formatted.
     """
     with open(file_path, "r", encoding="utf-8") as file:
         code = file.read()
@@ -314,6 +357,6 @@ def format_docstrings_from_file(file_path):
 
 
 if __name__ == "__main__":
-    path = r"/home/siulrek/MY_ROOM/github/CodeAcceleratorKit/tasks/controllers/magic_scripts/magic_register_runner.py"
+    path = r"temp.py"
     format_docstrings_from_file(path)
     print(f"Docstrings formatted of {path}")
