@@ -33,7 +33,7 @@ def _get_docstrings(code):
                         docstring += line + "\n"
                         stripped_line = line.strip()
                 except StopIteration:
-                    msg += "Invalid docstring numpyify "
+                    msg = "Invalid docstring numpyify "
                     raise ValueError(msg)
                 docstrings.append(docstring[:-1])
 
@@ -121,17 +121,35 @@ def _numpyify_metadata_text(text):
     header = lines[0].strip()
     body = lines[1:]
     m_type = header.split(":")[0].strip().removeprefix("-").strip()
+    additional_mtypes = [
+        "Warnings",
+        "Warning",
+        "Methods",
+        "Method",
+        "Attributes",
+        "Attribute",
+        "Yields",
+        "Yield",
+        "Notes",
+        "Note",
+        "Examples",
+        "Example",
+        "Usage",
+        "References",
+        "Reference",
+    ]
     if m_type in ["Args", "Arguments", "Parameters"]:
         header = "Parameters\n" + "-" * 10
     elif m_type in ["Returns", "Return"]:
         header = "Returns\n" + "-" * 7
     elif m_type in ["Raises", "Raise"]:
         header = "Raises\n" + "-" * 5
-    else:
-        raise ValueError(
-            f"Unknown metadata type: {m_type}. Supported types are Args, "
-            "Returns, and Raises."
-        )
+    elif m_type in additional_mtypes:
+        header = m_type + "\n" + "-" * len(m_type)
+    # else:
+    #     raise ValueError(
+    #         f"Unknown metadata type: {m_type}."
+    #     )
 
     items = []
     for line in body:
