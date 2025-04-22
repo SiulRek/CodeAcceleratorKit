@@ -28,15 +28,13 @@ def get_docstrings(code):
     code_lines = code.split("\n")
     lines_iter = iter(code_lines)
     docstrings = []
-    updated_code = ""
 
     while True:
         try:
             line = next(lines_iter)
             stripped_line = line.strip()
-            if not stripped_line.startswith(DOC_QUOTE):
-                updated_code += line + "\n"
-            else:
+            if stripped_line.startswith(DOC_QUOTE):
+                # It's a docstring
                 docstring = line + "\n"
                 stripped_line = stripped_line[3:]
                 try:
@@ -45,9 +43,17 @@ def get_docstrings(code):
                         docstring += line + "\n"
                         stripped_line = line.strip()
                 except StopIteration:
-                    msg = "Invalid docstring format "
+                    msg = f"Invalid docstring format: {docstring}"
                     raise ValueError(msg)
                 docstrings.append(docstring[:-1])
+            elif line.count(DOC_QUOTE) % 2 == 1:
+                # It's not a docstring
+                while True:
+                    line = next(lines_iter)
+                    if line.count(DOC_QUOTE) % 2 == 1:
+                        # Handles cases where a string is closed and then 
+                        # reopened on the same line
+                        break
 
         except StopIteration:
             break
