@@ -209,14 +209,8 @@ def wrap_metadata_text(text):
     )
     wrapped_text = ""
     text_buffer = ""
-    end_tag = "$$ENDTAG$$"
-    lines = (text + "\n" + end_tag).splitlines()
+    lines = text.splitlines()
     for i, line in enumerate(lines):
-        if line == end_tag:
-            if not is_freezing_needed(text_buffer):
-                text_buffer = wrap_text_with_indent(text_buffer, last_indent_length)
-            wrapped_text += "\n" + text_buffer if wrapped_text else text_buffer
-            break
         cur_indent_length = count_leading_spaces(line) // len(INDENT_SPACES)
         if cur_indent_length == root_indent_length:
             if text_buffer:
@@ -242,6 +236,10 @@ def wrap_metadata_text(text):
         else:
             text_buffer += "\n" + line if text_buffer else line
         last_indent_length = cur_indent_length
+
+    if not is_freezing_needed(text_buffer):
+        text_buffer = wrap_text_with_indent(text_buffer, last_indent_length)
+    wrapped_text += "\n" + text_buffer if wrapped_text else text_buffer
 
     return wrapped_text
 
