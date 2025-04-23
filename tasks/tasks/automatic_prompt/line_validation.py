@@ -60,6 +60,11 @@ run_pyscript_tag = TAGS.RUN_PYSCRIPT.value
 run_pyscript_pattern = rf"{run_pyscript_tag}\s(\S+\.py|{CURRENT_FILE_TAG})"
 RUN_PYSCRIPT_PATTERN = re.compile(run_pyscript_pattern)
 
+# RUN_BASH_SCRIPT_PATTERN
+run_bash_script_tag = TAGS.RUN_BASH_SCRIPT.value
+run_bash_script_pattern = rf"{run_bash_script_tag}\s(\S+\.sh|{CURRENT_FILE_TAG})"
+RUN_BASH_SCRIPT_PATTERN = re.compile(run_bash_script_pattern)
+
 # RUN_SUBPROCESS_PATTERN
 run_subprocess_tag = TAGS.RUN_SUBROCESS.value
 run_subprocess_pattern = rf"{run_subprocess_tag}\s*([^\n\(\["
@@ -227,6 +232,15 @@ def line_validation_for_run_pyscript(line):
     Validate if the line is a run python script macro.
     """
     if match := RUN_PYSCRIPT_PATTERN.match(line):
+        return match.group(1)
+    return None
+
+
+def line_validation_for_run_bash_script(line):
+    """
+    Validate if the line is a run bash script macro.
+    """
+    if match := RUN_BASH_SCRIPT_PATTERN.match(line):
         return match.group(1)
     return None
 

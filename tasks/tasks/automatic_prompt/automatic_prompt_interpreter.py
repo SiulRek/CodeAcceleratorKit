@@ -14,6 +14,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_meta_macros_with_args,
     line_validation_for_costum_function,
     line_validation_for_run_pyscript,
+    line_validation_for_run_bash_script,
     line_validation_for_run_subprocess,
     line_validation_for_run_pylint,
     line_validation_for_run_unittest,
@@ -226,6 +227,21 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return macro_data
         return None
 
+    def validate_run_bash_script_macro(self, line):
+        if result := line_validation_for_run_bash_script(line):
+            script_path = find_file_sloppy(result, self.profile.root, self.current_file)
+            output = subprocess.run(
+                [script_path],
+                shell=True,
+                capture_output=True,
+                text=True,
+            )
+            output = output.stderr if output.returncode != 0 else output.stdout
+            output = render_to_markdown(output, format="shell")
+            macro_data = {"type": MACROS.RUN_BASH_SCRIPT, "text": output}
+            return macro_data
+        return None
+
     def validate_run_subprocess_macro(self, line):
         if result := line_validation_for_run_subprocess(line):
             command, kwargs = result
@@ -233,8 +249,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             # Force 'capture_output' and 'text' kwargs to True
             kwargs["capture_output"] = True
             kwargs["text"] = True
-            result = subprocess.run(command, **kwargs)
-            output = result.stderr if result.returncode != 0 else result.stdout
+            output = subprocess.run(command, **kwargs)
+            output = output.stderr if output.returncode != 0 else output.stdout
             text = "$ " + command + "\n" + output
             macro_data = {"type": MACROS.RUN_SUBPROCESS, "text": text}
             return macro_data
