@@ -13,7 +13,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_meta_macros,
     line_validation_for_meta_macros_with_args,
     line_validation_for_costum_function,
-    line_validation_for_run_python_script,
+    line_validation_for_run_pyscript,
     line_validation_for_run_subprocess,
     line_validation_for_run_pylint,
     line_validation_for_run_unittest,
@@ -212,8 +212,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return macro_data
         return None
 
-    def validate_run_python_script_macro(self, line):
-        if result := line_validation_for_run_python_script(line):
+    def validate_run_pyscript_macro(self, line):
+        if result := line_validation_for_run_pyscript(line):
             script_path = find_file_sloppy(result, self.profile.root, self.current_file)
             environment_path = self.profile.runner_python_env
             script_output = execute_python_module(
@@ -222,7 +222,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 cwd=self.profile.cwd,
             )
             script_output = render_to_markdown(script_output, format="shell")
-            macro_data = {"type": MACROS.RUN_PYTHON_SCRIPT, "text": script_output}
+            macro_data = {"type": MACROS.RUN_PYSCRIPT, "text": script_output}
             return macro_data
         return None
 

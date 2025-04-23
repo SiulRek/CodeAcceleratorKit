@@ -30,7 +30,6 @@ paste_declaration_block_pattern = (
     rf"{paste_declaration_block_tag}\s+({file_pattern})\s+({declaration_pattern})"
 )
 
-
 # FILL_TEXT_PATTERN
 fill_text_tag = TAGS.FILL_TEXT.value
 fill_text_pattern = rf"^{fill_text_tag}\s*(.*)"
@@ -56,10 +55,10 @@ costum_function_end_tag = TAGS.COSTUM_FUNCTION_END.value
 costum_function_pattern = rf"{costum_function_start_tag}(.*?){costum_function_end_tag}"
 COSTUM_FUNCTION_PATTERN = re.compile(costum_function_pattern)
 
-# RUN_SCRIPT_PATTERN
-run_script_tag = TAGS.RUN_SCRIPT.value
-run_script_pattern = rf"{run_script_tag}\s(\S+\.py|{CURRENT_FILE_TAG})"
-RUN_SCRIPT_PATTERN = re.compile(run_script_pattern)
+# RUN_PYSCRIPT_PATTERN
+run_pyscript_tag = TAGS.RUN_PYSCRIPT.value
+run_pyscript_pattern = rf"{run_pyscript_tag}\s(\S+\.py|{CURRENT_FILE_TAG})"
+RUN_PYSCRIPT_PATTERN = re.compile(run_pyscript_pattern)
 
 # RUN_SUBPROCESS_PATTERN
 run_subprocess_tag = TAGS.RUN_SUBROCESS.value
@@ -223,11 +222,11 @@ def line_validation_for_costum_function(line):
     return None
 
 
-def line_validation_for_run_python_script(line):
+def line_validation_for_run_pyscript(line):
     """
     Validate if the line is a run python script macro.
     """
-    if match := RUN_SCRIPT_PATTERN.match(line):
+    if match := RUN_PYSCRIPT_PATTERN.match(line):
         return match.group(1)
     return None
 

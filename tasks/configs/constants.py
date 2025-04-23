@@ -26,7 +26,7 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     PASTE_DECLARATION_BLOCK = "paste_declaration_block"
     FILL_TEXT = "fill_text"
     COSTUM_FUNCTION = "costum_function"
-    RUN_PYTHON_SCRIPT = "run_python_script"
+    RUN_PYSCRIPT = "run_pyscript"
     RUN_SUBPROCESS = "run_subprocess"
     RUN_PYLINT = "run_pylint"
     RUN_UNITTEST = "run_unittest"
@@ -50,7 +50,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     COSTUM_FUNCTION_START = MACRO_TAG
     COSTUM_FUNCTION_END = "_func"
     FILL_TEXT = MACRO_TAG + r"\*"
-    RUN_SCRIPT = MACRO_TAG + "run"
+    RUN_PYSCRIPT = MACRO_TAG + "run"
     RUN_PYLINT = MACRO_TAG + "pylint"
     RUN_SUBROCESS = MACRO_TAG + r"\$"
     UNITTEST = MACRO_TAG + "unittest"
