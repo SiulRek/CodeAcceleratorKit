@@ -30,6 +30,11 @@ paste_declaration_block_pattern = (
     rf"{paste_declaration_block_tag}\s+({file_pattern})\s+({declaration_pattern})"
 )
 
+# PASTE_CLIPBOARD_PATTERN
+paste_clipboard_tag = TAGS.PASTE_CLIPBOARD.value
+paste_clipboard_pattern = rf"^{paste_clipboard_tag}"
+PASTE_CLIPBOARD_PATTERN = re.compile(paste_clipboard_pattern)
+
 # FILL_TEXT_PATTERN
 fill_text_tag = TAGS.FILL_TEXT.value
 fill_text_pattern = rf"^{fill_text_tag}\s*(.*)"
@@ -183,6 +188,23 @@ def line_validation_for_paste_declaration_block(line):
                 "for paste declaration block only declaration and docstring",
             )
         return file_name, declaration_name, only_declaration_and_docstring
+    return None
+
+
+def line_validation_for_paste_clipboard(line):
+    """
+    Validate if the line is a paste clipboard macro.
+    """
+    if PASTE_CLIPBOARD_PATTERN.match(line):
+        code_language = None
+        if arguments := retrieve_arguments_in_round_brackets(line, 1):
+            code_language = arguments[0]
+            check_type(
+                code_language,
+                str,
+                "for paste clipboard format",
+            )
+        return True, code_language
     return None
 
 

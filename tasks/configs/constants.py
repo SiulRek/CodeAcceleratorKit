@@ -24,6 +24,7 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     NORMAL_TEXT = "normal_text"
     PASTE_FILE = "paste_file"
     PASTE_DECLARATION_BLOCK = "paste_declaration_block"
+    PASTE_CLIPBOARD = "paste_clipboard"
     FILL_TEXT = "fill_text"
     COSTUM_FUNCTION = "costum_function"
     RUN_PYSCRIPT = "run_pyscript"
@@ -44,6 +45,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     NORMAL_TEXT = MACRO_TAG + "N "
     PASTE_FILE = MACRO_TAG + "P "
     PASTE_DECLARATION_BLOCK = MACRO_TAG + "PDB"
+    PASTE_CLIPBOARD = MACRO_TAG + "PC"
     META_MACROS_START = MACRO_TAG
     META_MACROS_END = "_meta"
     META_MACROS_WITH_ARGS_START = MACRO_TAG

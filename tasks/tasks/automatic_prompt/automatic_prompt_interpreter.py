@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+import clipboard
 from tasks.configs.constants import AUTOMATIC_PROMPT_MACROS as MACROS
 from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_begin_text,
@@ -9,6 +10,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_normal_text,
     line_validation_for_paste_file,
     line_validation_for_paste_declaration_block,
+    line_validation_for_paste_clipboard,
     line_validation_for_fill_text,
     line_validation_for_meta_macros,
     line_validation_for_meta_macros_with_args,
@@ -147,6 +149,21 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 "type": MACROS.PASTE_DECLARATION_BLOCK,
                 "text": declaration_block,
             }
+            return macro_data
+        return None
+
+    def validate_paste_clipboard_macro(self, line):
+        if result := line_validation_for_paste_clipboard(line):
+            _, code_language = result
+            content = clipboard.paste()
+            if not content:
+                raise ValueError(
+                    "Clipboard is empty."
+                    
+                )
+            if code_language:
+                content = render_to_markdown(content, format=code_language)
+            macro_data = {"type": MACROS.PASTE_CLIPBOARD, "text": content}
             return macro_data
         return None
 

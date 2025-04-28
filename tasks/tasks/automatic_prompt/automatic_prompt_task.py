@@ -8,10 +8,11 @@ Available reference types:
 |--------------------------|-----------------------------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | begin_text               | Place start text                        | #B <begin_text>                                      | –                                                                                             |
 | end_text                 | Place end text                          | #E <end_text>                                        | –                                                                                             |
-| title                    | Title of the reference                  | #T <title>                                           | <level: int>                                                                                  |
+| title                    | Title of the reference                  | #T <title>                                           | <level: int = 1>                                                                              |
 | normal_text              | Normal text                             | #N <normal_text>                                     | –                                                                                             |
 | paste_file               | Paste file/s                            | #P <file_path> or <file_path_1, file_path_2>         | <line_ranges: List[List[int, int]]>                                                           |
-| paste_declaration_block  | Paste class or function                 | #P <file_path> <declaration_name>                    | <only_declaration_and_docstring: bool>                                                        |
+| paste_declaration_block  | Paste class or function                 | #PDB <file_path> <declaration_name>                  | <only_declaration_and_docstring: bool = False>                                                |
+| paste_clipboard          | Paste clipboard entry                   | #PC <file_path> <declaration_name>                   | <code_language: str = None>                                                                   |
 | fill_text                | Add a fill text                         | #<file_name_without_ext>                             | –                                                                                             |
 | meta_macros              | Interpret predefined meta macros        | #<file_name_without_ext>_meta                        | –                                                                                             |
 | meta_macros_with_args    | Meta macros with args                   | #<file_name_without_ext>_meta+                       | <arg_1, arg_2, ...>                                                                           |
@@ -20,10 +21,10 @@ Available reference types:
 | run_bash_script          | Run a bash script                       | #runsh <script_path>                                 | –                                                                                             |
 | run_command              | Run Command                             | #$ <command>                                         | <subprocess kwargs: Dict>                                                                     |
 | run_pylint               | Run pylint on a Python script           | #run_pylint <file_path>                              | –                                                                                             |
-| run_unittest             | Run unittest from a Python script       | #run_unittest <file_path>                            | <verbosity: int>                                                                              |
-| directory_tree           | Get directory tree                      | #tree <directory_path>                               | <max_depth: int, include_files: List[str], ignore_list: List[str]>                            |
-| summarize_python_script  | Summarize a Python script               | #summarize <script_path>                             | <include_definitions_with_docstring: bool>                                                    |
-| summarize_folder         | Summarize Python scripts in a folder    | #summarize_folder <folder_path>                      | <include_definitions_with_docstrings: bool, excluded_dirs: List[str], excluded_files: List[str]> |
+| run_unittest             | Run unittest from a Python script       | #run_unittest <file_path>                            | <verbosity: int = 1>                                                                          |
+| directory_tree           | Get directory tree                      | #tree <directory_path>                               | <max_depth: int = float("inf"), include_files: bool = False, ignore_list: List[str]>          |
+| summarize_python_script  | Summarize a Python script               | #summarize <script_path>                             | <include_definitions_with_docstring: boo = False>                                             |
+| summarize_folder         | Summarize Python scripts in a folder    | #summarize_folder <folder_path>                      | <include_definitions_with_docstrings: bool = False, excluded_dirs: List[str], excluded_files: List[str]> |
 | send_prompt              | Send a prompt from a temporary file     | #send                                                | <modify_inplace: bool = False, max_tokens: int = None>                                        |
 
 Usage Example:
