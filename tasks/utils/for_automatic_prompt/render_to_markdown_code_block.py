@@ -19,7 +19,7 @@ EXTENSION_TO_FORMAT = {
 }
 
 
-def render_to_markdown(text, format=None, extension=None):
+def render_to_markdown_code_block(text, language=None, extension=None):
     """
     Renders the given text to a markdown code block with the specified format
     or extension of the file from which the text was extracted.
@@ -38,16 +38,16 @@ def render_to_markdown(text, format=None, extension=None):
     str
         The markdown formatted code block.
     """
-    if format and extension:
+    if language and extension:
         msg = "Only one of 'format' or 'extension' can be specified."
         raise ValueError(msg)
 
-    if not format:
+    if not language:
         extension = extension.split(".")[-1].lower()
-        format = EXTENSION_TO_FORMAT.get(extension, None)
-        if not format:
+        language = EXTENSION_TO_FORMAT.get(extension, None)
+        if not language:
             msg = f"Could not determine the format for the extension '{extension}'."
             msg += "Text is not rendered."
             warnings.warn(msg)
             return text
-    return f"```{format}\n{text}\n```"
+    return f"```{language}\n{text}\n```"

@@ -37,7 +37,7 @@ from tasks.utils.for_automatic_prompt.generate_directory_tree import (
     generate_directory_tree,
 )
 from tasks.utils.for_automatic_prompt.get_declaration_block import get_declaration_block
-from tasks.utils.for_automatic_prompt.render_to_markdown import render_to_markdown
+from tasks.utils.for_automatic_prompt.render_to_markdown_code_block import render_to_markdown_code_block
 from tasks.utils.for_automatic_prompt.summarize_python_script import (
     summarize_python_file,
 )
@@ -125,7 +125,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                     macro_type = MACROS.PASTE_DECLARATION_BLOCK
                 else:
                     macro_type = MACROS.PASTE_FILE
-                    file_content = render_to_markdown(
+                    file_content = render_to_markdown_code_block(
                         file_content, extension=file_path.split(".")[-1]
                     )
                 macro_data = {"type": macro_type, "text": file_content}
@@ -162,7 +162,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                     
                 )
             if code_language:
-                content = render_to_markdown(content, format=code_language)
+                content = render_to_markdown_code_block(content, language=code_language)
             macro_data = {"type": MACROS.PASTE_CLIPBOARD, "text": content}
             return macro_data
         return None
@@ -239,7 +239,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 environment_path,
                 cwd=self.profile.cwd,
             )
-            script_output = render_to_markdown(script_output, format="shell")
+            script_output = render_to_markdown_code_block(script_output, language="shell")
             macro_data = {"type": MACROS.RUN_PYSCRIPT, "text": script_output}
             return macro_data
         return None
@@ -254,7 +254,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 text=True,
             )
             output = output.stderr if output.returncode != 0 else output.stdout
-            output = render_to_markdown(output, format="shell")
+            output = render_to_markdown_code_block(output, language="shell")
             macro_data = {"type": MACROS.RUN_BASH_SCRIPT, "text": output}
             return macro_data
         return None
@@ -278,7 +278,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             script_path = find_file_sloppy(result, self.profile.root, self.current_file)
             environment_path = self.profile.runner_python_env
             pylint_output = execute_pylint(script_path, environment_path)
-            pylint_output = render_to_markdown(pylint_output, format="shell")
+            pylint_output = render_to_markdown_code_block(pylint_output, language="shell")
             macro_data = {"type": MACROS.RUN_PYLINT, "text": pylint_output}
             return macro_data
         return None
@@ -295,7 +295,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 env_python_path=python_env,
                 cwd=cwd,
             )
-            unittest_output = render_to_markdown(unittest_output, format="shell")
+            unittest_output = render_to_markdown_code_block(unittest_output, language="shell")
             macro_data = {"type": MACROS.RUN_UNITTEST, "text": unittest_output}
             return macro_data
         return None
@@ -307,7 +307,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             directory_tree = generate_directory_tree(
                 dir_, max_depth, include_files, ignore_list
             )
-            directory_tree = render_to_markdown(directory_tree, format="shell")
+            directory_tree = render_to_markdown_code_block(directory_tree, language="shell")
             macro_data = {"type": MACROS.DIRECTORY_TREE, "text": directory_tree}
             return macro_data
         return None
@@ -411,8 +411,8 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 ):
                     code_blocks.append(macros_data[i]["text"])
                     i += 1
-                merged_code = render_to_markdown(
-                    "\n\n\n".join(code_blocks), format="python"
+                merged_code = render_to_markdown_code_block(
+                    "\n\n\n".join(code_blocks), language="python"
                 )
                 merged_data.append(
                     {"type": MACROS.PASTE_DECLARATION_BLOCK, "text": merged_code}
