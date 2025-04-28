@@ -84,6 +84,131 @@ class FileManager:
         print("File deleted successfully.")
 ```
 
+## Test: Paste Clipboard Entry
+----------
+
+#B Start of Prompt
+#B Merge begin text in multiple lines
+
+#E End of prompt
+#E Merge end text in multiple lines
+
+#T Test: Title of the chapter
+
+#T Test: Normal Text (2)
+#N The Normal text
+#N Merge normal texts in multiple lines
+
+#T Test: Paste File (2)
+#P reference_1.py, data\reference_2.py
+
+#T Test: Paste Current File (2)
+#P File
+
+#T Test: Paste File's Lines, TODO list for test (2)
+#P File ([[1, 8]])
+
+#T Test: Paste Declaration Block (2)
+#PDB example_script_2.py FileManager (True)
+#PDB example_script_2.py delete_file
+
+#T Test: Paste Clipboard Entry (2)
+#PC 
+#PC ("shell")
+
+#T Test: Fill Text (2)
+#*template_4
+
+#T Test: Meta Macros (2)
+#template_1_meta
+
+#T Test: Meta Macros with Args (2)
+#template_2_meta+ (True, 5)
+
+#T Test: Custom Function (2)
+#template_3_func (True, 5)
+
+#T Test: Run Python Script (2)
+#run data/example_script.py
+
+#T Test: Run Pylint (2)
+#pylint data/example_script.py
+
+#T Test: Run Unittest (2)
+#unittest example_script_6.py (2)
+
+#T Test: Directory Tree (2)
+#tree . (2, False, ['temp', 'log'])
+
+#T Test: Summarize Python Script (2)
+#summarize data/example_script_2.py (True)
+
+#T Test: Summarize Folder (2)
+#summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
+
+
+```shell
+#B Start of Prompt
+#B Merge begin text in multiple lines
+
+#E End of prompt
+#E Merge end text in multiple lines
+
+#T Test: Title of the chapter
+
+#T Test: Normal Text (2)
+#N The Normal text
+#N Merge normal texts in multiple lines
+
+#T Test: Paste File (2)
+#P reference_1.py, data\reference_2.py
+
+#T Test: Paste Current File (2)
+#P File
+
+#T Test: Paste File's Lines, TODO list for test (2)
+#P File ([[1, 8]])
+
+#T Test: Paste Declaration Block (2)
+#PDB example_script_2.py FileManager (True)
+#PDB example_script_2.py delete_file
+
+#T Test: Paste Clipboard Entry (2)
+#PC 
+#PC ("shell")
+
+#T Test: Fill Text (2)
+#*template_4
+
+#T Test: Meta Macros (2)
+#template_1_meta
+
+#T Test: Meta Macros with Args (2)
+#template_2_meta+ (True, 5)
+
+#T Test: Custom Function (2)
+#template_3_func (True, 5)
+
+#T Test: Run Python Script (2)
+#run data/example_script.py
+
+#T Test: Run Pylint (2)
+#pylint data/example_script.py
+
+#T Test: Run Unittest (2)
+#unittest example_script_6.py (2)
+
+#T Test: Directory Tree (2)
+#tree . (2, False, ['temp', 'log'])
+
+#T Test: Summarize Python Script (2)
+#summarize data/example_script_2.py (True)
+
+#T Test: Summarize Folder (2)
+#summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
+
+```
+
 ## Test: Fill Text
 ----------
 

@@ -23,6 +23,10 @@
 #PDB example_script_2.py FileManager (True)
 #PDB example_script_2.py delete_file
 
+#T Test: Paste Clipboard Entry (2)
+#PC 
+#PC ("shell")
+
 #T Test: Fill Text (2)
 #*template_4
 
