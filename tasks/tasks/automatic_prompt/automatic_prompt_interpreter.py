@@ -50,12 +50,8 @@ from tasks.utils.shared.execute_python_module import execute_python_module
 from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
 from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 from tasks.utils.shared.format_identifiers_as_code import format_identifiers_as_code
+from tasks.utils.shared.sloppy_paths_utils import standardize_path
 
-
-def _standardize_path(path):
-    path = os.path.abspath(path)
-    path = os.path.normpath(path)
-    return path
 
 class AutomaticPromptInterpreter(MacroInterpreter):
     """
@@ -158,12 +154,12 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             ]
             macros_data = []
             for root, _, files in os.walk(folder_path):
-                root = _standardize_path(root)
+                root = standardize_path(root)
                 if root in excluded_dirs:
                     continue
                 for file in files:
                     file = os.path.join(root, file)
-                    file = _standardize_path(file)
+                    file = standardize_path(file)
                     if file in excluded_files:
                         continue
                     rel_file = os.path.relpath(file, folder_path)
@@ -207,9 +203,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             _, code_language = result
             content = clipboard.paste()
             if not content:
-                raise ValueError(
-                    "Clipboard is empty."
-                )
+                raise ValueError("Clipboard is empty.")
             if code_language:
                 content = render_to_markdown_code_block(content, language=code_language)
             macro_data = {"type": MACROS.PASTE_CLIPBOARD, "text": content}
@@ -404,12 +398,12 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             ]
             macros_data = []
             for root, _, files in os.walk(folder_path):
-                root = _standardize_path(root)
+                root = standardize_path(root)
                 if root in excluded_dirs:
                     continue
                 for file in files:
                     file = os.path.join(root, file)
-                    file = _standardize_path(file)
+                    file = standardize_path(file)
                     if file in excluded_files or not file.endswith(".py"):
                         continue
                     if script_summary := summarize_python_file(

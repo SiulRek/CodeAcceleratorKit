@@ -3,6 +3,12 @@ import os
 from tasks.configs.constants import CURRENT_DIRECTORY_TAG
 
 
+def standardize_path(path):
+    path = os.path.abspath(path)
+    path = os.path.normpath(path)
+    return path
+
+
 def _replace_current_directory_tag(path_fragment, reference_path):
     ref_is_dir = os.path.isdir(reference_path)
     reference_path = reference_path if ref_is_dir else os.path.dirname(reference_path)

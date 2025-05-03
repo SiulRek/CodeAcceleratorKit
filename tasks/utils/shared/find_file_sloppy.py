@@ -1,7 +1,10 @@
 import os
 
 from tasks.configs.constants import CURRENT_FILE_TAG
-from tasks.utils.shared.sloppy_paths_utils import sanitize_sloppy_path_string
+from tasks.utils.shared.sloppy_paths_utils import (
+    sanitize_sloppy_path_string,
+    standardize_path,
+)
 
 
 def find_nearest_file(file_name, root_dir, reference_file):
@@ -41,7 +44,7 @@ def find_nearest_file(file_name, root_dir, reference_file):
 
 
 def find_file_from_path_fragment(path_fragment, root_dir):
-    path_fragment = path_fragment.replace("\\", os.sep).replace("/", os.sep)
+    path_fragment = sanitize_sloppy_path_string(path_fragment, root_dir)
 
     for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
@@ -76,20 +79,18 @@ def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     file_path (str)
         The path to the file.
     """
-    root_dir = os.path.abspath(root_dir)
-    root_dir = os.path.normpath(root_dir)
-    reference_file_path = os.path.abspath(reference_file_path)
-    reference_file_path = os.path.normpath(reference_file_path)
+    root_dir = standardize_path(root_dir)
+    reference_file_path = standardize_path(reference_file_path)
 
     sloppy_string = sanitize_sloppy_path_string(sloppy_string, reference_file_path)
 
     if sloppy_string == CURRENT_FILE_TAG:
         return reference_file_path
 
-    # Add support for test/source files:
-    # Expected format for test names is "<source_file_name>_test".
-    # If a tag is found, rebuild sloppy_string considering the name
-    # of the reference file and converting to test/source format.
+    # Add support for test/source files: Expected format for test names is
+    # "<source_file_name>_test". If a tag is found, rebuild sloppy_string
+    # considering the name of the reference file and converting to test/source
+    # format.
     for type, tag in [
         ("test", CURRENT_FILE_TAG + "T"),
         ("source", CURRENT_FILE_TAG + "S"),
@@ -106,4 +107,4 @@ def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
         file = find_file_from_path_fragment(sloppy_string, root_dir)
     else:
         file = find_nearest_file(sloppy_string, root_dir, reference_file_path)
-    return os.path.normpath(file)
+    return standardize_path(file)

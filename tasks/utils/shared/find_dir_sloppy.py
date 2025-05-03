@@ -1,7 +1,7 @@
 import os
 
 from tasks.utils.shared.sloppy_paths_utils import (
-    _replace_current_directory_tag,
+    standardize_path,
     sanitize_sloppy_path_string,
 )
 
@@ -80,10 +80,8 @@ def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
     dir_path (str)
         The path to the directory.
     """
-    root_dir = os.path.abspath(root_dir)
-    reference_dir = os.path.abspath(reference_dir)
-    root_dir = os.path.normpath(root_dir)
-    reference_dir = os.path.normpath(reference_dir)
+    root_dir = standardize_path(root_dir)
+    reference_dir = standardize_path(reference_dir)
 
     # Reference_dir to be file should not be allowed, but
     # as it is often more convenient to use the file path
@@ -99,4 +97,4 @@ def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
         dir_ = find_dir_from_path_fragment(sloppy_string, root_dir, reference_dir)
     else:
         dir_ = find_nearest_dir(sloppy_string, root_dir, reference_dir)
-    return os.path.normpath(dir_)
+    return standardize_path(dir_)
