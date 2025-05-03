@@ -52,6 +52,34 @@ clipboard.copy(text)
 
 ```
 
+## Test: Paste Folder Files
+----------
+
+### test_results.log
+
+2024-05-11 18:10:41,841 - INFO - -------------- This is a Title -------------------------------
+2024-05-11 18:10:41,841 - ERROR - Test raised exc: test_example_error
+Message: Traceback (most recent call last):
+  File "/home/no_name/github/pcb-defect-detection/source/utils/testing/test_result_logger.py", line 146, in test_example_error
+    raise ValueError()
+ValueError
+
+2024-05-11 18:10:41,841 - ERROR - Test failure: test_example_fail
+Message: Traceback (most recent call last):
+  File "/home/no_name/github/pcb-defect-detection/source/utils/testing/test_result_logger.py", line 143, in test_example_fail
+    self.assertEqual(1, 2)
+AssertionError: 1 != 2
+
+2024-05-11 18:10:41,841 - INFO - Test passed: test_example_pass
+
+
+### reference_3.txt
+
+```text
+Here is the reference 3 file.
+Here is the reference 3 file finished.
+```
+
 ## Test: Paste File's Lines, TODO list for test
 ----------
 
@@ -104,6 +132,9 @@ class FileManager:
 
 #T Test: Paste Current File (2)
 #P File
+
+#T Test: Paste Folder Files (2)
+#PF tasks/tests/data (3, ["tasks/tests/data/__pycache__"] , ["example_script.py", "example_script_2.py", "example_script_3.py", "example_script_4.py", "example_script_5.py", "example_script_6.py", "reference_1.py", "reference_2.py", "automatic_prompt_macros.txt"])
 
 #T Test: Paste File's Lines, TODO list for test (2)
 #P File ([[1, 8]])
@@ -165,6 +196,9 @@ class FileManager:
 
 #T Test: Paste Current File (2)
 #P File
+
+#T Test: Paste Folder Files (2)
+#PF tasks/tests/data (3, ["tasks/tests/data/__pycache__"] , ["example_script.py", "example_script_2.py", "example_script_3.py", "example_script_4.py", "example_script_5.py", "example_script_6.py", "reference_1.py", "reference_2.py", "automatic_prompt_macros.txt"])
 
 #T Test: Paste File's Lines, TODO list for test (2)
 #P File ([[1, 8]])
@@ -333,7 +367,7 @@ OK
 ----------
 
 ```shell
-/
+CodeAcceleratorKit/
 ├── __pycache__/
 ├── _local/
 │   ├── management/

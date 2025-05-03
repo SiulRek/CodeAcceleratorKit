@@ -16,6 +16,9 @@
 #T Test: Paste Current File (2)
 #P File
 
+#T Test: Paste Folder Files (2)
+#PF tasks/tests/data (3, ["tasks/tests/data/__pycache__"] , ["example_script.py", "example_script_2.py", "example_script_3.py", "example_script_4.py", "example_script_5.py", "example_script_6.py", "reference_1.py", "reference_2.py", "automatic_prompt_macros.txt"])
+
 #T Test: Paste File's Lines, TODO list for test (2)
 #P File ([[1, 8]])
 
