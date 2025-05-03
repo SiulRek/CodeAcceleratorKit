@@ -23,6 +23,7 @@ class AUTOMATIC_PROMPT_MACROS(Enum):
     TITLE = "title"
     NORMAL_TEXT = "normal_text"
     PASTE_FILE = "paste_file"
+    PASTE_FOLDER_FILES = "paste_folder_files"
     PASTE_DECLARATION_BLOCK = "paste_declaration_block"
     PASTE_CLIPBOARD = "paste_clipboard"
     FILL_TEXT = "fill_text"
@@ -44,6 +45,7 @@ class AUTOMATIC_PROMPT_TAGS(Enum):
     TITLE = MACRO_TAG + "T "
     NORMAL_TEXT = MACRO_TAG + "N "
     PASTE_FILE = MACRO_TAG + "P "
+    PASTE_FOLDER_FILES = MACRO_TAG + "PF"
     PASTE_DECLARATION_BLOCK = MACRO_TAG + "PDB"
     PASTE_CLIPBOARD = MACRO_TAG + "PC"
     META_MACROS_START = MACRO_TAG

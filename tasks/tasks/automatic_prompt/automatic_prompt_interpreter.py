@@ -2,6 +2,7 @@ import os
 import subprocess
 
 import clipboard
+
 from tasks.configs.constants import AUTOMATIC_PROMPT_MACROS as MACROS
 from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_begin_text,
@@ -9,6 +10,7 @@ from tasks.tasks.automatic_prompt.line_validation import (
     line_validation_for_title,
     line_validation_for_normal_text,
     line_validation_for_paste_file,
+    line_validation_for_paste_folder_files,
     line_validation_for_paste_declaration_block,
     line_validation_for_paste_clipboard,
     line_validation_for_fill_text,
@@ -37,7 +39,9 @@ from tasks.utils.for_automatic_prompt.generate_directory_tree import (
     generate_directory_tree,
 )
 from tasks.utils.for_automatic_prompt.get_declaration_block import get_declaration_block
-from tasks.utils.for_automatic_prompt.render_to_markdown_code_block import render_to_markdown_code_block
+from tasks.utils.for_automatic_prompt.render_to_markdown_code_block import (
+    render_to_markdown_code_block,
+)
 from tasks.utils.for_automatic_prompt.summarize_python_script import (
     summarize_python_file,
 )
@@ -47,6 +51,11 @@ from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
 from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 from tasks.utils.shared.format_identifiers_as_code import format_identifiers_as_code
 
+
+def _standardize_path(path):
+    path = os.path.abspath(path)
+    path = os.path.normpath(path)
+    return path
 
 class AutomaticPromptInterpreter(MacroInterpreter):
     """
@@ -133,6 +142,47 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             return macro_data_list
         return None
 
+    def validate_paste_folder_files_macro(self, line):
+        if result := line_validation_for_paste_folder_files(line):
+            folder_name, title_level, excluded_dirs, excluded_files = result
+            folder_path = find_dir_sloppy(
+                folder_name, self.profile.root, self.current_file
+            )
+            excluded_dirs = [
+                find_dir_sloppy(dir_, self.profile.root, self.current_file)
+                for dir_ in excluded_dirs
+            ]
+            excluded_files = [
+                find_file_sloppy(file, self.profile.root, self.current_file)
+                for file in excluded_files
+            ]
+            macros_data = []
+            for root, _, files in os.walk(folder_path):
+                root = _standardize_path(root)
+                if root in excluded_dirs:
+                    continue
+                for file in files:
+                    file = os.path.join(root, file)
+                    file = _standardize_path(file)
+                    if file in excluded_files:
+                        continue
+                    rel_file = os.path.relpath(file, folder_path)
+                    file_content = self._read_file(file, "paste folder files reference")
+                    file_content = render_to_markdown_code_block(
+                        file_content, extension=file.split(".")[-1]
+                    )
+                    macros_data.append(
+                        {
+                            "type": MACROS.TITLE,
+                            "text": "#" * title_level + " " + rel_file,
+                        }
+                    )
+                    macros_data.append(
+                        {"type": MACROS.PASTE_FILE, "text": file_content}
+                    )
+            return macros_data
+        return None
+
     def validate_paste_declaration_block_macro(self, line):
         if result := line_validation_for_paste_declaration_block(line):
             file_name, declaration_name, only_declaration_and_docstring = result
@@ -159,7 +209,6 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             if not content:
                 raise ValueError(
                     "Clipboard is empty."
-                    
                 )
             if code_language:
                 content = render_to_markdown_code_block(content, language=code_language)
@@ -239,7 +288,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 environment_path,
                 cwd=self.profile.cwd,
             )
-            script_output = render_to_markdown_code_block(script_output, language="shell")
+            script_output = render_to_markdown_code_block(
+                script_output, language="shell"
+            )
             macro_data = {"type": MACROS.RUN_PYSCRIPT, "text": script_output}
             return macro_data
         return None
@@ -278,7 +329,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             script_path = find_file_sloppy(result, self.profile.root, self.current_file)
             environment_path = self.profile.runner_python_env
             pylint_output = execute_pylint(script_path, environment_path)
-            pylint_output = render_to_markdown_code_block(pylint_output, language="shell")
+            pylint_output = render_to_markdown_code_block(
+                pylint_output, language="shell"
+            )
             macro_data = {"type": MACROS.RUN_PYLINT, "text": pylint_output}
             return macro_data
         return None
@@ -295,7 +348,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 env_python_path=python_env,
                 cwd=cwd,
             )
-            unittest_output = render_to_markdown_code_block(unittest_output, language="shell")
+            unittest_output = render_to_markdown_code_block(
+                unittest_output, language="shell"
+            )
             macro_data = {"type": MACROS.RUN_UNITTEST, "text": unittest_output}
             return macro_data
         return None
@@ -307,7 +362,9 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             directory_tree = generate_directory_tree(
                 dir_, max_depth, include_files, ignore_list
             )
-            directory_tree = render_to_markdown_code_block(directory_tree, language="shell")
+            directory_tree = render_to_markdown_code_block(
+                directory_tree, language="shell"
+            )
             macro_data = {"type": MACROS.DIRECTORY_TREE, "text": directory_tree}
             return macro_data
         return None
@@ -347,12 +404,12 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             ]
             macros_data = []
             for root, _, files in os.walk(folder_path):
-                root = os.path.normpath(root)
-                if any([excluded_folder in root for excluded_folder in excluded_dirs]):
+                root = _standardize_path(root)
+                if root in excluded_dirs:
                     continue
                 for file in files:
                     file = os.path.join(root, file)
-                    file = os.path.normpath(file)
+                    file = _standardize_path(file)
                     if file in excluded_files or not file.endswith(".py"):
                         continue
                     if script_summary := summarize_python_file(

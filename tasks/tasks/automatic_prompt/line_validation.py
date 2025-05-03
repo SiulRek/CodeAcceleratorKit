@@ -22,6 +22,11 @@ files_list_pattern = rf"(?:{file_pattern}\s*(?:,\s*{file_pattern}\s*)*)"
 paste_file_pattern = rf"{paste_file_tag}\s*({files_list_pattern}|{CURRENT_FILE_TAG})"
 PASTE_FILE_PATTERN = re.compile(paste_file_pattern)
 
+# PASTE_FOLDER_FILES_PATTERN
+paste_folder_files_tag = TAGS.PASTE_FOLDER_FILES.value
+paste_folder_files_pattern = rf"{paste_folder_files_tag}\s+(\S+)"
+PASTE_FOLDER_FILES_PATTERN = re.compile(paste_folder_files_pattern)
+
 # PASTE_DECLARATION_BLOCK_PATTERN
 paste_declaration_block_tag = TAGS.PASTE_DECLARATION_BLOCK.value
 file_pattern = rf"\S+\.py|{CURRENT_FILE_TAG}"
@@ -174,6 +179,30 @@ def line_validation_for_paste_file(line):
         return file_names, updated_line_ranges
     return None
 
+def line_validation_for_paste_folder_files(line):
+    """
+    Validate if the line contains references to paste folder files macro.
+    """
+    if match := re.search(PASTE_FOLDER_FILES_PATTERN, line):
+        folder = match.group(1)
+        title_level = 1
+        excluded_dirs = []
+        excluded_files = []
+        if arguments := retrieve_arguments_in_round_brackets(line, 3):
+            title_level = arguments[0]
+            check_type(title_level, int, "for summarize folder title level")
+            if len(arguments) > 1:
+                excluded_dirs = arguments[1]
+                check_type(excluded_dirs, list, "for summarize folder excluded dirs")
+            if len(arguments) > 2:
+                excluded_files = arguments[2]
+                check_type(excluded_files, list, "for summarize folder excluded files")
+        return (
+            folder,
+            title_level,
+            excluded_dirs,
+            excluded_files,
+        )
 
 def line_validation_for_paste_declaration_block(line):
     if match := re.search(paste_declaration_block_pattern, line):
@@ -345,7 +374,7 @@ def line_validation_for_summarize_folder(line):
     Validate if the line is a summarize folder macro.
     """
     if match := SUMMARIZE_FOLDER_PATTERN.match(line):
-        dir = match.group(1)
+        folder = match.group(1)
         include_definitions_without_docstrings = False
         excluded_dirs = []
         excluded_files = []
@@ -358,7 +387,7 @@ def line_validation_for_summarize_folder(line):
                 excluded_files = arguments[2]
                 check_type(excluded_files, list, "for summarize folder excluded files")
         return (
-            dir,
+            folder,
             include_definitions_without_docstrings,
             excluded_dirs,
             excluded_files,
