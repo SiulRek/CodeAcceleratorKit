@@ -16,7 +16,7 @@ TITLE_PATTERN = re.compile(title_pattern)
 
 # PASTE_FILE_PATTERN
 paste_file_tag = TAGS.PASTE_FILE.value
-file_extensions = r"(?:py|txt|log|md|csv|json|sh)"
+file_extensions = r"(?:py|txt|log|md|csv|json|sh|html|js|css)"
 file_pattern = rf"\S+\.{file_extensions}"
 files_list_pattern = rf"(?:{file_pattern}\s*(?:,\s*{file_pattern}\s*)*)"
 paste_file_pattern = rf"{paste_file_tag}\s*({files_list_pattern}|{CURRENT_FILE_TAG})"
