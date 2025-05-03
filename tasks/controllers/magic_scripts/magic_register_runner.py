@@ -1,10 +1,11 @@
+import argparse
+
 from tasks.controllers.shared.TASKS_ROOT import TASKS_ROOT
 from tasks.controllers.shared.allocate_vscode_tasks_json import (
     allocate_vscode_tasks_json,
 )
 from tasks.management.task_manager import TaskManager
-from tasks.management.task_manager import TaskManager
-from tasks.utils.shared.is_library_installed import is_library_installed
+from tasks.utils.shared.library_utils import is_library_installed, install_library
 
 
 def magic_register_runner(
@@ -39,7 +40,7 @@ def magic_register_runner(
     try:
         TaskManager.login_runner(TASKS_ROOT)
     except Exception as e:
-        raise Exception(f"Probably main runner not registered") from e
+        raise Exception("Probably main runner not registered") from e
 
     try:
         TaskManager.login_runner(runner_root)
@@ -63,13 +64,35 @@ def magic_register_runner(
     print(f"Runner '{runner_root}' registered successfully.")
 
 
+def _parse_args():
+    parser = argparse.ArgumentParser(
+        description="Register a runner with the main tasks root."
+    )
+    parser.add_argument(
+        "runner_root",
+        type=str,
+        help="The root directory of the runner.",
+    )
+    parser.add_argument(
+        "--python_env",
+        type=str,
+        default=None,
+        help="The path to the python environment directory (optional).",
+    )
+    args = parser.parse_args()
+    runner_root = args.runner_root
+    python_env = args.python_env if args.python_env else f"{runner_root}/venv"
+
+    return runner_root, python_env
+
+
 if __name__ == "__main__":
-    #TODO: Assign runner paths.
-    runner_root = "/path/to/runner"
-    runner_env = "/path/to/venv"
+    runner_root, runner_env = _parse_args()
 
     for lib in ["black", "pylint", "stdlib-list"]:
-        if not is_library_installed(lib, runner_env):
+        if is_library_installed(lib, runner_env):
+            continue
+        if not install_library(lib, runner_env):
             msg = f"Library '{lib}' not installed in the specified virtual"
             msg += "environment."
             raise ValueError(msg)
