@@ -90,11 +90,12 @@ def find_dir_sloppy(sloppy_string, root_dir, reference_dir):
         reference_dir = os.path.dirname(reference_dir)
 
     sloppy_string = sanitize_sloppy_path_string(sloppy_string, reference_dir)
-    if os.path.isdir(sloppy_string):
-        return sloppy_string
 
     if "\\" in sloppy_string or "/" in sloppy_string:
-        dir_ = find_dir_from_path_fragment(sloppy_string, root_dir, reference_dir)
+        if os.path.isdir(sloppy_string):
+            dir_ = sloppy_string
+        else:
+            dir_ = find_dir_from_path_fragment(sloppy_string, root_dir, reference_dir)
     else:
         dir_ = find_nearest_dir(sloppy_string, root_dir, reference_dir)
     return standardize_path(dir_)
