@@ -376,19 +376,24 @@ def line_validation_for_summarize_folder(line):
     if match := SUMMARIZE_FOLDER_PATTERN.match(line):
         folder = match.group(1)
         include_definitions_without_docstrings = False
+        title_level = 1
         excluded_dirs = []
         excluded_files = []
-        if arguments := retrieve_arguments_in_round_brackets(line, 3):
+        if arguments := retrieve_arguments_in_round_brackets(line, 4):
             include_definitions_without_docstrings = arguments[0]
             if len(arguments) > 1:
-                excluded_dirs = arguments[1]
+                title_level = arguments[1]
+                check_type(title_level, int, "for summarize folder title level")
+            elif len(arguments) > 2:
+                excluded_dirs = arguments[2]
                 check_type(excluded_dirs, list, "for summarize folder excluded dirs")
-            if len(arguments) > 2:
-                excluded_files = arguments[2]
+            elif len(arguments) > 3:
+                excluded_files = arguments[3]
                 check_type(excluded_files, list, "for summarize folder excluded files")
         return (
             folder,
             include_definitions_without_docstrings,
+            title_level,
             excluded_dirs,
             excluded_files,
         )

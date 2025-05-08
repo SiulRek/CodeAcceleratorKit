@@ -175,7 +175,7 @@ class FileManager:
 #summarize data/example_script_2.py (True)
 
 #T Test: Summarize Folder (2)
-#summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
+#summarize_folder data (True, 3, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
 
 
 ```shell
@@ -239,7 +239,7 @@ class FileManager:
 #summarize data/example_script_2.py (True)
 
 #T Test: Summarize Folder (2)
-#summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
+#summarize_folder data (True, 3, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
 
 ```
 
@@ -435,21 +435,49 @@ def main():
 ## Test: Summarize Folder
 ----------
 
+### example_script_6.py
+
+```python
+class TestScriptNamePattern:
+
+    def test_valid_script_name(self):
+
+    def test_invalid_script_name_no_py(self):
+
+    def test_valid_script_name_with_path(self):
+
+```
+
+### example_script_4.py
+
+```python
 def check_age_raising_exception(age):
 
 def check_age_sending_warnings(age):
 
+```
 
+### example_script_5.py
+
+```python
 def parse_url(url):
 
 def calculate_square_root(number):
 
 def generate_random_number():
 
+```
 
+### example_script_3.py
+
+```python
 def function():
 
+```
 
+### example_script_2.py
+
+```python
 class FileManager:
     """
     Class to handle file management operations.
@@ -482,6 +510,7 @@ def main():
     """
     Main function to execute some operations.
     """
+```
 
 **********
 End of prompt

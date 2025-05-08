@@ -25,7 +25,7 @@ Available reference types:
 | run_unittest             | Run unittest from a Python script       | #run_unittest <file_path>                            | <verbosity: int = 1>                                                                          |
 | directory_tree           | Get directory tree                      | #tree <directory_path>                               | <max_depth: int = float("inf"), include_files: bool = False, ignore_list: List[str]>          |
 | summarize_python_script  | Summarize a Python script               | #summarize <script_path>                             | <include_definitions_with_docstring: boo = False>                                             |
-| summarize_folder         | Summarize Python scripts in a folder    | #summarize_folder <folder_path>                      | <include_definitions_with_docstrings: bool = False, excluded_dirs: List[str], excluded_files: List[str]> |
+| summarize_folder         | Summarize Python scripts in a folder    | #summarize_folder <folder_path>                      | <include_definitions_with_docstrings: bool = False, title_level: int = 1, excluded_dirs: List[str], excluded_files: List[str]> |
 | send_prompt              | Send a prompt from a temporary file     | #send                                                | <modify_inplace: bool = False, max_tokens: int = None>                                        |
 
 Usage Example:

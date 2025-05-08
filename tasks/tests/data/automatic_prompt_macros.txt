@@ -58,4 +58,4 @@
 #summarize data/example_script_2.py (True)
 
 #T Test: Summarize Folder (2)
-#summarize_folder data (True, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])
+#summarize_folder data (True, 3, [], ['reference_1.py', 'reference_2.py', 'example_script_6.py'])

@@ -382,6 +382,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             (
                 folder_path,
                 include_definitions_without_docstrings,
+                title_level,
                 excluded_dirs,
                 excluded_files,
             ) = result
@@ -408,7 +409,16 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                         continue
                     if script_summary := summarize_python_file(
                         file, include_definitions_without_docstrings
-                    ):
+                    ):  
+                        rel_file = os.path.relpath(file, folder_path)
+                        title = "#" * title_level + " " + rel_file
+                        macros_data.append({
+                            "type": MACROS.TITLE,
+                            "text": title,
+                        })
+                        script_summary = render_to_markdown_code_block(
+                            script_summary, language="python"
+                        )
                         macro_data = {
                             "type": MACROS.SUMMARIZE_PYTHON_SCRIPT,
                             "text": script_summary,
