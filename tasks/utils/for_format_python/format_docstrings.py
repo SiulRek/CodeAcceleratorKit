@@ -193,6 +193,7 @@ def _wrap_metadata_text(text):
         elif (
             cur_indent_length != last_indent_length
             and last_indent_length != root_indent_length
+            and not is_freezing_needed(text_buffer)
         ):
             raise ValueError(
                 "Inconsistent indentation detected in metadata. Lines with "
