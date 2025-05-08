@@ -123,7 +123,7 @@ class FormatPythonTask(TaskBase):
         self.current_file = self.additional_args[0]
         self.macros_text = None
         if len(self.additional_args) > 1:
-            text = self.additional_args[1]
+            text = self.additional_args[1].replace(";", "\n")
             # Both --help and --cancel options terminate the program
             self._handle_options_if_present(text)
             self.macros_text = text
