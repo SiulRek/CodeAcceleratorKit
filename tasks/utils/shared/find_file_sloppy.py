@@ -1,8 +1,8 @@
 import os
 
 from tasks.configs.constants import CURRENT_FILE_TAG
-from tasks.utils.shared.sloppy_paths_utils import (
-    sanitize_sloppy_path_string,
+from tasks.utils.shared.path_helpers import (
+    sanitize_partial_path,
     standardize_path,
 )
 
@@ -44,7 +44,7 @@ def find_nearest_file(file_name, root_dir, reference_file):
 
 
 def find_file_from_path_fragment(path_fragment, root_dir):
-    path_fragment = sanitize_sloppy_path_string(path_fragment, root_dir)
+    path_fragment = sanitize_partial_path(path_fragment, root_dir)
 
     for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
@@ -82,7 +82,7 @@ def find_file_sloppy(sloppy_string, root_dir, reference_file_path):
     root_dir = standardize_path(root_dir)
     reference_file_path = standardize_path(reference_file_path)
 
-    sloppy_string = sanitize_sloppy_path_string(sloppy_string, reference_file_path)
+    sloppy_string = sanitize_partial_path(sloppy_string, reference_file_path)
 
     if sloppy_string == CURRENT_FILE_TAG:
         return reference_file_path

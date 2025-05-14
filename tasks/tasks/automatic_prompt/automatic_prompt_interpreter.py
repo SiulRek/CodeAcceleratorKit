@@ -50,7 +50,7 @@ from tasks.utils.shared.execute_python_module import execute_python_module
 from tasks.utils.shared.find_closest_matching_dir import find_closest_matching_dir
 from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 from tasks.utils.shared.format_identifiers_as_code import format_identifiers_as_code
-from tasks.utils.shared.sloppy_paths_utils import standardize_path
+from tasks.utils.shared.path_helpers import standardize_path
 
 
 class AutomaticPromptInterpreter(MacroInterpreter):
