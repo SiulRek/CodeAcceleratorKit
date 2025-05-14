@@ -48,7 +48,7 @@ from tasks.utils.for_automatic_prompt.summarize_python_script import (
 from tasks.utils.shared.execute_pylint import execute_pylint
 from tasks.utils.shared.execute_python_module import execute_python_module
 from tasks.utils.shared.find_closest_matching_dir import find_closest_matching_dir
-from tasks.utils.shared.find_file_sloppy import find_file_sloppy
+from tasks.utils.shared.find_closest_matching_file import find_closest_matching_file
 from tasks.utils.shared.format_identifiers_as_code import format_identifiers_as_code
 from tasks.utils.shared.path_helpers import standardize_path
 
@@ -119,7 +119,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
             file_names, line_ranges = result
             macro_data_list = []
             for file_name in file_names:
-                file_path = find_file_sloppy(
+                file_path = find_closest_matching_file(
                     file_name, self.profile.root, self.current_file
                 )
                 file_content = self._read_file(file_path, "paste files reference")
@@ -149,7 +149,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 for dir_ in excluded_dirs
             ]
             excluded_files = [
-                find_file_sloppy(file, self.profile.root, self.current_file)
+                find_closest_matching_file(file, self.profile.root, self.current_file)
                 for file in excluded_files
             ]
             macros_data = []
@@ -182,7 +182,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_paste_declaration_block_macro(self, line):
         if result := line_validation_for_paste_declaration_block(line):
             file_name, declaration_name, only_declaration_and_docstring = result
-            file_path = find_file_sloppy(
+            file_path = find_closest_matching_file(
                 file_name, self.profile.root, self.current_file
             )
 
@@ -275,7 +275,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_run_pyscript_macro(self, line):
         if result := line_validation_for_run_pyscript(line):
-            script_path = find_file_sloppy(result, self.profile.root, self.current_file)
+            script_path = find_closest_matching_file(result, self.profile.root, self.current_file)
             environment_path = self.profile.runner_python_env
             script_output = execute_python_module(
                 script_path,
@@ -291,7 +291,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_run_bash_script_macro(self, line):
         if result := line_validation_for_run_bash_script(line):
-            script_path = find_file_sloppy(result, self.profile.root, self.current_file)
+            script_path = find_closest_matching_file(result, self.profile.root, self.current_file)
             output = subprocess.run(
                 [script_path],
                 shell=True,
@@ -320,7 +320,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def validate_run_pylint_macro(self, line):
         if result := line_validation_for_run_pylint(line):
-            script_path = find_file_sloppy(result, self.profile.root, self.current_file)
+            script_path = find_closest_matching_file(result, self.profile.root, self.current_file)
             environment_path = self.profile.runner_python_env
             pylint_output = execute_pylint(script_path, environment_path)
             pylint_output = render_to_markdown_code_block(
@@ -333,7 +333,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_run_unittest_macro(self, line):
         if result := line_validation_for_run_unittest(line):
             name, verbosity = result
-            script_path = find_file_sloppy(name, self.profile.root, self.current_file)
+            script_path = find_closest_matching_file(name, self.profile.root, self.current_file)
             python_env = self.profile.runner_python_env
             cwd = self.profile.cwd
             unittest_output = execute_python_module(
@@ -366,7 +366,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_summarize_python_script_macro(self, line):
         if result := line_validation_for_summarize_python_script(line):
             name, include_definitions_without_docstrings = result
-            script_path = find_file_sloppy(name, self.profile.root, self.current_file)
+            script_path = find_closest_matching_file(name, self.profile.root, self.current_file)
             script_summary = summarize_python_file(
                 script_path, include_definitions_without_docstrings
             )
@@ -394,7 +394,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 for dir_ in excluded_dirs
             ]
             excluded_files = [
-                find_file_sloppy(file, self.profile.root, self.current_file)
+                find_closest_matching_file(file, self.profile.root, self.current_file)
                 for file in excluded_files
             ]
             macros_data = []

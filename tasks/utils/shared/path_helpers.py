@@ -2,6 +2,8 @@ import os
 
 from tasks.configs.constants import CURRENT_DIRECTORY_TAG
 
+class PathNotFoundError(Exception):
+    pass
 
 def standardize_path(path):
     path = os.path.abspath(path)
@@ -66,14 +68,11 @@ def get_closest_path_from_list(path, reference_path):
     best_matches = [path for score, path in scored_paths if score == best_score]
     if len(best_matches) == 1:
         return best_matches[0]
-    if len(best_matches) > 1:
-        msg = (
-            "Multiple directories matching found with equal closeness to "
-            f"reference '{reference_path}':\n- "
-            + "\n- ".join(best_matches)
-            + "\nPlease refine the input for disambiguation."
-        )
-        raise ValueError(msg)
-    raise NotADirectoryError(
-        f"Directory not found near '{reference_path}'"
+    msg = (
+        "Multiple directories matching found with equal closeness to "
+        f"reference '{reference_path}':\n- "
+        + "\n- ".join(best_matches)
+        + "\nPlease refine the input for disambiguation."
     )
+    raise ValueError(msg)
+        

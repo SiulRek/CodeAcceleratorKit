@@ -1,6 +1,6 @@
 from tasks.configs.constants import CURRENT_FILE_TAG, CURRENT_DIRECTORY_TAG
 from tasks.utils.shared.find_closest_matching_dir import find_closest_matching_dir
-from tasks.utils.shared.find_file_sloppy import find_file_sloppy
+from tasks.utils.shared.find_closest_matching_file import find_closest_matching_file
 
 
 def process_tagged_arguments(arguments, root_dir, reference_file):
@@ -29,7 +29,7 @@ def process_tagged_arguments(arguments, root_dir, reference_file):
             continue
         if arg.startswith(f"{CURRENT_FILE_TAG}="):
             arg = arg.replace(f"{CURRENT_FILE_TAG}=", "")
-            arg = find_file_sloppy(arg.strip(), root_dir, reference_file)
+            arg = find_closest_matching_file(arg.strip(), root_dir, reference_file)
         elif arg.startswith(f"{CURRENT_DIRECTORY_TAG}="):
             arg = arg.replace(f"{CURRENT_DIRECTORY_TAG}=", "")
             arg = find_closest_matching_dir(arg.strip(), root_dir, reference_file)

@@ -1,6 +1,6 @@
 from tasks.configs.constants import TEST_RESULTS_FILE
 from tasks.configs.constants import TEST_RESULT_PATTERN
-from tasks.utils.shared.find_file_sloppy import find_file_sloppy
+from tasks.utils.shared.find_closest_matching_file import find_closest_matching_file
 
 
 def _extract_error_messages(log_text):
@@ -40,7 +40,7 @@ def get_error_text(root_dir, reference_file_path):
     str
         The error text.
     """
-    log_path = find_file_sloppy(TEST_RESULTS_FILE, root_dir, reference_file_path)
+    log_path = find_closest_matching_file(TEST_RESULTS_FILE, root_dir, reference_file_path)
     with open(log_path) as f:
         log_text = f.read()
     return _extract_error_messages(log_text)

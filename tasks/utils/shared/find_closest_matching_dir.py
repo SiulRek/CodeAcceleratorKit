@@ -4,6 +4,7 @@ from tasks.utils.shared.path_helpers import (
     standardize_path,
     sanitize_partial_path,
     get_closest_path_from_list,
+    PathNotFoundError,
 )
 
 
@@ -24,13 +25,8 @@ def _find_closest_dir_from_name(name, root_dir, reference_dir):
         return matching_dirs[0]
 
     # Step 2: Measure similarity by longest common prefix with reference_dir
-    try:
-        return get_closest_path_from_list(matching_dirs, reference_dir)
-    except NotADirectoryError as e:
-        raise NotADirectoryError(
-            "Could not determine a single closest directory matching "
-            f"'{name}' relative to '{reference_dir}'.\n"
-        ) from e
+    return get_closest_path_from_list(matching_dirs, reference_dir)
+
 
 
 def _find_closest_matching_dir_from_fragment(fragment, root_dir, reference_dir):
@@ -48,13 +44,7 @@ def _find_closest_matching_dir_from_fragment(fragment, root_dir, reference_dir):
         return matching_dirs[0]
 
     # Step 2: Measure similarity by longest common prefix with reference_dir
-    try:
-        return get_closest_path_from_list(matching_dirs, reference_dir)
-    except NotADirectoryError as e:
-        raise NotADirectoryError(
-            "Could not determine a single closest directory matching "
-            f"'{fragment}' relative to '{reference_dir}'.\n"
-        ) from e
+    return get_closest_path_from_list(matching_dirs, reference_dir)
 
 
 def find_closest_matching_dir(partial_path, root_dir, reference_dir):
