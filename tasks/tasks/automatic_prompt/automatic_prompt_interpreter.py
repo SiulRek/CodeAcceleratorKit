@@ -47,7 +47,7 @@ from tasks.utils.for_automatic_prompt.summarize_python_script import (
 )
 from tasks.utils.shared.execute_pylint import execute_pylint
 from tasks.utils.shared.execute_python_module import execute_python_module
-from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
+from tasks.utils.shared.find_closest_matching_dir import find_closest_matching_dir
 from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 from tasks.utils.shared.format_identifiers_as_code import format_identifiers_as_code
 from tasks.utils.shared.sloppy_paths_utils import standardize_path
@@ -141,11 +141,11 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_paste_folder_files_macro(self, line):
         if result := line_validation_for_paste_folder_files(line):
             folder_name, title_level, excluded_dirs, excluded_files = result
-            folder_path = find_dir_sloppy(
+            folder_path = find_closest_matching_dir(
                 folder_name, self.profile.root, self.current_file
             )
             excluded_dirs = [
-                find_dir_sloppy(dir_, self.profile.root, self.current_file)
+                find_closest_matching_dir(dir_, self.profile.root, self.current_file)
                 for dir_ in excluded_dirs
             ]
             excluded_files = [
@@ -352,7 +352,7 @@ class AutomaticPromptInterpreter(MacroInterpreter):
     def validate_directory_tree_macro(self, line):
         if result := line_validation_for_directory_tree(line):
             dir_, max_depth, include_files, ignore_list = result
-            dir_ = find_dir_sloppy(dir_, self.profile.root, self.current_file)
+            dir_ = find_closest_matching_dir(dir_, self.profile.root, self.current_file)
             directory_tree = generate_directory_tree(
                 dir_, max_depth, include_files, ignore_list
             )
@@ -386,11 +386,11 @@ class AutomaticPromptInterpreter(MacroInterpreter):
                 excluded_dirs,
                 excluded_files,
             ) = result
-            folder_path = find_dir_sloppy(
+            folder_path = find_closest_matching_dir(
                 folder_path, self.profile.root, self.current_file
             )
             excluded_dirs = [
-                find_dir_sloppy(dir_, self.profile.root, self.current_file)
+                find_closest_matching_dir(dir_, self.profile.root, self.current_file)
                 for dir_ in excluded_dirs
             ]
             excluded_files = [

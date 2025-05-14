@@ -32,7 +32,7 @@ import os
 
 from tasks.tasks.core.task_base import TaskBase
 from tasks.utils.shared.execute_pylint import execute_pylint
-from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
+from tasks.utils.shared.find_closest_matching_dir import find_closest_matching_dir
 
 
 class PylintReportTask(TaskBase):
@@ -135,8 +135,8 @@ class PylintReportTask(TaskBase):
 
         if hasattr(self, "dir_for_report"):
             if os.path.exists(self.current_file):
-                self.dir_for_report = find_dir_sloppy(
-                    sloppy_string=self.dir_for_report,
+                self.dir_for_report = find_closest_matching_dir(
+                    partial_path=self.dir_for_report,
                     root_dir=self.task_runner_root,
                     reference_dir=os.path.dirname(self.current_file),
                 )

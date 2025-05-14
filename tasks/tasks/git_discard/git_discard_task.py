@@ -29,7 +29,7 @@ import subprocess
 
 from tasks.utils.shared.backup_handler import BackupHandler
 from tasks.tasks.core.task_base import TaskBase
-from tasks.utils.shared.find_dir_sloppy import find_dir_sloppy
+from tasks.utils.shared.find_closest_matching_dir import find_closest_matching_dir
 from tasks.utils.shared.find_file_sloppy import find_file_sloppy
 
 
@@ -111,7 +111,7 @@ class GitDiscardTask(TaskBase):
                 processed_paths.append(file_path)
             except FileNotFoundError:
                 try:
-                    dir_path = find_dir_sloppy(
+                    dir_path = find_closest_matching_dir(
                         path, self.profile.root, os.path.dirname(self.current_file)
                     )
                     processed_paths.extend(
