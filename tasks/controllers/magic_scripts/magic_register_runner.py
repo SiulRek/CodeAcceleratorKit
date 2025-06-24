@@ -58,8 +58,8 @@ def magic_register_runner(
         cwd=cwd,
     )
     TaskManager.copy_costumizations_files(
-        source_runner_dir=TASKS_ROOT,
-        dest_runner_dir=runner_root,
+        source_runner=TASKS_ROOT,
+        dest_runner=runner_root,
     )
     print(f"Runner '{runner_root}' registered successfully.")
 

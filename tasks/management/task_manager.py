@@ -5,7 +5,7 @@ import warnings
 
 from tasks.configs.constants import REGISTERED_RUNNERS_JSON, TASKS_ROOT
 import tasks.configs.profile_attributes as Attributes
-from tasks.management.normalize_path import normalize_path
+from tasks.management.standardize_path import standardize_path
 from tasks.management.task_runner_profile import TaskRunnerProfile
 
 SUPPORT_FILES_DIR = os.path.join(TASKS_ROOT, "tasks", "management", "support_files")
@@ -68,9 +68,13 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         attributes = {}
 
-        python_env = normalize_path(python_env)
+        runner_root = standardize_path(runner_root)
+        storage_dir = standardize_path(storage_dir)
+        python_env = standardize_path(python_env)
+
         if cwd is None:
             cwd = runner_root
+        cwd = standardize_path(cwd)
         if not os.path.exists(cwd):
             msg = f"Current working directory {cwd} does not exist."
             raise NotADirectoryError(msg)
@@ -85,9 +89,9 @@ class TaskManager(Attributes.AttributesInitializer):
             "runner_python_env": python_env,
         }
         for attr in Attributes.ProfileAttrNames.__members__:
-            if attr in "cwd":
+            if attr == "cwd":
                 attributes[attr] = cwd if cwd is not None else runner_root
-            elif attr in "runner_python_env":
+            elif attr == "runner_python_env":
                 attributes[attr] = python_env
             else:
                 init_func = getattr(cls, f"_initialize_{attr}")
@@ -95,7 +99,7 @@ class TaskManager(Attributes.AttributesInitializer):
         return attributes
 
     @classmethod
-    def sync_directories_of(cls, runner_root):
+    def sync_directories_of(cls, runner):
         """
         Synchronizes the directories of a runner to the storage directory.
 
@@ -104,7 +108,11 @@ class TaskManager(Attributes.AttributesInitializer):
         runner_root (str)
             The root directory of the runner.
         """
-        profile = TaskRunnerProfile(runner_root)
+
+        if isinstance(runner, str):
+            profile = TaskRunnerProfile(runner)
+        else:
+            profile = runner
         created_dirs = []
         for attr in Attributes.ProfileAttrNames.__members__:
             if attr.endswith("_dir"):
@@ -115,7 +123,7 @@ class TaskManager(Attributes.AttributesInitializer):
         dirs_in_storage = os.listdir(storage_dir)
         dirs_in_storage = [os.path.join(storage_dir, dir_) for dir_ in dirs_in_storage]
         dirs_in_storage = [dir_ for dir_ in dirs_in_storage if os.path.isdir(dir_)]
-        dirs_in_storage = [normalize_path(dir_) for dir_ in dirs_in_storage]
+        dirs_in_storage = [standardize_path(dir_) for dir_ in dirs_in_storage]
         unknown_dirs = []
         for dir_in_storage in dirs_in_storage:
             for created_dir in created_dirs:
@@ -133,7 +141,7 @@ class TaskManager(Attributes.AttributesInitializer):
         cls,
         runner_root,
         python_env,
-        storage_dir="local/tasks_storage",
+        storage_dir=None,
         overwrite=False,
         create_dirs=True,
         cwd=None,
@@ -148,7 +156,8 @@ class TaskManager(Attributes.AttributesInitializer):
         python_env (str)
             The Python environment to use.
         storage_dir (str, optional)
-            The storage directory. Defaults to "local/task_storage".
+            The storage directory. If None, set to "local/task_storage"
+            relative to the runner root.
         overwrite (bool, optional)
             Whether to overwrite an existing registration. Defaults to False.
         create_dirs (bool, optional)
@@ -164,10 +173,12 @@ class TaskManager(Attributes.AttributesInitializer):
         if not os.path.exists(runner_root):
             msg = f"Runner root {runner_root} does not exist."
             raise NotADirectoryError(msg)
-        runner_root = normalize_path(runner_root)
-        storage_dir = normalize_path(storage_dir)
-        if not storage_dir.startswith(runner_root):
-            storage_dir = os.path.join(runner_root, storage_dir)
+        runner_root = standardize_path(runner_root)
+        storage_dir = storage_dir or os.path.join(runner_root, "local", "tasks_storage")
+        storage_dir = standardize_path(storage_dir)
+        assert storage_dir.startswith(runner_root), (
+            "Storage directory must be inside the runner root."
+        )
         cls._register_runner(runner_root, storage_dir, overwrite=overwrite)
         attributes = cls._init_runner_attributes(
             runner_root, storage_dir, python_env, cwd
@@ -191,7 +202,11 @@ class TaskManager(Attributes.AttributesInitializer):
         """
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_runners = json.load(f)
-        return registered_runners.keys()
+
+        registered_runners = [
+            TaskRunnerProfile(runner_root) for runner_root in registered_runners.keys()
+        ]
+        return registered_runners
 
     @classmethod
     def is_runner_registered(cls, runner_root, raise_error=False):
@@ -210,7 +225,7 @@ class TaskManager(Attributes.AttributesInitializer):
         bool
             True if the runner is registered, False otherwise.
         """
-        runner_root = normalize_path(runner_root)
+        runner_root = standardize_path(runner_root)
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_runners = json.load(f)
         if runner_root in registered_runners:
@@ -238,39 +253,43 @@ class TaskManager(Attributes.AttributesInitializer):
         TaskRunnerProfile
             The runner profile after logging in.
         """
-        runner_root = normalize_path(runner_root)
+        runner_root = standardize_path(runner_root)
         cls.is_runner_registered(runner_root, raise_error=True)
-        if update_dirs:
-            cls.sync_directories_of(runner_root)
         profile = TaskRunnerProfile(runner_root)
+        if update_dirs:
+            cls.sync_directories_of(profile)
         return profile
 
     @classmethod
-    def update_runner(cls, runner_root):
+    def update_runner(cls, runner):
         """
         Updates the runner profile with the latest attributes. The update
         depends on UPDATE_MAPPING in profile_attributes.py.
 
         Parameters
         ----------
-        runner_root (str)
-            The root directory of the runner.
+        runner (str or TaskRunnerProfile)
+            The root directory of the runner or a TaskRunnerProfile instance.
+            If a string is provided, it is assumed to be the root directory of
+            the runner.
         """
-        cls.is_runner_registered(runner_root, raise_error=True)
+        if isinstance(runner, str):
+            profile = TaskRunnerProfile(runner)
+        else:
+            profile = runner
 
-        profile = TaskRunnerProfile(runner_root)
         modules_info_file = os.path.join(profile.profile_dir, "modules_info.json")
         if os.path.exists(modules_info_file):
             os.remove(modules_info_file)  # Is going to be regenereted in the next step
         reinit_attrs = cls._init_runner_attributes(
-            runner_root,
+            runner,
             profile.storage_dir,
             profile.runner_python_env,
             profile.cwd,
         )
         profile.update_attributes(reinit_attrs)
         profile.save_attributes()
-        TaskManager.sync_directories_of(runner_root)
+        TaskManager.sync_directories_of(runner)
 
     @classmethod
     def update_registered_runners(cls):
@@ -293,9 +312,11 @@ class TaskManager(Attributes.AttributesInitializer):
 
         Parameters
         ----------
-        runner_root (str)
-            The root directory of the runner.
+        runner_root (str or TaskRunnerProfile)
+            The root directory of the runner or a TaskRunnerProfile instance.
         """
+        if isinstance(runner_root, TaskRunnerProfile):
+            runner_root = runner_root.root
         cls.is_runner_registered(runner_root, raise_error=True)
         with open(REGISTERED_RUNNERS_JSON, "r", encoding="utf-8") as f:
             registered_runners = json.load(f)
@@ -310,33 +331,34 @@ class TaskManager(Attributes.AttributesInitializer):
             json.dump(registered_runners, f, indent=4)
 
     @classmethod
-    def copy_costumizations_files(
-        cls, source_runner_dir, dest_runner_dir, overwrite=False
-    ):
+    def copy_costumizations_files(cls, source_runner, dest_runner, overwrite=False):
         """
         Copies costumizations files from the source runner to the destination
         runner.
 
         Parameters
         ----------
-        source_runner_dir (str)
-            The source runner directory.
-        dest_runner_dir (str)
-            The destination runner directory.
+        source_runner (str or TaskRunnerProfile)
+            The source runner root directory or a TaskRunnerProfile instance.
+        dest_runner (str or TaskRunnerProfile)
+            The destination runner root directory or a TaskRunnerProfile
+            instance.
         overwrite (bool, optional)
             Whether to overwrite existing files.
         """
-        if not cls.is_runner_registered(source_runner_dir):
-            msg = f"Source runner {source_runner_dir} is not registered."
-            raise ValueError(msg)
-        if not cls.is_runner_registered(dest_runner_dir):
-            msg = f"Destination runner {dest_runner_dir} is not registered."
-            raise ValueError(msg)
+        if isinstance(source_runner, str):
+            if not cls.is_runner_registered(source_runner):
+                msg = f"Source runner {source_runner} is not registered."
+                raise ValueError(msg)
+            source_runner = TaskRunnerProfile(source_runner)
+        if isinstance(dest_runner, str):
+            if not cls.is_runner_registered(dest_runner):
+                msg = f"Destination runner {dest_runner} is not registered."
+                raise ValueError(msg)
+            dest_runner = TaskRunnerProfile(dest_runner)
 
-        source_profile = TaskRunnerProfile(source_runner_dir)
-        dest_profile = TaskRunnerProfile(dest_runner_dir)
-        source_costumizations_dir = source_profile.costumizations_dir
-        dest_costumizations_dir = dest_profile.costumizations_dir
+        source_costumizations_dir = source_runner.costumizations_dir
+        dest_costumizations_dir = dest_runner.costumizations_dir
 
         for root, _, files in os.walk(source_costumizations_dir):
             if "__pycache__" in root:
@@ -358,24 +380,25 @@ class TaskManager(Attributes.AttributesInitializer):
                 shutil.copy2(file_abs_path, dest_file)
                 with open(dest_file, "r+", encoding="utf-8") as f:
                     content = f.read()
-                    source_runner_dir = normalize_path(source_runner_dir)
-                    dest_runner_dir = normalize_path(dest_runner_dir)
-                    content = content.replace(source_runner_dir, dest_runner_dir)
+                    content = content.replace(source_runner.root, dest_runner.root)
                     f.seek(0)
                     f.write(content)
                     f.truncate()
 
     @classmethod
-    def load_support_files_to(cls, runner_root):
+    def load_support_files_to(cls, runner):
         """
         Loads support files to the runner.
 
         Parameters
         ----------
-        runner_root (str)
-            The root directory of the runner.
+        runner (str or TaskRunnerProfile)
+            The root directory of the runner or a TaskRunnerProfile instance.
         """
-        profile = TaskRunnerProfile(runner_root)
+        if isinstance(runner, str):
+            profile = TaskRunnerProfile(runner)
+        else:
+            profile = runner
         cheatsheet = os.path.join(SUPPORT_FILES_DIR, "CHEATSHEET.md")
         template_1 = os.path.join(SUPPORT_FILES_DIR, "template_1.py")
         template_2 = os.path.join(SUPPORT_FILES_DIR, "template_2.py")

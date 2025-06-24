@@ -8,7 +8,7 @@ import warnings
 from unittest.mock import patch
 
 from tasks.management.task_runner_profile import TaskRunnerProfile
-from tasks.management.normalize_path import normalize_path
+from tasks.management.standardize_path import standardize_path
 from tasks.utils.for_testing.test_result_logger import TestResultLogger
 
 ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")
@@ -38,15 +38,15 @@ class TestTaskRunnerProfile(unittest.TestCase):
 
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.runner_root = normalize_path(
+        self.runner_root = standardize_path(
             os.path.join(self.temp_dir.name, "runner_root")
         )
-        self.json_mock = normalize_path(
+        self.json_mock = standardize_path(
             os.path.join(self.temp_dir.name, "registered_variables.json")
         )
 
         registered_runners = {
-            self.runner_root: normalize_path(
+            self.runner_root: standardize_path(
                 os.path.join(self.temp_dir.name, "task_storage")
             )
         }

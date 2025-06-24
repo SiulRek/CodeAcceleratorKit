@@ -6,7 +6,7 @@ import pickle
 import warnings
 
 import tasks.configs.constants as configs
-from tasks.management.normalize_path import normalize_path
+from tasks.management.standardize_path import standardize_path
 import tasks.configs.profile_attributes as Attributes
 
 
@@ -23,7 +23,7 @@ class TaskRunnerProfile:
     """
 
     def __init__(self, runner_root, load_attributes_from_storage=True):
-        self._root = normalize_path(runner_root)
+        self._root = standardize_path(runner_root)
         self._storage_dir = self._get_storage_dir(self.root)
         self._profile_dir = os.path.join(self.storage_dir, configs.PROFILE_SUBFOLDER)
         self._all_attributes = {}

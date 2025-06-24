@@ -13,13 +13,14 @@ def magic_update_all_runners():
     """
     TaskManager.update_registered_runners()
 
-    runner_roots = TaskManager.get_registered_runners()
+    runners = TaskManager.get_registered_runners()
 
-    for runner_root in runner_roots:
+    for runner in runners:
+        runner_root = runner if isinstance(runner, str) else runner.root
         if runner_root == TASKS_ROOT:
             continue
-        TaskManager.copy_costumizations_files(TASKS_ROOT, runner_root)
-        allocate_vscode_tasks_json(runner_root)
+        TaskManager.copy_costumizations_files(TASKS_ROOT, runner)
+        allocate_vscode_tasks_json(runner)
         print(f"Runner {os.path.basename(runner_root)} updated successfully.")
 
 

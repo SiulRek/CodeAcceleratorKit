@@ -9,7 +9,7 @@ from tasks.configs.constants import (
     MAX_BACKUPS,
 )
 from tasks.configs.defaults import COPY_PROMPT_DEFAULT
-from tasks.management.normalize_path import normalize_path
+from tasks.management.standardize_path import standardize_path
 from tasks.utils.shared.execute_python_module import execute_python_module
 import tasks.utils.shared.retrieve_modules as retrieve_modules
 
@@ -85,7 +85,7 @@ class AttributesInitializer:
         """
         Initializes the tasks_cache directory path.
         """
-        dir_ = normalize_path(TASKS_CACHE)
+        dir_ = standardize_path(TASKS_CACHE)
         return dir_
 
     @classmethod
@@ -93,7 +93,7 @@ class AttributesInitializer:
         """
         Initializes the runners_cache directory path.
         """
-        dir_ = normalize_path(primary_attrs.get("storage_dir"))
+        dir_ = standardize_path(primary_attrs.get("storage_dir"))
         dir_ = os.path.join(dir_, "__taskscache__")
         return dir_
 
@@ -105,7 +105,7 @@ class AttributesInitializer:
         """
         storage_dir = primary_attrs.get("storage_dir")
         dir_ = os.path.join(storage_dir, "data")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -116,7 +116,7 @@ class AttributesInitializer:
         """
         data_dir = cls._initialize_data_dir(primary_attrs)
         dir_ = os.path.join(data_dir, "execution_tracks")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -127,7 +127,7 @@ class AttributesInitializer:
         """
         storage_dir = primary_attrs.get("storage_dir")
         dir_ = os.path.join(storage_dir, "costumizations")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -138,7 +138,7 @@ class AttributesInitializer:
         """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "fill_texts")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -149,7 +149,7 @@ class AttributesInitializer:
         """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "meta_macros")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -160,7 +160,7 @@ class AttributesInitializer:
         """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "meta_macros_with_args")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -171,7 +171,7 @@ class AttributesInitializer:
         """
         templates_dir = cls._initialize_costumizations_dir(primary_attrs)
         dir_ = os.path.join(templates_dir, "functions")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -182,7 +182,7 @@ class AttributesInitializer:
         """
         storage_dir = primary_attrs.get("storage_dir")
         dir_ = os.path.join(storage_dir, "outputs")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -192,7 +192,7 @@ class AttributesInitializer:
         """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "logs")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -202,7 +202,7 @@ class AttributesInitializer:
         """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "backups")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -213,7 +213,7 @@ class AttributesInitializer:
         """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "checkpoints")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -223,7 +223,7 @@ class AttributesInitializer:
         """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "chats")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
 
     @classmethod
@@ -233,7 +233,7 @@ class AttributesInitializer:
         """
         output_dir = cls._initialize_output_dir(primary_attrs)
         dir_ = os.path.join(output_dir, "reports")
-        dir_ = normalize_path(dir_)
+        dir_ = standardize_path(dir_)
         return dir_
     
     @classmethod

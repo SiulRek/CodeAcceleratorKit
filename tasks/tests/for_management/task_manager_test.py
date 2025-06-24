@@ -7,7 +7,7 @@ from unittest.mock import patch, MagicMock
 import warnings
 
 import tasks
-from tasks.management.normalize_path import normalize_path
+from tasks.management.standardize_path import standardize_path
 from tasks.management.task_manager import TaskManager as Manager
 from tasks.management.task_runner_profile import TaskRunnerProfile
 
@@ -27,12 +27,11 @@ class AttrNamesMockOld(Enum):
 class TestTaskManager(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.runner_root = normalize_path(
+        self.runner_root = standardize_path(
             os.path.join(self.temp_dir.name, "runner_root")
         )
-        self.storage_subfolder = "task_storage"
-        self.storage_dir = os.path.join(self.runner_root, self.storage_subfolder)
-        self.json_mock = normalize_path(
+        self.storage_dir = os.path.join(self.runner_root, "task_storage")
+        self.json_mock = standardize_path(
             os.path.join(self.temp_dir.name, "registered_variables.json")
         )
         patcher1 = patch.object(
@@ -83,7 +82,7 @@ class TestTaskManager(unittest.TestCase):
         profile = Manager.register_runner(
             self.runner_root,
             python_env_path,
-            storage_dir=self.storage_subfolder,
+            storage_dir=self.storage_dir,
             overwrite=False,
             create_dirs=False,
         )
@@ -97,7 +96,7 @@ class TestTaskManager(unittest.TestCase):
         self.assertEqual(profile.var1_dir, os.path.join(self.storage_dir, "value1"))
         self.assertEqual(profile.var2_dir, os.path.join(self.storage_dir, "value2"))
         self.assertEqual(profile.cwd, self.runner_root)
-        self.assertEqual(profile.runner_python_env, normalize_path(python_env_path))
+        self.assertEqual(profile.runner_python_env, standardize_path(python_env_path))
 
     def test_initialize_attributes(self):
         python_env_path = os.path.join(self.runner_root, "runner_python_env")
@@ -105,7 +104,7 @@ class TestTaskManager(unittest.TestCase):
 
         attributes = Manager._init_runner_attributes(
             self.runner_root,
-            self.storage_subfolder,
+            self.storage_dir,
             python_env_path,
             self.runner_root,
         )
@@ -114,7 +113,7 @@ class TestTaskManager(unittest.TestCase):
         self.assertIn("var2_dir", attributes)
         self.assertEqual(attributes["cwd"], self.runner_root)
         self.assertEqual(
-            attributes["runner_python_env"], normalize_path(python_env_path)
+            attributes["runner_python_env"], standardize_path(python_env_path)
         )
 
     def test_create_directories(self):
@@ -124,7 +123,7 @@ class TestTaskManager(unittest.TestCase):
         profile = Manager.register_runner(
             self.runner_root,
             python_env_path,
-            storage_dir=self.storage_subfolder,
+            storage_dir=self.storage_dir,
             overwrite=False,
             create_dirs=True,
         )
@@ -142,7 +141,7 @@ class TestTaskManager(unittest.TestCase):
             Manager.register_runner(
                 self.runner_root,
                 python_env_path,
-                storage_dir=self.storage_subfolder,
+                storage_dir=self.storage_dir,
                 overwrite=False,
                 create_dirs=True,
             )
@@ -166,14 +165,14 @@ class TestTaskManager(unittest.TestCase):
         Manager.register_runner(
             self.runner_root,
             python_env_path,
-            storage_dir=self.storage_subfolder,
+            storage_dir=self.storage_dir,
             overwrite=False,
             create_dirs=False,
         )
         with patch("warnings.warn") as mock_warn:
             Manager.sync_directories_of(self.runner_root)
             mock_warn.assert_called_with(
-                f"Unknown directory {normalize_path(unknown_dir)} from tasks storage."
+                f"Unknown directory {standardize_path(unknown_dir)} from tasks storage."
             )
 
     def test_overwrite_registration(self):
@@ -183,7 +182,7 @@ class TestTaskManager(unittest.TestCase):
         Manager.register_runner(
             self.runner_root,
             python_env_path,
-            storage_dir=self.storage_subfolder,
+            storage_dir=self.storage_dir,
             overwrite=False,
             create_dirs=False,
         )
@@ -192,14 +191,14 @@ class TestTaskManager(unittest.TestCase):
             Manager.register_runner(
                 self.runner_root,
                 python_env_path,
-                storage_dir=self.storage_subfolder,
+                storage_dir=self.storage_dir,
                 overwrite=False,
             )
 
         Manager.register_runner(
             self.runner_root,
             python_env_path,
-            storage_dir=self.storage_subfolder,
+            storage_dir=self.storage_dir,
             overwrite=True,
             create_dirs=False,
         )
@@ -222,7 +221,7 @@ class TestTaskManager(unittest.TestCase):
         Manager.register_runner(
             self.runner_root,
             python_env_path,
-            storage_dir=self.storage_subfolder,
+            storage_dir=self.storage_dir,
             overwrite=False,
             create_dirs=False,
         )
@@ -242,7 +241,7 @@ class TestTaskManager(unittest.TestCase):
         Manager.register_runner(
             self.runner_root,
             python_env_path,
-            storage_dir=self.storage_subfolder,
+            storage_dir=self.storage_dir,
             overwrite=True,
             create_dirs=False,
         )
@@ -255,7 +254,7 @@ class TestTaskManager(unittest.TestCase):
         self.assertEqual(profile.var1_dir, os.path.join(self.storage_dir, "value1"))
         self.assertEqual(profile.var2_dir, os.path.join(self.storage_dir, "value2"))
         self.assertEqual(profile.cwd, self.runner_root)
-        self.assertEqual(profile.runner_python_env, normalize_path(python_env_path))
+        self.assertEqual(profile.runner_python_env, standardize_path(python_env_path))
 
     def test_delete_runner(self):
         python_env_path = os.path.join(self.runner_root, "runner_python_env")
@@ -264,7 +263,7 @@ class TestTaskManager(unittest.TestCase):
         Manager.register_runner(
             self.runner_root,
             python_env_path,
-            storage_dir=self.storage_subfolder,
+            storage_dir=self.storage_dir,
             overwrite=False,
             create_dirs=True,
         )
@@ -303,11 +302,13 @@ class TestTaskManager(unittest.TestCase):
         with patch("tasks.management.task_manager.TaskRunnerProfile") as MockProfile, patch.object(Manager, 'is_runner_registered', return_value=True):
             mock_source_profile = MagicMock()
             mock_source_profile.costumizations_dir = source_costumizations_dir
+            mock_source_profile.root = source_runner_dir
             mock_source_profile.var1_dir = source_costumizations_dir
             mock_source_profile.var2_dir = source_costumizations_dir
 
             mock_dest_profile = MagicMock()
             mock_dest_profile.costumizations_dir = dest_costumizations_dir
+            mock_dest_profile.root = dest_runner_dir
             mock_dest_profile.var1_dir = dest_costumizations_dir
             mock_dest_profile.var2_dir = dest_costumizations_dir
 
@@ -331,7 +332,7 @@ class TestTaskManager(unittest.TestCase):
             Manager.register_runner(
                 self.runner_root,
                 python_env_path,
-                storage_dir=self.storage_subfolder,
+                storage_dir=self.storage_dir,
                 overwrite=False,
                 create_dirs=False,
             )

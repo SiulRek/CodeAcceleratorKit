@@ -3,6 +3,7 @@ import os
 import warnings
 
 from tasks.controllers.shared.TASKS_ROOT import TASKS_ROOT
+from tasks.management.task_runner_profile import TaskRunnerProfile
 
 MAIN_VSCODE_TASKS_JSON = os.path.join(TASKS_ROOT, ".vscode", "tasks.json")
 
@@ -16,9 +17,14 @@ def allocate_vscode_tasks_json(runner_root):
 
     Parameters
     ----------
-    runner_root (str)
-        The root directory of the runner.
+    runner_root : str or TaskRunnerProfile
+        The root directory of the runner or a TaskRunnerProfile instance.
+        If a TaskRunnerProfile instance is provided, its `root` attribute will
+        be used as the runner root.
     """
+    if isinstance(runner_root, TaskRunnerProfile):
+        runner_root = runner_root.root
+
     if not os.path.exists(MAIN_VSCODE_TASKS_JSON):
         msg = f"The VSCODE tasks file '{MAIN_VSCODE_TASKS_JSON}' does not"
         msg += "exist."

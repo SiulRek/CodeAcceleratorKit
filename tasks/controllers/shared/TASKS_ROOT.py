@@ -4,6 +4,6 @@ root.
 """
 
 from tasks.configs.constants import TASKS_ROOT
-from tasks.management.normalize_path import normalize_path
+from tasks.management.standardize_path import standardize_path
 
-TASKS_ROOT = normalize_path(TASKS_ROOT)
+TASKS_ROOT = standardize_path(TASKS_ROOT)
