@@ -12,6 +12,10 @@ package_to_import_name = {
     "PyYAML": "yaml",
     "python-dateutil": "dateutil",
     "opencv-python": "cv2",
+    "flask-mail": "flask_mail",
+    "flask-sqlalchemy": "flask_sqlalchemy",
+    "flask-migrate": "flask_migrate",
+    "stdlib-list": "stdlib_list",
     # Add other package names here
 }
 
