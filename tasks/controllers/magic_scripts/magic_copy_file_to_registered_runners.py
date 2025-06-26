@@ -27,11 +27,7 @@ def copy_file_to_registered_runners(source_file):
 
     task_manager = TaskManager()
     runners = task_manager.get_registered_runners()
-    runners = [
-        TaskRunnerProfile(runner) 
-        for runner in runners
-        if runner != TASKS_ROOT
-    ]
+    runners = [runner for runner in runners if runner.root != TASKS_ROOT]
     root_runner = TaskRunnerProfile(TASKS_ROOT)
     root_storage_dir = root_runner.storage_dir
 
@@ -49,11 +45,14 @@ def copy_file_to_registered_runners(source_file):
         shutil.copy2(source_file, target_file)
         print(f"Copied '{source_file}' to '{target_file}'.")
 
+
 if __name__ == "__main__":
     import sys
 
     if len(sys.argv) < 2:
-        raise ValueError("Please provide the source file path as an argument.")
+        raise ValueError(
+            "Please provide the source file path as an argument."
+        )
 
     source_file = sys.argv[1]
     copy_file_to_registered_runners(source_file)
