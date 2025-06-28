@@ -11,7 +11,7 @@ from tasks.utils.shared.library_utils import is_library_installed, install_libra
 def magic_register_runner(
     runner_root,
     python_env,
-    storage_dir="local/tasks_storage",
+    storage_dir=None,
     overwrite=False,
     create_dirs=True,
     cwd=None,
@@ -47,7 +47,8 @@ def magic_register_runner(
         raise Exception(f"Runner '{runner_root}' already registered.")
     except Exception as e:
         pass
-
+    
+    storage_dir = storage_dir or f"{runner_root}/local/tasks_storage"
     allocate_vscode_tasks_json(runner_root)
     TaskManager.register_runner(
         runner_root,
