@@ -55,6 +55,7 @@ TODO when adding new macros:
 """
 
 import os
+import warnings
 
 from tasks.configs.constants import AUTOMATIC_PROMPT_MACROS as MACROS
 from tasks.tasks.automatic_prompt.ask_user_for_macros import ask_user_for_macros
@@ -125,7 +126,7 @@ class AutomaticPromptTask(TaskBase):
                     prompt += f"\n{text}\n" if prompt else f"{text}\n"
                 elif not macro_type in [MACROS.SEND_PROMPT]:
                     msg = f"Macro {macro_type} is missing text."
-                    raise ValueError(msg)
+                    warnings.warn(msg, UserWarning)
             else:
                 msg = f"Unknown macro type: {macro_type}"
                 raise ValueError(msg)
