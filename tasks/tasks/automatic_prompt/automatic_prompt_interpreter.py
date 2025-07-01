@@ -65,8 +65,12 @@ class AutomaticPromptInterpreter(MacroInterpreter):
 
     def _read_file(self, file_path, usage_description):
         self._check_exists(file_path, usage_description)
-        with open(file_path, "r", encoding="utf-8") as file:
-            return file.read()
+        try:
+            with open(file_path, "r", encoding="utf-8") as file:
+                return file.read()
+        except UnicodeDecodeError as e:
+            msg = f"Cannot read file {file_path} for {usage_description}. "
+            raise UnicodeDecodeError(msg) from e
 
     def validate_begin_text_macro(self, line):
         if result := line_validation_for_begin_text(line):
