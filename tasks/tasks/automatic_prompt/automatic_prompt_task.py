@@ -31,18 +31,20 @@ Available reference types:
 Usage Example:
 ```python
 macros_text = (
-"#T This is the Start of the prompt\n",
-"#C Some text\n",
-"#T New Chapter\n",
-"#run example_script.py\n",
-"#E Now that we paste the output of example_script.py we come to the end of prompt\n",
-"#send (True)"
+    "#T This is the Start of the prompt\n"
+    "#C Some text\n"
+    "#T New Chapter\n"
+    "#run example_script.py\n"
+    "#E Now that we paste the output of example_script.py we come to the end of prompt\n"
+    "#send (True)"
 )
+
 AutomaticPromptTask(
-default_root,
-default_file_path,
-"".join(macros_text)
+    default_root,
+    default_file_path,
+    "".join(macros_text)
 ).main()
+
 ```
 
 
@@ -142,8 +144,8 @@ class AutomaticPromptTask(TaskBase):
             send_prompt_macro = macros_data.pop(macro_types.index(MACROS.SEND_PROMPT))
             send_prompt_kwargs = send_prompt_macro["kwargs"]
 
-        reminder_prompt = self._format_text_from_macros(macros_data)
-        return send_prompt_kwargs, reminder_prompt
+        prompt = self._format_text_from_macros(macros_data)
+        return prompt, send_prompt_kwargs
 
     def execute(self):
         """
@@ -163,11 +165,11 @@ class AutomaticPromptTask(TaskBase):
         )
         if reminder_text != "":
             raise ValueError(
-                "Not able to process the following macros:\n"
+                "Not able to process the following macros:\n "
                 f"{reminder_text}"
             )
 
-        send_prompt_kwargs, prompt = self._extract_send_prompt_parameters(macros_data)
+        prompt, send_prompt_kwargs = self._extract_send_prompt_parameters(macros_data)
 
         cm = ChatManager(
             self.current_file,
