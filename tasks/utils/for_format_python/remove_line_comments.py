@@ -24,6 +24,11 @@ def remove_line_comments(text):
             clean_line = line.split("# ", 1)[0] + "\n" if "# " in line else line
             new_lines.append(clean_line)
     cleaned_text = "\n".join(new_lines)
+
+    # Ensure the last line ends with a newline character
+    if not cleaned_text.endswith("\n"):
+        cleaned_text += "\n"
+        
     return cleaned_text
 
 
